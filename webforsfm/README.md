@@ -1,0 +1,25 @@
+# SamudraFM Website
+
+Welcome to SamudraFM, the voice of SMK Taman SEA! 🎙️
+
+A student-run weekly radio programme created by volunteers with a passion for music, entertainment, and sharing stories.
+
+## Features
+
+- Live radio streaming
+- Latest episodes from Mixcloud
+- Interactive player with progress tracking
+- Responsive design
+- Custom domain: samudrafm.com
+
+## Technology
+
+- HTML5
+- CSS3
+- JavaScript
+- Mixcloud API
+- GitHub Pages
+
+## Live Website
+
+Visit us at: [samudrafm.com](https://samudrafm.com)

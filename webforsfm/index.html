@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SamudraFM — Your study, your music.</title>
+    <meta name="description" content="SamudraFM - Non-stop hits, live shows, and requests.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="#" class="brand" aria-label="SamudraFM Home">
+                <img class="brand-logo" src="images/SamudraFMLogo1.png" alt="SamudraFM" />
+                <span class="brand-mark">Samudra<span>FM</span></span>
+            </a>
+            <nav class="nav" aria-label="primary">
+                <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
+                <ul id="nav-menu" class="nav-list">
+                    <li><a href="#home" class="active">home</a></li>
+                    <li><a href="#schedule">schedule</a></li>
+                    <li><a href="#episodes">episodes</a></li>
+                    <li><a href="#listen">where to listen</a></li>
+                    <li><a href="#about">about</a></li>
+                    <li><a href="#contact">contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="home" class="site-main container">
+        <section class="hero">
+            <div class="hero-copy">
+                <h1>Your study, your music.</h1>
+                <p>Tuned for long hauls, study nights, and everything in between.</p>
+                <div class="cta-row">
+                    <a class="btn primary" href="#listen">Listen now</a>
+                    <a class="btn" href="#request">Send a request</a>
+                </div>
+            </div>
+            <div class="panel hero-latest" id="hero-latest">
+                <div class="player-widget">
+                    <div class="player-left">
+                        <div class="hero-latest-cover cover placeholder" id="player-cover"></div>
+                        <div class="play-overlay" id="play-overlay">
+                            <button class="play-pause-btn" id="hero-play-pause">⏸</button>
+                        </div>
+                    </div>
+                    <div class="player-right">
+                        <div class="player-info">
+                            <h3 id="hero-ep-title" class="track-title">Loading…</h3>
+                            <p id="hero-ep-artist" class="track-artist">SamudraFM</p>
+                        </div>
+                        <div class="player-controls">
+                            <div class="volume-control">
+                                <span class="volume-icon">🔊</span>
+                                <div class="volume-slider">
+                                    <div class="volume-bar">
+                                        <div class="volume-fill" style="width: 80%"></div>
+                                        <div class="volume-handle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a id="hero-open" class="request-btn" href="#" target="_blank" rel="noopener">Play on Mixcloud</a>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress" id="progress-bar">
+                                <div id="hero-progress" class="bar" style="width:0%"></div>
+                                <div class="progress-handle" id="progress-handle"></div>
+                            </div>
+                            <div class="time-display">
+                                <span id="current-time">0:00</span>
+                                <span id="total-time">0:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-embed" hidden></div>
+            </div>
+        </section>
+
+        <section class="recent" aria-labelledby="recent-heading">
+            <h2 id="recent-heading">Recently played</h2>
+            <div id="recent-grid" class="card-row"></div>
+        </section>
+
+        <section id="schedule" class="coming" aria-labelledby="coming-heading">
+            <div class="section-head">
+                <div class="dot"></div>
+                <h2 id="coming-heading">Coming up</h2>
+            </div>
+            <div id="coming-grid" class="card-col"></div>
+        </section>
+
+        <section id="episodes" class="episodes" aria-labelledby="episodes-heading">
+            <div class="section-head">
+                <div class="dot"></div>
+                <h2 id="episodes-heading">Latest episodes</h2>
+            </div>
+            <p class="muted">Live from SamudraFM Mixcloud profile.</p>
+            <div id="episodes-grid" class="card-row"></div>
+            <div class="cta-row" style="margin-top:12px">
+                <button id="episodes-load" class="btn" aria-label="Load more episodes">Load more</button>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <h2>About us</h2>
+            <div class="about-content">
+                <p>Welcome to SamudraFM, the voice of SMK Taman SEA! 🎙️</p>
+                <p>We're a student-run weekly radio programme created by volunteers with a passion for music, entertainment, and sharing stories. Every week, we bring energy, fun, and fresh vibes straight from our school community to you.</p>
+                <p>SamudraFM isn't just a radio show—it's a platform for students to express themselves, connect with others, and make mornings a little brighter.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer" id="about">
+        <div class="container footer-inner">
+            <div>
+                <img class="brand-logo" src="images/SamudraFMLogo1.png" alt="SamudraFM" />
+                <span class="brand-mark">Samudra<span>FM</span></span>
+                <p class="muted">Non-Profit Organization. Fully volunteer-run school of SMK Taman SEA radio station. © <span id="year"></span> SamudraFM.</p>
+            </div>
+            <nav aria-label="footer">
+                <ul class="footer-links">
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#schedule">Schedule</a></li>
+                    <li><a href="#listen">Listen</a></li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+
+    <audio id="radio-stream" preload="none" crossorigin="anonymous">
+        <source src="https://stream.zeno.fm/stream" type="audio/mpeg">
+    </audio>
+    
+    <!-- Hidden audio player for episodes -->
+    <audio id="episode-player" preload="none" style="display:none"></audio>
+
+    <script src="script.js?v=25&t=1734567912"></script>
+    <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
+    <meta http-equiv="Permissions-Policy" content="encrypted-media=*">
+    <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function(){ navigator.serviceWorker.register('/sw.js'); });
+    }
+    </script>
+</body>
+</html>
+

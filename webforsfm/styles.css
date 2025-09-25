@@ -1,0 +1,161 @@
+﻿/* SamduraFM theme - modern dark, inspired by trucking radio UI */
+:root{
+  --bg:#0f2230;
+  --bg-elev:#173246;
+  --panel:#23394b;
+  --text:#e9f1f7;
+  --muted:#8fa6b7;
+  --brand:#74d3ff;
+  --accent:#f06bdc;
+  --live:#ff4d6d;
+  --border:rgba(255,255,255,0.08);
+  --radius:14px;
+  --shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--text);
+  background:radial-gradient(1200px 800px at 20% -10%, #18354a 0%, transparent 60%),
+             radial-gradient(1000px 700px at 100% 0%, #0e1a25 0%, transparent 60%),
+             var(--bg);
+}
+
+.container{width:min(1200px,92%);margin:0 auto}
+
+/* Header */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(15,34,48,.7);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.brand{color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand-logo{width:32px;height:32px;border-radius:8px;display:block}
+.brand-mark{font-weight:800;letter-spacing:.2px;font-size:24px}
+.brand-mark span{color:var(--accent)}
+
+.nav-toggle{display:none;background:none;border:1px solid var(--border);border-radius:10px;color:var(--text);padding:6px 10px}
+.nav-list{display:flex;gap:28px;list-style:none;margin:0;padding:0}
+.nav-list a{color:var(--muted);text-decoration:none;text-transform:lowercase;font-weight:600}
+.nav-list a.active,.nav-list a:hover{color:var(--brand)}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:stretch;padding:42px 0}
+.hero-latest{display:grid;grid-template-columns:1fr;gap:12px}
+.player-widget{display:flex;gap:16px;align-items:center;padding:16px}
+.player-left{position:relative;flex-shrink:0}
+.hero-latest-cover{width:120px;height:120px;border-radius:12px;background-size:cover;background-position:center;background-repeat:no-repeat}
+.hero-latest-cover.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);
+  background:
+    radial-gradient(600px 300px at 10% -10%, rgba(255,255,255,.06), transparent 60%),
+    #142636 url('images/SamudraFMLogo1.png') center/42% no-repeat;
+}
+.play-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);border-radius:12px;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity 0.2s;pointer-events:none}
+.play-pause-btn{background:transparent;border:none;width:64px;height:64px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);pointer-events:auto;z-index:10;position:relative;line-height:1}
+.play-pause-btn{font-size:48px;color:white;font-weight:bold}
+.play-pause-btn:hover{transform:scale(1.08)}
+.play-pause-btn:active{transform:scale(0.95)}
+.player-right{flex:1;min-width:0}
+.player-info{margin-bottom:12px}
+.spotify-logo{width:24px;height:24px;background:var(--brand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:white;font-weight:bold}
+.track-title{font-size:18px;font-weight:700;margin:0;color:var(--text)}
+.track-artist{font-size:14px;color:var(--muted);margin:0}
+.player-controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.volume-control{display:flex;align-items:center;gap:8px}
+.volume-icon{font-size:16px}
+.volume-slider{width:100px}
+.volume-bar{height:4px;background:#333;border-radius:2px;position:relative;cursor:pointer}
+.volume-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.1s}
+.volume-handle{position:absolute;top:-4px;right:0;width:12px;height:12px;background:var(--accent);border-radius:50%;cursor:pointer}
+.request-btn{background:transparent;border:1px solid var(--border);color:var(--text);padding:12px 16px;border-radius:12px;text-decoration:none;font-size:12px;font-weight:600;transition:all 0.2s ease}
+.request-btn:hover{background:var(--bg-elev);border-color:var(--brand);color:var(--brand)}
+.progress-container{margin-top:8px}
+.progress{height:4px;background:#333;border-radius:2px;position:relative;cursor:pointer}
+.progress .bar{height:100%;background:var(--accent);border-radius:2px;transition:width 0.1s}
+.progress-handle{position:absolute;top:-4px;left:0;width:12px;height:12px;background:var(--accent);border-radius:50%;cursor:pointer;opacity:0;transition:opacity 0.2s}
+.progress:hover .progress-handle{opacity:1}
+.time-display{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+.hero-embed iframe{width:100%;height:120px;border:0;border-radius:10px}
+.hero-copy h1{font-size:54px;line-height:1.05;margin:0 0 12px}
+.hero-copy p{color:var(--muted);margin:0 0 20px}
+.cta-row{display:flex;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--text);text-decoration:none;font-weight:600;cursor:pointer;transition:all 0.2s ease}
+.btn:hover:not(:disabled){background:var(--bg-elev);border-color:var(--brand);color:var(--brand)}
+.btn:disabled{cursor:not-allowed;opacity:0.6}
+.btn.primary{background:linear-gradient(135deg,var(--brand),#82ffd8);color:#001421;border:0}
+.btn.small{padding:8px 12px;font-size:14px}
+.hero-art{border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,0)),url('images/hero.jpg') center/cover no-repeat;min-height:280px;box-shadow:var(--shadow);border:1px solid var(--border)}
+
+/* Panels */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px 18px;box-shadow:var(--shadow)}
+.panel-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 4px rgba(116,211,255,.12)}
+.dot.live{background:var(--live);box-shadow:0 0 0 4px rgba(255,77,109,.15)}
+
+.now-live .live-body{display:grid;grid-template-columns:1.2fr .8fr;gap:20px}
+.live-host{display:flex;gap:14px;align-items:center}
+.live-host img{width:84px;height:84px;border-radius:12px;object-fit:cover;border:1px solid var(--border)}
+.host-name{font-weight:700;margin:0}
+.show-desc{margin:6px 0 10px;color:var(--muted)}
+.icon{background:#102837;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:8px 10px;cursor:pointer}
+.icon:hover{background:#15344a}
+.live-track .muted{color:var(--muted);margin:0 0 6px}
+.track-title{margin:0 0 10px}
+.progress{height:8px;background:#102837;border-radius:999px;border:1px solid var(--border);overflow:hidden}
+.progress .bar{height:100%;background:linear-gradient(90deg,var(--accent),#ffb86b)}
+
+/* Cards */
+.recent h2,.coming h2{margin:28px 0 14px}
+.card-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.card-col{display:grid;grid-template-columns:1fr;gap:14px}
+.card{background:var(--bg-elev);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.clickable-card{cursor:pointer;transition:all 0.2s ease}
+.clickable-card:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,0.15);border-color:var(--brand)}
+.card .cover{height:120px;background:#0f1e2a center/cover no-repeat}
+.cover.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);
+  background:
+    radial-gradient(600px 300px at 10% -10%, rgba(255,255,255,.06), transparent 60%),
+    #142636 url('images/SamudraFMLogo1.png') center/42% no-repeat;
+}
+.hero-art.placeholder{background:
+    radial-gradient(800px 400px at 0% -10%, rgba(255,255,255,.06), transparent 60%),
+    #152b3b url('images/SamudraFMLogo1.png') center/160px no-repeat;
+}
+.avatar-placeholder{width:84px;height:84px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  background:#102837 url('images/SamudraFMLogo1.png') center/60% no-repeat;
+  color:var(--muted);border:1px solid var(--border);font-weight:700}
+.card .content{padding:12px}
+.card .title{font-weight:700;margin:0 0 4px}
+.card .meta{color:var(--muted);margin:0}
+
+/* Episodes */
+.episodes .card .cover{height:140px}
+.episodes .play-link{display:inline-flex;align-items:center;gap:8px;margin-top:8px;color:var(--brand);text-decoration:none;font-weight:600}
+.episodes .play-link:hover{opacity:.85}
+.episodes .embed{border-top:1px solid var(--border);}
+.episodes iframe{width:100%;height:120px;border:0;border-radius:0 0 14px 14px;display:block}
+
+/* About */
+.about{padding:42px 0}
+.about h2{margin:0 0 20px;text-align:center}
+.about-content{max-width:800px;margin:0 auto;text-align:left}
+.about-content p{font-size:16px;line-height:1.6;margin:0 0 16px;color:var(--text)}
+.about-content p:last-child{margin-bottom:0}
+
+/* Footer */
+.site-footer{margin-top:40px;border-top:1px solid var(--border);padding:28px 0;background:#0c1c27}
+.footer-inner{display:flex;justify-content:space-between;align-items:center}
+.muted{color:var(--muted)}
+.footer-links{display:flex;gap:16px;list-style:none;margin:0;padding:0}
+.footer-links a{color:var(--muted);text-decoration:none}
+.footer-links a:hover{color:var(--brand)}
+
+/* Responsive */
+@media (max-width: 900px){
+  .hero{grid-template-columns:1fr;gap:18px}
+  .now-live .live-body{grid-template-columns:1fr}
+  .nav-toggle{display:inline-block}
+  .nav-list{display:none;position:absolute;right:4%;top:64px;background:#0f2230;border:1px solid var(--border);border-radius:12px;padding:10px 12px;flex-direction:column;gap:10px}
+  .nav-list.open{display:flex}
+}
+
