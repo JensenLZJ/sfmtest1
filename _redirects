@@ -1,13 +1,16 @@
 # Netlify-style redirects (if using Netlify)
 # For GitHub Pages, we'll use a different approach
 
-# Block direct access to images
+# Redirect root to index.html
+/ /index.html 200
+
+# Block direct access to images (but allow through protect-images.php)
 /images/* /404.html 403
 
 # Block direct access to assets  
 /assets/* /404.html 403
 
-# Block specific file types
+# Block specific file types (but allow through protection scripts)
 /*.png /404.html 403
 /*.jpg /404.html 403
 /*.jpeg /404.html 403
