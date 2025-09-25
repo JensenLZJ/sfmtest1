@@ -4,8 +4,8 @@ const CORE_ASSETS = [
   '/index.html',
   '/styles.css',
   '/script.js',
-  '/assets/mixcloud-cache.json',
-  '/images/SamudraFMLogo1.png'
+  '/assets/mixcloud-cache.json'
+  // Note: Images are now protected and cached differently
 ];
 
 self.addEventListener('install', (event) => {
@@ -27,13 +27,40 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
 
   if (url.origin === self.location.origin) {
-    event.respondWith(
-      caches.match(req).then((cached) => cached || fetch(req).then((res) => {
-        const resClone = res.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
-        return res;
-      }).catch(() => caches.match('/index.html')))
-    );
+    // Special handling for protected assets (images, etc.)
+    if (url.pathname.startsWith('/images/') || url.pathname.startsWith('/assets/')) {
+      event.respondWith(
+        caches.match(req).then((cached) => {
+          if (cached) {
+            return cached;
+          }
+          // For protected assets, try to fetch with proper referer
+          return fetch(req, {
+            headers: {
+              'Referer': self.location.origin
+            }
+          }).then((res) => {
+            if (res.ok) {
+              const resClone = res.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
+            }
+            return res;
+          }).catch(() => {
+            // If fetch fails due to protection, return a placeholder or error
+            return new Response('Asset access denied', { status: 403 });
+          });
+        })
+      );
+    } else {
+      // Normal handling for other assets
+      event.respondWith(
+        caches.match(req).then((cached) => cached || fetch(req).then((res) => {
+          const resClone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
+          return res;
+        }).catch(() => caches.match('/index.html')))
+      );
+    }
   }
 });
 

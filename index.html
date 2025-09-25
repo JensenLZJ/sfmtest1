@@ -5,11 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SamudraFM — Your study, your music.</title>
     <meta name="description" content="SamudraFM - Non-stop hits, live shows, and requests.">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://samudrafm.com/">
+    <meta property="og:title" content="SamudraFM — Your study, your music.">
+    <meta property="og:description" content="SamudraFM - Non-stop hits, live shows, and requests. Tuned for long hauls, study nights, and everything in between.">
+    <meta property="og:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="SamudraFM Logo">
+    <meta property="og:site_name" content="SamudraFM">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://samudrafm.com/">
+    <meta property="twitter:title" content="SamudraFM — Your study, your music.">
+    <meta property="twitter:description" content="SamudraFM - Non-stop hits, live shows, and requests. Tuned for long hauls, study nights, and everything in between.">
+    <meta property="twitter:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    <meta property="twitter:image:alt" content="SamudraFM Logo">
+    
+    <!-- Additional meta tags for better sharing -->
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="msapplication-TileColor" content="#1a1a1a">
+    <meta name="msapplication-TileImage" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
+    <link rel="apple-touch-icon" href="images/SamudraFMLogo1.png">
+    <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
 </head>
 <body>
     <header class="site-header">
@@ -135,8 +165,10 @@
         </div>
     </footer>
 
-    <audio id="radio-stream" preload="none" crossorigin="anonymous">
+    <audio id="radio-stream" preload="none" crossorigin="anonymous" controls style="display: none;">
         <source src="https://stream.zeno.fm/stream" type="audio/mpeg">
+        <source src="https://stream.zeno.fm/stream" type="audio/mp3">
+        Your browser does not support the audio element.
     </audio>
     
     <!-- Hidden audio player for episodes -->
@@ -144,6 +176,7 @@
 
     <script src="script.js?v=25&t=1734567912"></script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
+    <script src="asset-protection.js"></script>
     <meta http-equiv="Permissions-Policy" content="encrypted-media=*">
     <script>
     if ('serviceWorker' in navigator) {
@@ -152,4 +185,3 @@
     </script>
 </body>
 </html>
-

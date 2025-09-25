@@ -209,6 +209,28 @@ function playEpisode(episode) {
   // Reset progress bar to beginning for new episode
   updateProgressBar(0, 0, 1200);
   
+  // Always try radio stream first (it's more reliable)
+  const radioStream = document.getElementById('radio-stream');
+  if (radioStream) {
+    console.log('Playing radio stream');
+    radioStream.play().then(() => {
+      console.log('Radio stream started successfully');
+      updatePlayState(true);
+      startSimpleProgressTracking();
+    }).catch((error) => {
+      console.error('Radio stream failed:', error);
+      // Try Mixcloud widget as backup
+      playWithMixcloudWidget(episode);
+    });
+  } else {
+    // Fallback to Mixcloud widget
+    playWithMixcloudWidget(episode);
+  }
+}
+
+function playWithMixcloudWidget(episode) {
+  console.log('Trying Mixcloud widget for:', episode.name);
+  
   // Create or update hidden iframe player
   let playerIframe = document.getElementById('hidden-player');
   if (!playerIframe) {
@@ -223,8 +245,8 @@ function playEpisode(episode) {
     document.body.appendChild(playerIframe);
   }
   
-  // Load the Mixcloud player with autoplay
-  const mixcloudUrl = `https://www.mixcloud.com/widget/iframe/?hide_cover=1&light=0&autoplay=1&feed=${encodeURIComponent(episode.url)}`;
+  // Load the Mixcloud player (without autoplay due to browser restrictions)
+  const mixcloudUrl = `https://www.mixcloud.com/widget/iframe/?hide_cover=1&light=0&autoplay=0&feed=${encodeURIComponent(episode.url)}`;
   console.log('Loading Mixcloud URL:', mixcloudUrl);
   playerIframe.src = mixcloudUrl;
   
@@ -233,6 +255,23 @@ function playEpisode(episode) {
   
   // Simple progress tracking without widget API
   startSimpleProgressTracking();
+  
+  // Try to trigger play after a short delay
+  setTimeout(() => {
+    if (window.Mixcloud && playerIframe) {
+      try {
+        const widget = window.Mixcloud.PlayerWidget(playerIframe);
+        widget.ready.then(() => {
+          console.log('Mixcloud widget ready, attempting to play');
+          widget.play();
+        }).catch((error) => {
+          console.error('Mixcloud widget error:', error);
+        });
+      } catch (error) {
+        console.error('Error creating Mixcloud widget:', error);
+      }
+    }
+  }, 2000);
 }
 
 function startProgressTracking(widget) {
@@ -287,9 +326,23 @@ function pauseEpisode() {
   console.log('Pausing episode...');
   isCurrentlyPlaying = false;
   
-  // Stop the hidden player
+  // Stop the radio stream
+  const radioStream = document.getElementById('radio-stream');
+  if (radioStream) {
+    radioStream.pause();
+  }
+  
+  // Stop the hidden Mixcloud player
   const playerIframe = document.getElementById('hidden-player');
   if (playerIframe) {
+    try {
+      if (window.Mixcloud) {
+        const widget = window.Mixcloud.PlayerWidget(playerIframe);
+        widget.pause();
+      }
+    } catch (error) {
+      console.error('Error pausing Mixcloud widget:', error);
+    }
     playerIframe.src = 'about:blank';
   }
   
@@ -512,7 +565,14 @@ async function loadHeroLatest(username){
     const res = await fetch(`https://api.mixcloud.com/${encodeURIComponent(username)}/cloudcasts/?limit=1`);
     const data = await res.json();
     const ep = data.data && data.data[0];
-    if (!ep) return;
+    if (!ep) {
+      // Fallback to radio stream info
+      titleEl.textContent = 'SamudraFM Live Stream';
+      openEl.href = '#';
+      currentEpisode = { name: 'SamudraFM Live Stream', url: '#' };
+      updatePlayState(false);
+      return;
+    }
     
     titleEl.textContent = ep.name;
     openEl.href = ep.url;
@@ -529,6 +589,12 @@ async function loadHeroLatest(username){
     
   } catch(e){ 
     console.error('Error loading hero latest:', e);
+    // Fallback to radio stream info
+    titleEl.textContent = 'SamudraFM Live Stream';
+    openEl.href = '#';
+    currentEpisode = { name: 'SamudraFM Live Stream', url: '#' };
+    updatePlayState(false);
+    
     // On error, ensure placeholder is shown
     if (coverEl) {
       coverEl.classList.add('placeholder');
@@ -544,6 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProgressBar();
   initVolumeControl();
   initPlayButton();
+  initAudioDebugging();
   
   // Force update play button after Font Awesome loads
   setTimeout(() => {
@@ -566,6 +633,46 @@ document.addEventListener('DOMContentLoaded', () => {
     forceUpdatePlayButton();
   }, 1000);
 });
+
+function initAudioDebugging() {
+  const radioStream = document.getElementById('radio-stream');
+  if (radioStream) {
+    console.log('Audio element found:', radioStream);
+    console.log('Audio sources:', radioStream.querySelectorAll('source'));
+    
+    // Add event listeners for debugging
+    radioStream.addEventListener('loadstart', () => console.log('Audio: loadstart'));
+    radioStream.addEventListener('loadeddata', () => console.log('Audio: loadeddata'));
+    radioStream.addEventListener('canplay', () => console.log('Audio: canplay'));
+    radioStream.addEventListener('canplaythrough', () => console.log('Audio: canplaythrough'));
+    radioStream.addEventListener('play', () => console.log('Audio: play event'));
+    radioStream.addEventListener('pause', () => console.log('Audio: pause event'));
+    radioStream.addEventListener('error', (e) => console.error('Audio error:', e));
+    radioStream.addEventListener('stalled', () => console.log('Audio: stalled'));
+    radioStream.addEventListener('waiting', () => console.log('Audio: waiting'));
+    
+    // Test if we can play the audio
+    radioStream.load();
+    
+    // Test the stream URL
+    testAudioStream();
+  } else {
+    console.error('Radio stream audio element not found!');
+  }
+}
+
+async function testAudioStream() {
+  const streamUrl = 'https://stream.zeno.fm/stream';
+  console.log('Testing audio stream URL:', streamUrl);
+  
+  try {
+    const response = await fetch(streamUrl, { method: 'HEAD' });
+    console.log('Stream URL response:', response.status, response.statusText);
+    console.log('Content-Type:', response.headers.get('content-type'));
+  } catch (error) {
+    console.error('Stream URL test failed:', error);
+  }
+}
 
 function forceUpdatePlayButton() {
   const playPauseBtn = document.getElementById('hero-play-pause');

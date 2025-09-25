@@ -1,0 +1,17 @@
+User-agent: *
+Disallow: /images/
+Disallow: /assets/
+Disallow: /*.png$
+Disallow: /*.jpg$
+Disallow: /*.jpeg$
+Disallow: /*.gif$
+Disallow: /*.svg$
+Disallow: /*.ico$
+Disallow: /*.css$
+Disallow: /*.js$
+Disallow: /*.json$
+
+# Allow access to main pages
+Allow: /
+Allow: /index.html
+
