@@ -40,6 +40,11 @@
     <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
     <link rel="apple-touch-icon" href="images/SamudraFMLogo1.png">
     <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
+    
+    <!-- Content Security Policy and Permissions Policy -->
+    <meta http-equiv="Permissions-Policy" content="encrypted-media=*; autoplay=*; microphone=*; camera=*; fullscreen=*; geolocation=*; payment=*; usb=*; accelerometer=*; gyroscope=*; magnetometer=*; display-capture=*; web-share=*; clipboard-read=*; clipboard-write=*; picture-in-picture=*">
+    <meta http-equiv="Feature-Policy" content="encrypted-media *; autoplay *; microphone *; camera *; fullscreen *; geolocation *; payment *; usb *; accelerometer *; gyroscope *; magnetometer *; display-capture *; web-share *; clipboard-read *; clipboard-write *; picture-in-picture *">
+    <meta http-equiv="Content-Security-Policy" content="frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none';">
 </head>
 <body>
     <header class="site-header">
@@ -69,7 +74,7 @@
                 <p>Tuned for long hauls, study nights, and everything in between.</p>
                 <div class="cta-row">
                     <a class="btn primary" href="#listen">Listen now</a>
-                    <a class="btn" href="#request">Send a request</a>
+                    <a class="btn" href="request.html">Send a request</a>
                 </div>
             </div>
             <div class="panel hero-latest" id="hero-latest">
@@ -96,8 +101,9 @@
                                 </div>
                             </div>
                             <a id="hero-open" class="request-btn" href="#" target="_blank" rel="noopener">Play on Mixcloud</a>
-                            <button id="test-audio-btn" class="request-btn" style="margin-left: 10px; background: #28a745;">Test Audio</button>
                         </div>
+                        
+                        <!-- Custom Player Controls Only -->
                         <div class="progress-container">
                             <div class="progress" id="progress-bar">
                                 <div id="hero-progress" class="bar" style="width:0%"></div>
@@ -115,13 +121,14 @@
         </section>
 
         <section class="recent" aria-labelledby="recent-heading">
-            <h2 id="recent-heading">Recently played</h2>
+            <div class="section-head">
+                <h2 id="recent-heading">Recently played</h2>
+            </div>
             <div id="recent-grid" class="card-row"></div>
         </section>
 
         <section id="schedule" class="coming" aria-labelledby="coming-heading">
             <div class="section-head">
-                <div class="dot"></div>
                 <h2 id="coming-heading">Coming up</h2>
             </div>
             <div id="coming-grid" class="card-col"></div>
@@ -129,7 +136,6 @@
 
         <section id="episodes" class="episodes" aria-labelledby="episodes-heading">
             <div class="section-head">
-                <div class="dot"></div>
                 <h2 id="episodes-heading">Latest episodes</h2>
             </div>
             <p class="muted">Live from SamudraFM Mixcloud profile.</p>
@@ -166,20 +172,16 @@
         </div>
     </footer>
 
-    <audio id="radio-stream" preload="none" crossorigin="anonymous" controls style="display: none;">
-        <source src="https://ice1.somafm.com/groovesalad-128-mp3" type="audio/mpeg">
-        <source src="https://ice1.somafm.com/groovesalad-128-mp3" type="audio/mp3">
-        <source src="https://streaming.radio.co/s8a2b5c5d5/listen" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-    
-    <!-- Hidden audio player for episodes -->
-    <audio id="episode-player" preload="none" style="display:none"></audio>
+    <!-- Official Mixcloud Player (Hidden at bottom) -->
+    <div id="mixcloud-player-container" style="position: fixed; bottom: -200px; left: 0; width: 100%; height: 200px; z-index: 1000; transition: bottom 0.3s ease;">
+        <div id="mixcloud-player" class="mixcloud-embed" data-url="" data-hide-cover="1" data-light="1" data-autoplay="0" data-mini="1" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <!-- Audio player will be handled by Mixcloud widget -->
 
     <script src="script.js?v=25&t=1734567912"></script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
     <script src="asset-protection.js"></script>
-    <meta http-equiv="Permissions-Policy" content="encrypted-media=*">
     <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function(){ navigator.serviceWorker.register('/sw.js'); });

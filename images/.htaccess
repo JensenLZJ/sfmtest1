@@ -1,0 +1,11 @@
+# Block all direct access to images
+Order Allow,Deny
+Deny from all
+
+# Only allow access from your website
+SetEnvIf Referer "^https?://(www\.)?samudrafm\.com" local_referer
+SetEnvIf Referer "^https?://localhost" local_referer
+SetEnvIf Referer "^https?://127\.0\.0\.1" local_referer
+Order Deny,Allow
+Deny from all
+Allow from env=local_referer

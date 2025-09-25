@@ -11,6 +11,7 @@ A student-run weekly radio programme created by volunteers with a passion for mu
 - Interactive player with progress tracking
 - Responsive design
 - Custom domain: samudrafm.com
+- Designed by Jensen Lim Zi Jen
 
 ## Technology
 
@@ -20,6 +21,6 @@ A student-run weekly radio programme created by volunteers with a passion for mu
 - Mixcloud API
 - GitHub Pages
 
-## Live Website
+## Live Website designed with passion by Jensen Lim Zi Jen
 
 Visit us at: [samudrafm.com](https://samudrafm.com)

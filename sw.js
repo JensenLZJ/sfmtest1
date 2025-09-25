@@ -10,7 +10,13 @@ const CORE_ASSETS = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(CORE_ASSETS).catch((error) => {
+        console.warn('Failed to cache some assets:', error);
+        // Continue with installation even if some assets fail to cache
+        return Promise.resolve();
+      });
+    }).then(() => self.skipWaiting())
   );
 });
 

@@ -1,49 +1,31 @@
-# Block direct access to images and assets
-<FilesMatch "\.(png|jpg|jpeg|gif|svg|ico|css|js|json|woff|woff2|ttf|eot)$">
-    # Allow access only from same origin (your website)
-    SetEnvIf Referer "^https?://samudrafm\.com" local_referer=1
-    SetEnvIf Referer "^https?://www\.samudrafm\.com" local_referer=1
-    SetEnvIf Referer "^https?://samudrafm\.github\.io" local_referer=1
-    SetEnvIf Referer "^https?://.*\.github\.io/samudrafm" local_referer=1
-    
-    # Block if no referer or referer is not from your domain
-    Require env local_referer
-</FilesMatch>
+# Protect PNG files from direct access
+<Files "*.png">
+    Order Allow,Deny
+    Deny from all
+</Files>
 
-# Additional protection for specific directories
+# Allow access only from your domain
+<Files "*.png">
+    SetEnvIf Referer "^https?://(www\.)?samudrafm\.com" local_referer
+    SetEnvIf Referer "^https?://localhost" local_referer
+    SetEnvIf Referer "^https?://127\.0\.0\.1" local_referer
+    Order Deny,Allow
+    Deny from all
+    Allow from env=local_referer
+</Files>
+
+# Block direct access to images folder
 <Directory "images">
-    # Block direct access to images directory
-    Require all denied
+    Order Allow,Deny
+    Deny from all
 </Directory>
 
-<Directory "assets">
-    # Block direct access to assets directory
-    Require all denied
+# Allow access to images only through your website
+<Directory "images">
+    SetEnvIf Referer "^https?://(www\.)?samudrafm\.com" local_referer
+    SetEnvIf Referer "^https?://localhost" local_referer
+    SetEnvIf Referer "^https?://127\.0\.0\.1" local_referer
+    Order Deny,Allow
+    Deny from all
+    Allow from env=local_referer
 </Directory>
-
-# Security headers
-<IfModule mod_headers.c>
-    # Prevent hotlinking
-    Header always set X-Frame-Options "SAMEORIGIN"
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-</IfModule>
-
-# Block common bot user agents and direct access attempts
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    
-    # Block bots from accessing assets
-    RewriteCond %{HTTP_USER_AGENT} (bot|crawler|spider|scraper|wget|curl) [NC]
-    RewriteRule ^(images|assets)/ - [F,L]
-    
-    # Block direct access to image files without proper referer
-    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?samudrafm\.com [NC]
-    RewriteCond %{HTTP_REFERER} !^https?://.*\.github\.io/samudrafm [NC]
-    RewriteCond %{REQUEST_URI} \.(png|jpg|jpeg|gif|svg|ico)$ [NC]
-    RewriteRule .* - [F,L]
-    
-    # Block access to directories
-    RewriteRule ^(images|assets)/.*$ - [F,L]
-</IfModule>
-
