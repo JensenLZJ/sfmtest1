@@ -209,22 +209,43 @@ function playEpisode(episode) {
   // Reset progress bar to beginning for new episode
   updateProgressBar(0, 0, 1200);
   
-  // Always try radio stream first (it's more reliable)
+  // Try to play the radio stream with proper user interaction handling
   const radioStream = document.getElementById('radio-stream');
   if (radioStream) {
-    console.log('Playing radio stream');
-    radioStream.play().then(() => {
-      console.log('Radio stream started successfully');
-      updatePlayState(true);
-      startSimpleProgressTracking();
-    }).catch((error) => {
-      console.error('Radio stream failed:', error);
-      // Try Mixcloud widget as backup
-      playWithMixcloudWidget(episode);
-    });
+    console.log('Attempting to play radio stream');
+    
+    // Load the audio first
+    radioStream.load();
+    
+    // Wait for the audio to be ready, then play
+    radioStream.addEventListener('canplay', () => {
+      console.log('Audio can play, attempting to start...');
+      radioStream.play().then(() => {
+        console.log('Radio stream started successfully');
+        updatePlayState(true);
+        startSimpleProgressTracking();
+      }).catch((error) => {
+        console.error('Radio stream play() failed:', error);
+        // Show user-friendly error message
+        alert('Unable to play audio. Please try clicking the play button again or check your browser settings.');
+        updatePlayState(false);
+        isCurrentlyPlaying = false;
+      });
+    }, { once: true });
+    
+    // Handle errors
+    radioStream.addEventListener('error', (e) => {
+      console.error('Audio loading error:', e);
+      alert('Unable to load audio stream. Please check your internet connection.');
+      updatePlayState(false);
+      isCurrentlyPlaying = false;
+    }, { once: true });
+    
   } else {
-    // Fallback to Mixcloud widget
-    playWithMixcloudWidget(episode);
+    console.error('Radio stream element not found');
+    alert('Audio player not found. Please refresh the page.');
+    updatePlayState(false);
+    isCurrentlyPlaying = false;
   }
 }
 
@@ -710,6 +731,25 @@ function initPlayButton() {
       } else {
         console.log('No current episode');
       }
+    });
+  }
+  
+  // Add test audio button functionality
+  const testAudioBtn = document.getElementById('test-audio-btn');
+  if (testAudioBtn) {
+    testAudioBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Test audio button clicked!');
+      
+      // Create a simple test episode
+      const testEpisode = {
+        name: 'Test Audio Stream',
+        url: '#'
+      };
+      
+      // Play the test episode
+      playEpisode(testEpisode);
     });
   }
 }

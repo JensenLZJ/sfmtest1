@@ -73,8 +73,9 @@
         <h2>Test 1: Direct Audio Element</h2>
         <p>Test the audio element directly with controls:</p>
         <audio id="test-audio" controls preload="none">
-            <source src="https://stream.zeno.fm/stream" type="audio/mpeg">
-            <source src="https://stream.zeno.fm/stream" type="audio/mp3">
+            <source src="https://ice1.somafm.com/groovesalad-128-mp3" type="audio/mpeg">
+            <source src="https://ice1.somafm.com/groovesalad-128-mp3" type="audio/mp3">
+            <source src="https://streaming.radio.co/s8a2b5c5d5/listen" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
         <div id="test1-status" class="status info">
@@ -176,7 +177,7 @@
         const urlStatus = document.getElementById('url-status');
 
         testUrlBtn.addEventListener('click', async () => {
-            const streamUrl = 'https://stream.zeno.fm/stream';
+            const streamUrl = 'https://ice1.somafm.com/groovesalad-128-mp3';
             log(`Testing stream URL: ${streamUrl}`);
             
             try {
