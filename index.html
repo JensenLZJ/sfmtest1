@@ -5,9 +5,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SamudraFM — Your study, your music.</title>
     <meta name="description" content="SamudraFM - Non-stop hits, live shows, and requests.">
+    
+    <!-- Coming Soon Redirect - Uncomment the line below to enable coming soon page -->
+    <script>
+        // Check if bypass parameter is present
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.has('bypass')) {
+            // Uncomment the line below to enable coming soon page
+            window.location.href = 'coming-soon.html';
+        } else {
+            // Show construction warning popup
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    alert('⚠️ WARNING ⚠️\n\nThis website is still under construction!\n\nSome features may not work properly.\n\nReport bugs to: 0176858799');
+                }, 1000);
+            });
+        }
+    </script>
     
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
@@ -37,7 +54,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="styles.css?v=9">
+    <link rel="stylesheet" href="styles.css?v=39&t=1734570200&force=16">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
@@ -50,6 +67,12 @@
     <meta http-equiv="Content-Security-Policy" content="frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none';">
 </head>
 <body>
+    <!-- Ribbon Effects -->
+    <div class="ribbon ribbon-top"></div>
+    <div class="ribbon ribbon-bottom"></div>
+    <div class="ribbon ribbon-left-top"></div>
+    <div class="ribbon ribbon-left-bottom"></div>
+    
     <header class="site-header">
         <div class="container header-inner">
             <a href="#" class="brand" aria-label="SamudraFM Home">
@@ -159,19 +182,43 @@
     </main>
 
     <footer class="site-footer" id="about">
-        <div class="container footer-inner">
-            <div>
-                <img class="brand-logo" src="images/SamudraFMLogo1.png" alt="SamudraFM" />
-                <span class="brand-mark">Samudra<span>FM</span></span>
-                <p class="muted">Non-Profit Organization. Fully volunteer-run school of SMK Taman SEA radio station. © <span id="year"></span> SamudraFM.</p>
+        <div class="footer-content">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <img src="images/SamudraFMLogo1transparent.png" alt="SamudraFM Logo" />
+                </div>
+                <h2 class="footer-brand-title">SamudraFM</h2>
+                <p class="footer-description">
+                    Non-Profit Organization. Fully volunteer-run<br>
+                    school of SMK Taman SEA radio station.
+                </p>
             </div>
-            <nav aria-label="footer">
-                <ul class="footer-links">
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="#schedule">Schedule</a></li>
-                    <li><a href="#listen">Listen</a></li>
+            
+            <div class="footer-column">
+                <h3>Connect</h3>
+                <ul class="footer-links social-links">
+                    <li><a href="#" class="social-link"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="https://www.instagram.com/samudrafm/" class="social-link"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="https://www.facebook.com/SamudraFMSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#" class="social-link"><i class="fab fa-youtube"></i> YouTube</a></li>
                 </ul>
-            </nav>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Listen</h3>
+                <ul class="footer-links">
+                    <li><a href="https://www.mixcloud.com/SamudraFM/">Mixcloud</a></li>
+                    <li><a href="#">Spotify</a></li>
+                    <li><a href="#">Apple Podcasts</a></li>
+                    <li><a href="#">Google Podcasts</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-separator"></div>
+        
+        <div class="footer-bottom">
+            <p>© 2025 SamudraFM. Designed with passion by Jensen Lim Zi Jen 📻</p>
         </div>
     </footer>
 

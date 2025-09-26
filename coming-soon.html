@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SamudraFM - Coming Soon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
+    <link rel="apple-touch-icon" href="images/SamudraFMLogo1.png">
+    <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #21055f 0%, #4a2c8a 50%, #6b4c93 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Apply zoom prevention only to specific elements, not the secret button */
+        .content, .social-links, .social-link, .logo, h1, .school-name, .tagline, .coming-soon, .subtitle {
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Animated background particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(246, 27, 88, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .particle:nth-child(1) { 
+            width: 80px; 
+            height: 80px; 
+            top: 20%; 
+            left: 10%; 
+            animation-delay: 0s;
+        }
+        .particle:nth-child(2) { width: 120px; height: 120px; top: 60%; left: 80%; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 60px; height: 60px; top: 80%; left: 20%; animation-delay: 4s; }
+        
+        /* Transparent button overlay for secret access */
+        .secret-access-button {
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 80px;
+            height: 80px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 50%;
+            /* Ensure it's clickable on mobile */
+            touch-action: auto;
+            -webkit-tap-highlight-color: rgba(246, 27, 88, 0.3);
+            -webkit-touch-callout: auto;
+            -webkit-user-select: auto;
+            -khtml-user-select: auto;
+            -moz-user-select: auto;
+            -ms-user-select: auto;
+            user-select: auto;
+            pointer-events: auto;
+        }
+        
+        .secret-access-button:hover {
+            background: rgba(246, 27, 88, 0.1);
+        }
+        
+        /* Mobile: Make secret button 50% smaller */
+        @media (max-width: 768px) {
+            .secret-access-button {
+                width: 40px;
+                height: 40px;
+                top: calc(20% + 20px); /* Adjust position to stay centered over particle */
+                left: calc(10% + 20px);
+            }
+        }
+        .particle:nth-child(4) { width: 100px; height: 100px; top: 30%; left: 70%; animation-delay: 1s; }
+        .particle:nth-child(5) { width: 90px; height: 90px; top: 70%; left: 50%; animation-delay: 3s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .logo {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            background: url('images/SamudraFMLogo1transparent.png') center/contain no-repeat;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .school-name {
+            font-size: 1rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.02em;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .coming-soon {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+            z-index: 2;
+        }
+        
+        .social-link {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 2.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+        }
+        
+        .social-link:hover {
+            color: #f61b58;
+            transform: translateY(-5px) scale(1.1);
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            
+            .content {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 20px;
+            }
+            
+            .school-name {
+                font-size: 0.9rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .coming-soon {
+                font-size: 1.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+                padding: 0 20px;
+                margin-bottom: 20px;
+            }
+            
+            .logo {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .social-links {
+                margin-top: 20px;
+                gap: 20px;
+            }
+            
+            .social-link {
+                font-size: 2rem;
+                width: 60px;
+                height: 60px;
+                padding: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .school-name {
+                font-size: 0.8rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 0.9rem;
+            }
+            
+            .coming-soon {
+                font-size: 1rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 15px;
+            }
+            
+            .logo {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .social-links {
+                margin-top: 15px;
+                gap: 15px;
+            }
+            
+            .social-link {
+                font-size: 1.8rem;
+                width: 55px;
+                height: 55px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+    <!-- Transparent button overlay for secret access -->
+    <button class="secret-access-button" id="secret-access-button" title="Click to access main site"></button>
+    
+    <div class="content">
+        <div class="logo"></div>
+        <div class="school-name">SMK TAMAN SEA RADIO FM</div>
+        <h1>SamudraFM</h1>
+        <div class="tagline">"YOUR STUDY, YOUR MUSIC"</div>
+        <div class="coming-soon">Coming Soon</div>
+        <div class="subtitle">
+            We're working hard to bring you the best radio experience. 
+            Stay tuned for something amazing!
+        </div>
+        
+        <div class="social-links">
+            <a href="https://www.instagram.com/samudrafm/" class="social-link" title="Instagram" target="_blank">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.facebook.com/SamudraFMSMKTS" class="social-link" title="Facebook" target="_blank">
+                <i class="fab fa-facebook"></i>
+            </a>
+            <a href="https://www.mixcloud.com/SamudraFM/" class="social-link" title="Mixcloud" target="_blank">
+                <i class="fab fa-mixcloud"></i>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Simple secret button handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const secretButton = document.getElementById('secret-access-button');
+            
+            if (secretButton) {
+                console.log('Secret access button found');
+                
+                secretButton.addEventListener('click', function(e) {
+                    console.log('Secret button clicked!');
+                    e.preventDefault();
+                    window.location.href = 'index.html?bypass=1';
+                });
+                
+                secretButton.addEventListener('touchstart', function(e) {
+                    console.log('Secret button touched!');
+                    e.preventDefault();
+                });
+                
+                secretButton.addEventListener('touchend', function(e) {
+                    console.log('Secret button touch end!');
+                    e.preventDefault();
+                    window.location.href = 'index.html?bypass=1';
+                });
+                
+                console.log('Secret button setup complete');
+            } else {
+                console.log('Secret access button not found!');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -33,6 +33,7 @@ const MOCK_RECENT = [
   { title: 'As It Was', artist: 'Harry Styles', time: '18:36', cover: null }
 ];
 
+
 const MOCK_COMING = [
   { title: 'Jensen', desc: 'A Wee Mystical Magical Show', time: '20:00 – 22:00', cover: null },
   { title: 'Good guy', desc: 'Throwbacks With Good guy', time: '22:00 – 00:00', cover: null }
