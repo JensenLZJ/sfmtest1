@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿<!-- Like looking under the hood? We're interested in people like you! Come and join us: https://samudrafm.com/opportunities/ -->
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -34,7 +37,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=9">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
@@ -73,7 +76,7 @@
                 <h1>Your study, your music.</h1>
                 <p>Tuned for long hauls, study nights, and everything in between.</p>
                 <div class="cta-row">
-                    <a class="btn primary" href="#listen">Listen now</a>
+                    <button class="btn primary" onclick="window.handlePlayOnly()">Listen now</button>
                     <a class="btn" href="request.html">Send a request</a>
                 </div>
             </div>
@@ -82,7 +85,7 @@
                     <div class="player-left">
                         <div class="hero-latest-cover cover placeholder" id="player-cover"></div>
                         <div class="play-overlay" id="play-overlay">
-                            <button class="play-pause-btn" id="hero-play-pause">⏸</button>
+                            <button class="play-pause-btn" id="hero-play-pause"><i class="fa-solid fa-pause"></i></button>
                         </div>
                     </div>
                     <div class="player-right">
@@ -179,7 +182,8 @@
 
     <!-- Audio player will be handled by Mixcloud widget -->
 
-    <script src="script.js?v=25&t=1734567912"></script>
+
+    <script src="script.js?v=42&t=1734567912"></script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
     <script src="asset-protection.js"></script>
     <script>
