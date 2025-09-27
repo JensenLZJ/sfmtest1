@@ -62,6 +62,11 @@
     # Handle main site with bypass
     RewriteCond %{QUERY_STRING} bypass=1
     RewriteRule ^$ index.html [L]
+    
+    # Remove .html extension from URLs
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^([^\.]+)$ $1.html [NC,L]
 </IfModule>
 
 # Security headers
