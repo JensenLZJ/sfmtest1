@@ -183,7 +183,9 @@ async function loadMixcloudEpisodes(username, nextUrl) {
       }
     }
   } catch (err) {
-    grid.innerHTML = '<p class="muted">Could not load episodes from Mixcloud right now.</p>';
+    console.log('Mixcloud API error (likely CORS):', err);
+    // Show simple loading message when Mixcloud API fails
+    grid.innerHTML = '<p class="muted">Loading episodes...</p>';
   }
   
   // After episodes are loaded, ensure play button is ready
@@ -1034,11 +1036,11 @@ async function loadHeroLatest(username){
     coverEl.innerHTML = '';
     
   } catch(e){ 
-    console.error('Error loading hero latest:', e);
-    // Fallback to radio stream info
-    titleEl.textContent = 'SamudraFM Live Stream';
+    console.log('Mixcloud API error (likely CORS):', e);
+    // Show simple loading state when API fails
+    titleEl.textContent = 'Loading...';
     openEl.href = '#';
-    currentEpisode = { name: 'SamudraFM Live Stream', url: '#' };
+    currentEpisode = null;
     updatePlayState(false);
     
     // On error, ensure placeholder is shown
