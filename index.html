@@ -49,7 +49,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://samudrafm.com/">
     <meta property="og:title" content="SamudraFM — Your study, your music.">
-    <meta property="og:description" content="SamudraFM - Non-stop hits, live shows, and requests. Tuned for long hauls, study nights, and everything in between.">
+    <meta property="og:description" content="SamudraFM - Non-stop hits, live shows, and requests. Helping you focus, unwind, and stay inspired — one song at a time.">
     <meta property="og:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -60,7 +60,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://samudrafm.com/">
     <meta property="twitter:title" content="SamudraFM — Your study, your music.">
-    <meta property="twitter:description" content="SamudraFM - Non-stop hits, live shows, and requests. Tuned for long hauls, study nights, and everything in between.">
+    <meta property="twitter:description" content="SamudraFM - Non-stop hits, live shows, and requests. Helping you focus, unwind, and stay inspired — one song at a time.">
     <meta property="twitter:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
     <meta property="twitter:image:alt" content="SamudraFM Logo">
     
@@ -95,8 +95,8 @@
     <header class="site-header">
         <div class="container header-inner">
             <a href="/" class="brand" aria-label="SamudraFM Home">
-                <img class="brand-logo" src="images/SamudraFMLogo1.png" alt="SamudraFM" />
                 <span class="brand-mark">Samudra<span>FM</span></span>
+                <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
             </a>
             <nav class="nav" aria-label="primary">
                 <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
@@ -116,7 +116,7 @@
         <section class="hero">
             <div class="hero-copy">
                 <h1>Your study, your music.</h1>
-                <p>Tuned for long hauls, study nights, and everything in between.</p>
+                <p>Helping you focus, unwind, and stay inspired — one song at a time.</p>
                 <div class="cta-row">
                     <button class="btn primary" onclick="window.handlePlayOnly()">Listen now</button>
                     <a class="btn" href="request.html">Send a request</a>
@@ -145,7 +145,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a id="hero-open" class="request-btn" href="#" target="_blank" rel="noopener">Play on Mixcloud</a>
+                            <a id="hero-open" class="request-btn" href="request.html" target="_blank" rel="noopener">Send a request</a>
                         </div>
                         
                         <!-- Custom Player Controls Only -->
@@ -165,26 +165,45 @@
             </div>
         </section>
 
-        <section class="recent" aria-labelledby="recent-heading">
-            <div class="section-head">
-                <h2 id="recent-heading">Recently played</h2>
-            </div>
-            <div id="recent-grid" class="card-row"></div>
-        </section>
 
-        <section id="schedule" class="coming" aria-labelledby="coming-heading">
+        <section class="main-content-grid">
+            <!-- Left Side - Instagram Posts -->
+            <div class="instagram-section">
             <div class="section-head">
-                <h2 id="coming-heading">Coming up</h2>
+                    <h2><span class="dot-particle"></span>Latest Posts<span class="heading-line"></span></h2>
+                </div>
+                <div class="instagram-embeds">
+                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DO0d4jRktgm/" data-instgrm-version="14">
+                        <a href="https://www.instagram.com/p/DO0d4jRktgm/" target="_blank">View this post on Instagram</a>
+                    </blockquote>
+                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DO0d28EkkZy/" data-instgrm-version="14">
+                        <a href="https://www.instagram.com/p/DO0d28EkkZy/" target="_blank">View this post on Instagram</a>
+                    </blockquote>
+                </div>
             </div>
-            <div id="coming-grid" class="card-col"></div>
+
+            <!-- Right Side - Coming Up -->
+            <div id="schedule" class="coming" aria-labelledby="coming-heading">
+            <div class="section-head">
+                    <h2 id="coming-heading"><span class="dot-particle"></span>Coming up<span class="heading-line"></span></h2>
+                </div>
+                <div id="coming-grid" class="card-col"></div>
+            </div>
         </section>
 
         <section id="episodes" class="episodes" aria-labelledby="episodes-heading">
             <div class="section-head">
-                <h2 id="episodes-heading">Latest episodes</h2>
+                <h2 id="episodes-heading"><span class="dot-particle"></span>Latest episodes<span class="heading-line"></span></h2>
             </div>
             <p class="muted">Live from SamudraFM Mixcloud profile.</p>
-            <div id="episodes-grid" class="card-row"></div>
+            <div class="episodes-slider-container">
+                <div id="episodes-slider" class="episodes-slider"></div>
+            </div>
+            <div class="slider-controls">
+                <button id="prev-episode" class="slider-btn" aria-label="Previous episodes">‹</button>
+                <div class="slider-dots" id="episode-dots"></div>
+                <button id="next-episode" class="slider-btn" aria-label="Next episodes">›</button>
+            </div>
             <div class="cta-row" style="margin-top:12px">
                 <button id="episodes-load" class="btn" aria-label="Load more episodes">Load more</button>
             </div>
@@ -221,6 +240,13 @@
                     <li><a href="https://www.mixcloud.com/SamudraFM/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
                 </ul>
             </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                </ul>
+            </div>
         </div>
         
         <div class="footer-separator"></div>
@@ -238,7 +264,7 @@
     <!-- Audio player will be handled by Mixcloud widget -->
 
 
-    <script src="script.js?v=43&t=1734567912&nocache=1"></script>
+    <script src="script.js?v=44&t=1734567912&nocache=1"></script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
     <script>
     // Force clear all caches on every visit
@@ -270,6 +296,27 @@
         window.location.reload();
       }
     });
+    </script>
+    
+    <!-- Instagram Embed Script -->
+    <script async src="https://www.instagram.com/embed.js"></script>
+    <script>
+      // Process Instagram embeds after page loads
+      window.addEventListener('load', function() {
+        // Wait a bit for the Instagram script to load
+        setTimeout(function() {
+          if (window.instgrm) {
+            window.instgrm.Embeds.process();
+          } else {
+            // If Instagram script didn't load, try again
+            setTimeout(function() {
+              if (window.instgrm) {
+                window.instgrm.Embeds.process();
+              }
+            }, 2000);
+          }
+        }, 1000);
+      });
     </script>
 </body>
 </html>
