@@ -1,3 +1,4 @@
+# SamudraFM Production Configuration
 # Force no caching for all files
 <IfModule mod_headers.c>
     # Disable caching for HTML files
@@ -42,4 +43,38 @@
     ExpiresByType image/gif "access plus 0 seconds"
     ExpiresByType image/svg+xml "access plus 0 seconds"
     ExpiresByType image/x-icon "access plus 0 seconds"
+</IfModule>
+
+# URL Rewriting for clean URLs
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redirect root to coming soon page (unless bypass parameter)
+    RewriteCond %{QUERY_STRING} !bypass=1
+    RewriteRule ^$ coming-soon.html [L]
+    
+    # Handle coming-soon route
+    RewriteRule ^coming-soon/?$ coming-soon.html [L]
+    
+    # Handle request route
+    RewriteRule ^request/?$ request.html [L]
+    
+    # Handle main site with bypass
+    RewriteCond %{QUERY_STRING} bypass=1
+    RewriteRule ^$ index.html [L]
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+    # Prevent clickjacking
+    Header always append X-Frame-Options SAMEORIGIN
+    
+    # XSS Protection
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Content type sniffing protection
+    Header set X-Content-Type-Options nosniff
+    
+    # Referrer policy
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>

@@ -122,7 +122,7 @@ async function loadMixcloudEpisodes(username, nextUrl) {
     grid.innerHTML = '<p class="muted">Loading episodes…</p>';
   }
   try {
-    const url = nextUrl || `/api/mixcloud/${encodeURIComponent(username)}/cloudcasts/?limit=8`;
+    const url = nextUrl || `https://api.mixcloud.com/${encodeURIComponent(username)}/cloudcasts/?limit=8`;
     const res = await fetch(url, {
       cache: 'no-cache',
       headers: {
@@ -266,7 +266,7 @@ async function fetchDurationFromAPI(episodeUrl) {
     }
     
     // Construct the API URL
-    const apiUrl = `/api/mixcloud/${username}/${showSlug}/`;
+    const apiUrl = `https://api.mixcloud.com/${username}/${showSlug}/`;
     // API URL constructed
     
     // Fetch from Mixcloud API
@@ -990,7 +990,7 @@ async function loadHeroLatest(username){
   const openEl = document.getElementById('hero-open');
   
   try{
-    const res = await fetch(`/api/mixcloud/${encodeURIComponent(username)}/cloudcasts/?limit=1`, {
+    const res = await fetch(`https://api.mixcloud.com/${encodeURIComponent(username)}/cloudcasts/?limit=1`, {
       cache: 'no-cache',
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',

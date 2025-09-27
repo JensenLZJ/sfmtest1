@@ -87,14 +87,23 @@ app.use((req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const baseUrl = isProduction ? 'https://samudrafm.com' : `http://localhost:${PORT}`;
+  
   console.log(`🚀 SamudraFM Server running at:`);
-  console.log(`   Local:   http://localhost:${PORT}`);
-  console.log(`   Network: http://0.0.0.0:${PORT}`);
+  if (isProduction) {
+    console.log(`   Production: ${baseUrl}`);
+  } else {
+    console.log(`   Local:   http://localhost:${PORT}`);
+    console.log(`   Network: http://0.0.0.0:${PORT}`);
+  }
   console.log(`\n📻 Website Features:`);
-  console.log(`   • Home (redirects to coming soon): http://localhost:${PORT}`);
-  console.log(`   • Coming soon: http://localhost:${PORT}/coming-soon`);
-  console.log(`   • Main site (secret access): http://localhost:${PORT}?bypass=1`);
-  console.log(`   • Request page: http://localhost:${PORT}/request`);
+  console.log(`   • Home (redirects to coming soon): ${baseUrl}`);
+  console.log(`   • Coming soon: ${baseUrl}/coming-soon`);
+  console.log(`   • Main site (secret access): ${baseUrl}?bypass=1`);
+  console.log(`   • Request page: ${baseUrl}/request`);
   console.log(`\n🔄 Cache clearing is enabled - fresh content on every visit!`);
-  console.log(`\nPress Ctrl+C to stop the server`);
+  if (!isProduction) {
+    console.log(`\nPress Ctrl+C to stop the server`);
+  }
 });
