@@ -2236,10 +2236,7 @@ function ensurePlayButtonReady() {
   }
 }
 
-// Instagram Embeds - Auto-updating Instagram content
-// No JavaScript needed - Instagram embeds handle everything automatically
-
-/*
+// Instagram Feed - Auto-updating Instagram content
 // Instagram Posts - Card-based layout similar to episodes
 class InstagramPosts {
   constructor() {
@@ -2258,136 +2255,122 @@ class InstagramPosts {
     }
   }
 
-  // Load mock Instagram posts
+  // Load Instagram posts from public account
   async loadMockPosts() {
     this.isLoading = true;
+    console.log('Instagram Posts: Loading posts from @samudrafm...');
     
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Real Instagram posts data from @samudrafm
-    this.posts = [
-      {
-        id: '1',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/f61b58/ffffff?text=Latest+Post',
-        permalink: 'https://www.instagram.com/p/DO0d4jRktgm/',
-        caption: 'Latest Instagram Post',
-        timestamp: new Date('2025-01-27T12:00:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '2',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/8b4c93/ffffff?text=Recent+Post',
-        permalink: 'https://www.instagram.com/p/DO0d28EkkZy/',
-        caption: 'Recent Instagram Post',
-        timestamp: new Date('2025-01-26T15:30:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '3',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/ed1d59/ffffff?text=Instagram+Update',
-        permalink: 'https://www.instagram.com/p/DO0dtQeknJA/',
-        caption: 'Instagram Update',
-        timestamp: new Date('2025-01-25T10:15:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '4',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/1a1a1a/ffffff?text=SamudraFM+Post',
-        permalink: 'https://www.instagram.com/p/DO0b3e9kn0s/',
-        caption: 'SamudraFM Post',
-        timestamp: new Date('2025-01-24T00:30:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '5',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/333333/ffffff?text=Radio+Content',
-        permalink: 'https://www.instagram.com/p/DO0bpnEEtV0/',
-        caption: 'Radio Content',
-        timestamp: new Date('2025-01-23T14:45:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '6',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/f61b58/ffffff?text=Behind+Scenes',
-        permalink: 'https://www.instagram.com/p/DO0bcWgEnUn/',
-        caption: 'Behind the Scenes',
-        timestamp: new Date('2025-01-22T12:00:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '7',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/8b4c93/ffffff?text=Studio+Life',
-        permalink: 'https://www.instagram.com/p/DO0aYX5kh9p/',
-        caption: 'Studio Life',
-        timestamp: new Date('2025-01-21T15:30:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '8',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/ed1d59/ffffff?text=Music+Show',
-        permalink: 'https://www.instagram.com/p/DO0aMQlEkU9/',
-        caption: 'Music Show',
-        timestamp: new Date('2025-01-20T10:15:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '9',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/1a1a1a/ffffff?text=Live+Session',
-        permalink: 'https://www.instagram.com/p/DO0Z3RXkr6X/',
-        caption: 'Live Session',
-        timestamp: new Date('2025-01-19T00:30:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '10',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/333333/ffffff?text=Radio+Update',
-        permalink: 'https://www.instagram.com/p/DO0ZXF_ki2Z/',
-        caption: 'Radio Update',
-        timestamp: new Date('2025-01-18T14:45:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '11',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/f61b58/ffffff?text=SamudraFM+Content',
-        permalink: 'https://www.instagram.com/p/DO0Y_OIkrMM/',
-        caption: 'SamudraFM Content',
-        timestamp: new Date('2025-01-17T12:00:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '12',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/8b4c93/ffffff?text=Latest+Update',
-        permalink: 'https://www.instagram.com/p/DO0Yw6-EnD4/',
-        caption: 'Latest Update',
-        timestamp: new Date('2025-01-16T15:30:00Z').toISOString(),
-        username: 'samudrafm'
-      },
-      {
-        id: '13',
-        media_type: 'IMAGE',
-        media_url: 'https://via.placeholder.com/400x300/ed1d59/ffffff?text=Special+Post',
-        permalink: 'https://www.instagram.com/p/DLpMmlBTRKf/?img_index=1',
-        caption: 'Special Post',
-        timestamp: new Date('2025-01-15T10:15:00Z').toISOString(),
-        username: 'samudrafm'
+    try {
+      // Method 1: Try to fetch from Instagram's public profile
+      const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://www.instagram.com/samudrafm/')}`);
+      const data = await response.json();
+      const html = data.contents;
+      
+      // Parse Instagram profile data
+      const profileData = this.parseInstagramProfile(html);
+      
+      if (profileData && profileData.posts && profileData.posts.length > 0) {
+        console.log('Found Instagram posts:', profileData.posts.length);
+        this.posts = profileData.posts.slice(0, 4); // Show only 4 latest posts
+      } else {
+        console.log('Could not parse Instagram posts, trying alternative method');
+        await this.loadFromInstagramAPI();
       }
-    ];
+    } catch (error) {
+      console.error('Error fetching Instagram profile:', error);
+      await this.loadFromInstagramAPI();
+    }
     
+    console.log('Instagram Posts: Posts loaded, count:', this.posts.length);
     this.isLoading = false;
     this.renderPosts();
+  }
+
+  // Alternative method using Instagram's public API
+  async loadFromInstagramAPI() {
+    try {
+      console.log('Trying Instagram public API...');
+      
+      // Use Instagram's public JSON endpoint
+      const response = await fetch(`https://www.instagram.com/samudrafm/?__a=1&__d=dis`);
+      const data = await response.json();
+      
+      if (data.graphql && data.graphql.user) {
+        const user = data.graphql.user;
+        const posts = user.edge_owner_to_timeline_media.edges.map((edge, index) => {
+          const node = edge.node;
+          return {
+            id: node.id,
+            media_type: node.is_video ? 'VIDEO' : 'IMAGE',
+            media_url: node.display_url,
+            permalink: `https://www.instagram.com/p/${node.shortcode}/`,
+            caption: node.edge_media_to_caption.edges[0]?.node.text || 'Instagram Post',
+            timestamp: new Date(node.taken_at_timestamp * 1000).toISOString(),
+            username: 'samudrafm'
+          };
+        });
+        
+        this.posts = posts.slice(0, 4);
+        console.log('Successfully loaded from Instagram API:', this.posts.length, 'posts');
+        return;
+      }
+    } catch (error) {
+      console.error('Instagram API failed:', error);
+    }
+    
+    // If all methods fail, use fallback
+    console.log('All methods failed, using fallback posts');
+    this.loadFallbackPosts();
+  }
+
+  // Parse Instagram profile HTML to extract posts
+  parseInstagramProfile(html) {
+    try {
+      // Look for the JSON data in the HTML
+      const jsonMatch = html.match(/window\._sharedData\s*=\s*({.+?});/);
+      if (jsonMatch) {
+        const data = JSON.parse(jsonMatch[1]);
+        const user = data.entry_data.ProfilePage[0].graphql.user;
+        
+        const posts = user.edge_owner_to_timeline_media.edges.map((edge, index) => {
+          const node = edge.node;
+          return {
+            id: node.id,
+            media_type: node.is_video ? 'VIDEO' : 'IMAGE',
+            media_url: node.display_url,
+            permalink: `https://www.instagram.com/p/${node.shortcode}/`,
+            caption: node.edge_media_to_caption.edges[0]?.node.text || 'Instagram Post',
+            timestamp: new Date(node.taken_at_timestamp * 1000).toISOString(),
+            username: 'samudrafm'
+          };
+        });
+        
+        return { posts };
+      }
+      
+      // Fallback: try to extract from meta tags
+      const posts = [];
+      const imageMatches = html.match(/<meta property="og:image" content="([^"]+)"/g);
+      if (imageMatches) {
+        imageMatches.forEach((match, index) => {
+          const imageUrl = match.match(/content="([^"]+)"/)[1];
+          posts.push({
+            id: `fallback_${index}`,
+            media_type: 'IMAGE',
+            media_url: imageUrl,
+            permalink: `https://www.instagram.com/samudrafm/`,
+            caption: `Instagram Post ${index + 1}`,
+            timestamp: new Date().toISOString(),
+            username: 'samudrafm'
+          });
+        });
+      }
+      
+      return { posts };
+    } catch (error) {
+      console.error('Error parsing Instagram profile:', error);
+      return null;
+    }
   }
 
   // Fallback posts if API fails
@@ -2408,19 +2391,21 @@ class InstagramPosts {
 
   // Render Instagram posts to the UI
   renderPosts() {
-    const postsContainer = document.getElementById('instagram-grid');
+    const postsContainer = document.getElementById('instagram-feed');
     if (!postsContainer) {
-      console.error('Instagram posts container not found!');
+      console.error('Instagram feed container not found!');
       return;
     }
 
     console.log('Rendering Instagram posts:', this.posts.length, 'posts');
+    console.log('Posts data:', this.posts);
     
     // Clear existing posts
     postsContainer.innerHTML = '';
 
-    // Render each post as a card - only show 2 posts to match Coming up section height
-    this.posts.slice(0, 2).forEach((post, index) => {
+    // Render each post as a card - only show 4 posts to match Coming up section height
+    this.posts.slice(0, 4).forEach((post, index) => {
+      console.log('Creating post card for:', post.caption);
       const postElement = this.createPostCard(post, index);
       postsContainer.appendChild(postElement);
     });
@@ -2431,7 +2416,7 @@ class InstagramPosts {
   // Create individual post card (matching episode layout exactly)
   createPostCard(post, index) {
     const cardDiv = document.createElement('div');
-    cardDiv.className = 'card clickable-card instagram-card';
+    cardDiv.className = 'instagram-post';
     cardDiv.onclick = () => window.open(post.permalink, '_blank');
 
     const timeAgo = this.getTimeAgo(post.timestamp);
@@ -2439,14 +2424,20 @@ class InstagramPosts {
     const formattedDate = this.formatDate(post.timestamp);
 
     cardDiv.innerHTML = `
-      <div class="cover instagram-cover" style="background-image: url('${post.media_url}'); background-size: cover; background-position: center;">
-        ${!post.media_url ? '<div class="instagram-placeholder"><i class="fab fa-instagram"></i></div>' : ''}
-        ${post.media_type === 'VIDEO' ? '<div class="video-overlay"><i class="fas fa-play"></i></div>' : ''}
+      <div class="instagram-post-image">
+        <img src="${post.media_url}" alt="${caption}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="instagram-placeholder" style="display: none;">
+          <i class="fab fa-instagram"></i>
+        </div>
       </div>
-      <div class="content">
-        <a href="${post.permalink}" class="play-link" target="_blank" rel="noopener">
-          View on Instagram <i class="fas fa-external-link-alt"></i>
-        </a>
+      <div class="instagram-post-content">
+        <h3 class="instagram-post-title">${caption}</h3>
+        <div class="instagram-post-meta">
+          <p class="instagram-post-date">${timeAgo}</p>
+          <a href="${post.permalink}" class="instagram-post-link" target="_blank" rel="noopener">
+            View <i class="fas fa-external-link-alt"></i>
+          </a>
+        </div>
       </div>
     `;
 
@@ -2481,6 +2472,68 @@ class InstagramPosts {
     return `${day}/${month}/${year}`;
   }
 
+  // Get Instagram image from post URL
+  async getInstagramImage(postUrl) {
+    try {
+      console.log('Fetching image for:', postUrl);
+      
+      // Try multiple methods to get the image
+      const methods = [
+        // Method 1: AllOrigins proxy
+        async () => {
+          const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(postUrl)}`);
+          const data = await response.json();
+          return data.contents;
+        },
+        // Method 2: CORS Anywhere (backup)
+        async () => {
+          const response = await fetch(`https://cors-anywhere.herokuapp.com/${postUrl}`);
+          return await response.text();
+        }
+      ];
+
+      for (const method of methods) {
+        try {
+          const html = await method();
+          
+          // Look for the main image in the HTML
+          const imageMatch = html.match(/<meta property="og:image" content="([^"]+)"/);
+          if (imageMatch && imageMatch[1]) {
+            console.log('Found Instagram image:', imageMatch[1]);
+            return imageMatch[1];
+          }
+          
+          // Fallback: look for other image patterns
+          const fallbackMatch = html.match(/https:\/\/[^"]*instagram[^"]*\.(jpg|jpeg|png|webp)/i);
+          if (fallbackMatch && fallbackMatch[0]) {
+            console.log('Found fallback Instagram image:', fallbackMatch[0]);
+            return fallbackMatch[0];
+          }
+        } catch (methodError) {
+          console.log('Method failed, trying next:', methodError.message);
+          continue;
+        }
+      }
+      
+      console.log('No Instagram image found for:', postUrl);
+      return this.getFallbackImage();
+    } catch (error) {
+      console.error('Error fetching Instagram image:', error);
+      return this.getFallbackImage();
+    }
+  }
+
+  // Get fallback image based on post content
+  getFallbackImage() {
+    const fallbackImages = [
+      'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop&crop=center', // Music/concert
+      'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop&crop=center', // Radio/microphone
+      'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop&crop=center', // Thank you/community
+      'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&h=300&fit=crop&crop=center'  // Music studio
+    ];
+    return fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
+  }
+
   // Refresh posts
   async refresh() {
     console.log('Instagram Posts: Refreshing posts');
@@ -2492,15 +2545,32 @@ class InstagramPosts {
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Initializing Instagram posts...');
   const instagramPosts = new InstagramPosts();
+  
+  // Test if the container exists
+  const container = document.getElementById('instagram-feed');
+  if (container) {
+    console.log('Instagram feed container found!');
+  } else {
+    console.error('Instagram feed container NOT found!');
+  }
+  
   instagramPosts.init();
 
-  // Add refresh button functionality
-  const refreshButton = document.querySelector('.instagram-header');
-  if (refreshButton) {
+  // Add refresh button functionality to the header
+  const refreshButton = document.querySelector('.section-head h2');
+  if (refreshButton && refreshButton.textContent.includes('Latest Posts')) {
+    refreshButton.style.cursor = 'pointer';
     refreshButton.addEventListener('click', () => {
+      console.log('Refreshing Instagram posts...');
       instagramPosts.refresh();
     });
   }
+
+  // Auto-refresh Instagram posts every 5 minutes
+  setInterval(() => {
+    console.log('Auto-refreshing Instagram posts...');
+    instagramPosts.refresh();
+  }, 5 * 60 * 1000); // 5 minutes
 });
 
 // Force refresh Instagram posts on page load to clear cache
@@ -2509,4 +2579,3 @@ window.addEventListener('load', function() {
   const instagramPosts = new InstagramPosts();
   instagramPosts.init();
 });
-*/

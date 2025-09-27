@@ -172,13 +172,12 @@
             <div class="section-head">
                     <h2><span class="dot-particle"></span>Latest Posts<span class="heading-line"></span></h2>
                 </div>
-                <div class="instagram-embeds">
-                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DO0d4jRktgm/" data-instgrm-version="14">
-                        <a href="https://www.instagram.com/p/DO0d4jRktgm/" target="_blank">View this post on Instagram</a>
-                    </blockquote>
-                    <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DO0d28EkkZy/" data-instgrm-version="14">
-                        <a href="https://www.instagram.com/p/DO0d28EkkZy/" target="_blank">View this post on Instagram</a>
-                    </blockquote>
+                <div class="instagram-feed" id="instagram-feed">
+                    <!-- Instagram posts will be loaded here automatically -->
+                    <div class="instagram-loading">
+                        <i class="fab fa-instagram"></i>
+                        <p>Loading latest posts...</p>
+                    </div>
                 </div>
             </div>
 
@@ -264,7 +263,7 @@
     <!-- Audio player will be handled by Mixcloud widget -->
 
 
-    <script src="script.js?v=44&t=1734567912&nocache=1"></script>
+    <script src="script.js?v=51&t=1734570200&nocache=1"></script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
     <script>
     // Force clear all caches on every visit
@@ -298,25 +297,10 @@
     });
     </script>
     
-    <!-- Instagram Embed Script -->
-    <script async src="https://www.instagram.com/embed.js"></script>
+    <!-- Instagram Feed - Auto-updating content -->
     <script>
-      // Process Instagram embeds after page loads
-      window.addEventListener('load', function() {
-        // Wait a bit for the Instagram script to load
-        setTimeout(function() {
-          if (window.instgrm) {
-            window.instgrm.Embeds.process();
-          } else {
-            // If Instagram script didn't load, try again
-            setTimeout(function() {
-              if (window.instgrm) {
-                window.instgrm.Embeds.process();
-              }
-            }, 2000);
-          }
-        }, 1000);
-      });
+      // Instagram feed is handled by the main script.js
+      console.log('Instagram feed system loaded');
     </script>
 </body>
 </html>
