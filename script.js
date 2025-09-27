@@ -108,7 +108,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 
 // Mixcloud integration ------------------------------------------------------
 // Set your Mixcloud username here
-const MIXCLOUD_USERNAME = 'samudrafm';
+const MIXCLOUD_USERNAME = 'SamudraFM';
 const MIXCLOUD_API_KEY = 'gDVAEf3yoChF4fkXFxfXNwl3XMkZEs0g';
 
 let mixcloudNextUrl = null;
@@ -123,15 +123,14 @@ async function loadMixcloudEpisodes(username, nextUrl) {
   }
   try {
     const url = nextUrl || `https://api.mixcloud.com/${encodeURIComponent(username)}/cloudcasts/?limit=8`;
+    console.log('Fetching Mixcloud episodes from:', url);
     const res = await fetch(url, {
-      cache: 'no-cache',
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache'
-      }
+      cache: 'no-cache'
     });
-    if (!res.ok) throw new Error('Failed to fetch Mixcloud');
+    console.log('Mixcloud API response status:', res.status);
+    if (!res.ok) throw new Error(`Failed to fetch Mixcloud: ${res.status} ${res.statusText}`);
     const data = await res.json();
+    console.log('Mixcloud API response data:', data);
     const items = (data.data || []).map(item => ({
       url: item.url,
       name: item.name,
@@ -139,8 +138,10 @@ async function loadMixcloudEpisodes(username, nextUrl) {
       picture: item.pictures ? (item.pictures.extra_large || item.pictures.large || item.pictures.medium) : ''
     }));
     mixcloudNextUrl = data.paging && data.paging.next ? data.paging.next : null;
+    console.log('Processed episodes:', items);
     if (!items.length) {
-      grid.innerHTML = '<p class="muted">No episodes yet.</p>';
+      console.log('No episodes found in API response');
+      grid.innerHTML = '<p class="muted">No episodes found. Please check if the Mixcloud profile "SamudraFM" exists and has published episodes.</p>';
       return;
     }
     const startIndex = grid.querySelectorAll('.episodes-card').length;
@@ -183,9 +184,10 @@ async function loadMixcloudEpisodes(username, nextUrl) {
       }
     }
   } catch (err) {
-    console.log('Mixcloud API error (likely CORS):', err);
-    // Show simple loading message when Mixcloud API fails
-    grid.innerHTML = '<p class="muted">Loading episodes...</p>';
+    console.error('Mixcloud API error:', err);
+    console.error('Error details:', err.message);
+    // Show error message to help debug
+    grid.innerHTML = `<p class="muted">Error loading episodes: ${err.message}</p>`;
   }
   
   // After episodes are loaded, ensure play button is ready
@@ -195,7 +197,10 @@ async function loadMixcloudEpisodes(username, nextUrl) {
   }, 100);
 }
 
-loadMixcloudEpisodes(MIXCLOUD_USERNAME);
+// Load episodes when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  loadMixcloudEpisodes(MIXCLOUD_USERNAME);
+});
 
 const loadMoreBtn = document.getElementById('episodes-load');
 if (loadMoreBtn) {
@@ -273,11 +278,7 @@ async function fetchDurationFromAPI(episodeUrl) {
     
     // Fetch from Mixcloud API
     const response = await fetch(apiUrl, {
-      cache: 'no-cache',
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache'
-      }
+      cache: 'no-cache'
     });
     
     if (!response.ok) {
@@ -992,15 +993,16 @@ async function loadHeroLatest(username){
   const openEl = document.getElementById('hero-open');
   
   try{
-    const res = await fetch(`https://api.mixcloud.com/${encodeURIComponent(username)}/cloudcasts/?limit=1`, {
-      cache: 'no-cache',
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache'
-      }
+    const url = `https://api.mixcloud.com/${encodeURIComponent(username)}/cloudcasts/?limit=1`;
+    console.log('Fetching hero episode from:', url);
+    const res = await fetch(url, {
+      cache: 'no-cache'
     });
+    console.log('Hero API response status:', res.status);
     const data = await res.json();
+    console.log('Hero API response data:', data);
     const ep = data.data && data.data[0];
+    console.log('Hero episode:', ep);
     if (!ep) {
       // Fallback to radio stream info
       titleEl.textContent = 'SamudraFM Live Stream';
