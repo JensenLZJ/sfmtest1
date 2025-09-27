@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SamudraFM - Coming Soon</title>
+    
+    <!-- Force cache clearing on every visit -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -96,7 +101,7 @@
         }
         
         .secret-access-button:hover {
-            background: rgba(246, 27, 88, 0.1);
+            background: transparent;
         }
         
         /* Mobile: Make secret button 50% smaller */
@@ -350,6 +355,9 @@
                 secretButton.addEventListener('click', function(e) {
                     console.log('Secret button clicked!');
                     e.preventDefault();
+                    // Set bypass flag in sessionStorage for this session only
+                    sessionStorage.setItem('samudrafm_bypass', 'true');
+                    // Redirect to main site (bypass coming soon page)
                     window.location.href = 'index.html?bypass=1';
                 });
                 
@@ -361,12 +369,45 @@
                 secretButton.addEventListener('touchend', function(e) {
                     console.log('Secret button touch end!');
                     e.preventDefault();
+                    // Set bypass flag in sessionStorage for this session only
+                    sessionStorage.setItem('samudrafm_bypass', 'true');
+                    // Redirect to main site (bypass coming soon page)
                     window.location.href = 'index.html?bypass=1';
                 });
                 
                 console.log('Secret button setup complete');
             } else {
                 console.log('Secret access button not found!');
+            }
+        });
+        
+        // Force clear all caches on every visit
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                for (let name of names) {
+                    caches.delete(name);
+                }
+            });
+        }
+        
+        // Clear any existing bypass data to ensure fresh coming soon experience
+        localStorage.removeItem('samudrafm_bypass');
+        sessionStorage.removeItem('samudrafm_bypass');
+        document.cookie = 'samudrafm_bypass=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        
+        // Clear service worker cache
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+        
+        // Force reload if page is loaded from cache
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
             }
         });
     </script>

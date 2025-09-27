@@ -6,6 +6,15 @@
 (function() {
     'use strict';
     
+    // Force clear cache on every load
+    if ('caches' in window) {
+        caches.keys().then(function(names) {
+            for (let name of names) {
+                caches.delete(name);
+            }
+        });
+    }
+    
     // Check if we're accessing an asset directly
     const currentPath = window.location.pathname;
     const isAsset = /\.(png|jpg|jpeg|gif|svg|ico|css|js|json|woff|woff2|ttf|eot)$/i.test(currentPath);

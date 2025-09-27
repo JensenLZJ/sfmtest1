@@ -9,15 +9,34 @@
     <title>SamudraFM — Your study, your music.</title>
     <meta name="description" content="SamudraFM - Non-stop hits, live shows, and requests.">
     
-    <!-- Coming Soon Redirect - Uncomment the line below to enable coming soon page -->
+    <!-- Force cache clearing on every visit -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- Coming Soon Redirect - Always redirect to coming soon page -->
     <script>
-        // Check if bypass parameter is present
+        // Check if this is a fresh bypass (not a refresh)
         const urlParams = new URLSearchParams(window.location.search);
-        if (!urlParams.has('bypass')) {
-            // Uncomment the line below to enable coming soon page
+        const hasBypassParam = urlParams.has('bypass');
+        const isRefresh = sessionStorage.getItem('samudrafm_visited') === 'true';
+        
+        // If no bypass parameter OR if it's a refresh, redirect to coming soon
+        if (!hasBypassParam || isRefresh) {
+            // Clear any existing bypass data
+            localStorage.removeItem('samudrafm_bypass');
+            sessionStorage.removeItem('samudrafm_bypass');
+            sessionStorage.removeItem('samudrafm_visited');
+            document.cookie = 'samudrafm_bypass=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            
+            // Force redirect to coming soon page
             window.location.href = 'coming-soon.html';
         } else {
-            // Show construction warning popup
+            // Mark as visited and set session flag
+            sessionStorage.setItem('samudrafm_visited', 'true');
+            sessionStorage.setItem('samudrafm_bypass', 'true');
+            
+            // Show construction warning popup for bypassed users
             window.addEventListener('load', function() {
                 setTimeout(function() {
                     alert('⚠️ WARNING ⚠️\n\nThis website is still under construction!\n\nSome features may not work properly.\n\nReport bugs to: 0176858799');
@@ -54,7 +73,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="styles.css?v=39&t=1734570200&force=16">
+    <link rel="stylesheet" href="styles.css?v=40&t=1734570200&force=17&nocache=1">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
@@ -75,7 +94,7 @@
     
     <header class="site-header">
         <div class="container header-inner">
-            <a href="#" class="brand" aria-label="SamudraFM Home">
+            <a href="/" class="brand" aria-label="SamudraFM Home">
                 <img class="brand-logo" src="images/SamudraFMLogo1.png" alt="SamudraFM" />
                 <span class="brand-mark">Samudra<span>FM</span></span>
             </a>
@@ -195,22 +214,11 @@
             </div>
             
             <div class="footer-column">
-                <h3>Connect</h3>
+                <h3>Connect & Listen</h3>
                 <ul class="footer-links social-links">
-                    <li><a href="#" class="social-link"><i class="fab fa-twitter"></i> Twitter</a></li>
                     <li><a href="https://www.instagram.com/samudrafm/" class="social-link"><i class="fab fa-instagram"></i> Instagram</a></li>
                     <li><a href="https://www.facebook.com/SamudraFMSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
-                    <li><a href="#" class="social-link"><i class="fab fa-youtube"></i> YouTube</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h3>Listen</h3>
-                <ul class="footer-links">
-                    <li><a href="https://www.mixcloud.com/SamudraFM/">Mixcloud</a></li>
-                    <li><a href="#">Spotify</a></li>
-                    <li><a href="#">Apple Podcasts</a></li>
-                    <li><a href="#">Google Podcasts</a></li>
+                    <li><a href="https://www.mixcloud.com/SamudraFM/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
                 </ul>
             </div>
         </div>
@@ -230,13 +238,39 @@
     <!-- Audio player will be handled by Mixcloud widget -->
 
 
-    <script src="script.js?v=42&t=1734567912"></script>
+    <script src="script.js?v=43&t=1734567912&nocache=1"></script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
     <script src="asset-protection.js"></script>
     <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function(){ navigator.serviceWorker.register('/sw.js'); });
+    // Force clear all caches on every visit
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        for (let name of names) {
+          caches.delete(name);
+        }
+      });
     }
+    
+    // Clear service worker cache
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+          registration.unregister();
+        }
+      });
+      
+      // Register new service worker after clearing
+      window.addEventListener('load', function(){ 
+        navigator.serviceWorker.register('/sw.js?v=' + Date.now()); 
+      });
+    }
+    
+    // Force reload if page is loaded from cache
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    });
     </script>
 </body>
 </html>

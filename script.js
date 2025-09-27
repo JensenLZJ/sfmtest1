@@ -1,5 +1,14 @@
 ﻿// SamduraFM front-end behaviors and mock data wiring
 
+// Force clear cache on every load
+if ('caches' in window) {
+    caches.keys().then(function(names) {
+        for (let name of names) {
+            caches.delete(name);
+        }
+    });
+}
+
 // Hidden easter egg - hiring message
 console.log("%cLike looking under the hood? We're interested in people like you! Come and join us: https://samudrafm.com/opportunities/", 'color: #4fa6d3;font:18px/80px "Inter", sans-serif;');
 
@@ -76,6 +85,12 @@ if (comingGrid) {
   `).join('');
 }
 
+// Handle logo click to go to home page
+document.querySelector('.brand').addEventListener('click', function(e) {
+  e.preventDefault();
+  window.location.href = '/';
+});
+
 // Smooth scroll for internal links
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
@@ -107,8 +122,14 @@ async function loadMixcloudEpisodes(username, nextUrl) {
     grid.innerHTML = '<p class="muted">Loading episodes…</p>';
   }
   try {
-    const url = nextUrl || `https://api.mixcloud.com/${encodeURIComponent(username)}/cloudcasts/?limit=8`;
-    const res = await fetch(url);
+    const url = nextUrl || `/api/mixcloud/${encodeURIComponent(username)}/cloudcasts/?limit=8`;
+    const res = await fetch(url, {
+      cache: 'no-cache',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      }
+    });
     if (!res.ok) throw new Error('Failed to fetch Mixcloud');
     const data = await res.json();
     const items = (data.data || []).map(item => ({
@@ -245,11 +266,17 @@ async function fetchDurationFromAPI(episodeUrl) {
     }
     
     // Construct the API URL
-    const apiUrl = `https://api.mixcloud.com/${username}/${showSlug}/`;
+    const apiUrl = `/api/mixcloud/${username}/${showSlug}/`;
     // API URL constructed
     
     // Fetch from Mixcloud API
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, {
+      cache: 'no-cache',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      }
+    });
     
     if (!response.ok) {
       // API request failed
@@ -633,6 +660,12 @@ function startSimpleProgressTracking() {
     window.currentProgressInterval = null;
   }
   
+  // Only start tracking if we're actually playing
+  if (!isCurrentlyPlaying) {
+    console.log('Not starting progress tracking - not currently playing');
+    return;
+  }
+  
   console.log('Starting progress tracking...', {isCurrentlyPlaying, hasWidget: !!currentWidget});
   
   // Try to get progress from Mixcloud widget
@@ -776,6 +809,13 @@ function initProgressBar() {
     }
     
     seekTo(percentage);
+    
+    // Restart progress tracking after seeking
+    if (isCurrentlyPlaying) {
+      setTimeout(() => {
+        startSimpleProgressTracking();
+      }, 100);
+    }
   });
   
   // Drag handle
@@ -804,6 +844,13 @@ function initProgressBar() {
       isDragging = false;
       const percentage = parseFloat(progressFill.style.width);
       seekTo(percentage);
+      
+      // Restart progress tracking after dragging
+      if (isCurrentlyPlaying) {
+        setTimeout(() => {
+          startSimpleProgressTracking();
+        }, 100);
+      }
     }
   });
   
@@ -864,9 +911,7 @@ function initProgressBar() {
     // Update the progress bar immediately to show user's click
     updateProgress(percentage);
     
-    // Don't restart progress tracking immediately - let the existing tracking continue
-    // The Mixcloud widget will update its position and sync naturally
-    console.log('Seek completed, letting existing progress tracking continue');
+    console.log('Seek completed');
   }
   
   function formatTime(seconds) {
@@ -945,7 +990,13 @@ async function loadHeroLatest(username){
   const openEl = document.getElementById('hero-open');
   
   try{
-    const res = await fetch(`https://api.mixcloud.com/${encodeURIComponent(username)}/cloudcasts/?limit=1`);
+    const res = await fetch(`/api/mixcloud/${encodeURIComponent(username)}/cloudcasts/?limit=1`, {
+      cache: 'no-cache',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      }
+    });
     const data = await res.json();
     const ep = data.data && data.data[0];
     if (!ep) {

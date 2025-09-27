@@ -232,20 +232,33 @@
         </div>
     </main>
 
-    <footer class="site-footer">
-        <div class="container footer-inner">
-            <div>
-                <img class="brand-logo" src="images/SamudraFMLogo1.png" alt="SamudraFM" />
-                <span class="brand-mark">Samudra<span>FM</span></span>
-                <p class="muted">Non-Profit Organization. Fully volunteer-run school of SMK Taman SEA radio station. © <span id="year"></span> SamudraFM.</p>
+    <footer class="site-footer" id="about">
+        <div class="footer-content">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <img src="images/SamudraFMLogo1transparent.png" alt="SamudraFM Logo" />
+                </div>
+                <h2 class="footer-brand-title">SamudraFM</h2>
+                <p class="footer-description">
+                    Non-Profit Organization. Fully volunteer-run<br>
+                    school of SMK Taman SEA radio station.
+                </p>
             </div>
-            <nav aria-label="footer">
-                <ul class="footer-links">
-                    <li><a href="index.html#contact">Contact</a></li>
-                    <li><a href="index.html#schedule">Schedule</a></li>
-                    <li><a href="index.html#listen">Listen</a></li>
+            
+            <div class="footer-column">
+                <h3>Connect & Listen</h3>
+                <ul class="footer-links social-links">
+                    <li><a href="https://www.instagram.com/samudrafm/" class="social-link"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="https://www.facebook.com/SamudraFMSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://www.mixcloud.com/SamudraFM/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
                 </ul>
-            </nav>
+            </div>
+        </div>
+        
+        <div class="footer-separator"></div>
+        
+        <div class="footer-bottom">
+            <p>© 2025 SamudraFM. Designed with passion by Jensen Lim Zi Jen 📻</p>
         </div>
     </footer>
 
@@ -255,8 +268,7 @@
         const GOOGLE_SHEETS_ID = '1U6ap5LrMtgo2a1UDyy2A8niUe2xf9rAov9Ojq4f_EkA'; // Replace with your Google Sheets ID
         const GOOGLE_SHEETS_API_KEY = 'AIzaSyA9UDQaJ0tKbaEoRWYcmZgKFCd0V_QZoEc'; // Replace with your Google Sheets API key
         
-        // Set current year
-        document.getElementById('year').textContent = new Date().getFullYear();
+        // Year is now handled in the footer design
         
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
