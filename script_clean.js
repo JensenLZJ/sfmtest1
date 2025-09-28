@@ -6,7 +6,7 @@
   }
 });
 
-// Auto-refresh Instagram posts every 5 minutes - DISABLED (using Elfsight widget)
+// Auto-refresh Instagram posts every 5 minutes - DISABLED
 // setInterval(() => {
 //   if (window.autoInstagramPosts) {
 //     window.autoInstagramPosts.refresh();

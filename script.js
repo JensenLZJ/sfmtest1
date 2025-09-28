@@ -131,6 +131,48 @@ const MOCK_RECENT = [
   { title: 'As It Was', artist: 'Harry Styles', time: '18:36', cover: null }
 ];
 
+// Profile picture mapping (same as schedule page)
+const profilePictures = {
+  'JensenL': 'assets/avatar/Jensen.jpg',
+  'Jensen': 'assets/avatar/Jensen.jpg',
+  'JensenLim': 'assets/avatar/Jensen.jpg',
+  'Jensen Lim': 'assets/avatar/Jensen.jpg',
+  'Jensen L': 'assets/avatar/Jensen.jpg',
+  'Srishti': 'assets/avatar/Srishti.jpg',
+  'mrbean': 'assets/avatar/mrbean.jpg',
+  'Mrbean': 'assets/avatar/mrbean.jpg',
+  'MrBean': 'assets/avatar/mrbean.jpg',
+  'Marcus': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
+  'Jess': 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face',
+  'James': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face',
+  'Lana': 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face',
+  'Jessica': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face',
+  'Niv': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face',
+  'Gavin': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face',
+  'TBA': 'images/SamudraFMLogo1.png'
+};
+
+// Function to get profile picture for a presenter
+function getProfilePicture(presenterName) {
+  // Clean the presenter name (remove extra spaces, special characters)
+  const cleanName = presenterName.trim().replace(/[^\w\s]/g, '');
+  
+  // Check for exact matches first
+  if (profilePictures[cleanName]) {
+    return profilePictures[cleanName];
+  }
+  
+  // Check for partial matches (for names like "Jess & James")
+  for (const [key, image] of Object.entries(profilePictures)) {
+    if (cleanName.toLowerCase().includes(key.toLowerCase()) || 
+        key.toLowerCase().includes(cleanName.toLowerCase())) {
+      return image;
+    }
+  }
+  
+  // Default fallback - use SamudraFM logo
+  return 'images/SamudraFMLogo1.png';
+}
 
 const MOCK_COMING = [
   { title: 'Jensen', desc: 'A Wee Mystical Magical Show', time: '20:00 � 22:00', cover: null },
@@ -211,17 +253,33 @@ function formatCalendarEvent(event) {
     }
   }
   
+  // Extract date and day information
+  let dateString = '';
+  let dayString = '';
+  if (start) {
+    const startDate = new Date(start);
+    dateString = startDate.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short'
+    });
+    dayString = startDate.toLocaleDateString('en-GB', {
+      weekday: 'long'
+    });
+  }
+
   return {
     title: presenter,
     desc: showTitle,
     time: timeString,
-    cover: null
+    cover: getProfilePicture(presenter),
+    date: dateString,
+    day: dayString
   };
 }
 
 // Helpers for placeholders ---------------------------------------------------
 function withCover(url){
-  return url ? `<div class="cover" style="background-image:url('${url}')"></div>` : `<div class="cover placeholder"></div>`;
+  return url ? `<div class="cover" style="background-image:url('${url}')" onerror="this.style.backgroundImage='url(images/SamudraFMLogo1.png)'"></div>` : `<div class="cover placeholder"></div>`;
 }
 
 // Render recent grid (if element exists)
@@ -295,16 +353,26 @@ function renderComingUpEvents(events) {
   }
   
   // Show all events in vertical scrollable format
-  const html = events.map(item => `
-    <article class="card">
-      ${withCover(item.cover)}
-      <div class="content">
-        <p class="title">${item.title}</p>
-        <p class="meta">${item.desc}</p>
-        <p class="meta">${item.time}</p>
-      </div>
-    </article>
-  `).join('');
+  const html = events.map(item => {
+    // Use profile picture if cover is null or empty
+    const coverUrl = item.cover || getProfilePicture(item.title);
+    return `
+      <article class="card coming-up-card">
+        ${withCover(coverUrl)}
+        <div class="content">
+          <p class="title">${item.title}</p>
+          <p class="meta">${item.desc}</p>
+          <p class="meta">${item.time}</p>
+        </div>
+        ${item.date && item.day ? `
+          <div class="coming-up-time">
+            <div class="coming-up-date">${item.date}</div>
+            <div class="coming-up-day">${item.day}</div>
+          </div>
+        ` : ''}
+      </article>
+    `;
+  }).join('');
   
   comingGrid.innerHTML = html;
   comingGrid.classList.add('scrollable');
@@ -1230,11 +1298,12 @@ function initProgressBar() {
     
     seekTo(percentage);
     
-    // Restart progress tracking after seeking
+    // Restart progress tracking after seeking with longer delay
     if (isCurrentlyPlaying) {
       setTimeout(() => {
+        console.log('Restarting progress tracking after seek');
         startSimpleProgressTracking();
-      }, 100);
+      }, 500);
     }
   });
   
@@ -1265,11 +1334,12 @@ function initProgressBar() {
       const percentage = parseFloat(progressFill.style.width);
       seekTo(percentage);
       
-      // Restart progress tracking after dragging
+      // Restart progress tracking after dragging with longer delay
       if (isCurrentlyPlaying) {
         setTimeout(() => {
+          console.log('Restarting progress tracking after drag');
           startSimpleProgressTracking();
-        }, 100);
+        }, 500);
       }
     }
   });
@@ -1313,25 +1383,49 @@ function initProgressBar() {
   }
   
   function seekTo(percentage) {
+    console.log('Seeking to percentage:', percentage);
     
+    // Prevent multiple seek operations
+    if (window.isSeeking) {
+      console.log('Seek already in progress, skipping');
+      return;
+    }
+    
+    window.isSeeking = true;
     
     // Seek the actual Mixcloud player
-    // Use current widget instead of creating new one
     if (currentWidget && typeof currentWidget.seek === 'function') {
       try {
-        const totalDuration = parseFloat(document.getElementById('total-time').textContent.replace('-', '').split(':').reduce((acc, time, i) => acc + time * Math.pow(60, 1-i), 0));
-        const seekPosition = (percentage / 100) * totalDuration;
-        currentWidget.seek(seekPosition);
-        
+        // Get duration from the widget directly instead of parsing UI text
+        currentWidget.getDuration().then(duration => {
+          if (duration && duration > 0) {
+            const seekPosition = (percentage / 100) * duration;
+            console.log('Seeking to position:', seekPosition, 'of', duration);
+            currentWidget.seek(seekPosition);
+            
+            // Reset seeking flag after a delay
+            setTimeout(() => {
+              window.isSeeking = false;
+            }, 1000);
+          } else {
+            console.log('No valid duration available for seeking');
+            window.isSeeking = false;
+          }
+        }).catch(error => {
+          console.log('Error getting duration for seek:', error);
+          window.isSeeking = false;
+        });
       } catch (error) {
-        
+        console.log('Error in seek function:', error);
+        window.isSeeking = false;
       }
+    } else {
+      console.log('No current widget available for seeking');
+      window.isSeeking = false;
     }
     
     // Update the progress bar immediately to show user's click
     updateProgress(percentage);
-    
-    
   }
   
   function formatTime(seconds) {
@@ -2796,7 +2890,7 @@ window.testCustomPosts = async function() {
 // Initialize manual Instagram posts when page loads
 document.addEventListener('DOMContentLoaded', function() {
   
-// Auto-updating Instagram posts using RSS.app feed - DISABLED (using Elfsight widget instead)
+// Auto-updating Instagram posts using RSS.app feed - DISABLED
 // const autoInstagramPosts = new AutoInstagramPosts();
   
   // Test if the container exists
@@ -2805,9 +2899,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Instagram feed container found, initializing...
   }
   
-  // autoInstagramPosts.init(); // DISABLED - using Elfsight widget instead
+  // autoInstagramPosts.init(); // DISABLED
 
-  // Add refresh button functionality to the header - DISABLED for Elfsight widget
+  // Add refresh button functionality to the header - DISABLED
   // const refreshButton = document.querySelector('.section-head h2');
   // if (refreshButton && refreshButton.textContent.includes('Latest Posts')) {
   //   refreshButton.style.cursor = 'pointer';
@@ -2823,13 +2917,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (prevBtn) {
     prevBtn.addEventListener('click', () => {
-      // autoInstagramPosts.prevSlide(); // DISABLED - using Elfsight widget
+      // autoInstagramPosts.prevSlide(); // DISABLED
     });
   }
   
   if (nextBtn) {
     nextBtn.addEventListener('click', () => {
-      // autoInstagramPosts.nextSlide(); // DISABLED - using Elfsight widget
+      // autoInstagramPosts.nextSlide(); // DISABLED
     });
   }
 
@@ -2838,7 +2932,7 @@ document.addEventListener('DOMContentLoaded', function() {
   updateIndicator.className = 'update-indicator';
   updateIndicator.innerHTML = `
     <small style="color: var(--muted); font-size: 11px;">
-      Using Elfsight Instagram widget
+      Instagram feed temporarily unavailable
     </small>
   `;
   
@@ -2848,7 +2942,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Auto-refresh Instagram posts every 5 minutes - DISABLED (using Elfsight widget)
+// Auto-refresh Instagram posts every 5 minutes - DISABLED
 // setInterval(() => {
 //   if (window.autoInstagramPosts) {
 //     window.autoInstagramPosts.refresh();

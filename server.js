@@ -4,7 +4,7 @@ const path = require('path');
 const url = require('url');
 
 const PORT = 8000;
-const HOST = '0.0.0.0';
+const HOST = '127.0.0.1';
 
 // MIME types
 const mimeTypes = {
@@ -97,12 +97,6 @@ server.listen(PORT, HOST, () => {
     console.log(`🌐 Open your browser to: http://${HOST}:${PORT}/`);
     console.log(`⏹️  Press Ctrl+C to stop the server`);
     console.log('-'.repeat(50));
-    
-    // Try to open browser
-    const { exec } = require('child_process');
-    const start = process.platform === 'darwin' ? 'open' : 
-                  process.platform === 'win32' ? 'start' : 'xdg-open';
-    exec(`${start} http://${HOST}:${PORT}/`);
 });
 
 // Handle server errors
