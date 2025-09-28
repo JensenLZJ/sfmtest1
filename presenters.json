@@ -1,0 +1,46 @@
+{
+  "presenters": [
+    {
+      "title": "Jensen",
+      "desc": "A Wee Mystical Magical Show",
+      "time": "Today 20:00 – 22:00",
+      "cover": null
+    },
+    {
+      "title": "Sarah",
+      "desc": "Evening Vibes with Sarah",
+      "time": "Tomorrow 19:00 – 21:00",
+      "cover": null
+    },
+    {
+      "title": "Alex",
+      "desc": "Late Night Sessions",
+      "time": "Friday 22:00 – 00:00",
+      "cover": null
+    },
+    {
+      "title": "Maya",
+      "desc": "Weekend Special",
+      "time": "Saturday 18:00 – 20:00",
+      "cover": null
+    },
+    {
+      "title": "David",
+      "desc": "Sunday Morning Show",
+      "time": "Sunday 10:00 – 12:00",
+      "cover": null
+    },
+    {
+      "title": "Emma",
+      "desc": "Monday Motivation",
+      "time": "Monday 07:00 – 09:00",
+      "cover": null
+    },
+    {
+      "title": "Chris",
+      "desc": "Tuesday Tunes",
+      "time": "Tuesday 18:00 – 20:00",
+      "cover": null
+    }
+  ]
+}

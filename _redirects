@@ -4,17 +4,5 @@
 # Redirect root to index.html
 / /index.html 200
 
-# Block direct access to images (but allow through protect-images.php)
-/images/* /404.html 403
-
-# Block direct access to assets  
-/assets/* /404.html 403
-
-# Block specific file types (but allow through protection scripts)
-/*.png /404.html 403
-/*.jpg /404.html 403
-/*.jpeg /404.html 403
-/*.gif /404.html 403
-/*.svg /404.html 403
-/*.ico /404.html 403
+# Allow all images and assets to load normally
 

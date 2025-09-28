@@ -1,0 +1,13 @@
+{
+  "name": "samudrafm-local-server",
+  "version": "1.0.0",
+  "description": "Local development server for SamudraFM website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["samudrafm", "radio", "local-server"],
+  "author": "Jensen Lim Zi Jen",
+  "license": "MIT"
+}

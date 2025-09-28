@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Schedule - SamudraFM</title>
+    <meta name="description" content="Check out our live radio schedule and upcoming shows on SamudraFM.">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://samudrafm.com/schedule">
+    <meta property="og:title" content="Schedule - SamudraFM">
+    <meta property="og:description" content="Check out our live radio schedule and upcoming shows on SamudraFM.">
+    <meta property="og:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    <meta property="og:site_name" content="SamudraFM">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://samudrafm.com/schedule">
+    <meta property="twitter:title" content="Schedule - SamudraFM">
+    <meta property="twitter:description" content="Check out our live radio schedule and upcoming shows on SamudraFM.">
+    <meta property="twitter:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    
+    <!-- Additional meta tags -->
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="msapplication-TileColor" content="#1a1a1a">
+    <meta name="msapplication-TileImage" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://www.googleapis.com https://widget-data.service.elfsight.com https://api.mixcloud.com;">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="styles.css?v=1734574000">
+    
+    <!-- Force schedule layout changes -->
+    <style>
+        .schedule-item {
+            background: #1d283c !important;
+            border: none !important;
+            border-radius: 10px !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: stretch !important;
+            gap: 0 !important;
+            margin-bottom: 24px !important;
+            min-height: auto !important;
+            width: 100% !important;
+        }
+        
+        .schedule-image {
+            display: none !important;
+            padding: 32px !important;
+            border-radius: 10px !important;
+            border: none !important;
+            flex-shrink: 0 !important;
+        }
+        
+        .schedule-image img {
+            width: 120px !important;
+            height: 120px !important;
+            object-fit: cover !important;
+            border-radius: 10px !important;
+            aspect-ratio: 1 !important;
+        }
+        
+        .schedule-content {
+            flex: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            padding: 16px 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            min-height: 100px !important;
+            position: relative !important;
+        }
+        
+             .presenter-name {
+                 font-size: 33px !important;
+                 font-weight: bold !important;
+                 color: white !important;
+                 margin: 0 !important;
+                 text-overflow: ellipsis !important;
+                 overflow: hidden !important;
+                 white-space: nowrap !important;
+             }
+        
+        .show-title {
+            font-size: 18px !important;
+            font-weight: normal !important;
+            color: white !important;
+            margin: 0 !important;
+            line-height: 1.2 !important;
+            margin-top: 8px !important;
+            display: block !important;
+        }
+        
+        
+        .schedule-actions {
+            display: flex !important;
+            align-items: flex-end !important;
+            gap: 10px !important;
+            margin-top: auto !important;
+            font-size: 18px !important;
+            line-height: 0 !important;
+            position: absolute !important;
+            bottom: 16px !important;
+            left: 0 !important;
+            right: 0 !important;
+        }
+        
+        .action-btn {
+            background: none !important;
+            border: none !important;
+            color: white !important;
+            opacity: 0.25 !important;
+            width: 32px !important;
+            height: 32px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            pointer-events: none !important;
+        }
+        
+             .schedule-time {
+                 background: linear-gradient(135deg, #2a2a3e 0%, #434366 100%) !important;
+                 padding: 20px !important;
+                 font-weight: 300 !important;
+                 color: #ffffff !important;
+                 font-size: 18px !important;
+                 width: auto !important;
+                 margin-left: auto !important;
+                 border-radius: 0 10px 10px 0 !important;
+                 box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+                 min-width: 120px !important;
+                 display: flex !important;
+                 align-items: center !important;
+                 justify-content: center !important;
+             }
+        
+        .time-slot {
+            background: none !important;
+            color: inherit !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            font-size: inherit !important;
+            font-weight: inherit !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            flex-direction: column !important;
+            text-align: center !important;
+        }
+        
+        @media (min-width: 1280px) {
+            .schedule-image {
+                display: flex !important;
+            }
+            .schedule-content {
+                padding: 32px !important;
+                padding-left: 0 !important;
+            }
+            .schedule-actions {
+                bottom: 32px !important;
+            }
+            .schedule-time {
+                padding: 40px 60px !important;
+                width: 320px !important;
+                font-size: 32px !important;
+                min-width: 200px !important;
+            }
+        }
+    </style>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
+    <link rel="apple-touch-icon" href="images/SamudraFMLogo1.png">
+    <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="/" class="brand" aria-label="SamudraFM Home">
+                <span class="brand-mark">Samudra<span>FM</span></span>
+                <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
+            </a>
+            <nav class="nav" aria-label="primary">
+                <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
+                <ul id="nav-menu" class="nav-list">
+                    <li><a href="/">home</a></li>
+                    <li><a href="/schedule" class="active">schedule</a></li>
+                    <li><a href="/episodes">episodes</a></li>
+                    <li><a href="/listen">where to listen</a></li>
+                    <li><a href="/about">about</a></li>
+                    <li><a href="/contact">contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <section class="hero-section" id="schedule">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Live Radio Schedule</h1>
+                    <p>Check out our upcoming shows and live broadcasts</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="schedule-section">
+            <div class="container">
+                
+                
+                <div class="schedule-list" id="schedule-list">
+                    <!-- Schedule items will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer" id="about">
+        <div class="footer-content">
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <img src="assets/brandmark/SamudraFMLogo1.png" alt="SamudraFM Logo" />
+                </div>
+                <h2 class="footer-brand-title">SamudraFM</h2>
+                <p class="footer-description">
+                    Non-Profit Organization. Fully volunteer-run<br>
+                    school of SMK Taman SEA radio station.
+                </p>
+                <p class="footer-programme">
+                    Our programme is a recreational school radio initiative, designed to give students hands-on broadcasting experience while exploring creativity in music, events, and radio production.
+                </p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Connect & Listen</h3>
+                <ul class="footer-links social-links">
+                    <li><a href="https://www.instagram.com/samudrafm/" class="social-link"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="https://www.facebook.com/SamudraFMSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://www.mixcloud.com/SamudraFM/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-separator"></div>
+        
+        <div class="footer-bottom">
+            <p>© 2025 SamudraFM. Designed with passion by Jensen Lim Zi Jen 📻</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Pagination variables - declare at the top
+        let displayedCount = 4; // Show 4 initially
+        let loadMoreCount = 2; // Load 2 more each time
+        let allScheduleData = []; // Store all data
+        let currentDisplayed = 0; // Track how many are currently displayed
+        
+        // Force cache busting
+        function forceCacheBust() {
+            const links = document.querySelectorAll('link[rel="stylesheet"]');
+            links.forEach(link => {
+                const href = link.href;
+                if (href.includes('styles.css')) {
+                    link.href = href.split('?')[0] + '?v=' + Date.now();
+                }
+            });
+        }
+        
+        // Initialize schedule page
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                console.log('Schedule page loaded with pagination support');
+                console.log('Pagination variables:', { displayedCount, loadMoreCount, currentDisplayed });
+                forceCacheBust();
+                loadScheduleData();
+            } catch (error) {
+                console.error('Error initializing schedule page:', error);
+            }
+        });
+        
+        // Profile picture mapping
+        const profilePictures = {
+            'JensenL': 'images/ProfilePicture/Jensen.jpg',
+            'Jensen': 'images/ProfilePicture/Jensen.jpg',
+            'Marcus': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
+            'Jess': 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face',
+            'James': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face',
+            'Lana': 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face',
+            'Jessica': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face',
+            'Niv': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face',
+            'Gavin': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face',
+            'TBA': 'images/SamudraFMLogo1.png'
+        };
+        
+        // Function to get profile picture for a presenter
+        function getProfilePicture(presenterName) {
+            // Clean the presenter name (remove extra spaces, special characters)
+            const cleanName = presenterName.trim().replace(/[^\w\s]/g, '');
+            
+            // Check for exact matches first
+            if (profilePictures[cleanName]) {
+                return profilePictures[cleanName];
+            }
+            
+            // Check for partial matches (for names like "Jess & James")
+            for (const [key, image] of Object.entries(profilePictures)) {
+                if (cleanName.toLowerCase().includes(key.toLowerCase()) || 
+                    key.toLowerCase().includes(cleanName.toLowerCase())) {
+                    return image;
+                }
+            }
+            
+            // Default fallback - use SamudraFM logo
+            return 'images/SamudraFMLogo1.png';
+        }
+        
+        // Function to add new profile pictures
+        function addProfilePicture(name, imagePath) {
+            profilePictures[name] = imagePath;
+            console.log(`Added profile picture for ${name}: ${imagePath}`);
+        }
+        
+        // Add more profile pictures as needed
+        // addProfilePicture('NewPresenter', 'images/ProfilePicture/NewPresenter.jpg');
+        
+        // Load schedule data
+        async function loadScheduleData() {
+            const scheduleContainer = document.getElementById('schedule-list');
+            if (!scheduleContainer) return;
+            
+            // Show loading state
+            scheduleContainer.innerHTML = '<p style="text-align: center; color: var(--muted);">Loading schedule...</p>';
+            
+            try {
+                console.log('Loading schedule data...');
+                
+                // Try to load from Google Calendar first
+                const events = await loadGoogleCalendarEvents();
+                console.log('Google Calendar events:', events);
+                
+                if (events && events.length > 0) {
+                    console.log('Using Google Calendar data');
+                    console.log('Google Calendar events count:', events.length);
+                    allScheduleData = events;
+                    renderScheduleItemsPaginated(scheduleContainer);
+                    return;
+                } else {
+                    console.log('No Google Calendar events found, using fallback data');
+                }
+                
+                // Fallback to presenters.json
+                const response = await fetch('presenters.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.events && data.events.length > 0) {
+                        // Map the events to the correct format
+                        const mappedEvents = data.events.map(event => {
+                            const presenter = event.presenter || event.title || 'TBA';
+                            return {
+                                presenter: presenter,
+                                show: event.description || event.show || 'Special Show',
+                                startTime: event.startTime || '10:00',
+                                endTime: event.endTime || '11:00',
+                                image: getProfilePicture(presenter)
+                            };
+                        });
+                        allScheduleData = mappedEvents;
+                        renderScheduleItemsPaginated(scheduleContainer);
+                        return;
+                    }
+                }
+                
+                // Fallback to mock data (images will be auto-detected)
+                const mockSchedule = [
+                    {
+                        presenter: "Marcus",
+                        show: "The Dance-floor",
+                        startTime: "01:00",
+                        endTime: "03:00"
+                    },
+                    {
+                        presenter: "Jess & James",
+                        show: "The Odd Show",
+                        startTime: "03:00",
+                        endTime: "05:00"
+                    },
+                    {
+                        presenter: "JensenL",
+                        show: "A Wee Mystical Magical Show",
+                        startTime: "06:50",
+                        endTime: "07:20"
+                    },
+                    {
+                        presenter: "Lana",
+                        show: "The Night Shift With Lana",
+                        startTime: "05:00",
+                        endTime: "07:00"
+                    },
+                    {
+                        presenter: "Jessica",
+                        show: "Sunday mornings with Jessica!",
+                        startTime: "14:00",
+                        endTime: "16:00"
+                    },
+                    {
+                        presenter: "Niv",
+                        show: "Tunes & Coffee!",
+                        startTime: "17:00",
+                        endTime: "18:00"
+                    },
+                    {
+                        presenter: "Gavin",
+                        show: "Sunday already?!",
+                        startTime: "18:00",
+                        endTime: "19:00"
+                    }
+                ];
+                console.log('Using mock data');
+                console.log('Mock schedule count:', mockSchedule.length);
+                allScheduleData = mockSchedule;
+                renderScheduleItemsPaginated(scheduleContainer);
+                
+            } catch (error) {
+                console.error('Error loading schedule:', error);
+                scheduleContainer.innerHTML = '<p style="text-align: center; color: var(--muted);">Unable to load schedule. Please try again later.</p>';
+            }
+        }
+        
+        // Render schedule items in the new format
+        function renderScheduleItems(items, container) {
+            if (!items || items.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--muted);">No schedule available for this date.</p>';
+                return;
+            }
+            
+            console.log('Rendering schedule items:', items);
+            
+            const scheduleHTML = items.map((item, index) => {
+                // Ensure all required fields have fallback values
+                const presenter = item.presenter || item.title || 'TBA';
+                const show = item.show || item.description || 'Special Show';
+                const startTime = item.startTime || '10:00';
+                const endTime = item.endTime || '11:00';
+                
+                // Use profile picture detection or fallback to provided image
+                const image = item.image || getProfilePicture(presenter);
+                
+                console.log(`Item ${index}:`, { presenter, show, image, detectedImage: getProfilePicture(presenter) });
+                console.log('Show title will be:', show);
+                
+                return `
+                    <div class="schedule-item">
+                        <div class="schedule-image">
+                            <img src="${image}" alt="${presenter}" onerror="this.src='images/SamudraFMLogo1.png'" />
+                        </div>
+                        <div class="schedule-content">
+                            <div class="presenter-name">${presenter}</div>
+                            <div class="show-title">${show}</div>
+                 <div class="schedule-actions">
+                     <div class="action-btn" title="X (Twitter)">
+                         <i class="fab fa-twitter"></i>
+                     </div>
+                     <div class="action-btn" title="Facebook">
+                         <i class="fab fa-facebook"></i>
+                     </div>
+                     <div class="action-btn" title="Instagram">
+                         <i class="fab fa-instagram"></i>
+                     </div>
+                     <div class="action-btn" title="YouTube">
+                         <i class="fab fa-youtube"></i>
+                     </div>
+                 </div>
+                        </div>
+                        <div class="schedule-time">
+                            <div class="time-slot">
+                                <div>${startTime}</div>
+                                <div>${endTime}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = scheduleHTML;
+        }
+        
+        // Render schedule items with pagination
+        function renderScheduleItemsPaginated(container) {
+            console.log('renderScheduleItemsPaginated called');
+            console.log('allScheduleData:', allScheduleData);
+            console.log('allScheduleData.length:', allScheduleData ? allScheduleData.length : 'undefined');
+            
+            if (!allScheduleData || allScheduleData.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--muted);">No schedule available for this date.</p>';
+                return;
+            }
+            
+            console.log('Rendering schedule items with pagination:', allScheduleData);
+            
+            // Reset displayed count
+            currentDisplayed = 0;
+            
+            // Show initial items
+            loadMoreItems(container);
+        }
+        
+        // Load more items function
+        function loadMoreItems(container) {
+            const itemsToShow = allScheduleData.slice(currentDisplayed, currentDisplayed + (currentDisplayed === 0 ? displayedCount : loadMoreCount));
+            
+            if (itemsToShow.length === 0) {
+                return;
+            }
+            
+            console.log('Loading more items:', itemsToShow);
+            
+            const scheduleHTML = itemsToShow.map((item, index) => {
+                // Ensure all required fields have fallback values
+                const presenter = item.presenter || item.title || 'TBA';
+                const show = item.show || item.description || 'Special Show';
+                const startTime = item.startTime || '10:00';
+                const endTime = item.endTime || '11:00';
+                
+                // Use profile picture detection or fallback to provided image
+                const image = item.image || getProfilePicture(presenter);
+                
+                console.log('Show title will be:', show);
+                
+                return `
+                    <div class="schedule-item">
+                        <div class="schedule-image">
+                            <img src="${image}" alt="${presenter}" onerror="this.src='images/SamudraFMLogo1.png'" />
+                        </div>
+                        <div class="schedule-content">
+                            <div class="presenter-name">${presenter}</div>
+                            <div class="show-title">${show}</div>
+                 <div class="schedule-actions">
+                     <div class="action-btn" title="X (Twitter)">
+                         <i class="fab fa-twitter"></i>
+                     </div>
+                     <div class="action-btn" title="Facebook">
+                         <i class="fab fa-facebook"></i>
+                     </div>
+                     <div class="action-btn" title="Instagram">
+                         <i class="fab fa-instagram"></i>
+                     </div>
+                     <div class="action-btn" title="YouTube">
+                         <i class="fab fa-youtube"></i>
+                     </div>
+                 </div>
+                        </div>
+                        <div class="schedule-time">
+                            <div class="time-slot">
+                                <div>${startTime}</div>
+                                <div>${endTime}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            if (currentDisplayed === 0) {
+                // First load - replace content
+                container.innerHTML = scheduleHTML;
+            } else {
+                // Load more - append content
+                container.insertAdjacentHTML('beforeend', scheduleHTML);
+            }
+            
+            currentDisplayed += itemsToShow.length;
+            
+            // Add or update Load More button
+            updateLoadMoreButton(container);
+        }
+        
+        // Update Load More button
+        function updateLoadMoreButton(container) {
+            // Remove existing button
+            const existingButton = container.parentNode.querySelector('.load-more-btn');
+            if (existingButton) {
+                existingButton.remove();
+            }
+            
+            // Check if there are more items to load
+            if (currentDisplayed < allScheduleData.length) {
+                const loadMoreButton = document.createElement('button');
+                loadMoreButton.className = 'load-more-btn';
+                loadMoreButton.innerHTML = 'Load More';
+                loadMoreButton.style.cssText = `
+                    display: block;
+                    margin: 20px auto;
+                    padding: 12px 24px;
+                    background: var(--accent, #4a2c8a);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                `;
+                
+                loadMoreButton.addEventListener('click', () => {
+                    loadMoreButton.innerHTML = 'Loading...';
+                    loadMoreButton.disabled = true;
+                    
+                    setTimeout(() => {
+                        loadMoreItems(container);
+                        loadMoreButton.innerHTML = 'Load More';
+                        loadMoreButton.disabled = false;
+                    }, 300);
+                });
+                
+                loadMoreButton.addEventListener('mouseenter', () => {
+                    loadMoreButton.style.background = 'var(--accent-hover, #5a3a9a)';
+                });
+                
+                loadMoreButton.addEventListener('mouseleave', () => {
+                    loadMoreButton.style.background = 'var(--accent, #4a2c8a)';
+                });
+                
+                container.parentNode.appendChild(loadMoreButton);
+            }
+        }
+        
+        // Load Google Calendar events (same as main page)
+        async function loadGoogleCalendarEvents() {
+            const API_KEY = 'AIzaSyBsR0tbkQTYwBoxLS9rsTh-MRu6yjK8QQ0';
+            const CALENDAR_ID = 'samudrafm.com@gmail.com';
+            const now = new Date();
+            const timeMin = now.toISOString();
+            const timeMax = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days ahead
+            
+            const url = `https://www.googleapis.com/calendar/v3/calendars/${CALENDAR_ID}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Failed to fetch events');
+                
+                const data = await response.json();
+                console.log('Total events found in calendar:', data.items ? data.items.length : 0);
+                return data.items.map(event => {
+                    const fullTitle = event.summary || 'TBA';
+                    
+                    // Split "JensenL - A Wee Mystical Magical Show" into presenter and show
+                    let presenter, show;
+                    if (fullTitle.includes(' - ')) {
+                        const parts = fullTitle.split(' - ');
+                        presenter = parts[0].trim();
+                        show = parts[1].trim();
+                    } else {
+                        presenter = fullTitle;
+                        show = event.description || 'Special Show';
+                    }
+                    
+                    return {
+                        presenter: presenter,
+                        show: show,
+                        startTime: new Date(event.start.dateTime || event.start.date).toLocaleTimeString('en-GB', { 
+                            hour: '2-digit', 
+                            minute: '2-digit',
+                            hour12: false 
+                        }),
+                        endTime: new Date(event.end.dateTime || event.end.date).toLocaleTimeString('en-GB', { 
+                            hour: '2-digit', 
+                            minute: '2-digit',
+                            hour12: false 
+                        }),
+                        image: getProfilePicture(presenter)
+                    };
+                });
+            } catch (error) {
+                console.error('Google Calendar API error:', error);
+                return null;
+            }
+        }
+    </script>
+</body>
+</html>

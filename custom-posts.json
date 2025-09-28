@@ -1,0 +1,52 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "Welcome to SamudraFM!",
+      "content": "🎵 Fresh beats and great vibes! Tune in to SamudraFM for the latest music and updates!",
+      "image": "images/CustomPost/552514804_17962043480989085_3816.jpg",
+      "link": "https://www.instagram.com/p/DO0d4jRktgm/",
+      "date": "2024-12-18T10:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "title": "Behind the Scenes",
+      "content": "📻 Our amazing team working hard to bring you the best content!",
+      "image": "images/CustomPost/551500122_17962043462989085_5241.jpg",
+      "link": "https://www.instagram.com/samudrafm/",
+      "date": "2024-12-17T15:30:00.000Z"
+    },
+    {
+      "id": "3",
+      "title": "New Episode Alert!",
+      "content": "🔥 Check out our latest episode featuring amazing music and great conversations!",
+      "image": "images/CustomPost/551794330_17962043393989085_4990.jpg",
+      "link": "https://www.instagram.com/samudrafm/",
+      "date": "2024-12-16T20:15:00.000Z"
+    },
+    {
+      "id": "4",
+      "title": "Thank You Listeners!",
+      "content": "🙏 Thank you for your amazing support! We love hearing from our community!",
+      "image": "images/CustomPost/552115285_17962041956989085_5018.jpg",
+      "link": "https://www.instagram.com/samudrafm/",
+      "date": "2024-12-15T12:45:00.000Z"
+    },
+    {
+      "id": "5",
+      "title": "New Music Friday!",
+      "content": "🎶 Fresh tracks just dropped! Check out our latest playlist featuring the hottest new releases! 🔥",
+      "image": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop&crop=center",
+      "link": "https://www.instagram.com/samudrafm/",
+      "date": "2024-12-14T20:15:00.000Z"
+    },
+    {
+      "id": "6",
+      "title": "Behind the Scenes",
+      "content": "📻 Our amazing team working hard to bring you the best content!",
+      "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop&crop=center",
+      "link": "https://www.instagram.com/samudrafm/",
+      "date": "2024-12-13T15:30:00.000Z"
+    }
+  ]
+}

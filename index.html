@@ -75,6 +75,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="styles.css?v=40&t=1734570200&force=17&nocache=1">
     
+    <!-- Elfsight Instagram Feed -->
+    <script src="https://elfsightcdn.com/platform.js" async></script>
+    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
     <link rel="apple-touch-icon" href="images/SamudraFMLogo1.png">
@@ -83,7 +86,7 @@
     <!-- Content Security Policy and Permissions Policy -->
     <meta http-equiv="Permissions-Policy" content="encrypted-media=*; autoplay=*; microphone=*; camera=*; fullscreen=*; geolocation=*; payment=*; usb=*; accelerometer=*; gyroscope=*; magnetometer=*; display-capture=*; web-share=*; clipboard-read=*; clipboard-write=*; picture-in-picture=*">
     <meta http-equiv="Feature-Policy" content="encrypted-media *; autoplay *; microphone *; camera *; fullscreen *; geolocation *; payment *; usb *; accelerometer *; gyroscope *; magnetometer *; display-capture *; web-share *; clipboard-read *; clipboard-write *; picture-in-picture *">
-    <meta http-equiv="Content-Security-Policy" content="frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none';">
+    <meta http-equiv="Content-Security-Policy" content="frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com https://core.service.elfsight.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://elfsightcdn.com https://static.elfsight.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://www.instagram.com https://api.allorigins.win https://rss.app https://core.service.elfsight.com https://www.googleapis.com https://widget-data.service.elfsight.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none';">
 </head>
 <body>
     <!-- Ribbon Effects -->
@@ -101,12 +104,12 @@
             <nav class="nav" aria-label="primary">
                 <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
                 <ul id="nav-menu" class="nav-list">
-                    <li><a href="#home" class="active">home</a></li>
-                    <li><a href="#schedule">schedule</a></li>
-                    <li><a href="#episodes">episodes</a></li>
-                    <li><a href="#listen">where to listen</a></li>
-                    <li><a href="#about">about</a></li>
-                    <li><a href="#contact">contact</a></li>
+                    <li><a href="/" class="active">home</a></li>
+                    <li><a href="/schedule">schedule</a></li>
+                    <li><a href="/episodes">episodes</a></li>
+                    <li><a href="/listen">where to listen</a></li>
+                    <li><a href="/about">about</a></li>
+                    <li><a href="/contact">contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -173,11 +176,8 @@
                     <h2><span class="dot-particle"></span>Latest Posts<span class="heading-line"></span></h2>
                 </div>
                 <div class="instagram-feed" id="instagram-feed">
-                    <!-- Instagram posts will be loaded here automatically -->
-                    <div class="instagram-loading">
-                        <i class="fab fa-instagram"></i>
-                        <p>Loading latest posts...</p>
-                    </div>
+                    <!-- Elfsight Instagram Feed Widget -->
+                    <div class="elfsight-app-eec3bd70-2432-4db7-81e3-c642a9159d95" data-elfsight-app-lazy></div>
                 </div>
             </div>
 
@@ -221,13 +221,16 @@
     <footer class="site-footer" id="about">
         <div class="footer-content">
             <div class="footer-column">
-                <div class="footer-logo">
-                    <img src="images/SamudraFMLogo1transparent.png" alt="SamudraFM Logo" />
-                </div>
+                   <div class="footer-logo">
+                       <img src="assets/brandmark/SamudraFMLogo1.png" alt="SamudraFM Logo" />
+                   </div>
                 <h2 class="footer-brand-title">SamudraFM</h2>
                 <p class="footer-description">
                     Non-Profit Organization. Fully volunteer-run<br>
                     school of SMK Taman SEA radio station.
+                </p>
+                <p class="footer-programme">
+                    Our programme is a recreational school radio initiative, designed to give students hands-on broadcasting experience while exploring creativity in music, events, and radio production.
                 </p>
             </div>
             
@@ -263,7 +266,7 @@
     <!-- Audio player will be handled by Mixcloud widget -->
 
 
-    <script src="script.js?v=51&t=1734570200&nocache=1"></script>
+    <script src="script.js?v=71&t=1734570200&nocache=1"></script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
     <script>
     // Force clear all caches on every visit
@@ -300,7 +303,7 @@
     <!-- Instagram Feed - Auto-updating content -->
     <script>
       // Instagram feed is handled by the main script.js
-      console.log('Instagram feed system loaded');
     </script>
 </body>
 </html>
+
