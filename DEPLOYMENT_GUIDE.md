@@ -11,13 +11,13 @@ Your SamudraFM website is now production-ready with secure API integration using
 3. **Add these secrets:**
 
 ```
-MY_INSTAGRAM_API = IGAAKR1FYftV5BZAFMwRUVrM1Nwak44cUlGaUhqWWhXdlZAyTFZAjZAVBFYzRoZAFViVklmVmNYeEJoS3RvNklOaHlEQjd1UVFfV0pUdmQwN2pZAVlpNbkE5LTFXSXg5UUl2TmpiQXc1bXoxZAHhQYWF3Mzl6blk4T1M4bG1nMmMtX0JuawZDZD
+MY_INSTAGRAM_API = your_instagram_access_token_here
 
-MY_INSTAGRAM_APP_ID = 723291117434206
+MY_INSTAGRAM_APP_ID = your_instagram_app_id_here
 
-MY_INSTAGRAM_APP_SECRET = 11f5a58610ee6c7e708fcc7cec378e41
+MY_INSTAGRAM_APP_SECRET = your_instagram_app_secret_here
 
-MY_CALENDAR_API = AIzaSyBsR0tbkQTYwBoxLS9rsTh-MRu6yjK8QQ0
+MY_CALENDAR_API = your_google_calendar_api_key_here
 
 MY_SHEET_API = your_google_sheets_api_key_here
 ```

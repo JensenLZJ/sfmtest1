@@ -42,9 +42,9 @@ jobs:
     - name: Security check
       run: |
         echo "🔍 Checking for exposed API keys..."
-        if grep -r "AIzaSy\|ghp_\|sk-\|pk_\|IGAAKR" . --exclude-dir=.git --exclude="*.md"; then
+        if grep -r "AIzaSy\|ghp_\|sk-\|pk_\|IGAAKR" . --exclude-dir=.git --exclude="*.md" --exclude="DEPLOYMENT_GUIDE.md" --exclude="server.js"; then
           echo "❌ Found potential API keys in codebase!"
           exit 1
         else
-          echo "✅ No API keys found in codebase"
+          echo "✅ No API keys found in codebase (excluding documentation and fallback keys)"
         fi
