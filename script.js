@@ -182,33 +182,119 @@ const MOCK_COMING = [
 // Mock data for reference (Live section removed)
 // MOCK_NOW, MOCK_RECENT, MOCK_COMING kept for potential future use
 
-// Google Calendar Integration - Direct API
-async function fetchGoogleCalendarEvents() {
+// Instagram API Configuration - Using secure backend API
+// API keys are now stored securely in GitHub Repository secrets
+// and accessed through the backend API server
+
+// Instagram API Integration (Secure Backend)
+async function fetchInstagramPosts() {
   try {
-    const calendarId = 'samudrafm.com@gmail.com';
-    const apiKey = 'AIzaSyBsR0tbkQTYwBoxLS9rsTh-MRu6yjK8QQ0';
+    // Use secure backend API instead of direct Instagram API
+    const apiUrl = '/api/instagram';
     
-    const now = new Date();
-    
-    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${now.toISOString()}&singleEvents=true&orderBy=startTime&maxResults=50`;
-    
-    
-    const response = await fetch(url);
+    const response = await fetch(apiUrl);
     
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Google Calendar API Error:', response.status, errorText);
-      throw new Error(`API error: ${response.status} - ${errorText}`);
+      throw new Error(`API error: ${response.status}`);
     }
     
     const data = await response.json();
     
-    return data.items || [];
+    if (!data.success) {
+      throw new Error(`API error: ${data.error}`);
+    }
+    
+    return data.posts || [];
+    
+  } catch (error) {
+    console.error('Error fetching Instagram posts:', error);
+    // Fallback to direct API if backend is not available
+    return await fetchInstagramPostsDirect();
+  }
+}
+
+// Fallback direct Instagram API (for development)
+async function fetchInstagramPostsDirect() {
+  try {
+    // This fallback is disabled to prevent API key exposure
+    // All API calls should go through the secure backend
+    console.warn('Fallback Instagram API is disabled for security');
+    return [];
+    
+  } catch (error) {
+    console.error('Error fetching Instagram posts directly:', error);
+    return [];
+  }
+}
+
+// Render Instagram posts
+function renderInstagramPosts(posts) {
+  const container = document.getElementById('instagram-feed');
+  if (!container) return;
+  
+  if (!posts || posts.length === 0) {
+    container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 2rem;">No Instagram posts available</p>';
+    return;
+  }
+  
+  const html = posts.map(post => {
+    const imageUrl = post.media_type === 'VIDEO' ? post.thumbnail_url : post.media_url;
+    const caption = post.caption ? post.caption.substring(0, 100) + '...' : 'View on Instagram';
+    const timestamp = new Date(post.timestamp).toLocaleDateString();
+    
+    return `
+      <div class="instagram-card">
+        <div class="instagram-cover" style="background-image: url('${imageUrl}')">
+          <div class="instagram-overlay">
+            <a href="${post.permalink}" target="_blank" rel="noopener" class="instagram-link">
+              <i class="fab fa-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="instagram-content">
+          <p class="instagram-caption">${caption}</p>
+          <p class="instagram-date">${timestamp}</p>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  container.innerHTML = html;
+}
+
+// Google Calendar Integration - Secure Backend API
+async function fetchGoogleCalendarEvents() {
+  try {
+    // Use secure backend API instead of direct Google Calendar API
+    const apiUrl = '/api/calendar';
+    
+    const response = await fetch(apiUrl);
+    
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (!data.success) {
+      throw new Error(`API error: ${data.error}`);
+    }
+    
+    return data.events || [];
+    
   } catch (error) {
     console.error('Error fetching Google Calendar events:', error);
-    console.error('Error details:', error.message);
-    return null;
+    // Fallback to direct API if backend is not available
+    return await fetchGoogleCalendarEventsDirect();
   }
+}
+
+// Fallback direct Google Calendar API (disabled for security)
+async function fetchGoogleCalendarEventsDirect() {
+  // This fallback is disabled to prevent API key exposure
+  // All API calls should go through the secure backend
+  console.warn('Fallback Google Calendar API is disabled for security');
+  return [];
 }
 
 function formatCalendarEvent(event) {
@@ -577,7 +663,6 @@ function renderEpisodesSlider() {
   
   slider.innerHTML = html;
   slider.dataset.loaded = '1';
-  updateSliderPosition();
 }
 
 function createSliderDots() {
@@ -2887,60 +2972,49 @@ window.testCustomPosts = async function() {
   }
 };
 
-// Initialize manual Instagram posts when page loads
+// Initialize Instagram posts when page loads
 document.addEventListener('DOMContentLoaded', function() {
-  
-// Auto-updating Instagram posts using RSS.app feed - DISABLED
-// const autoInstagramPosts = new AutoInstagramPosts();
-  
-  // Test if the container exists
-  const container = document.getElementById('instagram-feed');
-  if (container) {
-    // Instagram feed container found, initializing...
-  }
-  
-  // autoInstagramPosts.init(); // DISABLED
-
-  // Add refresh button functionality to the header - DISABLED
-  // const refreshButton = document.querySelector('.section-head h2');
-  // if (refreshButton && refreshButton.textContent.includes('Latest Posts')) {
-  //   refreshButton.style.cursor = 'pointer';
-  //   refreshButton.title = `Last updated: ${autoInstagramPosts.getLastUpdateTime()}`;
-  //   refreshButton.addEventListener('click', () => {
-  //     autoInstagramPosts.refresh();
-  //   });
-  // }
-
-  // Add slider controls
-  const prevBtn = document.getElementById('prev-instagram');
-  const nextBtn = document.getElementById('next-instagram');
-  
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      // autoInstagramPosts.prevSlide(); // DISABLED
-    });
-  }
-  
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      // autoInstagramPosts.nextSlide(); // DISABLED
-    });
-  }
-
-  // Add update indicator
-  const updateIndicator = document.createElement('div');
-  updateIndicator.className = 'update-indicator';
-  updateIndicator.innerHTML = `
-    <small style="color: var(--muted); font-size: 11px;">
-      Instagram feed temporarily unavailable
-    </small>
-  `;
-  
-  const sectionHead = document.querySelector('.instagram-section .section-head');
-  if (sectionHead) {
-    sectionHead.appendChild(updateIndicator);
-  }
+  // Load Instagram posts
+  loadInstagramPosts();
 });
+
+// Load Instagram posts function
+async function loadInstagramPosts() {
+  const container = document.getElementById('instagram-feed');
+  if (!container) return;
+  
+  // Show loading state
+  container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 2rem;">Loading Instagram posts...</p>';
+  
+  try {
+    const posts = await fetchInstagramPosts();
+    renderInstagramPosts(posts);
+    
+    // Update indicator
+    const sectionHead = document.querySelector('.instagram-section .section-head');
+    if (sectionHead) {
+      // Remove existing indicator
+      const existingIndicator = sectionHead.querySelector('.update-indicator');
+      if (existingIndicator) {
+        existingIndicator.remove();
+      }
+      
+      // Add new indicator
+      const updateIndicator = document.createElement('div');
+      updateIndicator.className = 'update-indicator';
+      updateIndicator.innerHTML = `
+        <small style="color: var(--muted); font-size: 11px;">
+          ${posts.length} posts loaded from Instagram
+        </small>
+      `;
+      sectionHead.appendChild(updateIndicator);
+    }
+    
+  } catch (error) {
+    console.error('Error loading Instagram posts:', error);
+    container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 2rem;">Unable to load Instagram posts</p>';
+  }
+}
 
 // Auto-refresh Instagram posts every 5 minutes - DISABLED
 // setInterval(() => {

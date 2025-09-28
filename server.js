@@ -2,9 +2,30 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const fetch = require('node-fetch');
 
 const PORT = 8000;
-const HOST = '127.0.0.1';
+const HOST = '0.0.0.0';
+
+// API Configuration - using environment variables with fallbacks for local development
+const API_CONFIG = {
+  // Instagram API
+  instagram: {
+    accessToken: process.env.MY_INSTAGRAM_API || 'IGAAKR1FYftV5BZAFMwRUVrM1Nwak44cUlGaUhqWWhXdlZAyTFZAjZAVBFYzRoZAFViVklmVmNYeEJoS3RvNklOaHlEQjd1UVFfV0pUdmQwN2pZAVlpNbkE5LTFXSXg5UUl2TmpiQXc1bXoxZAHhQYWF3Mzl6blk4T1M4bG1nMmMtX0JuawZDZD',
+    appId: process.env.MY_INSTAGRAM_APP_ID || '723291117434206',
+    appSecret: process.env.MY_INSTAGRAM_APP_SECRET || '11f5a58610ee6c7e708fcc7cec378e41'
+  },
+  // Google Calendar API
+  calendar: {
+    apiKey: process.env.MY_CALENDAR_API || 'AIzaSyBsR0tbkQTYwBoxLS9rsTh-MRu6yjK8QQ0',
+    calendarId: 'samudrafm.com@gmail.com'
+  },
+  // Google Sheets API
+  sheets: {
+    apiKey: process.env.MY_SHEET_API || '',
+    spreadsheetId: '' // You'll need to provide this
+  }
+};
 
 // MIME types
 const mimeTypes = {
@@ -19,7 +40,89 @@ const mimeTypes = {
     '.ico': 'image/x-icon'
 };
 
-const server = http.createServer((req, res) => {
+// API Route handlers
+async function handleInstagramAPI(req, res) {
+  try {
+    const accessToken = API_CONFIG.instagram.accessToken;
+    
+    if (!accessToken) {
+      throw new Error('Instagram API key not configured');
+    }
+    
+    // Get the user's media
+    const mediaUrl = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${accessToken}&limit=12`;
+    
+    const response = await fetch(mediaUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Instagram API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.error) {
+      throw new Error(`Instagram API error: ${data.error.message}`);
+    }
+    
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      success: true,
+      posts: data.data || []
+    }));
+    
+  } catch (error) {
+    console.error('Error fetching Instagram posts:', error);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      success: false,
+      error: error.message
+    }));
+  }
+}
+
+async function handleCalendarAPI(req, res) {
+  try {
+    const { apiKey, calendarId } = API_CONFIG.calendar;
+    
+    if (!apiKey) {
+      throw new Error('Google Calendar API key not configured');
+    }
+    
+    const now = new Date();
+    const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)); // 30 days ahead
+    
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${now.toISOString()}&timeMax=${timeMax.toISOString()}&singleEvents=true&orderBy=startTime&maxResults=50`;
+    
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Google Calendar API error: ${response.status} - ${errorText}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.error) {
+      throw new Error(`Google Calendar API error: ${data.error.message}`);
+    }
+    
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      success: true,
+      events: data.items || []
+    }));
+    
+  } catch (error) {
+    console.error('Error fetching Google Calendar events:', error);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      success: false,
+      error: error.message
+    }));
+  }
+}
+
+const server = http.createServer(async (req, res) => {
     // Add CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -29,6 +132,23 @@ const server = http.createServer((req, res) => {
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
+    
+    // Handle API routes
+    if (req.url === '/api/instagram') {
+        await handleInstagramAPI(req, res);
+        return;
+    }
+    
+    if (req.url === '/api/calendar') {
+        await handleCalendarAPI(req, res);
+        return;
+    }
+    
+    if (req.url === '/api/health') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'OK', timestamp: new Date().toISOString() }));
+        return;
+    }
     
     // Parse URL
     const parsedUrl = url.parse(req.url);

@@ -741,23 +741,26 @@
             }
         }
         
-        // Load Google Calendar events (same as main page)
+        // Load Google Calendar events via secure backend API
         async function loadGoogleCalendarEvents() {
-            const API_KEY = 'AIzaSyBsR0tbkQTYwBoxLS9rsTh-MRu6yjK8QQ0';
-            const CALENDAR_ID = 'samudrafm.com@gmail.com';
-            const now = new Date();
-            const timeMin = now.toISOString();
-            const timeMax = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days ahead
-            
-            const url = `https://www.googleapis.com/calendar/v3/calendars/${CALENDAR_ID}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
-            
             try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Failed to fetch events');
+                // Use secure backend API instead of direct Google Calendar API
+                const apiUrl = '/api/calendar';
+                
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
                 
                 const data = await response.json();
-                console.log('Total events found in calendar:', data.items ? data.items.length : 0);
-                return data.items.map(event => {
+                
+                if (!data.success) {
+                    throw new Error(`API error: ${data.error}`);
+                }
+                
+                console.log('Total events found in calendar:', data.events ? data.events.length : 0);
+                return data.events.map(event => {
                     const fullTitle = event.summary || 'TBA';
                     
                     // Split "JensenL - A Wee Mystical Magical Show" into presenter and show

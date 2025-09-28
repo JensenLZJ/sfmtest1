@@ -20,7 +20,7 @@ Your API keys are now secured using Vercel serverless functions. This works perf
    - Import your GitHub repository
    - Add environment variables in Vercel dashboard:
      - `GOOGLE_CALENDAR_ID` = `c2FtdWRyYWZtLmNvbUBnbWFpbC5jb20`
-     - `GOOGLE_CALENDAR_API_KEY` = `AIzaSyBsR0tbkQTYwBoxLS9rsTh-MRu6yjK8QQ0`
+     - `MY_CALENDAR_API` = `your_google_calendar_api_key_here`
 
 2. **Update API URL** (if needed):
    - Replace `https://samudrafm.vercel.app` in `script.js` with your Vercel domain

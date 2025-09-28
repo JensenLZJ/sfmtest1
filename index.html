@@ -84,7 +84,7 @@
     <!-- Content Security Policy and Permissions Policy -->
     <meta http-equiv="Permissions-Policy" content="encrypted-media=*; autoplay=*; microphone=*; camera=*; fullscreen=*; geolocation=*; payment=*; usb=*; accelerometer=*; gyroscope=*; magnetometer=*; display-capture=*; web-share=*; clipboard-read=*; clipboard-write=*; picture-in-picture=*">
     <meta http-equiv="Feature-Policy" content="encrypted-media *; autoplay *; microphone *; camera *; fullscreen *; geolocation *; payment *; usb *; accelerometer *; gyroscope *; magnetometer *; display-capture *; web-share *; clipboard-read *; clipboard-write *; picture-in-picture *">
-    <meta http-equiv="Content-Security-Policy" content="frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://www.instagram.com https://api.allorigins.win https://rss.app https://www.googleapis.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none';">
+    <meta http-equiv="Content-Security-Policy" content="frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://www.instagram.com https://api.allorigins.win https://rss.app https://www.googleapis.com https://graph.instagram.com https://sheets.googleapis.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none';">
 </head>
 <body>
     <!-- Ribbon Effects -->
@@ -196,14 +196,6 @@
             <div class="episodes-slider-container">
                 <div id="episodes-slider" class="episodes-slider"></div>
             </div>
-            <div class="slider-controls">
-                <button id="prev-episode" class="slider-btn" aria-label="Previous episodes">‹</button>
-                <div class="slider-dots" id="episode-dots"></div>
-                <button id="next-episode" class="slider-btn" aria-label="Next episodes">›</button>
-            </div>
-            <div class="cta-row" style="margin-top:12px">
-                <button id="episodes-load" class="btn" aria-label="Load more episodes">Load more</button>
-            </div>
         </section>
 
         <section id="about" class="about">
@@ -303,7 +295,6 @@
       // Instagram feed is handled by the main script.js
     </script>
     
-    <script src="script.js"></script>
 </body>
 </html>
 
