@@ -21,6 +21,29 @@ if (navToggle) {
   navToggle.addEventListener('click', () => {
     const open = navMenu.classList.toggle('open');
     navToggle.setAttribute('aria-expanded', String(open));
+    
+    // Add animate__fadeInRightBig class on mobile when menu opens
+    if (window.innerWidth <= 768) {
+      if (open) {
+        console.log('Opening menu on mobile');
+        // Remove any existing animation classes first
+        navMenu.classList.remove('animate__fadeInRightBig', 'animate__animated');
+        // Force a reflow to ensure the class removal takes effect
+        navMenu.offsetHeight;
+        // Add both animate__animated and animate__fadeInRightBig classes
+        navMenu.classList.add('animate__animated', 'animate__fadeInRightBig');
+        console.log('Added animation classes:', navMenu.classList.toString());
+        // Remove animation class after animation completes
+        setTimeout(() => {
+          navMenu.classList.remove('animate__fadeInRightBig', 'animate__animated');
+          console.log('Removed animation classes');
+        }, 1000);
+      } else {
+        // Remove animation class when closing
+        navMenu.classList.remove('animate__fadeInRightBig', 'animate__animated');
+        console.log('Closing menu, removed animation classes');
+      }
+    }
   });
 }
 
@@ -230,9 +253,15 @@ async function fetchInstagramPostsDirect() {
 // Render Instagram posts
 function renderInstagramPosts(posts) {
   const container = document.getElementById('instagram-feed');
-  if (!container) return;
+  if (!container) {
+    console.error('Instagram feed container not found in renderInstagramPosts');
+    return;
+  }
+  
+  console.log('Rendering Instagram posts:', posts);
   
   if (!posts || posts.length === 0) {
+    console.log('No posts to render, showing no posts message');
     container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 2rem;">No Instagram posts available</p>';
     return;
   }
@@ -245,6 +274,9 @@ function renderInstagramPosts(posts) {
     return `
       <div class="instagram-card">
         <div class="instagram-cover" style="background-image: url('${imageUrl}')">
+          <div class="instagram-date-overlay">
+            <p class="instagram-date">${timestamp}</p>
+          </div>
           <div class="instagram-overlay">
             <a href="${post.permalink}" target="_blank" rel="noopener" class="instagram-link">
               <i class="fab fa-instagram"></i>
@@ -253,13 +285,14 @@ function renderInstagramPosts(posts) {
         </div>
         <div class="instagram-content">
           <p class="instagram-caption">${caption}</p>
-          <p class="instagram-date">${timestamp}</p>
         </div>
       </div>
     `;
   }).join('');
   
+  console.log('Setting Instagram feed HTML:', html);
   container.innerHTML = html;
+  console.log('Instagram feed HTML set successfully');
 }
 
 // Google Calendar Integration - Secure Backend API
@@ -438,8 +471,11 @@ function renderComingUpEvents(events) {
     return;
   }
   
-  // Show all events in vertical scrollable format
-  const html = events.map(item => {
+  // Show only the 2 latest events
+  const limitedEvents = events.slice(0, 2);
+  
+  // Show limited events in vertical scrollable format
+  const html = limitedEvents.map(item => {
     // Use profile picture if cover is null or empty
     const coverUrl = item.cover || getProfilePicture(item.title);
     return `
@@ -461,17 +497,6 @@ function renderComingUpEvents(events) {
   }).join('');
   
   comingGrid.innerHTML = html;
-  comingGrid.classList.add('scrollable');
-  
-  // Add scroll event listener to show/hide scroll indicator
-  comingGrid.addEventListener('scroll', function() {
-    const scrollIndicator = document.querySelector('.coming .section-head::after');
-    if (comingGrid.scrollTop > 0) {
-      comingGrid.style.setProperty('--scroll-indicator-opacity', '0');
-    } else {
-      comingGrid.style.setProperty('--scroll-indicator-opacity', '0.7');
-    }
-  });
 }
 
 // Handle logo click to go to home page
@@ -656,7 +681,7 @@ function renderEpisodesSlider() {
       <div class="content">
         <p class="title">${ep.name}</p>
         <p class="meta">${ep.created ? ep.created.toLocaleDateString() : ''}</p>
-        <a class="play-link" href="${ep.url}" target="_blank" rel="noopener">Open on Mixcloud ▶</a>
+        <span class="play-link">Click to play now ▶</span>
       </div>
     </article>
   `).join('');
@@ -735,10 +760,11 @@ function attachEpisodeClickHandlers() {
   slider.querySelectorAll('.episodes-card').forEach((card, idx) => {
     const episode = episodes[idx];
     card.addEventListener('click', (e) => {
-      // Don't trigger if clicking on the Mixcloud link
-      if (e.target.classList.contains('play-link')) {
-        return;
-      }
+      // Prevent any redirect to Mixcloud
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Play the episode when clicking anywhere on the card
       playEpisode(episode);
     });
   });
@@ -787,6 +813,31 @@ document.addEventListener('DOMContentLoaded', () => {
     nextBtn.addEventListener('click', nextSlide);
   }
 });
+
+// Episodes navigation functions
+function prevEpisode() {
+  const slider = document.getElementById('episodes-slider');
+  if (slider) {
+    const container = slider.parentElement;
+    const scrollAmount = container.clientWidth * 0.8; // Scroll 80% of container width
+    container.scrollBy({
+      left: -scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+}
+
+function nextEpisode() {
+  const slider = document.getElementById('episodes-slider');
+  if (slider) {
+    const container = slider.parentElement;
+    const scrollAmount = container.clientWidth * 0.8; // Scroll 80% of container width
+    container.scrollBy({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+}
 
 // Audio player for episodes -------------------------------------------------------
 let currentEpisode = null;
@@ -1159,11 +1210,19 @@ function startProgressTracking(widget) {
 }
 
 function updateProgressBar(percentage, currentSeconds, totalSeconds) {
+  // Update mobile progress bar
   const progressFill = document.getElementById('hero-progress');
   const progressHandle = document.getElementById('progress-handle');
   const currentTimeEl = document.getElementById('current-time');
   const totalTimeEl = document.getElementById('total-time');
   
+  // Update desktop progress bar
+  const progressFillDesktop = document.getElementById('hero-progress-desktop');
+  const progressHandleDesktop = document.getElementById('progress-handle-desktop');
+  const currentTimeElDesktop = document.getElementById('current-time-desktop');
+  const totalTimeElDesktop = document.getElementById('total-time-desktop');
+  
+  // Update mobile elements
   if (progressFill) {
     progressFill.style.width = percentage + '%';
   }
@@ -1175,6 +1234,20 @@ function updateProgressBar(percentage, currentSeconds, totalSeconds) {
   }
   if (totalTimeEl) {
     totalTimeEl.textContent = '-' + formatTime(Math.floor(totalSeconds - currentSeconds));
+  }
+  
+  // Update desktop elements
+  if (progressFillDesktop) {
+    progressFillDesktop.style.width = percentage + '%';
+  }
+  if (progressHandleDesktop) {
+    progressHandleDesktop.style.left = percentage + '%';
+  }
+  if (currentTimeElDesktop) {
+    currentTimeElDesktop.textContent = formatTime(Math.floor(currentSeconds));
+  }
+  if (totalTimeElDesktop) {
+    totalTimeElDesktop.textContent = '-' + formatTime(Math.floor(totalSeconds - currentSeconds));
   }
 }
 
@@ -1329,22 +1402,21 @@ function updatePlayState(isPlaying) {
   // Update the single play/pause button
   const playPauseBtn = document.getElementById('hero-play-pause');
   
-  // Updating play state
-  
-  // On mobile, don't show the button until widget is ready
-  if (isMobileDevice() && !currentWidget) {
-    // Mobile: Not updating play state - widget not ready yet
+  if (!playPauseBtn) {
+    console.log('Play button not found in updatePlayState');
     return;
   }
+  
+  // Updating play state
   
   if (isPlaying) {
     // Show pause icon (Font Awesome)
     playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-    // Set pause icon
+    console.log('Set to pause icon');
   } else {
     // Show play icon (Font Awesome)
     playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-    // Set play icon
+    console.log('Set to play icon');
   }
   
   // Force a re-render
@@ -1355,15 +1427,23 @@ function updatePlayState(isPlaying) {
 
 // Progress bar functionality
 function initProgressBar() {
-  const progressBar = document.getElementById('progress-bar');
-  const progressHandle = document.getElementById('progress-handle');
-  const progressFill = document.getElementById('hero-progress');
-  const currentTimeEl = document.getElementById('current-time');
-  const totalTimeEl = document.getElementById('total-time');
+  // Initialize mobile progress bar
+  initSingleProgressBar('progress-bar', 'progress-handle', 'hero-progress', 'current-time', 'total-time');
+  
+  // Initialize desktop progress bar
+  initSingleProgressBar('progress-bar-desktop', 'progress-handle-desktop', 'hero-progress-desktop', 'current-time-desktop', 'total-time-desktop');
+}
+
+function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, currentTimeId, totalTimeId) {
+  const progressBar = document.getElementById(progressBarId);
+  const progressHandle = document.getElementById(progressHandleId);
+  const progressFill = document.getElementById(progressFillId);
+  const currentTimeEl = document.getElementById(currentTimeId);
+  const totalTimeEl = document.getElementById(totalTimeId);
   
   // Check if elements exist before adding event listeners
   if (!progressBar || !progressHandle || !progressFill || !currentTimeEl || !totalTimeEl) {
-    console.log('Progress bar elements not found, skipping initialization');
+    console.log(`Progress bar elements not found for ${progressBarId}, skipping initialization`);
     return;
   }
   
@@ -1536,36 +1616,145 @@ function initVolumeControl() {
   }
   
   let isDragging = false;
+  let startX = 0;
+  let startPercentage = 0;
   
+  // Click on volume bar to set volume (desktop)
   volumeBar.addEventListener('click', (e) => {
+    if (isDragging) return; // Don't trigger if we're dragging
+    e.preventDefault();
+    e.stopPropagation();
+    
     const rect = volumeBar.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
-    const percentage = (clickX / rect.width) * 100;
+    const percentage = Math.max(0, Math.min(100, (clickX / rect.width) * 100));
+    
+    // Add visual feedback
+    volumeBar.style.transform = 'scale(1.02)';
+    setTimeout(() => {
+      volumeBar.style.transform = 'scale(1)';
+    }, 100);
+    
+    // Immediate visual feedback
     updateVolume(percentage);
   });
   
+  // Touch support for volume bar (mobile)
+  volumeBar.addEventListener('touchstart', (e) => {
+    if (isDragging) return;
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const touch = e.touches[0];
+    const rect = volumeBar.getBoundingClientRect();
+    const touchX = touch.clientX - rect.left;
+    const percentage = Math.max(0, Math.min(100, (touchX / rect.width) * 100));
+    
+    // Add visual feedback
+    volumeBar.style.transform = 'scale(1.02)';
+    setTimeout(() => {
+      volumeBar.style.transform = 'scale(1)';
+    }, 100);
+    
+    // Immediate visual feedback
+    updateVolume(percentage);
+  });
+  
+  // Mouse events for desktop
   volumeHandle.addEventListener('mousedown', (e) => {
     isDragging = true;
     e.preventDefault();
+    e.stopPropagation();
+    
+    const rect = volumeBar.getBoundingClientRect();
+    startX = e.clientX;
+    startPercentage = parseFloat(volumeFill.style.width) || 0;
+    
+    // Add visual feedback
+    volumeHandle.style.cursor = 'grabbing';
+    volumeBar.style.cursor = 'grabbing';
   });
   
   document.addEventListener('mousemove', (e) => {
     if (isDragging) {
-      const rect = volumeBar.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left;
-      const percentage = Math.max(0, Math.min(100, (mouseX / rect.width) * 100));
-      updateVolume(percentage);
+      e.preventDefault();
+      requestAnimationFrame(() => {
+        const rect = volumeBar.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const percentage = Math.max(0, Math.min(100, (mouseX / rect.width) * 100));
+        updateVolume(percentage);
+      });
     }
   });
   
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
+  document.addEventListener('mouseup', (e) => {
+    if (isDragging) {
+      isDragging = false;
+      
+      // Remove visual feedback
+      volumeHandle.style.cursor = 'grab';
+      volumeBar.style.cursor = 'pointer';
+    }
+  });
+  
+  // Touch events for mobile
+  volumeHandle.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const touch = e.touches[0];
+    const rect = volumeBar.getBoundingClientRect();
+    startX = touch.clientX;
+    startPercentage = parseFloat(volumeFill.style.width) || 0;
+    
+    // Add visual feedback
+    volumeHandle.style.cursor = 'grabbing';
+    volumeBar.style.cursor = 'grabbing';
+  });
+  
+  document.addEventListener('touchmove', (e) => {
+    if (isDragging) {
+      e.preventDefault();
+      requestAnimationFrame(() => {
+        const touch = e.touches[0];
+        const rect = volumeBar.getBoundingClientRect();
+        const touchX = touch.clientX - rect.left;
+        const percentage = Math.max(0, Math.min(100, (touchX / rect.width) * 100));
+        updateVolume(percentage);
+      });
+    }
+  });
+  
+  document.addEventListener('touchend', (e) => {
+    if (isDragging) {
+      isDragging = false;
+      
+      // Remove visual feedback
+      volumeHandle.style.cursor = 'grab';
+      volumeBar.style.cursor = 'pointer';
+    }
   });
   
   function updateVolume(percentage) {
-    // Update visual slider
+    // Ensure percentage is within bounds
+    percentage = Math.max(0, Math.min(100, percentage));
+    
+    // Update visual slider immediately with no transition during drag or click
+    if (isDragging) {
+      volumeFill.style.transition = 'none';
+      volumeHandle.style.transition = 'none';
+    } else {
+      // Quick transition for clicks, no transition for immediate feedback
+      volumeFill.style.transition = 'width 0.05s ease-out';
+      volumeHandle.style.transition = 'left 0.05s ease-out';
+    }
+    
     volumeFill.style.width = percentage + '%';
     volumeHandle.style.left = percentage + '%';
+    
+    // Force a reflow to ensure immediate visual update
+    volumeFill.offsetHeight;
     
     // Control Mixcloud widget volume
     if (currentWidget && typeof currentWidget.setVolume === 'function') {
@@ -1574,10 +1763,10 @@ function initVolumeControl() {
         currentWidget.setVolume(volume);
         
       } catch (error) {
-        
+        console.log('Error setting volume:', error);
       }
     } else {
-      
+      console.log('No widget available for volume control');
     }
   }
   
@@ -1708,6 +1897,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     forceUpdatePlayButton();
   }, 1000);
+  
+  // Change Listen now button to Send a request on mobile
+  if (window.innerWidth <= 768) {
+    const listenBtn = document.querySelector('.hero-copy .btn.primary');
+    if (listenBtn) {
+      listenBtn.textContent = 'Send a request';
+      listenBtn.onclick = function(e) {
+        e.preventDefault();
+        window.location.href = 'request.html';
+      };
+    }
+  }
 });
 
 function initAudioDebugging() {
@@ -2981,34 +3182,21 @@ document.addEventListener('DOMContentLoaded', function() {
 // Load Instagram posts function
 async function loadInstagramPosts() {
   const container = document.getElementById('instagram-feed');
-  if (!container) return;
+  if (!container) {
+    console.error('Instagram feed container not found');
+    return;
+  }
   
   // Show loading state
   container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 2rem;">Loading Instagram posts...</p>';
   
   try {
+    console.log('Fetching Instagram posts...');
     const posts = await fetchInstagramPosts();
+    console.log('Instagram posts fetched:', posts);
     renderInstagramPosts(posts);
     
-    // Update indicator
-    const sectionHead = document.querySelector('.instagram-section .section-head');
-    if (sectionHead) {
-      // Remove existing indicator
-      const existingIndicator = sectionHead.querySelector('.update-indicator');
-      if (existingIndicator) {
-        existingIndicator.remove();
-      }
-      
-      // Add new indicator
-      const updateIndicator = document.createElement('div');
-      updateIndicator.className = 'update-indicator';
-      updateIndicator.innerHTML = `
-        <small style="color: var(--muted); font-size: 11px;">
-          ${posts.length} posts loaded from Instagram
-        </small>
-      `;
-      sectionHead.appendChild(updateIndicator);
-    }
+    // Update indicator removed - no longer showing post count
     
   } catch (error) {
     console.error('Error loading Instagram posts:', error);
@@ -3022,3 +3210,145 @@ async function loadInstagramPosts() {
 //     window.autoInstagramPosts.refresh();
 //   }
 // }, 5 * 60 * 1000); // 5 minutes
+
+// Ensure main content grid is visible on mobile
+function ensureMainContentVisible() {
+  const mainContentGrid = document.querySelector('.main-content-grid');
+  if (!mainContentGrid) return;
+  
+  console.log('Main content grid found - ensuring visibility');
+  
+  // Force main content grid to be visible
+  mainContentGrid.style.setProperty('opacity', '1', 'important');
+  mainContentGrid.style.setProperty('transform', 'translateY(0)', 'important');
+  mainContentGrid.style.setProperty('pointer-events', 'auto', 'important');
+  mainContentGrid.style.setProperty('display', 'grid', 'important');
+  mainContentGrid.style.setProperty('visibility', 'visible', 'important');
+  
+  // Force all child elements to be visible
+  const childElements = mainContentGrid.querySelectorAll('*');
+  childElements.forEach(element => {
+    if (!element.classList.contains('hero') && !element.classList.contains('hero-latest')) {
+      element.classList.add('mobile-revealed', 'revealed');
+      element.style.setProperty('opacity', '1', 'important');
+      element.style.setProperty('transform', 'translateY(0)', 'important');
+      element.style.setProperty('pointer-events', 'auto', 'important');
+      element.style.setProperty('visibility', 'visible', 'important');
+    }
+  });
+  
+  // Specifically ensure coming section is visible
+  const comingSection = document.querySelector('.coming');
+  if (comingSection) {
+    comingSection.classList.add('mobile-revealed', 'revealed');
+    comingSection.style.setProperty('opacity', '1', 'important');
+    comingSection.style.setProperty('transform', 'translateY(0)', 'important');
+    comingSection.style.setProperty('pointer-events', 'auto', 'important');
+    comingSection.style.setProperty('visibility', 'visible', 'important');
+    
+    // Ensure coming-grid is visible
+    const comingGrid = document.getElementById('coming-grid');
+    if (comingGrid) {
+      comingGrid.classList.add('mobile-revealed', 'revealed');
+      comingGrid.style.setProperty('opacity', '1', 'important');
+      comingGrid.style.setProperty('transform', 'translateY(0)', 'important');
+      comingGrid.style.setProperty('pointer-events', 'auto', 'important');
+      comingGrid.style.setProperty('visibility', 'visible', 'important');
+    }
+  }
+
+  // Specifically ensure instagram section is visible
+  const instagramSection = document.querySelector('.instagram-section');
+  if (instagramSection) {
+    instagramSection.classList.add('mobile-revealed', 'revealed');
+    instagramSection.style.setProperty('opacity', '1', 'important');
+    instagramSection.style.setProperty('transform', 'translateY(0)', 'important');
+    instagramSection.style.setProperty('pointer-events', 'auto', 'important');
+    instagramSection.style.setProperty('visibility', 'visible', 'important');
+    
+    // Ensure instagram-feed is visible
+    const instagramFeed = document.getElementById('instagram-feed');
+    if (instagramFeed) {
+      instagramFeed.classList.add('mobile-revealed', 'revealed');
+      instagramFeed.style.setProperty('opacity', '1', 'important');
+      instagramFeed.style.setProperty('transform', 'translateY(0)', 'important');
+      instagramFeed.style.setProperty('pointer-events', 'auto', 'important');
+      instagramFeed.style.setProperty('visibility', 'visible', 'important');
+    }
+    
+    // Ensure all instagram cards are visible
+    const instagramCards = instagramSection.querySelectorAll('.instagram-card');
+    instagramCards.forEach(card => {
+      card.classList.add('mobile-revealed', 'revealed');
+      card.style.setProperty('opacity', '1', 'important');
+      card.style.setProperty('transform', 'translateY(0) scale(1)', 'important');
+      card.style.setProperty('pointer-events', 'auto', 'important');
+      card.style.setProperty('visibility', 'visible', 'important');
+    });
+  }
+  
+  console.log('Main content grid visibility enforced');
+}
+
+// Call the function on mobile devices
+if (window.innerWidth <= 768) {
+  document.addEventListener('DOMContentLoaded', ensureMainContentVisible);
+  // Also call after a short delay to ensure all content is loaded
+  setTimeout(ensureMainContentVisible, 1000);
+}
+
+// Instagram Navigation Functions
+function scrollInstagramLeft() {
+  const feed = document.getElementById('instagram-feed');
+  if (!feed) return;
+  
+  const scrollAmount = feed.clientWidth * 0.8; // Scroll by 80% of visible width
+  feed.scrollBy({
+    left: -scrollAmount,
+    behavior: 'smooth'
+  });
+  
+  updateInstagramNavButtons();
+}
+
+function scrollInstagramRight() {
+  const feed = document.getElementById('instagram-feed');
+  if (!feed) return;
+  
+  const scrollAmount = feed.clientWidth * 0.8; // Scroll by 80% of visible width
+  feed.scrollBy({
+    left: scrollAmount,
+    behavior: 'smooth'
+  });
+  
+  updateInstagramNavButtons();
+}
+
+function updateInstagramNavButtons() {
+  const feed = document.getElementById('instagram-feed');
+  if (!feed) return;
+  
+  const prevBtn = document.querySelector('.instagram-prev-btn');
+  const nextBtn = document.querySelector('.instagram-next-btn');
+  
+  if (!prevBtn || !nextBtn) return;
+  
+  // Update button states based on scroll position
+  const isAtStart = feed.scrollLeft <= 0;
+  const isAtEnd = feed.scrollLeft >= (feed.scrollWidth - feed.clientWidth);
+  
+  prevBtn.disabled = isAtStart;
+  nextBtn.disabled = isAtEnd;
+}
+
+// Initialize navigation buttons when Instagram posts are loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Update buttons after a short delay to ensure posts are loaded
+  setTimeout(updateInstagramNavButtons, 2000);
+  
+  // Update buttons on scroll
+  const feed = document.getElementById('instagram-feed');
+  if (feed) {
+    feed.addEventListener('scroll', updateInstagramNavButtons);
+  }
+});

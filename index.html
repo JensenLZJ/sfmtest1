@@ -73,6 +73,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="styles.css?v=40&t=1734570200&force=17&nocache=1">
     
     
@@ -116,8 +117,8 @@
     <main id="home" class="site-main container">
         <section class="hero">
             <div class="hero-copy">
-                <h1>Your study, your music.</h1>
-                <p>Helping you focus, unwind, and stay inspired — one song at a time.</p>
+                <h1>Your study,<br>your music.</h1>
+                <p>Helping you focus, unwind, and stay inspired.<br>one song at a time.</p>
                 <div class="cta-row">
                     <button class="btn primary" onclick="window.handlePlayOnly()">Listen now</button>
                     <a class="btn" href="request.html">Send a request</a>
@@ -125,57 +126,80 @@
             </div>
             <div class="panel hero-latest" id="hero-latest">
                 <div class="player-widget">
-                    <div class="player-left">
-                        <div class="hero-latest-cover cover placeholder" id="player-cover"></div>
-                        <div class="play-overlay" id="play-overlay">
-                            <button class="play-pause-btn" id="hero-play-pause"><i class="fa-solid fa-pause"></i></button>
+                    <div class="player-content-row">
+                        <div class="player-left">
+                            <div class="hero-latest-cover cover placeholder" id="player-cover"></div>
+                            <div class="play-overlay" id="play-overlay">
+                                <button class="play-pause-btn" id="hero-play-pause"><i class="fa-solid fa-pause"></i></button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="player-right">
-                        <div class="player-info">
-                            <h3 id="hero-ep-title" class="track-title">Loading…</h3>
-                            <p id="hero-ep-artist" class="track-artist">SamudraFM</p>
-                        </div>
-                        <div class="player-controls">
-                            <div class="volume-control">
-                                <span class="volume-icon">🔊</span>
-                                <div class="volume-slider">
-                                    <div class="volume-bar">
-                                        <div class="volume-fill" style="width: 80%"></div>
-                                        <div class="volume-handle"></div>
+                        <div class="player-right">
+                            <div class="player-info">
+                                <h3 id="hero-ep-title" class="track-title">Loading…</h3>
+                                <p id="hero-ep-artist" class="track-artist">SamudraFM</p>
+                            </div>
+                            <div class="player-controls">
+                                <div class="volume-control">
+                                    <span class="volume-icon">🔊</span>
+                                    <div class="volume-slider">
+                                        <div class="volume-bar">
+                                            <div class="volume-fill" style="width: 80%"></div>
+                                            <div class="volume-handle"></div>
+                                        </div>
                                     </div>
                                 </div>
+                                <a id="hero-open" class="request-btn" href="request.html" target="_blank" rel="noopener">Send a request</a>
                             </div>
-                            <a id="hero-open" class="request-btn" href="request.html" target="_blank" rel="noopener">Send a request</a>
+                            
+                            <!-- Progress Bar for Desktop -->
+                            <div class="progress-container">
+                                <div class="progress" id="progress-bar-desktop">
+                                    <div id="hero-progress-desktop" class="bar" style="width:0%"></div>
+                                    <div class="progress-handle" id="progress-handle-desktop"></div>
+                                </div>
+                                <div class="time-display">
+                                    <span id="current-time-desktop">0:00</span>
+                                    <span id="total-time-desktop">0:00</span>
+                                </div>
+                            </div>
                         </div>
-                        
-                        <!-- Custom Player Controls Only -->
-                        <div class="progress-container">
-                            <div class="progress" id="progress-bar">
-                                <div id="hero-progress" class="bar" style="width:0%"></div>
-                                <div class="progress-handle" id="progress-handle"></div>
-                            </div>
-                            <div class="time-display">
-                                <span id="current-time">0:00</span>
-                                <span id="total-time">0:00</span>
-                            </div>
+                    </div>
+                    
+                    <!-- Progress Bar - Full Width on Mobile -->
+                    <div class="progress-container">
+                        <div class="progress" id="progress-bar">
+                            <div id="hero-progress" class="bar" style="width:0%"></div>
+                            <div class="progress-handle" id="progress-handle"></div>
+                        </div>
+                        <div class="time-display">
+                            <span id="current-time">0:00</span>
+                            <span id="total-time">0:00</span>
                         </div>
                     </div>
                 </div>
-                <div class="hero-embed" hidden></div>
             </div>
+
+
+            <div class="hero-embed" hidden></div>
         </section>
 
 
         <section class="main-content-grid">
             <!-- Left Side - Instagram Posts -->
             <div class="instagram-section">
-            <div class="section-head">
-                    <h2><span class="dot-particle"></span>Latest Posts<span class="heading-line"></span></h2>
+                <div class="section-head">
+                    <h2><span class="dot-particle"></span>SFM Instagram<span class="heading-line"></span></h2>
+                    <div class="instagram-nav-controls">
+                        <button class="instagram-nav-btn instagram-prev-btn" onclick="scrollInstagramLeft()">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="instagram-nav-btn instagram-next-btn" onclick="scrollInstagramRight()">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="instagram-feed" id="instagram-feed">
-                    <!-- Instagram feed removed -->
-                    <p style="text-align: center; color: var(--muted); padding: 2rem;">Instagram feed temporarily unavailable</p>
+                    <!-- Instagram posts will be loaded here by JavaScript -->
                 </div>
             </div>
 
@@ -190,9 +214,16 @@
 
         <section id="episodes" class="episodes" aria-labelledby="episodes-heading">
             <div class="section-head">
-                <h2 id="episodes-heading"><span class="dot-particle"></span>Latest episodes<span class="heading-line"></span></h2>
+                <h2 id="episodes-heading"><span class="dot-particle"></span>Shows<span class="heading-line"></span></h2>
+                <div class="episodes-nav-controls">
+                    <button class="episodes-nav-btn episodes-prev-btn" onclick="prevEpisode()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="episodes-nav-btn episodes-next-btn" onclick="nextEpisode()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
             </div>
-            <p class="muted">Live from SamudraFM Mixcloud profile.</p>
             <div class="episodes-slider-container">
                 <div id="episodes-slider" class="episodes-slider"></div>
             </div>

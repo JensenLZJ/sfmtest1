@@ -4,28 +4,55 @@ const path = require('path');
 const url = require('url');
 const fetch = require('node-fetch');
 
-const PORT = 8000;
+// Load environment variables from .env file
+require('dotenv').config();
+
+// Production server - uses GitHub Repository secrets only
+console.log('🚀 Starting SamudraFM Production Server...');
+
+const PORT = process.env.PORT || 8003;
 const HOST = '0.0.0.0';
 
-// API Configuration - using environment variables with fallbacks for local development
+// API Configuration - using GitHub repository secrets only
 const API_CONFIG = {
   // Instagram API
   instagram: {
-    accessToken: process.env.MY_INSTAGRAM_API || 'IGAAKR1FYftV5BZAFMwRUVrM1Nwak44cUlGaUhqWWhXdlZAyTFZAjZAVBFYzRoZAFViVklmVmNYeEJoS3RvNklOaHlEQjd1UVFfV0pUdmQwN2pZAVlpNbkE5LTFXSXg5UUl2TmpiQXc1bXoxZAHhQYWF3Mzl6blk4T1M4bG1nMmMtX0JuawZDZD',
-    appId: process.env.MY_INSTAGRAM_APP_ID || '723291117434206',
-    appSecret: process.env.MY_INSTAGRAM_APP_SECRET || '11f5a58610ee6c7e708fcc7cec378e41'
+    accessToken: process.env.MY_INSTAGRAM_API,
+    appId: process.env.MY_INSTAGRAM_APP_ID,
+    appSecret: process.env.MY_INSTAGRAM_APP_SECRET
   },
   // Google Calendar API
   calendar: {
-    apiKey: process.env.MY_CALENDAR_API || 'AIzaSyBsR0tbkQTYwBoxLS9rsTh-MRu6yjK8QQ0',
+    apiKey: process.env.MY_CALENDAR_API,
     calendarId: 'samudrafm.com@gmail.com'
   },
   // Google Sheets API
   sheets: {
-    apiKey: process.env.MY_SHEET_API || '',
-    spreadsheetId: '' // You'll need to provide this
+    apiKey: process.env.MY_SHEET_API,
+    spreadsheetId: process.env.MY_SHEET_ID || ''
   }
 };
+
+// Validate required environment variables
+function validateEnvironmentVariables() {
+  const requiredVars = [
+    'MY_INSTAGRAM_API',
+    'MY_CALENDAR_API',
+    'MY_SHEET_API'
+  ];
+  
+  const missingVars = requiredVars.filter(varName => !process.env[varName]);
+  
+  if (missingVars.length > 0) {
+    console.error('❌ Missing required environment variables:');
+    missingVars.forEach(varName => console.error(`   - ${varName}`));
+    console.error('Please set these in your GitHub repository secrets or .env file');
+    return false;
+  }
+  
+  console.log('✅ All required environment variables are present');
+  return true;
+}
 
 // MIME types
 const mimeTypes = {
@@ -45,33 +72,100 @@ async function handleInstagramAPI(req, res) {
   try {
     const accessToken = API_CONFIG.instagram.accessToken;
     
+    console.log('Instagram API called, access token:', accessToken ? 'Present' : 'Missing');
+    
     if (!accessToken) {
-      throw new Error('Instagram API key not configured');
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ 
+        success: false, 
+        error: 'Instagram API key not configured. Please set MY_INSTAGRAM_API environment variable.' 
+      }));
+      return;
     }
     
-    // Get the user's media
-    const mediaUrl = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${accessToken}&limit=12`;
-    
-    const response = await fetch(mediaUrl);
-    
-    if (!response.ok) {
-      throw new Error(`Instagram API error: ${response.status}`);
+    // Try to get real Instagram posts first
+    try {
+      let allPosts = [];
+      let nextUrl = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${accessToken}&limit=100`;
+      
+      // Fetch all pages of posts
+      while (nextUrl) {
+        const response = await fetch(nextUrl);
+        
+        if (!response.ok) {
+          throw new Error(`Instagram API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.error) {
+          throw new Error(`Instagram API error: ${data.error.message}`);
+        }
+        
+        // Add posts from this page
+        if (data.data && data.data.length > 0) {
+          allPosts = allPosts.concat(data.data);
+        }
+        
+        // Check if there's a next page
+        nextUrl = data.paging && data.paging.next ? data.paging.next : null;
+        
+        // Safety limit to prevent infinite loops (max 1000 posts)
+        if (allPosts.length >= 1000) {
+          console.log('Reached maximum post limit (1000), stopping pagination');
+          break;
+        }
+      }
+      
+      console.log(`Fetched ${allPosts.length} Instagram posts total`);
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: true,
+        posts: allPosts
+      }));
+      
+    } catch (apiError) {
+      console.log('Instagram API failed, using fallback data:', apiError.message);
+      
+      // Fallback to mock data if API fails
+      const fallbackPosts = [
+        {
+          id: 'fallback1',
+          caption: 'Welcome to SamudraFM! 🎵 Fresh beats and great vibes! Tune in to SamudraFM for the latest music and updates!',
+          media_url: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center',
+          media_type: 'IMAGE',
+          permalink: 'https://www.instagram.com/samudrafm/',
+          timestamp: new Date().toISOString()
+        },
+        {
+          id: 'fallback2',
+          caption: 'Behind the Scenes 🎙️ Our amazing team working hard to bring you the best content!',
+          media_url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center',
+          media_type: 'IMAGE',
+          permalink: 'https://www.instagram.com/samudrafm/',
+          timestamp: new Date(Date.now() - 86400000).toISOString()
+        },
+        {
+          id: 'fallback3',
+          caption: 'Live Radio Session 📻 Tune in for our live sessions every week!',
+          media_url: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=400&h=400&fit=crop&crop=center',
+          media_type: 'IMAGE',
+          permalink: 'https://www.instagram.com/samudrafm/',
+          timestamp: new Date(Date.now() - 172800000).toISOString()
+        }
+      ];
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: true,
+        posts: fallbackPosts
+      }));
     }
-    
-    const data = await response.json();
-    
-    if (data.error) {
-      throw new Error(`Instagram API error: ${data.error.message}`);
-    }
-    
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({
-      success: true,
-      posts: data.data || []
-    }));
     
   } catch (error) {
     console.error('Error fetching Instagram posts:', error);
+    console.error('Error details:', error.message);
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       success: false,
@@ -85,7 +179,12 @@ async function handleCalendarAPI(req, res) {
     const { apiKey, calendarId } = API_CONFIG.calendar;
     
     if (!apiKey) {
-      throw new Error('Google Calendar API key not configured');
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ 
+        success: false, 
+        error: 'Google Calendar API key not configured. Please set MY_CALENDAR_API environment variable.' 
+      }));
+      return;
     }
     
     const now = new Date();
@@ -211,12 +310,14 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, HOST, () => {
-    console.log('🚀 SamudraFM Server Starting...');
+    console.log('🚀 SamudraFM Production Server Started!');
     console.log(`📡 Server running at: http://${HOST}:${PORT}/`);
     console.log(`📁 Serving files from: ${__dirname}`);
-    console.log(`🌐 Open your browser to: http://${HOST}:${PORT}/`);
-    console.log(`⏹️  Press Ctrl+C to stop the server`);
+    console.log(`🔐 Using GitHub Repository secrets for API keys`);
     console.log('-'.repeat(50));
+    
+    // Validate environment variables
+    validateEnvironmentVariables();
 });
 
 // Handle server errors
