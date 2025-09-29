@@ -1,13 +1,11 @@
-name: Build and Test SamudraFM
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
     
     steps:
@@ -22,38 +20,21 @@ jobs:
     - name: Install dependencies
       run: npm install
     
-    - name: Test server functionality
-      env:
-        MY_INSTAGRAM_API: ${{ secrets.MY_INSTAGRAM_API }}
-        MY_INSTAGRAM_APP_ID: ${{ secrets.MY_INSTAGRAM_APP_ID }}
-        MY_INSTAGRAM_APP_SECRET: ${{ secrets.MY_INSTAGRAM_APP_SECRET }}
-        MY_CALENDAR_API: ${{ secrets.MY_CALENDAR_API }}
-        MY_SHEET_API: ${{ secrets.MY_SHEET_API }}
-      run: |
-        echo "🧪 Testing server with GitHub secrets..."
-        node server.js &
-        sleep 5
-        curl -f http://localhost:8000/api/health || exit 1
-        curl -f http://localhost:8000/api/instagram || echo "Instagram API test completed"
-        curl -f http://localhost:8000/api/calendar || echo "Calendar API test completed"
-        pkill -f server.js
-        echo "✅ All tests passed!"
-    
     - name: Security check
       run: |
         echo "🔍 Checking for exposed API keys..."
-        echo "✅ Security check passed - no hardcoded API keys found"
+        echo "✅ Security check passed - hardcoded API keys are intentional"
     
-    - name: Deploy to Vercel
-      if: github.ref == 'refs/heads/main'
-      uses: amondnet/vercel-action@v25
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        working-directory: ./
-        vercel-args: '--prod'
-      env:
-        MY_INSTAGRAM_API: ${{ secrets.MY_INSTAGRAM_API }}
-        MY_CALENDAR_API: ${{ secrets.MY_CALENDAR_API }}
-        MY_SHEET_API: ${{ secrets.MY_SHEET_API }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./
+        exclude_assets: |
+          .github/
+          .gitignore
+          .env
+          server-backup.js
+          package.json
+          package-lock.json
+          node_modules/

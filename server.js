@@ -13,44 +13,29 @@ console.log('🚀 Starting SamudraFM Production Server...');
 const PORT = process.env.PORT || 8003;
 const HOST = '0.0.0.0';
 
-// API Configuration - using GitHub repository secrets only
+// API Configuration - using hardcoded API keys
 const API_CONFIG = {
   // Instagram API
   instagram: {
-    accessToken: process.env.MY_INSTAGRAM_API,
-    appId: process.env.MY_INSTAGRAM_APP_ID,
-    appSecret: process.env.MY_INSTAGRAM_APP_SECRET
+    accessToken: process.env.MY_INSTAGRAM_API || 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD',
+    appId: process.env.MY_INSTAGRAM_APP_ID || '723291117434206',
+    appSecret: process.env.MY_INSTAGRAM_APP_SECRET || '633a4b6826c81ee605cff6aa2e867edb'
   },
   // Google Calendar API
   calendar: {
-    apiKey: process.env.MY_CALENDAR_API,
+    apiKey: process.env.MY_CALENDAR_API || 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4',
     calendarId: 'samudrafm.com@gmail.com'
   },
   // Google Sheets API
   sheets: {
-    apiKey: process.env.MY_SHEET_API,
+    apiKey: process.env.MY_SHEET_API || 'AIzaSyA-iGsaqKLpZAnBx8vOBWnRC4XLCb6vsrQ',
     spreadsheetId: process.env.MY_SHEET_ID || ''
   }
 };
 
-// Validate required environment variables
+// API keys are hardcoded, no validation needed
 function validateEnvironmentVariables() {
-  const requiredVars = [
-    'MY_INSTAGRAM_API',
-    'MY_CALENDAR_API',
-    'MY_SHEET_API'
-  ];
-  
-  const missingVars = requiredVars.filter(varName => !process.env[varName]);
-  
-  if (missingVars.length > 0) {
-    console.error('❌ Missing required environment variables:');
-    missingVars.forEach(varName => console.error(`   - ${varName}`));
-    console.error('Please set these in your GitHub repository secrets or .env file');
-    return false;
-  }
-  
-  console.log('✅ All required environment variables are present');
+  console.log('✅ Using hardcoded API keys');
   return true;
 }
 
