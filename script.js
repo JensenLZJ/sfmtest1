@@ -229,19 +229,27 @@ function getFallbackInstagramPosts() {
   return [
     {
       id: 'fallback-1',
-      caption: 'Welcome to SamudraFM! Follow us for updates.',
-      mediaUrl: 'https://via.placeholder.com/400x400/1a1a1a/ffffff?text=SamudraFM',
-      thumbnailUrl: 'https://via.placeholder.com/400x400/1a1a1a/ffffff?text=SamudraFM',
+      caption: 'Welcome to SamudraFM! Your study, your music. 🎵',
+      mediaUrl: 'images/SamudraFMLogo1.png',
+      thumbnailUrl: 'images/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
       timestamp: new Date().toLocaleDateString('en-GB')
     },
     {
       id: 'fallback-2',
-      caption: 'Tune in to our latest shows!',
-      mediaUrl: 'https://via.placeholder.com/400x400/2a2a2a/ffffff?text=Latest+Shows',
-      thumbnailUrl: 'https://via.placeholder.com/400x400/2a2a2a/ffffff?text=Latest+Shows',
+      caption: 'Tune in to our latest shows and discover new music! 🎧',
+      mediaUrl: 'images/SamudraFMLogo1.png',
+      thumbnailUrl: 'images/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
-      timestamp: new Date().toLocaleDateString('en-GB')
+      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toLocaleDateString('en-GB')
+    },
+    {
+      id: 'fallback-3',
+      caption: 'Helping you focus, unwind, and stay inspired — one song at a time. ✨',
+      mediaUrl: 'images/SamudraFMLogo1.png',
+      thumbnailUrl: 'images/SamudraFMLogo1.png',
+      permalink: 'https://www.instagram.com/samudrafm/',
+      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB')
     }
   ];
 }
@@ -322,22 +330,32 @@ async function fetchGoogleCalendarEvents() {
 
 // Fallback calendar events if API fails
 function getFallbackCalendarEvents() {
+  const now = new Date();
   return [
     {
       id: 'fallback-1',
-      title: 'SamudraFM Live Show',
-      description: 'Join us for our weekly live show!',
-      start: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
-      end: new Date(Date.now() + 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString(), // Tomorrow + 2 hours
+      title: 'JensenL - A Wee Mystical Magical Show',
+      description: 'Join Jensen for an enchanting musical journey',
+      start: new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
+      end: new Date(now.getTime() + 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString(), // Tomorrow + 2 hours
       location: 'Online',
       url: 'https://samudrafm.com'
     },
     {
       id: 'fallback-2',
-      title: 'Special Guest Session',
-      description: 'Exclusive interview with special guest',
-      start: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days from now
-      end: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000 + 1 * 60 * 60 * 1000).toISOString(), // 3 days from now + 1 hour
+      title: 'Srishti - Study Vibes Session',
+      description: 'Perfect music for your study sessions',
+      start: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days from now
+      end: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000 + 1.5 * 60 * 60 * 1000).toISOString(), // 2 days from now + 1.5 hours
+      location: 'Online',
+      url: 'https://samudrafm.com'
+    },
+    {
+      id: 'fallback-3',
+      title: 'Special Guest - Music Discovery',
+      description: 'Discover new artists and hidden gems',
+      start: new Date(now.getTime() + 4 * 24 * 60 * 60 * 1000).toISOString(), // 4 days from now
+      end: new Date(now.getTime() + 4 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString(), // 4 days from now + 2 hours
       location: 'Online',
       url: 'https://samudrafm.com'
     }
