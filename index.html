@@ -85,7 +85,7 @@
     <!-- Content Security Policy and Permissions Policy -->
     <meta http-equiv="Permissions-Policy" content="encrypted-media=*; autoplay=*; microphone=*; camera=*; fullscreen=*; geolocation=*; payment=*; usb=*; accelerometer=*; gyroscope=*; magnetometer=*; display-capture=*; web-share=*; clipboard-read=*; clipboard-write=*; picture-in-picture=*">
     <meta http-equiv="Feature-Policy" content="encrypted-media *; autoplay *; microphone *; camera *; fullscreen *; geolocation *; payment *; usb *; accelerometer *; gyroscope *; magnetometer *; display-capture *; web-share *; clipboard-read *; clipboard-write *; picture-in-picture *">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://www.instagram.com https://api.allorigins.win https://rss.app https://www.googleapis.com https://graph.instagram.com https://sheets.googleapis.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://www.instagram.com https://api.allorigins.win https://rss.app https://www.googleapis.com https://graph.instagram.com https://sheets.googleapis.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none'; base-uri 'self'; form-action 'self';">
 </head>
 <body>
     <!-- Ribbon Effects -->
@@ -288,7 +288,7 @@
 
 
     <script>
-        // Block any attempts to load scripts from infird.com
+        // Block any attempts to load scripts from infird.com and other suspicious domains
         (function() {
             const originalCreateElement = document.createElement;
             document.createElement = function(tagName) {
@@ -296,15 +296,31 @@
                 if (tagName.toLowerCase() === 'script') {
                     const originalSetAttribute = element.setAttribute;
                     element.setAttribute = function(name, value) {
-                        if (name === 'src' && value && value.includes('infird.com')) {
-                            console.warn('Blocked script from infird.com:', value);
-                            return;
+                        if (name === 'src' && value) {
+                            const suspiciousDomains = ['infird.com', 'malicious.com', 'tracking.com'];
+                            if (suspiciousDomains.some(domain => value.includes(domain))) {
+                                console.warn('Blocked suspicious script:', value);
+                                return;
+                            }
                         }
                         return originalSetAttribute.call(this, name, value);
                     };
                 }
                 return element;
             };
+            
+            // Also block any existing scripts that might try to load
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.tagName === 'SCRIPT' && node.src && node.src.includes('infird.com')) {
+                            console.warn('Removed suspicious script:', node.src);
+                            node.remove();
+                        }
+                    });
+                });
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
         })();
     </script>
     <script src="script.js?v=71&t=1734570200&nocache=1"></script>
