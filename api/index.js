@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
 
 async function handleInstagram(req, res) {
   try {
-    const accessToken = process.env.MY_INSTAGRAM_API;
+    const accessToken = process.env.MY_INSTAGRAM_API || 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD';
     
     if (!accessToken) {
       res.status(500).json({ 
@@ -76,7 +76,7 @@ async function handleInstagram(req, res) {
 
 async function handleCalendar(req, res) {
   try {
-    const apiKey = process.env.MY_CALENDAR_API;
+    const apiKey = process.env.MY_CALENDAR_API || 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
     const calendarId = 'samudrafm.com@gmail.com';
     
     if (!apiKey) {

@@ -22,9 +22,9 @@ module.exports = async function handler(req, res) {
     message: 'SamudraFM API is running',
     timestamp: new Date().toISOString(),
     environment: {
-      instagram: process.env.MY_INSTAGRAM_API ? 'configured' : 'missing',
-      calendar: process.env.MY_CALENDAR_API ? 'configured' : 'missing',
-      sheets: process.env.MY_SHEET_API ? 'configured' : 'missing'
+      instagram: 'hardcoded',
+      calendar: 'hardcoded', 
+      sheets: 'hardcoded'
     }
   });
 }

@@ -20,7 +20,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const apiKey = process.env.MY_CALENDAR_API;
+    const apiKey = process.env.MY_CALENDAR_API || 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
     const calendarId = 'samudrafm.com@gmail.com';
     
     console.log('Calendar API called, API key:', apiKey ? 'Present' : 'Missing');

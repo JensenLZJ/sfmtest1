@@ -20,7 +20,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const accessToken = process.env.MY_INSTAGRAM_API;
+    const accessToken = process.env.MY_INSTAGRAM_API || 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD';
     
     console.log('Instagram API called, access token:', accessToken ? 'Present' : 'Missing');
     
