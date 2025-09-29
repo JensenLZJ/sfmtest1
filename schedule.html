@@ -815,26 +815,35 @@
             }
         }
         
-        // Load Google Calendar events via secure backend API
+        // Load Google Calendar events via CORS proxy
         async function loadGoogleCalendarEvents() {
             try {
-                // Use secure backend API instead of direct Google Calendar API
-                const apiUrl = '/api/calendar';
+                // Use CORS proxy to bypass browser restrictions
+                const apiKey = 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
+                const calendarId = 'samudrafm.com@gmail.com';
                 
-                const response = await fetch(apiUrl);
+                const now = new Date();
+                const timeMin = now.toISOString();
+                const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
+                
+                const calendarUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&maxResults=50&singleEvents=true&orderBy=startTime`;
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(calendarUrl)}`;
+                
+                const response = await fetch(proxyUrl);
                 
                 if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
+                    throw new Error(`CORS proxy error: ${response.status}`);
                 }
                 
-                const data = await response.json();
+                const proxyData = await response.json();
+                const data = JSON.parse(proxyData.contents);
                 
-                if (!data.success) {
-                    throw new Error(`API error: ${data.error}`);
+                if (data.error) {
+                    throw new Error(`Google Calendar API error: ${data.error.message}`);
                 }
                 
-                console.log('Total events found in calendar:', data.events ? data.events.length : 0);
-                return data.events.map(event => {
+                console.log('Total events found in calendar:', data.items ? data.items.length : 0);
+                return data.items.map(event => {
                     const fullTitle = event.summary || 'TBA';
                     
                     // Split "JensenL - A Wee Mystical Magical Show" into presenter and show
