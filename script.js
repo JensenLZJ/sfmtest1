@@ -209,43 +209,58 @@ const MOCK_COMING = [
 // API keys are now stored securely in GitHub Repository secrets
 // and accessed through the backend API server
 
-// Instagram API Integration (Using CORS proxy for static hosting)
+// Instagram API Integration (Using multiple CORS proxies for reliability)
 async function fetchInstagramPosts() {
   try {
-    // Use CORS proxy to bypass browser restrictions
     const accessToken = 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD';
     
     const instagramUrl = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${accessToken}&limit=12`;
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(instagramUrl)}`;
     
-    const response = await fetch(proxyUrl);
+    // Try multiple CORS proxies for better reliability
+    const proxies = [
+      `https://cors-anywhere.herokuapp.com/${instagramUrl}`,
+      `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(instagramUrl)}`,
+      `https://thingproxy.freeboard.io/fetch/${instagramUrl}`
+    ];
     
-    if (!response.ok) {
-      throw new Error(`CORS proxy error: ${response.status}`);
+    for (const proxyUrl of proxies) {
+      try {
+        const response = await fetch(proxyUrl, {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          if (data.error) {
+            throw new Error(`Instagram API error: ${data.error.message}`);
+          }
+          
+          // Transform the data to match your frontend expectations
+          const posts = data.data.map(post => ({
+            id: post.id,
+            caption: post.caption || 'View on Instagram',
+            mediaUrl: post.media_url,
+            thumbnailUrl: post.thumbnail_url || post.media_url,
+            permalink: post.permalink,
+            timestamp: new Date(post.timestamp).toLocaleDateString('en-GB')
+          }));
+          
+          return posts;
+        }
+      } catch (proxyError) {
+        console.warn('Proxy failed, trying next:', proxyError.message);
+        continue;
+      }
     }
     
-    const proxyData = await response.json();
-    const data = JSON.parse(proxyData.contents);
-    
-    if (data.error) {
-      throw new Error(`Instagram API error: ${data.error.message}`);
-    }
-    
-    // Transform the data to match your frontend expectations
-    const posts = data.data.map(post => ({
-      id: post.id,
-      caption: post.caption || 'View on Instagram',
-      mediaUrl: post.media_url,
-      thumbnailUrl: post.thumbnail_url || post.media_url,
-      permalink: post.permalink,
-      timestamp: new Date(post.timestamp).toLocaleDateString('en-GB')
-    }));
-    
-    return posts;
+    throw new Error('All CORS proxies failed');
     
   } catch (error) {
     console.error('Error fetching Instagram posts:', error);
-    // Return fallback data if API fails
+    // Return fallback data if all APIs fail
     return getFallbackInstagramPosts();
   }
 }
@@ -331,10 +346,9 @@ function renderInstagramPosts(posts) {
   console.log('Instagram feed HTML set successfully');
 }
 
-// Google Calendar Integration - Using CORS proxy for static hosting
+// Google Calendar Integration - Using multiple CORS proxies for reliability
 async function fetchGoogleCalendarEvents() {
   try {
-    // Use CORS proxy to bypass browser restrictions
     const apiKey = 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
     const calendarId = 'samudrafm.com@gmail.com';
     
@@ -343,33 +357,49 @@ async function fetchGoogleCalendarEvents() {
     const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString(); // 30 days from now
     
     const calendarUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&maxResults=10&singleEvents=true&orderBy=startTime`;
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(calendarUrl)}`;
     
-    const response = await fetch(proxyUrl);
+    // Try multiple CORS proxies for better reliability
+    const proxies = [
+      `https://cors-anywhere.herokuapp.com/${calendarUrl}`,
+      `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(calendarUrl)}`,
+      `https://thingproxy.freeboard.io/fetch/${calendarUrl}`
+    ];
     
-    if (!response.ok) {
-      throw new Error(`CORS proxy error: ${response.status}`);
+    for (const proxyUrl of proxies) {
+      try {
+        const response = await fetch(proxyUrl, {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          if (data.error) {
+            throw new Error(`Google Calendar API error: ${data.error.message}`);
+          }
+          
+          // Transform the data to match your frontend expectations
+          const events = data.items.map(event => ({
+            id: event.id,
+            title: event.summary || 'Untitled Event',
+            description: event.description || '',
+            start: event.start?.dateTime || event.start?.date,
+            end: event.end?.dateTime || event.end?.date,
+            location: event.location || '',
+            url: event.htmlLink || ''
+          }));
+          
+          return events;
+        }
+      } catch (proxyError) {
+        console.warn('Proxy failed, trying next:', proxyError.message);
+        continue;
+      }
     }
     
-    const proxyData = await response.json();
-    const data = JSON.parse(proxyData.contents);
-    
-    if (data.error) {
-      throw new Error(`Google Calendar API error: ${data.error.message}`);
-    }
-    
-    // Transform the data to match your frontend expectations
-    const events = data.items.map(event => ({
-      id: event.id,
-      title: event.summary || 'Untitled Event',
-      description: event.description || '',
-      start: event.start.dateTime || event.start.date,
-      end: event.end.dateTime || event.end.date,
-      location: event.location || '',
-      url: event.htmlLink || ''
-    }));
-    
-    return events;
+    throw new Error('All CORS proxies failed');
     
   } catch (error) {
     console.error('Error fetching Google Calendar events:', error);

@@ -815,10 +815,9 @@
             }
         }
         
-        // Load Google Calendar events via CORS proxy
+        // Load Google Calendar events via multiple CORS proxies
         async function loadGoogleCalendarEvents() {
             try {
-                // Use CORS proxy to bypass browser restrictions
                 const apiKey = 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
                 const calendarId = 'samudrafm.com@gmail.com';
                 
@@ -827,62 +826,79 @@
                 const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
                 
                 const calendarUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&maxResults=50&singleEvents=true&orderBy=startTime`;
-                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(calendarUrl)}`;
                 
-                const response = await fetch(proxyUrl);
+                // Try multiple CORS proxies for better reliability
+                const proxies = [
+                    `https://cors-anywhere.herokuapp.com/${calendarUrl}`,
+                    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(calendarUrl)}`,
+                    `https://thingproxy.freeboard.io/fetch/${calendarUrl}`
+                ];
                 
-                if (!response.ok) {
-                    throw new Error(`CORS proxy error: ${response.status}`);
-                }
-                
-                const proxyData = await response.json();
-                const data = JSON.parse(proxyData.contents);
-                
-                if (data.error) {
-                    throw new Error(`Google Calendar API error: ${data.error.message}`);
-                }
-                
-                console.log('Total events found in calendar:', data.items ? data.items.length : 0);
-                return data.items.map(event => {
-                    const fullTitle = event.summary || 'TBA';
-                    
-                    // Split "JensenL - A Wee Mystical Magical Show" into presenter and show
-                    let presenter, show;
-                    if (fullTitle.includes(' - ')) {
-                        const parts = fullTitle.split(' - ');
-                        presenter = parts[0].trim();
-                        show = parts[1].trim();
-                    } else {
-                        presenter = fullTitle;
-                        show = event.description || 'Special Show';
+                for (const proxyUrl of proxies) {
+                    try {
+                        const response = await fetch(proxyUrl, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            
+                            if (data.error) {
+                                throw new Error(`Google Calendar API error: ${data.error.message}`);
+                            }
+                            
+                            console.log('Total events found in calendar:', data.items ? data.items.length : 0);
+                            return data.items.map(event => {
+                                const fullTitle = event.summary || 'TBA';
+                                
+                                // Split "JensenL - A Wee Mystical Magical Show" into presenter and show
+                                let presenter, show;
+                                if (fullTitle.includes(' - ')) {
+                                    const parts = fullTitle.split(' - ');
+                                    presenter = parts[0].trim();
+                                    show = parts[1].trim();
+                                } else {
+                                    presenter = fullTitle;
+                                    show = event.description || 'Special Show';
+                                }
+                                
+                                const startDate = new Date(event.start?.dateTime || event.start?.date);
+                                const endDate = new Date(event.end?.dateTime || event.end?.date);
+                                
+                                return {
+                                    presenter: presenter,
+                                    show: show,
+                                    startTime: startDate.toLocaleTimeString('en-GB', { 
+                                        hour: '2-digit', 
+                                        minute: '2-digit',
+                                        hour12: false 
+                                    }),
+                                    endTime: endDate.toLocaleTimeString('en-GB', { 
+                                        hour: '2-digit', 
+                                        minute: '2-digit',
+                                        hour12: false 
+                                    }),
+                                    date: startDate.toLocaleDateString('en-GB', {
+                                        day: 'numeric',
+                                        month: 'short'
+                                    }),
+                                    day: startDate.toLocaleDateString('en-GB', {
+                                        weekday: 'long'
+                                    }),
+                                    image: getProfilePicture(presenter)
+                                };
+                            });
+                        }
+                    } catch (proxyError) {
+                        console.warn('Proxy failed, trying next:', proxyError.message);
+                        continue;
                     }
-                    
-                    const startDate = new Date(event.start.dateTime || event.start.date);
-                    const endDate = new Date(event.end.dateTime || event.end.date);
-                    
-                    return {
-                        presenter: presenter,
-                        show: show,
-                        startTime: startDate.toLocaleTimeString('en-GB', { 
-                            hour: '2-digit', 
-                            minute: '2-digit',
-                            hour12: false 
-                        }),
-                        endTime: endDate.toLocaleTimeString('en-GB', { 
-                            hour: '2-digit', 
-                            minute: '2-digit',
-                            hour12: false 
-                        }),
-                        date: startDate.toLocaleDateString('en-GB', {
-                            day: 'numeric',
-                            month: 'short'
-                        }),
-                        day: startDate.toLocaleDateString('en-GB', {
-                            weekday: 'long'
-                        }),
-                        image: getProfilePicture(presenter)
-                    };
-                });
+                }
+                
+                throw new Error('All CORS proxies failed');
+                
             } catch (error) {
                 console.error('Google Calendar API error:', error);
                 return null;
