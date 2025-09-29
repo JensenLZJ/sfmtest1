@@ -14,10 +14,6 @@
       "use": "@vercel/static"
     },
     {
-      "src": "*.js",
-      "use": "@vercel/static"
-    },
-    {
       "src": "assets/**/*",
       "use": "@vercel/static"
     },
@@ -35,10 +31,5 @@
       "src": "/(.*)",
       "dest": "/$1"
     }
-  ],
-  "env": {
-    "MY_INSTAGRAM_API": "@my_instagram_api",
-    "MY_CALENDAR_API": "@my_calendar_api",
-    "MY_SHEET_API": "@my_sheet_api"
-  }
+  ]
 }
