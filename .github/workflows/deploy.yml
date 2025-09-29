@@ -11,20 +11,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm install
-    
-    - name: Security check
-      run: |
-        echo "🔍 Checking for exposed API keys..."
-        echo "✅ Security check passed - hardcoded API keys are intentional"
-    
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
@@ -34,7 +20,3 @@ jobs:
           .github/
           .gitignore
           .env
-          server-backup.js
-          package.json
-          package-lock.json
-          node_modules/
