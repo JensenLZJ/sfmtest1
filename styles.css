@@ -2688,8 +2688,8 @@ body{
     opacity: 1 !important;
     transition: opacity 0.2s !important;
     pointer-events: none !important;
-    z-index: 10 !important;
-    visibility: visible !important;
+      z-index: 10 !important;
+      visibility: visible !important;
   }
 
   /* Ensure play button is visible and clickable on mobile */

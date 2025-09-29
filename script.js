@@ -284,7 +284,7 @@ function renderInstagramPosts(posts) {
           </div>
         </div>
         <div class="instagram-content">
-          <p class="instagram-caption">${caption}</p>
+            <p class="instagram-caption">${caption}</p>
         </div>
       </div>
     `;
@@ -385,7 +385,7 @@ function formatCalendarEvent(event) {
       weekday: 'long'
     });
   }
-
+  
   return {
     title: presenter,
     desc: showTitle,
@@ -481,18 +481,18 @@ function renderComingUpEvents(events) {
     return `
       <article class="card coming-up-card">
         ${withCover(coverUrl)}
-        <div class="content">
-          <p class="title">${item.title}</p>
-          <p class="meta">${item.desc}</p>
-          <p class="meta">${item.time}</p>
-        </div>
+      <div class="content">
+        <p class="title">${item.title}</p>
+        <p class="meta">${item.desc}</p>
+        <p class="meta">${item.time}</p>
+      </div>
         ${item.date && item.day ? `
           <div class="coming-up-time">
             <div class="coming-up-date">${item.date}</div>
             <div class="coming-up-day">${item.day}</div>
           </div>
         ` : ''}
-      </article>
+    </article>
     `;
   }).join('');
   
@@ -1566,8 +1566,8 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
           if (duration && duration > 0) {
             const seekPosition = (percentage / 100) * duration;
             console.log('Seeking to position:', seekPosition, 'of', duration);
-            currentWidget.seek(seekPosition);
-            
+        currentWidget.seek(seekPosition);
+        
             // Reset seeking flag after a delay
             setTimeout(() => {
               window.isSeeking = false;
@@ -1679,17 +1679,17 @@ function initVolumeControl() {
     if (isDragging) {
       e.preventDefault();
       requestAnimationFrame(() => {
-        const rect = volumeBar.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const percentage = Math.max(0, Math.min(100, (mouseX / rect.width) * 100));
-        updateVolume(percentage);
+      const rect = volumeBar.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(100, (mouseX / rect.width) * 100));
+      updateVolume(percentage);
       });
     }
   });
   
   document.addEventListener('mouseup', (e) => {
     if (isDragging) {
-      isDragging = false;
+    isDragging = false;
       
       // Remove visual feedback
       volumeHandle.style.cursor = 'grab';
@@ -1852,18 +1852,18 @@ async function loadHeroLatest(username){
 
 // Only load hero latest if we're on a page with hero elements
 if (document.getElementById('hero-ep-title')) {
-  loadHeroLatest(MIXCLOUD_USERNAME);
+loadHeroLatest(MIXCLOUD_USERNAME);
 }
 
 // Initialize player controls
 document.addEventListener('DOMContentLoaded', () => {
   // Only initialize if we're on a page with player elements
   if (document.getElementById('progress-bar') || document.getElementById('play-pause-btn')) {
-    initProgressBar();
-    initVolumeControl();
-    initPlayButton();
-    initAudioDebugging();
-    startAudioMonitoring();
+  initProgressBar();
+  initVolumeControl();
+  initPlayButton();
+  initAudioDebugging();
+  startAudioMonitoring();
   }
   
   // Ensure play button is ready after a short delay
@@ -2032,8 +2032,8 @@ function initPlayButton() {
     return;
   }
   
-  // Set initial state to play
-  updatePlayState(false);
+    // Set initial state to play
+    updatePlayState(false);
     
     // Hide play button initially on mobile until widget is ready
     if (isMobileDevice()) {
@@ -2159,7 +2159,7 @@ function initPlayButton() {
         window.handlePlayPause();
       }
     });
-    
+  
   // Test audio button removed - using Mixcloud only
 }
 
@@ -3178,7 +3178,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Load Instagram posts
   loadInstagramPosts();
 });
-
+  
 // Load Instagram posts function
 async function loadInstagramPosts() {
   const container = document.getElementById('instagram-feed');
