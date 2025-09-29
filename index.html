@@ -323,7 +323,15 @@
             observer.observe(document.body, { childList: true, subtree: true });
         })();
     </script>
-    <script src="script.js?v=72&t=1734570300&nocache=1"></script>
+    <script>
+    // Dynamic script loading with cache busting
+    const script = document.createElement('script');
+    script.src = 'script.js?v=74&t=' + Date.now() + '&nocache=1';
+    script.onload = function() {
+      console.log('Fresh script loaded at:', new Date().toISOString());
+    };
+    document.head.appendChild(script);
+    </script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
     <script>
     // Force clear all caches on every visit
