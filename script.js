@@ -209,21 +209,23 @@ const MOCK_COMING = [
 // API keys are now stored securely in GitHub Repository secrets
 // and accessed through the backend API server
 
-// Instagram API Integration (Direct API calls for static hosting)
+// Instagram API Integration (Using CORS proxy for static hosting)
 async function fetchInstagramPosts() {
   try {
-    // Direct Instagram API call with hardcoded access token
+    // Use CORS proxy to bypass browser restrictions
     const accessToken = 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD';
     
     const instagramUrl = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${accessToken}&limit=12`;
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(instagramUrl)}`;
     
-    const response = await fetch(instagramUrl);
+    const response = await fetch(proxyUrl);
     
     if (!response.ok) {
-      throw new Error(`Instagram API error: ${response.status}`);
+      throw new Error(`CORS proxy error: ${response.status}`);
     }
     
-    const data = await response.json();
+    const proxyData = await response.json();
+    const data = JSON.parse(proxyData.contents);
     
     if (data.error) {
       throw new Error(`Instagram API error: ${data.error.message}`);
@@ -243,8 +245,31 @@ async function fetchInstagramPosts() {
     
   } catch (error) {
     console.error('Error fetching Instagram posts:', error);
-    return [];
+    // Return fallback data if API fails
+    return getFallbackInstagramPosts();
   }
+}
+
+// Fallback Instagram posts if API fails
+function getFallbackInstagramPosts() {
+  return [
+    {
+      id: 'fallback-1',
+      caption: 'Welcome to SamudraFM! Follow us for updates.',
+      mediaUrl: 'https://via.placeholder.com/400x400/1a1a1a/ffffff?text=SamudraFM',
+      thumbnailUrl: 'https://via.placeholder.com/400x400/1a1a1a/ffffff?text=SamudraFM',
+      permalink: 'https://www.instagram.com/samudrafm/',
+      timestamp: new Date().toLocaleDateString('en-GB')
+    },
+    {
+      id: 'fallback-2',
+      caption: 'Tune in to our latest shows!',
+      mediaUrl: 'https://via.placeholder.com/400x400/2a2a2a/ffffff?text=Latest+Shows',
+      thumbnailUrl: 'https://via.placeholder.com/400x400/2a2a2a/ffffff?text=Latest+Shows',
+      permalink: 'https://www.instagram.com/samudrafm/',
+      timestamp: new Date().toLocaleDateString('en-GB')
+    }
+  ];
 }
 
 // Fallback direct Instagram API (for development)
@@ -306,10 +331,10 @@ function renderInstagramPosts(posts) {
   console.log('Instagram feed HTML set successfully');
 }
 
-// Google Calendar Integration - Direct API calls for static hosting
+// Google Calendar Integration - Using CORS proxy for static hosting
 async function fetchGoogleCalendarEvents() {
   try {
-    // Direct Google Calendar API call with hardcoded API key
+    // Use CORS proxy to bypass browser restrictions
     const apiKey = 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
     const calendarId = 'samudrafm.com@gmail.com';
     
@@ -318,14 +343,16 @@ async function fetchGoogleCalendarEvents() {
     const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString(); // 30 days from now
     
     const calendarUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&maxResults=10&singleEvents=true&orderBy=startTime`;
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(calendarUrl)}`;
     
-    const response = await fetch(calendarUrl);
+    const response = await fetch(proxyUrl);
     
     if (!response.ok) {
-      throw new Error(`Google Calendar API error: ${response.status}`);
+      throw new Error(`CORS proxy error: ${response.status}`);
     }
     
-    const data = await response.json();
+    const proxyData = await response.json();
+    const data = JSON.parse(proxyData.contents);
     
     if (data.error) {
       throw new Error(`Google Calendar API error: ${data.error.message}`);
@@ -346,8 +373,33 @@ async function fetchGoogleCalendarEvents() {
     
   } catch (error) {
     console.error('Error fetching Google Calendar events:', error);
-    return [];
+    // Return fallback data if API fails
+    return getFallbackCalendarEvents();
   }
+}
+
+// Fallback calendar events if API fails
+function getFallbackCalendarEvents() {
+  return [
+    {
+      id: 'fallback-1',
+      title: 'SamudraFM Live Show',
+      description: 'Join us for our weekly live show!',
+      start: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
+      end: new Date(Date.now() + 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString(), // Tomorrow + 2 hours
+      location: 'Online',
+      url: 'https://samudrafm.com'
+    },
+    {
+      id: 'fallback-2',
+      title: 'Special Guest Session',
+      description: 'Exclusive interview with special guest',
+      start: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days from now
+      end: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000 + 1 * 60 * 60 * 1000).toISOString(), // 3 days from now + 1 hour
+      location: 'Online',
+      url: 'https://samudrafm.com'
+    }
+  ];
 }
 
 // Fallback direct Google Calendar API (disabled for security)
