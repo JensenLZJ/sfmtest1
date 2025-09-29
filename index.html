@@ -85,7 +85,7 @@
     <!-- Content Security Policy and Permissions Policy -->
     <meta http-equiv="Permissions-Policy" content="encrypted-media=*; autoplay=*; microphone=*; camera=*; fullscreen=*; geolocation=*; payment=*; usb=*; accelerometer=*; gyroscope=*; magnetometer=*; display-capture=*; web-share=*; clipboard-read=*; clipboard-write=*; picture-in-picture=*">
     <meta http-equiv="Feature-Policy" content="encrypted-media *; autoplay *; microphone *; camera *; fullscreen *; geolocation *; payment *; usb *; accelerometer *; gyroscope *; magnetometer *; display-capture *; web-share *; clipboard-read *; clipboard-write *; picture-in-picture *">
-    <meta http-equiv="Content-Security-Policy" content="frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://www.instagram.com https://api.allorigins.win https://rss.app https://www.googleapis.com https://graph.instagram.com https://sheets.googleapis.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://www.instagram.com https://api.allorigins.win https://rss.app https://www.googleapis.com https://graph.instagram.com https://sheets.googleapis.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none'; base-uri 'self'; form-action 'self';">
 </head>
 <body>
     <!-- Ribbon Effects -->
@@ -287,6 +287,26 @@
     <!-- Audio player will be handled by Mixcloud widget -->
 
 
+    <script>
+        // Block any attempts to load scripts from infird.com
+        (function() {
+            const originalCreateElement = document.createElement;
+            document.createElement = function(tagName) {
+                const element = originalCreateElement.call(this, tagName);
+                if (tagName.toLowerCase() === 'script') {
+                    const originalSetAttribute = element.setAttribute;
+                    element.setAttribute = function(name, value) {
+                        if (name === 'src' && value && value.includes('infird.com')) {
+                            console.warn('Blocked script from infird.com:', value);
+                            return;
+                        }
+                        return originalSetAttribute.call(this, name, value);
+                    };
+                }
+                return element;
+            };
+        })();
+    </script>
     <script src="script.js?v=71&t=1734570200&nocache=1"></script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
     <script>
