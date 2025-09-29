@@ -313,17 +313,80 @@ function renderInstagramPosts(posts) {
   console.log('Instagram feed HTML set successfully');
 }
 
-// Google Calendar Integration - Using fallback data for static hosting
+// Google Calendar Integration - Using JSONP for static hosting
 async function fetchGoogleCalendarEvents() {
   try {
-    // Since we can't use CORS proxies, we'll use the fallback data
-    // In a real production environment, you'd need a backend server
-    console.log('Using fallback Calendar data for static hosting');
-    return getFallbackCalendarEvents();
+    const apiKey = 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
+    const calendarId = 'samudrafm.com@gmail.com';
+    
+    const now = new Date();
+    const timeMin = now.toISOString();
+    const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
+    
+    // Use JSONP approach for static hosting
+    const calendarUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&maxResults=10&singleEvents=true&orderBy=startTime&callback=handleCalendarResponse`;
+    
+    return new Promise((resolve, reject) => {
+      // Create a unique callback function name
+      const callbackName = 'googleCalendarCallback_' + Date.now();
+      
+      // Create the script tag for JSONP
+      const script = document.createElement('script');
+      script.src = calendarUrl.replace('callback=handleCalendarResponse', `callback=${callbackName}`);
+      
+      // Define the callback function
+      window[callbackName] = function(data) {
+        try {
+          // Clean up
+          document.head.removeChild(script);
+          delete window[callbackName];
+          
+          if (data.error) {
+            throw new Error(`Google Calendar API error: ${data.error.message}`);
+          }
+          
+          console.log('Successfully fetched Google Calendar events:', data.items ? data.items.length : 0);
+          
+          // Transform the data
+          const events = data.items.map(event => ({
+            id: event.id,
+            title: event.summary || 'Untitled Event',
+            description: event.description || '',
+            start: event.start?.dateTime || event.start?.date,
+            end: event.end?.dateTime || event.end?.date,
+            location: event.location || '',
+            url: event.htmlLink || ''
+          }));
+          
+          resolve(events);
+        } catch (error) {
+          reject(error);
+        }
+      };
+      
+      // Handle script load error
+      script.onerror = function() {
+        document.head.removeChild(script);
+        delete window[callbackName];
+        reject(new Error('Failed to load Google Calendar data'));
+      };
+      
+      // Add script to document
+      document.head.appendChild(script);
+      
+      // Timeout after 10 seconds
+      setTimeout(() => {
+        if (window[callbackName]) {
+          document.head.removeChild(script);
+          delete window[callbackName];
+          reject(new Error('Google Calendar request timeout'));
+        }
+      }, 10000);
+    });
     
   } catch (error) {
     console.error('Error fetching Google Calendar events:', error);
-    // Return fallback data if all APIs fail
+    // Return fallback data if API fails
     return getFallbackCalendarEvents();
   }
 }
