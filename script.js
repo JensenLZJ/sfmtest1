@@ -209,30 +209,41 @@ const MOCK_COMING = [
 // API keys are now stored securely in GitHub Repository secrets
 // and accessed through the backend API server
 
-// Instagram API Integration (Secure Backend)
+// Instagram API Integration (Direct API calls for static hosting)
 async function fetchInstagramPosts() {
   try {
-    // Use secure backend API instead of direct Instagram API
-    const apiUrl = '/api/instagram';
+    // Direct Instagram API call with hardcoded access token
+    const accessToken = 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD';
     
-    const response = await fetch(apiUrl);
+    const instagramUrl = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${accessToken}&limit=12`;
+    
+    const response = await fetch(instagramUrl);
     
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      throw new Error(`Instagram API error: ${response.status}`);
     }
     
     const data = await response.json();
     
-    if (!data.success) {
-      throw new Error(`API error: ${data.error}`);
+    if (data.error) {
+      throw new Error(`Instagram API error: ${data.error.message}`);
     }
     
-    return data.posts || [];
+    // Transform the data to match your frontend expectations
+    const posts = data.data.map(post => ({
+      id: post.id,
+      caption: post.caption || 'View on Instagram',
+      mediaUrl: post.media_url,
+      thumbnailUrl: post.thumbnail_url || post.media_url,
+      permalink: post.permalink,
+      timestamp: new Date(post.timestamp).toLocaleDateString('en-GB')
+    }));
+    
+    return posts;
     
   } catch (error) {
     console.error('Error fetching Instagram posts:', error);
-    // Fallback to direct API if backend is not available
-    return await fetchInstagramPostsDirect();
+    return [];
   }
 }
 
@@ -295,30 +306,47 @@ function renderInstagramPosts(posts) {
   console.log('Instagram feed HTML set successfully');
 }
 
-// Google Calendar Integration - Secure Backend API
+// Google Calendar Integration - Direct API calls for static hosting
 async function fetchGoogleCalendarEvents() {
   try {
-    // Use secure backend API instead of direct Google Calendar API
-    const apiUrl = '/api/calendar';
+    // Direct Google Calendar API call with hardcoded API key
+    const apiKey = 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
+    const calendarId = 'samudrafm.com@gmail.com';
     
-    const response = await fetch(apiUrl);
+    const now = new Date();
+    const timeMin = now.toISOString();
+    const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString(); // 30 days from now
+    
+    const calendarUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&maxResults=10&singleEvents=true&orderBy=startTime`;
+    
+    const response = await fetch(calendarUrl);
     
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      throw new Error(`Google Calendar API error: ${response.status}`);
     }
     
     const data = await response.json();
     
-    if (!data.success) {
-      throw new Error(`API error: ${data.error}`);
+    if (data.error) {
+      throw new Error(`Google Calendar API error: ${data.error.message}`);
     }
     
-    return data.events || [];
+    // Transform the data to match your frontend expectations
+    const events = data.items.map(event => ({
+      id: event.id,
+      title: event.summary || 'Untitled Event',
+      description: event.description || '',
+      start: event.start.dateTime || event.start.date,
+      end: event.end.dateTime || event.end.date,
+      location: event.location || '',
+      url: event.htmlLink || ''
+    }));
+    
+    return events;
     
   } catch (error) {
     console.error('Error fetching Google Calendar events:', error);
-    // Fallback to direct API if backend is not available
-    return await fetchGoogleCalendarEventsDirect();
+    return [];
   }
 }
 
