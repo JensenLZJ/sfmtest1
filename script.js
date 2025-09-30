@@ -489,7 +489,9 @@ if (comingGrid) {
 
 
 async function loadComingUpEvents() {
+  console.log('loadComingUpEvents function called');
   const comingGrid = document.getElementById('coming-grid');
+  console.log('coming-grid found:', !!comingGrid);
   if (!comingGrid) return;
   
   // Show loading state
@@ -504,7 +506,9 @@ async function loadComingUpEvents() {
       console.log('Processing calendar events...');
       const formattedEvents = events.map(formatCalendarEvent);
       console.log('Formatted events:', formattedEvents);
+      console.log('About to call renderComingUpEvents with:', formattedEvents);
       renderComingUpEvents(formattedEvents);
+      console.log('renderComingUpEvents called successfully');
       return;
     } else {
       console.log('No calendar events found, trying fallback...');
@@ -533,13 +537,21 @@ async function loadComingUpEvents() {
 }
 
 function renderComingUpEvents(events) {
+  console.log('renderComingUpEvents called with:', events);
   const comingGrid = document.getElementById('coming-grid');
-  if (!comingGrid) return;
+  console.log('coming-grid element:', comingGrid);
+  if (!comingGrid) {
+    console.log('coming-grid element not found!');
+    return;
+  }
   
   if (!events || events.length === 0) {
+    console.log('No events provided, showing no-events message');
     comingGrid.innerHTML = '<div class="no-events">No upcoming shows scheduled</div>';
     return;
   }
+  
+  console.log('Rendering events:', events.length);
   
   // Show only the 2 latest events
   const limitedEvents = events.slice(0, 2);
