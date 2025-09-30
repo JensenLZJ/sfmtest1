@@ -563,8 +563,10 @@ function renderComingUpEvents(events) {
   
   // Show limited events in vertical scrollable format
   const html = limitedEvents.map(item => {
+    console.log('Rendering event item:', item);
     // Use profile picture if cover is null or empty
     const coverUrl = item.cover || getProfilePicture(item.title);
+    console.log('Cover URL for', item.title, ':', coverUrl);
     return `
       <article class="card coming-up-card">
         ${withCover(coverUrl)}
@@ -583,7 +585,11 @@ function renderComingUpEvents(events) {
     `;
   }).join('');
   
+  console.log('Generated HTML for coming up events:', html);
+  
   comingGrid.innerHTML = html;
+  console.log('HTML set in coming-grid element');
+  console.log('coming-grid innerHTML after setting:', comingGrid.innerHTML);
 }
 
 // Handle logo click to go to home page
