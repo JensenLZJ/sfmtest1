@@ -485,14 +485,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const comingGrid = document.getElementById('coming-grid');
   if (comingGrid) {
     console.log('DOM ready, loading coming up events...');
-    console.log('coming-grid element found:', comingGrid);
-    console.log('coming-grid classes:', comingGrid.className);
-    console.log('coming-grid current content:', comingGrid.innerHTML);
-    
-    // Test: Set some test content first
-    comingGrid.innerHTML = '<div class="test-content">Testing coming up section...</div>';
-    console.log('Test content set, coming-grid innerHTML:', comingGrid.innerHTML);
-    
     // Add a small delay to ensure other functions don't interfere
     setTimeout(() => {
       console.log('Loading coming up events after delay...');
@@ -512,20 +504,44 @@ async function loadComingUpEvents() {
   
   // Show loading state
   comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
-  console.log('Loading state set, coming-grid innerHTML:', comingGrid.innerHTML);
   
-  // Wait a moment to show loading state
-  setTimeout(() => {
-    // SIMPLIFIED TEST: Just set some test content directly
-    const testEvents = [
-      { title: 'JensenL', desc: 'A Wee Mystical Magical Show', time: '20:00 - 22:00', cover: 'assets/avatar/Jensen.jpg' },
-      { title: 'Srishti', desc: 'Study Vibes Session', time: '19:00 - 21:00', cover: 'assets/avatar/Srishti.jpg' }
-    ];
+  try {
+    // Try Google Calendar first
+    const events = await fetchGoogleCalendarEvents();
+    console.log('Calendar events received:', events);
     
-    console.log('Setting test events:', testEvents);
-    renderComingUpEvents(testEvents);
-    console.log('Test events rendered');
-  }, 500);
+    if (events && events.length > 0) {
+      console.log('Processing calendar events...');
+      const formattedEvents = events.map(formatCalendarEvent);
+      console.log('Formatted events:', formattedEvents);
+      console.log('About to call renderComingUpEvents with:', formattedEvents);
+      renderComingUpEvents(formattedEvents);
+      console.log('renderComingUpEvents called successfully');
+      return;
+    } else {
+      console.log('No calendar events found, trying fallback...');
+    }
+    
+    // Try to load from presenters.json
+    try {
+      const response = await fetch('/presenters.json');
+      if (response.ok) {
+        const data = await response.json();
+        renderComingUpEvents(data.presenters);
+        return;
+      }
+    } catch (jsonError) {
+      // Silent fallback
+    }
+    
+    // Fallback to mock data only if no other data is available
+    renderComingUpEvents(MOCK_COMING);
+    
+  } catch (error) {
+    console.error('Error loading coming up events:', error);
+    // Fallback to mock data on error
+    renderComingUpEvents(MOCK_COMING);
+  }
 }
 
 function renderComingUpEvents(events) {
@@ -550,12 +566,9 @@ function renderComingUpEvents(events) {
   
   // Show limited events in vertical scrollable format
   const html = limitedEvents.map(item => {
-    console.log('Rendering event item:', item);
     // Use profile picture if cover is null or empty
     const coverUrl = item.cover || getProfilePicture(item.title);
-    console.log('Cover URL for', item.title, ':', coverUrl);
-    
-    const itemHtml = `
+    return `
       <article class="card coming-up-card">
         ${withCover(coverUrl)}
       <div class="content">
@@ -571,15 +584,10 @@ function renderComingUpEvents(events) {
         ` : ''}
     </article>
     `;
-    console.log('Generated HTML for item', item.title, ':', itemHtml);
-    return itemHtml;
   }).join('');
   
-  console.log('Generated HTML for coming up events:', html);
-  
   comingGrid.innerHTML = html;
-  console.log('HTML set in coming-grid element');
-  console.log('coming-grid innerHTML after setting:', comingGrid.innerHTML);
+  console.log('Coming up events rendered successfully');
 }
 
 // Handle logo click to go to home page
