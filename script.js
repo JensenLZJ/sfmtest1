@@ -323,9 +323,9 @@ async function fetchGoogleCalendarEvents() {
     const timeMin = now.toISOString();
     const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
     
-    // Use a working CORS proxy
+    // Use a working CORS proxy that supports HTTPS
     const calendarUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&maxResults=10&singleEvents=true&orderBy=startTime`;
-    const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(calendarUrl)}`;
+    const proxyUrl = `https://thingproxy.freeboard.io/fetch/${calendarUrl}`;
     
     console.log('Fetching Google Calendar events...');
     const response = await fetch(proxyUrl);
