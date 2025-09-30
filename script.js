@@ -210,23 +210,111 @@ const MOCK_COMING = [
 // Replace with your actual Instagram access token
 const INSTAGRAM_ACCESS_TOKEN = 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD';
 
-// Instagram API Integration (Using JSONP approach for static hosting)
+// Instagram API Integration (Using Instagram Basic Display API)
 async function fetchInstagramPosts() {
   try {
-    // Since we can't use CORS proxies reliably, we'll use the fallback data
-    // In a real production environment, you'd need a backend server
-    console.log('Using fallback Instagram data for static hosting');
-    return getFallbackInstagramPosts();
+    console.log('Attempting to fetch Instagram posts from Instagram API...');
+    
+    // First, get the user's Instagram account ID
+    const userId = await getInstagramUserId();
+    if (!userId) {
+      console.warn('Could not get Instagram user ID, using fallback');
+      return await getFallbackInstagramPosts();
+    }
+    
+    // Fetch media from Instagram API
+    const mediaResponse = await fetch(`https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=12`);
+    
+    if (mediaResponse.ok) {
+      const mediaData = await mediaResponse.json();
+      console.log('Instagram API data received:', mediaData);
+      
+      if (mediaData.data && mediaData.data.length > 0) {
+        // Convert Instagram API data to our post format
+        const posts = mediaData.data.map((item, index) => ({
+          id: item.id,
+          caption: item.caption || 'Instagram Post',
+          mediaUrl: item.media_type === 'VIDEO' ? (item.thumbnail_url || item.media_url) : item.media_url,
+          thumbnailUrl: item.thumbnail_url || item.media_url,
+          permalink: item.permalink,
+          timestamp: item.timestamp
+        }));
+        
+        console.log('Converted Instagram API posts:', posts);
+        return posts;
+      } else {
+        console.warn('No posts found in Instagram API response');
+        return await getFallbackInstagramPosts();
+      }
+    } else {
+      const errorData = await mediaResponse.json();
+      console.error('Instagram API error:', errorData);
+      console.warn('Instagram API failed, using fallback');
+      return await getFallbackInstagramPosts();
+    }
     
   } catch (error) {
-    console.error('Error fetching Instagram posts:', error);
-    // Return fallback data if API fails
-    return getFallbackInstagramPosts();
+    console.error('Error fetching Instagram posts from API:', error);
+    console.log('Falling back to custom posts');
+    return await getFallbackInstagramPosts();
   }
 }
 
-// Fallback Instagram posts if API fails
-function getFallbackInstagramPosts() {
+// Get Instagram user ID from access token
+async function getInstagramUserId() {
+  try {
+    console.log('Getting Instagram user ID...');
+    const response = await fetch(`https://graph.instagram.com/me?fields=id,username&access_token=${INSTAGRAM_ACCESS_TOKEN}`);
+    
+    if (response.ok) {
+      const userData = await response.json();
+      console.log('Instagram user data:', userData);
+      return userData.id;
+    } else {
+      const errorData = await response.json();
+      console.error('Error getting Instagram user ID:', errorData);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching Instagram user ID:', error);
+    return null;
+  }
+}
+
+// Fallback Instagram posts if API fails - loads from custom-posts.json
+async function getFallbackInstagramPosts() {
+  try {
+    console.log('Loading fallback posts from custom-posts.json...');
+    const response = await fetch('custom-posts.json?v=' + Date.now());
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Custom posts data loaded:', data);
+      
+      // Convert custom posts to Instagram post format
+      const posts = data.posts.map((post, index) => ({
+        id: post.id || `custom-${index}`,
+        caption: post.content || post.title || 'Instagram Post',
+        mediaUrl: post.image,
+        thumbnailUrl: post.image,
+        permalink: post.link || 'https://www.instagram.com/samudrafm/',
+        timestamp: post.date || new Date().toISOString()
+      }));
+      
+      console.log('Converted custom posts:', posts);
+      return posts;
+    } else {
+      console.warn('Could not load custom-posts.json, using hardcoded fallback');
+      return getHardcodedFallbackPosts();
+    }
+  } catch (error) {
+    console.error('Error loading custom posts:', error);
+    return getHardcodedFallbackPosts();
+  }
+}
+
+// Hardcoded fallback posts as last resort
+function getHardcodedFallbackPosts() {
   return [
     {
       id: 'fallback-1',
@@ -234,7 +322,7 @@ function getFallbackInstagramPosts() {
       mediaUrl: 'images/SamudraFMLogo1.png',
       thumbnailUrl: 'images/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
-      timestamp: new Date().toLocaleDateString('en-GB')
+      timestamp: new Date().toISOString()
     },
     {
       id: 'fallback-2',
@@ -242,7 +330,7 @@ function getFallbackInstagramPosts() {
       mediaUrl: 'images/SamudraFMLogo1.png',
       thumbnailUrl: 'images/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toLocaleDateString('en-GB')
+      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
     },
     {
       id: 'fallback-3',
@@ -250,7 +338,7 @@ function getFallbackInstagramPosts() {
       mediaUrl: 'images/SamudraFMLogo1.png',
       thumbnailUrl: 'images/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
-      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB')
+      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
     }
   ];
 }
@@ -288,24 +376,30 @@ function renderInstagramPosts(posts) {
   }
   
   const html = posts.map(post => {
-    const imageUrl = post.mediaUrl || post.media_url || post.thumbnail_url;
-    const caption = post.caption ? post.caption.substring(0, 100) + '...' : 'View on Instagram';
-    const timestamp = new Date(post.timestamp).toLocaleDateString();
+    const imageUrl = post.mediaUrl || post.media_url || post.thumbnail_url || post.image;
+    const caption = post.caption || post.content || post.title || 'View on Instagram';
+    const truncatedCaption = caption.length > 100 ? caption.substring(0, 100) + '...' : caption;
+    const timestamp = new Date(post.timestamp || post.date).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+    const permalink = post.permalink || post.link || 'https://www.instagram.com/samudrafm/';
     
     return `
-      <div class="instagram-card">
+      <div class="instagram-card" onclick="window.open('${permalink}', '_blank')">
         <div class="instagram-cover" style="background-image: url('${imageUrl}')">
           <div class="instagram-date-overlay">
             <p class="instagram-date">${timestamp}</p>
           </div>
           <div class="instagram-overlay">
-            <a href="${post.permalink}" target="_blank" rel="noopener" class="instagram-link">
+            <a href="${permalink}" target="_blank" rel="noopener" class="instagram-link">
               <i class="fab fa-instagram"></i>
             </a>
           </div>
         </div>
         <div class="instagram-content">
-            <p class="instagram-caption">${caption}</p>
+            <p class="instagram-caption">${truncatedCaption}</p>
         </div>
       </div>
     `;
@@ -3358,20 +3452,43 @@ async function loadInstagramPosts() {
   
   // Show loading state
   console.log('Setting loading state...');
-  container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 2rem;">Loading Instagram posts...</p>';
+  container.innerHTML = `
+    <div class="instagram-loading" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+      <i class="fab fa-instagram" style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent);"></i>
+      <p style="color: var(--muted);">Loading Instagram posts...</p>
+    </div>
+  `;
   console.log('Loading state set, container innerHTML:', container.innerHTML);
   
   try {
     console.log('Fetching Instagram posts...');
     const posts = await fetchInstagramPosts();
     console.log('Instagram posts fetched:', posts);
-    console.log('About to call renderInstagramPosts...');
-    renderInstagramPosts(posts);
-    console.log('renderInstagramPosts called successfully');
+    
+    if (posts && posts.length > 0) {
+      console.log('About to call renderInstagramPosts...');
+      renderInstagramPosts(posts);
+      console.log('renderInstagramPosts called successfully');
+    } else {
+      console.warn('No posts received, showing fallback message');
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+          <i class="fab fa-instagram" style="font-size: 2rem; margin-bottom: 1rem; color: var(--muted);"></i>
+          <p style="color: var(--muted);">No Instagram posts available at the moment</p>
+          <p style="color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem;">Check back later or visit our <a href="https://www.instagram.com/samudrafm/" target="_blank" style="color: var(--accent);">Instagram page</a></p>
+        </div>
+      `;
+    }
     
   } catch (error) {
     console.error('Error loading Instagram posts:', error);
-    container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 2rem;">Unable to load Instagram posts</p>';
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem; color: var(--warning);"></i>
+        <p style="color: var(--muted);">Unable to load Instagram posts</p>
+        <p style="color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem;">Please check your connection or visit our <a href="https://www.instagram.com/samudrafm/" target="_blank" style="color: var(--accent);">Instagram page</a></p>
+      </div>
+    `;
   }
 }
 
