@@ -1,4 +1,5 @@
 // SamduraFM front-end behaviors and mock data wiring
+console.log('Script.js loaded successfully');
 
 // Force clear cache on every load
 if ('caches' in window) {
@@ -544,9 +545,15 @@ if (recentGrid) {
 
 // Load coming up events when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM Content Loaded event fired');
   const comingGrid = document.getElementById('coming-grid');
+  console.log('coming-grid element:', comingGrid);
   if (comingGrid) {
     console.log('DOM ready, loading coming up events...');
+    // Immediate test - set some content right away
+    comingGrid.innerHTML = '<div class="test-card">Test content loading...</div>';
+    console.log('Test content set in coming-grid');
+    
     // Add a small delay to ensure other functions don't interfere
     setTimeout(() => {
       console.log('Loading coming up events after delay...');
@@ -929,6 +936,12 @@ function attachEpisodeClickHandlers() {
 
 // Load episodes when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM Content Loaded - Episodes loading started');
+  const episodesSlider = document.getElementById('episodes-slider');
+  if (episodesSlider) {
+    episodesSlider.innerHTML = '<div class="test-card">Episodes test content...</div>';
+    console.log('Episodes test content set');
+  }
   loadMixcloudEpisodes(MIXCLOUD_USERNAME);
   
   // Fallback: if no episodes load after 2 seconds, use fallback
@@ -3334,6 +3347,12 @@ window.testCustomPosts = async function() {
 
 // Initialize Instagram posts when page loads
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM Content Loaded - Instagram loading started');
+  const instagramFeed = document.getElementById('instagram-feed');
+  if (instagramFeed) {
+    instagramFeed.innerHTML = '<div class="test-card">Instagram test content...</div>';
+    console.log('Instagram test content set');
+  }
   // Load Instagram posts
   loadInstagramPosts();
 });
