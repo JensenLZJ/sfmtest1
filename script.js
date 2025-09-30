@@ -271,7 +271,9 @@ async function fetchInstagramPostsDirect() {
 
 // Render Instagram posts
 function renderInstagramPosts(posts) {
+  console.log('renderInstagramPosts function called with:', posts);
   const container = document.getElementById('instagram-feed');
+  console.log('Instagram container in renderInstagramPosts:', !!container);
   if (!container) {
     console.error('Instagram feed container not found in renderInstagramPosts');
     return;
@@ -312,6 +314,7 @@ function renderInstagramPosts(posts) {
   console.log('Setting Instagram feed HTML:', html);
   container.innerHTML = html;
   console.log('Instagram feed HTML set successfully');
+  console.log('Final container innerHTML:', container.innerHTML);
 }
 
 // Google Calendar Integration - Direct API call
@@ -3330,32 +3333,41 @@ window.testCustomPosts = async function() {
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM Content Loaded - Instagram loading started');
   const instagramFeed = document.getElementById('instagram-feed');
+  console.log('Instagram feed element:', instagramFeed);
   if (instagramFeed) {
+    console.log('Setting immediate Instagram content...');
     instagramFeed.innerHTML = '<div class="test-card">Instagram test content...</div>';
-    console.log('Instagram test content set');
+    console.log('Instagram test content set, innerHTML:', instagramFeed.innerHTML);
+  } else {
+    console.log('Instagram feed element not found!');
   }
   // Load Instagram posts
+  console.log('About to call loadInstagramPosts...');
   loadInstagramPosts();
 });
   
 // Load Instagram posts function
 async function loadInstagramPosts() {
+  console.log('loadInstagramPosts function called');
   const container = document.getElementById('instagram-feed');
+  console.log('Instagram container found:', !!container);
   if (!container) {
     console.error('Instagram feed container not found');
     return;
   }
   
   // Show loading state
+  console.log('Setting loading state...');
   container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 2rem;">Loading Instagram posts...</p>';
+  console.log('Loading state set, container innerHTML:', container.innerHTML);
   
   try {
     console.log('Fetching Instagram posts...');
     const posts = await fetchInstagramPosts();
     console.log('Instagram posts fetched:', posts);
+    console.log('About to call renderInstagramPosts...');
     renderInstagramPosts(posts);
-    
-    // Update indicator removed - no longer showing post count
+    console.log('renderInstagramPosts called successfully');
     
   } catch (error) {
     console.error('Error loading Instagram posts:', error);
