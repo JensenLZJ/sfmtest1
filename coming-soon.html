@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon - SamudraFM</title>
+    <meta name="description" content="SamudraFM is coming soon! Stay tuned for the ultimate radio experience.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://samudrafm.com/coming-soon">
+    <meta property="og:title" content="Coming Soon - SamudraFM">
+    <meta property="og:description" content="SamudraFM is coming soon! Stay tuned for the ultimate radio experience.">
+    <meta property="og:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://samudrafm.com/coming-soon">
+    <meta property="twitter:title" content="Coming Soon - SamudraFM">
+    <meta property="twitter:description" content="SamudraFM is coming soon! Stay tuned for the ultimate radio experience.">
+    <meta property="twitter:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
+    <link rel="apple-touch-icon" href="images/SamudraFMLogo1.png">
+    <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .coming-soon-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .coming-soon-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 600px;
+            padding: 2rem;
+        }
+        
+        .logo {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .coming-soon-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .coming-soon-subtitle {
+            font-size: 1.5rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+        
+        .construction-message {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            color: #ffffff;
+        }
+        
+        .construction-message h3 {
+            color: #fbbf24;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .construction-message p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .contact-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .contact-info h4 {
+            color: #60a5fa;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-info p {
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+        
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .bypass-link {
+            margin-top: 2rem;
+        }
+        
+        .bypass-link a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        
+        .bypass-link a:hover {
+            opacity: 1;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-element:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+        
+        .floating-element:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @media (max-width: 768px) {
+            .coming-soon-title {
+                font-size: 2.5rem;
+            }
+            
+            .coming-soon-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .logo {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .coming-soon-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="coming-soon-container">
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        
+        <div class="coming-soon-content">
+            <img src="images/SamudraFMLogo1.png" alt="SamudraFM Logo" class="logo">
+            
+            <h1 class="coming-soon-title animate__animated animate__fadeInUp">Coming Soon</h1>
+            <p class="coming-soon-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+                SamudraFM is under construction
+            </p>
+            
+            <div class="construction-message animate__animated animate__fadeInUp animate__delay-2s">
+                <h3><i class="fas fa-tools"></i> We're Building Something Amazing</h3>
+                <p>Our team is working hard to bring you the ultimate radio experience. We're putting the finishing touches on our website to ensure everything works perfectly for you.</p>
+                <p>Stay tuned for updates and get ready to discover the best music and content!</p>
+            </div>
+            
+            <div class="contact-info animate__animated animate__fadeInUp animate__delay-3s">
+                <h4><i class="fas fa-phone"></i> Contact Us</h4>
+                <p><strong>Phone:</strong> 0176858799</p>
+                <p><strong>Email:</strong> info@samudrafm.com</p>
+                <p>Report any issues or get in touch with our team</p>
+            </div>
+            
+            <div class="social-links animate__animated animate__fadeInUp animate__delay-4s">
+                <a href="https://www.instagram.com/samudrafm/" class="social-link" target="_blank" rel="noopener">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.facebook.com/SamudraFMSMKTS" class="social-link" target="_blank" rel="noopener">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="https://www.mixcloud.com/SamudraFM/" class="social-link" target="_blank" rel="noopener">
+                    <i class="fab fa-mixcloud"></i>
+                </a>
+            </div>
+            
+            <div class="bypass-link animate__animated animate__fadeInUp animate__delay-5s">
+                <a href="/?bypass=true">Access Site (Development Mode)</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click effect to social links
+            const socialLinks = document.querySelectorAll('.social-link');
+            socialLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+            
+            // Add floating animation to logo
+            const logo = document.querySelector('.logo');
+            setInterval(() => {
+                logo.style.transform = 'translateY(-5px)';
+                setTimeout(() => {
+                    logo.style.transform = 'translateY(0)';
+                }, 1000);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
