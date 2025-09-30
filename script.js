@@ -485,8 +485,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const comingGrid = document.getElementById('coming-grid');
   if (comingGrid) {
     console.log('DOM ready, loading coming up events...');
-    // Try to load from Google Calendar first, fallback to presenters.json, then mock data
-    loadComingUpEvents();
+    // Add a small delay to ensure other functions don't interfere
+    setTimeout(() => {
+      console.log('Loading coming up events after delay...');
+      loadComingUpEvents();
+    }, 100);
   } else {
     console.log('coming-grid element not found on DOM ready');
   }
@@ -3339,14 +3342,19 @@ function ensureMainContentVisible() {
     comingSection.style.setProperty('pointer-events', 'auto', 'important');
     comingSection.style.setProperty('visibility', 'visible', 'important');
     
-    // Ensure coming-grid is visible
+    // Ensure coming-grid is visible (but don't modify its content)
     const comingGrid = document.getElementById('coming-grid');
     if (comingGrid) {
+      // Only add visibility classes if content is already loaded
+      if (comingGrid.children.length > 0) {
+        console.log('coming-grid already has content, preserving it');
+      }
       comingGrid.classList.add('mobile-revealed', 'revealed');
       comingGrid.style.setProperty('opacity', '1', 'important');
       comingGrid.style.setProperty('transform', 'translateY(0)', 'important');
       comingGrid.style.setProperty('pointer-events', 'auto', 'important');
       comingGrid.style.setProperty('visibility', 'visible', 'important');
+      console.log('coming-grid visibility ensured, content preserved');
     }
   }
 
