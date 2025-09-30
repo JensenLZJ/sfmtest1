@@ -332,12 +332,17 @@ async function fetchGoogleCalendarEvents() {
     
     // Filter events to only show upcoming ones
     const now = new Date();
+    console.log('Current date:', now.toISOString());
+    
     const upcomingEvents = events.filter(event => {
       const eventDate = new Date(event.start.dateTime);
-      return eventDate >= now;
+      const isUpcoming = eventDate >= now;
+      console.log(`Event: ${event.summary}, Date: ${eventDate.toISOString()}, Is upcoming: ${isUpcoming}`);
+      return isUpcoming;
     }).slice(0, 10);
     
     console.log('Upcoming events:', upcomingEvents.length);
+    console.log('Upcoming events details:', upcomingEvents);
     
     return upcomingEvents;
     
@@ -493,11 +498,16 @@ async function loadComingUpEvents() {
   try {
     // Try Google Calendar first
     const events = await fetchGoogleCalendarEvents();
+    console.log('Calendar events received:', events);
     
     if (events && events.length > 0) {
+      console.log('Processing calendar events...');
       const formattedEvents = events.map(formatCalendarEvent);
+      console.log('Formatted events:', formattedEvents);
       renderComingUpEvents(formattedEvents);
       return;
+    } else {
+      console.log('No calendar events found, trying fallback...');
     }
     
     // Try to load from presenters.json
