@@ -480,12 +480,17 @@ if (recentGrid) {
   `).join('');
 }
 
-// Render coming up (if element exists)
-const comingGrid = document.getElementById('coming-grid');
-if (comingGrid) {
-  // Try to load from Google Calendar first, fallback to presenters.json, then mock data
-  loadComingUpEvents();
-}
+// Load coming up events when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  const comingGrid = document.getElementById('coming-grid');
+  if (comingGrid) {
+    console.log('DOM ready, loading coming up events...');
+    // Try to load from Google Calendar first, fallback to presenters.json, then mock data
+    loadComingUpEvents();
+  } else {
+    console.log('coming-grid element not found on DOM ready');
+  }
+});
 
 
 async function loadComingUpEvents() {
