@@ -313,7 +313,7 @@ function renderInstagramPosts(posts) {
   console.log('Instagram feed HTML set successfully');
 }
 
-// Google Calendar Integration - Using working CORS proxy
+// Google Calendar Integration - Using direct JSONP without external providers
 async function fetchGoogleCalendarEvents() {
   try {
     const apiKey = 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
@@ -323,37 +323,68 @@ async function fetchGoogleCalendarEvents() {
     const timeMin = now.toISOString();
     const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
     
-    // Use a working CORS proxy that supports HTTPS
+    // Use Google's JSONP support directly
     const calendarUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&maxResults=10&singleEvents=true&orderBy=startTime`;
-    const proxyUrl = `https://thingproxy.freeboard.io/fetch/${calendarUrl}`;
     
-    console.log('Fetching Google Calendar events...');
-    const response = await fetch(proxyUrl);
+    console.log('Fetching Google Calendar events directly...');
     
-    if (!response.ok) {
-      throw new Error(`CORS proxy error: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    if (data.error) {
-      throw new Error(`Google Calendar API error: ${data.error.message}`);
-    }
-    
-    console.log('Successfully fetched Google Calendar events:', data.items ? data.items.length : 0);
-    
-    // Transform the data
-    const events = data.items.map(event => ({
-      id: event.id,
-      title: event.summary || 'Untitled Event',
-      description: event.description || '',
-      start: event.start?.dateTime || event.start?.date,
-      end: event.end?.dateTime || event.end?.date,
-      location: event.location || '',
-      url: event.htmlLink || ''
-    }));
-    
-    return events;
+    return new Promise((resolve, reject) => {
+      // Create a unique callback function name
+      const callbackName = 'googleCalendarCallback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      
+      // Create the script tag for JSONP
+      const script = document.createElement('script');
+      script.src = `${calendarUrl}&callback=${callbackName}`;
+      
+      // Define the callback function
+      window[callbackName] = function(data) {
+        try {
+          // Clean up
+          document.head.removeChild(script);
+          delete window[callbackName];
+          
+          if (data.error) {
+            throw new Error(`Google Calendar API error: ${data.error.message}`);
+          }
+          
+          console.log('Successfully fetched Google Calendar events:', data.items ? data.items.length : 0);
+          
+          // Transform the data
+          const events = data.items.map(event => ({
+            id: event.id,
+            title: event.summary || 'Untitled Event',
+            description: event.description || '',
+            start: event.start?.dateTime || event.start?.date,
+            end: event.end?.dateTime || event.end?.date,
+            location: event.location || '',
+            url: event.htmlLink || ''
+          }));
+          
+          resolve(events);
+        } catch (error) {
+          reject(error);
+        }
+      };
+      
+      // Handle script load error
+      script.onerror = function() {
+        document.head.removeChild(script);
+        delete window[callbackName];
+        reject(new Error('Failed to load Google Calendar data'));
+      };
+      
+      // Add script to document
+      document.head.appendChild(script);
+      
+      // Timeout after 10 seconds
+      setTimeout(() => {
+        if (window[callbackName]) {
+          document.head.removeChild(script);
+          delete window[callbackName];
+          reject(new Error('Google Calendar request timeout'));
+        }
+      }, 10000);
+    });
     
   } catch (error) {
     console.error('Error fetching Google Calendar events:', error);
