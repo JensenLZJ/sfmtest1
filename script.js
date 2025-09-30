@@ -205,21 +205,40 @@ const MOCK_COMING = [
 // Mock data for reference (Live section removed)
 // MOCK_NOW, MOCK_RECENT, MOCK_COMING kept for potential future use
 
-// Instagram API Configuration - Using secure backend API
-// API keys are now stored securely in GitHub Repository secrets
-// and accessed through the backend API server
+// Instagram API Configuration
+// Replace with your actual Instagram access token
+const INSTAGRAM_ACCESS_TOKEN = 'YOUR_INSTAGRAM_ACCESS_TOKEN_HERE';
 
 // Instagram API Integration (Using JSONP approach for static hosting)
 async function fetchInstagramPosts() {
   try {
-    // Since we can't use CORS proxies, we'll use the fallback data
-    // In a real production environment, you'd need a backend server
-    console.log('Using fallback Instagram data for static hosting');
-    return getFallbackInstagramPosts();
+    console.log('Fetching Instagram posts from API...');
+    
+    // Try to fetch from Instagram API using a CORS proxy
+    const proxyUrl = 'https://api.allorigins.win/raw?url=';
+    const instagramUrl = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}`;
+    
+    const response = await fetch(proxyUrl + encodeURIComponent(instagramUrl));
+    
+    if (!response.ok) {
+      throw new Error(`Instagram API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('Instagram API response:', data);
+    
+    if (data.error) {
+      throw new Error(`Instagram API error: ${data.error.message}`);
+    }
+    
+    const posts = data.data || [];
+    console.log('Successfully fetched Instagram posts:', posts.length);
+    
+    return posts;
     
   } catch (error) {
     console.error('Error fetching Instagram posts:', error);
-    // Return fallback data if API fails
+    console.log('Falling back to static Instagram data');
     return getFallbackInstagramPosts();
   }
 }
