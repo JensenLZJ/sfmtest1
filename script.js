@@ -197,6 +197,39 @@ function getProfilePicture(presenterName) {
   return 'images/SamudraFMLogo1.png';
 }
 
+// Social media links for presenters (same as schedule page)
+const socialMediaLinks = {
+  'JensenL': {
+    instagram: 'https://instagram.com/jensenl',
+    twitter: 'https://twitter.com/jensenl',
+    facebook: 'https://facebook.com/jensenl',
+    youtube: 'https://youtube.com/jensenl'
+  },
+  'Srishti': {
+    instagram: 'https://instagram.com/srishti',
+    twitter: 'https://twitter.com/srishti',
+    facebook: 'https://facebook.com/srishti',
+    youtube: 'https://youtube.com/srishti'
+  },
+  'Special Guest': {
+    instagram: '#',
+    twitter: '#',
+    facebook: '#',
+    youtube: '#'
+  }
+};
+
+// Function to get social media links for a presenter
+function getSocialMediaLinks(presenterName) {
+  const cleanName = presenterName.trim();
+  return socialMediaLinks[cleanName] || {
+    instagram: '#',
+    twitter: '#',
+    facebook: '#',
+    youtube: '#'
+  };
+}
+
 const MOCK_COMING = [
   { title: 'Jensen', desc: 'A Wee Mystical Magical Show', time: '20:00 � 22:00', cover: null },
   { title: 'Good guy', desc: 'Throwbacks With Good guy', time: '22:00 � 00:00', cover: null }
@@ -534,25 +567,61 @@ function renderComingUpEvents(events) {
   // Show only the 2 latest events
   const limitedEvents = events.slice(0, 2);
   
-  // Show limited events in vertical scrollable format
+  // Show limited events in vertical scrollable format using the same system as schedule page
   const html = limitedEvents.map(item => {
-    // Use profile picture if cover is null or empty
-    const coverUrl = item.cover || getProfilePicture(item.title);
+    // Extract presenter and show using the same system as schedule page
+    const fullTitle = item.title || 'TBA';
+    let presenter, show;
+    
+    // Split "JensenL - A Wee Mystical Magical Show" into presenter and show
+    if (fullTitle.includes(' - ')) {
+      const parts = fullTitle.split(' - ');
+      presenter = parts[0].trim();
+      show = parts[1].trim();
+    } else {
+      presenter = fullTitle;
+      show = item.desc || 'Special Show';
+    }
+    
+    // Use profile picture detection (same as schedule page)
+    const image = getProfilePicture(presenter);
+    
+    // Get social media links for this presenter
+    const socialLinks = getSocialMediaLinks(presenter);
+    
+    console.log(`Coming up item:`, { presenter, show, image, detectedImage: getProfilePicture(presenter) });
+    
     return `
       <article class="card coming-up-card">
-        ${withCover(coverUrl)}
-      <div class="content">
-        <p class="title">${item.title}</p>
-        <p class="meta">${item.desc}</p>
-        <p class="meta">${item.time}</p>
-      </div>
+        <div class="coming-up-image">
+          <img src="${image}" alt="${presenter}" onerror="this.src='images/SamudraFMLogo1.png'" />
+        </div>
+        <div class="content">
+          <p class="title">${presenter}</p>
+          <p class="meta">${show}</p>
+          <p class="meta">${item.time}</p>
+        </div>
         ${item.date && item.day ? `
           <div class="coming-up-time">
             <div class="coming-up-date">${item.date}</div>
             <div class="coming-up-day">${item.day}</div>
           </div>
         ` : ''}
-    </article>
+        <div class="coming-up-social">
+          <a href="${socialLinks.instagram}" target="_blank" rel="noopener" class="social-btn ${socialLinks.instagram !== '#' ? 'active' : 'disabled'}" title="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="${socialLinks.twitter}" target="_blank" rel="noopener" class="social-btn ${socialLinks.twitter !== '#' ? 'active' : 'disabled'}" title="X (Twitter)">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="${socialLinks.facebook}" target="_blank" rel="noopener" class="social-btn ${socialLinks.facebook !== '#' ? 'active' : 'disabled'}" title="Facebook">
+            <i class="fab fa-facebook"></i>
+          </a>
+          <a href="${socialLinks.youtube}" target="_blank" rel="noopener" class="social-btn ${socialLinks.youtube !== '#' ? 'active' : 'disabled'}" title="YouTube">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+      </article>
     `;
   }).join('');
   
