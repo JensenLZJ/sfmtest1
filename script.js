@@ -485,6 +485,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const comingGrid = document.getElementById('coming-grid');
   if (comingGrid) {
     console.log('DOM ready, loading coming up events...');
+    console.log('coming-grid element found:', comingGrid);
+    console.log('coming-grid classes:', comingGrid.className);
+    console.log('coming-grid current content:', comingGrid.innerHTML);
+    
+    // Test: Set some test content first
+    comingGrid.innerHTML = '<div class="test-content">Testing coming up section...</div>';
+    console.log('Test content set, coming-grid innerHTML:', comingGrid.innerHTML);
+    
     // Add a small delay to ensure other functions don't interfere
     setTimeout(() => {
       console.log('Loading coming up events after delay...');
@@ -504,44 +512,17 @@ async function loadComingUpEvents() {
   
   // Show loading state
   comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
+  console.log('Loading state set, coming-grid innerHTML:', comingGrid.innerHTML);
   
-  try {
-    // Try Google Calendar first
-    const events = await fetchGoogleCalendarEvents();
-    console.log('Calendar events received:', events);
-    
-    if (events && events.length > 0) {
-      console.log('Processing calendar events...');
-      const formattedEvents = events.map(formatCalendarEvent);
-      console.log('Formatted events:', formattedEvents);
-      console.log('About to call renderComingUpEvents with:', formattedEvents);
-      renderComingUpEvents(formattedEvents);
-      console.log('renderComingUpEvents called successfully');
-      return;
-    } else {
-      console.log('No calendar events found, trying fallback...');
-    }
-    
-    // Try to load from presenters.json
-    try {
-      const response = await fetch('/presenters.json');
-      if (response.ok) {
-        const data = await response.json();
-        renderComingUpEvents(data.presenters);
-        return;
-      }
-    } catch (jsonError) {
-      // Silent fallback
-    }
-    
-    // Fallback to mock data
-    renderComingUpEvents(MOCK_COMING);
-    
-  } catch (error) {
-    console.error('Error loading coming up events:', error);
-    // Fallback to mock data on error
-    renderComingUpEvents(MOCK_COMING);
-  }
+  // SIMPLIFIED TEST: Just set some test content directly
+  const testEvents = [
+    { title: 'JensenL', desc: 'A Wee Mystical Magical Show', time: '20:00 - 22:00', cover: 'assets/avatar/Jensen.jpg' },
+    { title: 'Srishti', desc: 'Study Vibes Session', time: '19:00 - 21:00', cover: 'assets/avatar/Srishti.jpg' }
+  ];
+  
+  console.log('Setting test events:', testEvents);
+  renderComingUpEvents(testEvents);
+  console.log('Test events rendered');
 }
 
 function renderComingUpEvents(events) {
