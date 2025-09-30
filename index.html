@@ -14,29 +14,9 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
-    <!-- Coming Soon Redirect - Always redirect to coming soon page -->
+    <!-- Site is live and ready -->
     <script>
-        // Check if this is a fresh bypass (not a refresh)
-        const urlParams = new URLSearchParams(window.location.search);
-        const hasBypassParam = urlParams.has('bypass');
-        const isRefresh = sessionStorage.getItem('samudrafm_visited') === 'true';
-        
-        // If no bypass parameter OR if it's a refresh, redirect to coming soon
-        if (!hasBypassParam || isRefresh) {
-            // Clear any existing bypass data
-            localStorage.removeItem('samudrafm_bypass');
-            sessionStorage.removeItem('samudrafm_bypass');
-            sessionStorage.removeItem('samudrafm_visited');
-            document.cookie = 'samudrafm_bypass=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            
-            // Force redirect to coming soon page
-            window.location.href = '/coming-soon';
-        } else {
-            // Mark as visited and set session flag
-            sessionStorage.setItem('samudrafm_visited', 'true');
-            sessionStorage.setItem('samudrafm_bypass', 'true');
-            
-            // Show construction warning popup for bypassed users
+        // Site is live - no redirects needed
             window.addEventListener('load', function() {
                 setTimeout(function() {
                     alert('⚠️ WARNING ⚠️\n\nThis website is still under construction!\n\nSome features may not work properly.\n\nReport bugs to: 0176858799');
