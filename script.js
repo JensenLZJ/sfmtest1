@@ -368,30 +368,30 @@ function getFallbackCalendarEvents() {
   return [
     {
       id: 'fallback-1',
-      title: 'JensenL - A Wee Mystical Magical Show',
+      summary: 'JensenL - A Wee Mystical Magical Show',
       description: 'Join Jensen for an enchanting musical journey',
-      start: new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
-      end: new Date(now.getTime() + 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString(), // Tomorrow + 2 hours
+      start: { dateTime: new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString() },
+      end: { dateTime: new Date(now.getTime() + 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString() },
       location: 'Online',
-      url: 'https://samudrafm.com'
+      htmlLink: 'https://samudrafm.com'
     },
     {
       id: 'fallback-2',
-      title: 'Srishti - Study Vibes Session',
+      summary: 'Srishti - Study Vibes Session',
       description: 'Perfect music for your study sessions',
-      start: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days from now
-      end: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000 + 1.5 * 60 * 60 * 1000).toISOString(), // 2 days from now + 1.5 hours
+      start: { dateTime: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000).toISOString() },
+      end: { dateTime: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000 + 1.5 * 60 * 60 * 1000).toISOString() },
       location: 'Online',
-      url: 'https://samudrafm.com'
+      htmlLink: 'https://samudrafm.com'
     },
     {
       id: 'fallback-3',
-      title: 'Special Guest - Music Discovery',
+      summary: 'Special Guest - Music Discovery',
       description: 'Discover new artists and hidden gems',
-      start: new Date(now.getTime() + 4 * 24 * 60 * 60 * 1000).toISOString(), // 4 days from now
-      end: new Date(now.getTime() + 4 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString(), // 4 days from now + 2 hours
+      start: { dateTime: new Date(now.getTime() + 4 * 24 * 60 * 60 * 1000).toISOString() },
+      end: { dateTime: new Date(now.getTime() + 4 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString() },
       location: 'Online',
-      url: 'https://samudrafm.com'
+      htmlLink: 'https://samudrafm.com'
     }
   ];
 }
