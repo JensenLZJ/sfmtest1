@@ -213,46 +213,14 @@ const INSTAGRAM_ACCESS_TOKEN = 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZA
 // Instagram API Integration (Using JSONP approach for static hosting)
 async function fetchInstagramPosts() {
   try {
-    console.log('Fetching Instagram posts...');
-    
-    // For static hosting, we'll use a more reliable approach
-    // Try multiple CORS proxies in sequence
-    const proxies = [
-      'https://api.allorigins.win/raw?url=',
-      'https://cors-anywhere.herokuapp.com/',
-      'https://thingproxy.freeboard.io/fetch/'
-    ];
-    
-    const instagramUrl = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}`;
-    
-    for (const proxy of proxies) {
-      try {
-        console.log(`Trying proxy: ${proxy}`);
-        const response = await fetch(proxy + encodeURIComponent(instagramUrl));
-        
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Instagram API response:', data);
-          
-          if (data.error) {
-            throw new Error(`Instagram API error: ${data.error.message}`);
-          }
-          
-          const posts = data.data || [];
-          console.log('Successfully fetched Instagram posts:', posts.length);
-          return posts;
-        }
-      } catch (proxyError) {
-        console.log(`Proxy ${proxy} failed:`, proxyError.message);
-        continue;
-      }
-    }
-    
-    throw new Error('All CORS proxies failed');
+    // Since we can't use CORS proxies reliably, we'll use the fallback data
+    // In a real production environment, you'd need a backend server
+    console.log('Using fallback Instagram data for static hosting');
+    return getFallbackInstagramPosts();
     
   } catch (error) {
     console.error('Error fetching Instagram posts:', error);
-    console.log('Falling back to static Instagram data');
+    // Return fallback data if API fails
     return getFallbackInstagramPosts();
   }
 }
