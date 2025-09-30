@@ -208,34 +208,47 @@ const MOCK_COMING = [
 
 // Instagram API Configuration
 // Replace with your actual Instagram access token
-const INSTAGRAM_ACCESS_TOKEN = 'YOUR_INSTAGRAM_ACCESS_TOKEN_HERE';
+const INSTAGRAM_ACCESS_TOKEN = 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD';
 
 // Instagram API Integration (Using JSONP approach for static hosting)
 async function fetchInstagramPosts() {
   try {
-    console.log('Fetching Instagram posts from API...');
+    console.log('Fetching Instagram posts...');
     
-    // Try to fetch from Instagram API using a CORS proxy
-    const proxyUrl = 'https://api.allorigins.win/raw?url=';
+    // For static hosting, we'll use a more reliable approach
+    // Try multiple CORS proxies in sequence
+    const proxies = [
+      'https://api.allorigins.win/raw?url=',
+      'https://cors-anywhere.herokuapp.com/',
+      'https://thingproxy.freeboard.io/fetch/'
+    ];
+    
     const instagramUrl = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}`;
     
-    const response = await fetch(proxyUrl + encodeURIComponent(instagramUrl));
-    
-    if (!response.ok) {
-      throw new Error(`Instagram API error: ${response.status}`);
+    for (const proxy of proxies) {
+      try {
+        console.log(`Trying proxy: ${proxy}`);
+        const response = await fetch(proxy + encodeURIComponent(instagramUrl));
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Instagram API response:', data);
+          
+          if (data.error) {
+            throw new Error(`Instagram API error: ${data.error.message}`);
+          }
+          
+          const posts = data.data || [];
+          console.log('Successfully fetched Instagram posts:', posts.length);
+          return posts;
+        }
+      } catch (proxyError) {
+        console.log(`Proxy ${proxy} failed:`, proxyError.message);
+        continue;
+      }
     }
     
-    const data = await response.json();
-    console.log('Instagram API response:', data);
-    
-    if (data.error) {
-      throw new Error(`Instagram API error: ${data.error.message}`);
-    }
-    
-    const posts = data.data || [];
-    console.log('Successfully fetched Instagram posts:', posts.length);
-    
-    return posts;
+    throw new Error('All CORS proxies failed');
     
   } catch (error) {
     console.error('Error fetching Instagram posts:', error);
