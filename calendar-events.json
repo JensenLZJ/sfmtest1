@@ -1,0 +1,82 @@
+{
+  "events": [
+    {
+      "id": "event-1",
+      "summary": "JensenL - A Wee Mystical Magical Show",
+      "description": "Join Jensen for an enchanting musical journey through mystical sounds and magical melodies",
+      "start": {
+        "dateTime": "2025-01-15T20:00:00+00:00"
+      },
+      "end": {
+        "dateTime": "2025-01-15T22:00:00+00:00"
+      },
+      "location": "Online",
+      "htmlLink": "https://samudrafm.com"
+    },
+    {
+      "id": "event-2",
+      "summary": "Srishti - Study Vibes Session",
+      "description": "Perfect music for your study sessions with Srishti's curated playlist",
+      "start": {
+        "dateTime": "2025-01-16T19:00:00+00:00"
+      },
+      "end": {
+        "dateTime": "2025-01-16T21:00:00+00:00"
+      },
+      "location": "Online",
+      "htmlLink": "https://samudrafm.com"
+    },
+    {
+      "id": "event-3",
+      "summary": "Special Guest - Music Discovery",
+      "description": "Discover new artists and hidden gems with our special guest",
+      "start": {
+        "dateTime": "2025-01-17T18:00:00+00:00"
+      },
+      "end": {
+        "dateTime": "2025-01-17T20:00:00+00:00"
+      },
+      "location": "Online",
+      "htmlLink": "https://samudrafm.com"
+    },
+    {
+      "id": "event-4",
+      "summary": "JensenL - Late Night Vibes",
+      "description": "Wind down with Jensen's late night music selection",
+      "start": {
+        "dateTime": "2025-01-18T22:00:00+00:00"
+      },
+      "end": {
+        "dateTime": "2025-01-19T00:00:00+00:00"
+      },
+      "location": "Online",
+      "htmlLink": "https://samudrafm.com"
+    },
+    {
+      "id": "event-5",
+      "summary": "Srishti - Weekend Chill",
+      "description": "Relax and unwind with Srishti's weekend chill playlist",
+      "start": {
+        "dateTime": "2025-01-19T15:00:00+00:00"
+      },
+      "end": {
+        "dateTime": "2025-01-19T17:00:00+00:00"
+      },
+      "location": "Online",
+      "htmlLink": "https://samudrafm.com"
+    },
+    {
+      "id": "event-6",
+      "summary": "JensenL - Morning Motivation",
+      "description": "Start your day right with Jensen's motivational morning mix",
+      "start": {
+        "dateTime": "2025-01-20T08:00:00+00:00"
+      },
+      "end": {
+        "dateTime": "2025-01-20T10:00:00+00:00"
+      },
+      "location": "Online",
+      "htmlLink": "https://samudrafm.com"
+    }
+  ]
+}

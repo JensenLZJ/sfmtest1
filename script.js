@@ -313,78 +313,33 @@ function renderInstagramPosts(posts) {
   console.log('Instagram feed HTML set successfully');
 }
 
-// Google Calendar Integration - Using direct JSONP without external providers
+// Google Calendar Integration - Using static JSON file for reliable data
 async function fetchGoogleCalendarEvents() {
   try {
-    const apiKey = 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
-    const calendarId = 'samudrafm.com@gmail.com';
+    console.log('Fetching Google Calendar events from static file...');
     
+    // Load events from static JSON file
+    const response = await fetch('/calendar-events.json');
+    
+    if (!response.ok) {
+      throw new Error(`Failed to load calendar events: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const events = data.events || [];
+    
+    console.log('Successfully fetched Google Calendar events:', events.length);
+    
+    // Filter events to only show upcoming ones
     const now = new Date();
-    const timeMin = now.toISOString();
-    const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
+    const upcomingEvents = events.filter(event => {
+      const eventDate = new Date(event.start.dateTime);
+      return eventDate >= now;
+    }).slice(0, 10);
     
-    // Use Google's JSONP support directly
-    const calendarUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&maxResults=10&singleEvents=true&orderBy=startTime`;
+    console.log('Upcoming events:', upcomingEvents.length);
     
-    console.log('Fetching Google Calendar events directly...');
-    
-    return new Promise((resolve, reject) => {
-      // Create a unique callback function name
-      const callbackName = 'googleCalendarCallback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-      
-      // Create the script tag for JSONP
-      const script = document.createElement('script');
-      script.src = `${calendarUrl}&callback=${callbackName}`;
-      
-      // Define the callback function
-      window[callbackName] = function(data) {
-        try {
-          // Clean up
-          document.head.removeChild(script);
-          delete window[callbackName];
-          
-          if (data.error) {
-            throw new Error(`Google Calendar API error: ${data.error.message}`);
-          }
-          
-          console.log('Successfully fetched Google Calendar events:', data.items ? data.items.length : 0);
-          
-          // Transform the data
-          const events = data.items.map(event => ({
-            id: event.id,
-            title: event.summary || 'Untitled Event',
-            description: event.description || '',
-            start: event.start?.dateTime || event.start?.date,
-            end: event.end?.dateTime || event.end?.date,
-            location: event.location || '',
-            url: event.htmlLink || ''
-          }));
-          
-          resolve(events);
-        } catch (error) {
-          reject(error);
-        }
-      };
-      
-      // Handle script load error
-      script.onerror = function() {
-        document.head.removeChild(script);
-        delete window[callbackName];
-        reject(new Error('Failed to load Google Calendar data'));
-      };
-      
-      // Add script to document
-      document.head.appendChild(script);
-      
-      // Timeout after 10 seconds
-      setTimeout(() => {
-        if (window[callbackName]) {
-          document.head.removeChild(script);
-          delete window[callbackName];
-          reject(new Error('Google Calendar request timeout'));
-        }
-      }, 10000);
-    });
+    return upcomingEvents;
     
   } catch (error) {
     console.error('Error fetching Google Calendar events:', error);
