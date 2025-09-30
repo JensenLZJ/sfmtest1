@@ -514,15 +514,18 @@ async function loadComingUpEvents() {
   comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
   console.log('Loading state set, coming-grid innerHTML:', comingGrid.innerHTML);
   
-  // SIMPLIFIED TEST: Just set some test content directly
-  const testEvents = [
-    { title: 'JensenL', desc: 'A Wee Mystical Magical Show', time: '20:00 - 22:00', cover: 'assets/avatar/Jensen.jpg' },
-    { title: 'Srishti', desc: 'Study Vibes Session', time: '19:00 - 21:00', cover: 'assets/avatar/Srishti.jpg' }
-  ];
-  
-  console.log('Setting test events:', testEvents);
-  renderComingUpEvents(testEvents);
-  console.log('Test events rendered');
+  // Wait a moment to show loading state
+  setTimeout(() => {
+    // SIMPLIFIED TEST: Just set some test content directly
+    const testEvents = [
+      { title: 'JensenL', desc: 'A Wee Mystical Magical Show', time: '20:00 - 22:00', cover: 'assets/avatar/Jensen.jpg' },
+      { title: 'Srishti', desc: 'Study Vibes Session', time: '19:00 - 21:00', cover: 'assets/avatar/Srishti.jpg' }
+    ];
+    
+    console.log('Setting test events:', testEvents);
+    renderComingUpEvents(testEvents);
+    console.log('Test events rendered');
+  }, 500);
 }
 
 function renderComingUpEvents(events) {
@@ -551,7 +554,8 @@ function renderComingUpEvents(events) {
     // Use profile picture if cover is null or empty
     const coverUrl = item.cover || getProfilePicture(item.title);
     console.log('Cover URL for', item.title, ':', coverUrl);
-    return `
+    
+    const itemHtml = `
       <article class="card coming-up-card">
         ${withCover(coverUrl)}
       <div class="content">
@@ -567,6 +571,8 @@ function renderComingUpEvents(events) {
         ` : ''}
     </article>
     `;
+    console.log('Generated HTML for item', item.title, ':', itemHtml);
+    return itemHtml;
   }).join('');
   
   console.log('Generated HTML for coming up events:', html);
