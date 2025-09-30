@@ -285,7 +285,7 @@ function renderInstagramPosts(posts) {
   }
   
   const html = posts.map(post => {
-    const imageUrl = post.media_type === 'VIDEO' ? post.thumbnail_url : post.media_url;
+    const imageUrl = post.mediaUrl || post.media_url || post.thumbnail_url;
     const caption = post.caption ? post.caption.substring(0, 100) + '...' : 'View on Instagram';
     const timestamp = new Date(post.timestamp).toLocaleDateString();
     
@@ -557,34 +557,38 @@ async function loadComingUpEvents() {
       console.log('Processing calendar events...');
       const formattedEvents = events.map(formatCalendarEvent);
       console.log('Formatted events:', formattedEvents);
-      console.log('About to call renderComingUpEvents with:', formattedEvents);
       renderComingUpEvents(formattedEvents);
-      console.log('renderComingUpEvents called successfully');
       return;
     } else {
-      console.log('No calendar events found, trying fallback...');
+      console.log('No calendar events found, using fallback...');
     }
-    
-    // Try to load from presenters.json
-    try {
-      const response = await fetch('/presenters.json');
-      if (response.ok) {
-        const data = await response.json();
-        renderComingUpEvents(data.presenters);
-        return;
-      }
-    } catch (jsonError) {
-      // Silent fallback
-    }
-    
-    // Fallback to mock data only if no other data is available
-    renderComingUpEvents(MOCK_COMING);
     
   } catch (error) {
     console.error('Error loading coming up events:', error);
-    // Fallback to mock data on error
-    renderComingUpEvents(MOCK_COMING);
   }
+  
+  // Use fallback data with proper formatting
+  const fallbackEvents = [
+    { 
+      title: 'JensenL', 
+      desc: 'A Wee Mystical Magical Show', 
+      time: '20:00 - 22:00', 
+      cover: 'assets/avatar/Jensen.jpg',
+      date: '1 Oct',
+      day: 'Wednesday'
+    },
+    { 
+      title: 'Srishti', 
+      desc: 'Study Vibes Session', 
+      time: '19:00 - 21:00', 
+      cover: 'assets/avatar/Srishti.jpg',
+      date: '2 Oct',
+      day: 'Thursday'
+    }
+  ];
+  
+  console.log('Using fallback events:', fallbackEvents);
+  renderComingUpEvents(fallbackEvents);
 }
 
 function renderComingUpEvents(events) {
@@ -908,16 +912,18 @@ function attachEpisodeClickHandlers() {
 document.addEventListener('DOMContentLoaded', () => {
   loadMixcloudEpisodes(MIXCLOUD_USERNAME);
   
-  // Fallback: if no episodes load after 3 seconds, use fallback
+  // Fallback: if no episodes load after 2 seconds, use fallback
   setTimeout(() => {
     const slider = document.getElementById('episodes-slider');
     if (slider && !slider.dataset.loaded) {
+      console.log('Using fallback episodes after timeout');
       episodes = getFallbackEpisodes();
       initEpisodesSlider();
       renderEpisodesSlider();
       attachEpisodeClickHandlers();
+      slider.dataset.loaded = 'true';
     }
-  }, 3000);
+  }, 2000);
 });
 
 const loadMoreBtn = document.getElementById('episodes-load');
