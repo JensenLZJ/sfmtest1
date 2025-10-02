@@ -2577,7 +2577,7 @@ body{
   /* Change hero text to two lines on mobile */
   .hero-copy h1 {
     white-space: pre-line;
-    font-size: 64px;
+    font-size: 48px;
     line-height: 1.1;
   }
 
