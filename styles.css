@@ -2526,7 +2526,8 @@ body{
   
   /* Adjust hero section for small screens */
   .hero {
-    padding: 20px 0;
+    padding: 20px 0 0 0 !important;
+    padding-bottom: 0px !important; /* Force bottom padding to 0 */
   }
   
   .hero h1 {
@@ -2571,7 +2572,8 @@ body{
 @media (max-width: 768px) {
   /* Hero section - reduced gap between nav and text on mobile */
   .hero {
-    padding: 56px 0 42px 0; /* 50% reduction from 113px to 56px */
+    padding: 56px 0 0 0 !important; /* Removed bottom padding */
+    padding-bottom: 0px !important; /* Force bottom padding to 0 */
   }
   
   /* Change hero text to two lines on mobile */

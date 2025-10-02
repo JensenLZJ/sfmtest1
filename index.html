@@ -10,9 +10,12 @@
     <meta name="description" content="SamudraFM - Non-stop hits, live shows, and requests.">
     
     <!-- Force cache clearing on every visit -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <meta name="cache-control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta name="expires" content="0">
+    <meta name="pragma" content="no-cache">
     
     <!-- Coming Soon Redirect - Always redirect to coming soon page -->
     <script>
@@ -74,7 +77,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="styles.css?v=40&t=1734570200&force=17&nocache=1">
+    <link rel="stylesheet" href="styles.css?v=42&t=1734570300&force=19&nocache=1&cb=1734570300">
     
     
     <!-- Favicon -->
@@ -324,11 +327,20 @@
         })();
     </script>
     <script>
-    // Dynamic script loading with cache busting
+    // Dynamic script loading with aggressive cache busting
     const script = document.createElement('script');
-    script.src = 'script.js?v=74&t=' + Date.now() + '&nocache=1';
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(2, 15);
+    script.src = 'script.js?v=75&t=' + timestamp + '&nocache=1&cb=' + timestamp + '&r=' + randomId;
     script.onload = function() {
       console.log('Fresh script loaded at:', new Date().toISOString());
+    };
+    script.onerror = function() {
+      console.log('Script loading failed, retrying...');
+      // Fallback to static script
+      const fallbackScript = document.createElement('script');
+      fallbackScript.src = 'script.js?fallback=' + Date.now();
+      document.head.appendChild(fallbackScript);
     };
     document.head.appendChild(script);
     </script>
@@ -343,35 +355,70 @@
     }
     </script>
     <script>
-    // Force clear all caches on every visit
-    if ('caches' in window) {
-      caches.keys().then(function(names) {
-        for (let name of names) {
-          caches.delete(name);
-        }
+    // Aggressive cache clearing on every visit
+    (function() {
+      const timestamp = Date.now();
+      
+      // Clear all browser caches
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          for (let name of names) {
+            caches.delete(name);
+          }
+        });
+      }
+      
+      // Clear service worker cache and unregister
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+          }
+        });
+        
+        // Register new service worker after clearing
+        window.addEventListener('load', function(){ 
+          navigator.serviceWorker.register('/sw.js?v=' + timestamp + '&cb=' + timestamp); 
+        });
+      }
+      
+      // Clear localStorage and sessionStorage
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch(e) {
+        console.log('Storage clearing failed:', e);
+      }
+      
+      // Clear all cookies for this domain
+      document.cookie.split(";").forEach(function(c) { 
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
       });
-    }
-    
-    // Clear service worker cache
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let registration of registrations) {
-          registration.unregister();
+      
+      // Force reload if page is loaded from cache (back/forward navigation)
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+          window.location.reload(true);
         }
       });
       
-      // Register new service worker after clearing
-      window.addEventListener('load', function(){ 
-        navigator.serviceWorker.register('/sw.js?v=' + Date.now()); 
+      // Force reload on browser back button
+      window.addEventListener('popstate', function(event) {
+        window.location.reload(true);
       });
-    }
-    
-    // Force reload if page is loaded from cache
-    window.addEventListener('pageshow', function(event) {
-      if (event.persisted) {
-        window.location.reload();
-      }
-    });
+      
+      // Prevent caching of this page
+      window.addEventListener('beforeunload', function() {
+        // Clear any remaining cache
+        if ('caches' in window) {
+          caches.keys().then(function(names) {
+            for (let name of names) {
+              caches.delete(name);
+            }
+          });
+        }
+      });
+    })();
     </script>
     
     <!-- Instagram Feed - Auto-updating content -->
