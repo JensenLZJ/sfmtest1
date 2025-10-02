@@ -632,25 +632,18 @@
     
     /* Tablet and small desktop player - 768px to 1024px */
     @media (min-width: 769px) and (max-width: 1023px) {
-        /* Force full container width for tablet/small desktop */
+        /* Use same container width as schedule-list */
         .hero-player-section .container {
-            max-width: none !important;
-            width: 100% !important;
-            padding: 0 20px !important;
-            margin: 0 auto !important;
+            /* Remove overrides - use default container styling */
             box-sizing: border-box !important;
         }
         
         .hero-player-section {
-            width: 100% !important;
-            max-width: none !important;
             padding: 40px 0 20px 0 !important;
         }
         
         .hero-latest {
             padding: 20px !important;
-            max-width: none !important;
-            width: 100% !important;
             margin: 0 !important;
             box-sizing: border-box !important;
         }
@@ -716,18 +709,13 @@
     }
     
     @media (min-width: 1024px) {
-         /* Force full container width - override global 1200px max-width */
+         /* Use same container width as schedule-list */
          .hero-player-section .container {
-             max-width: none !important;
-             width: 100% !important;
-             padding: 0 20px !important;
-             margin: 0 auto !important;
+             /* Remove overrides - use default container styling */
              box-sizing: border-box !important;
          }
          
          .hero-player-section {
-             width: 100% !important;
-             max-width: none !important;
              padding: 40px 0 20px 0 !important;
          }
          
@@ -745,8 +733,6 @@
              margin: 20px 0 !important;
              border: 1px solid rgba(255,255,255,0.2) !important;
              box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1) !important;
-             max-width: none !important;
-             width: 100% !important;
          }
          
          /* Match home page player-widget styling exactly */
