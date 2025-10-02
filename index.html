@@ -77,7 +77,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="styles.css?v=42&t=1734570300&force=19&nocache=1&cb=1734570300">
+    <link rel="stylesheet" href="styles.css?v=43&t=1734570400&force=20&nocache=1&cb=1734570400">
     
     
     <!-- Favicon -->
@@ -333,10 +333,10 @@
     const randomId = Math.random().toString(36).substring(2, 15);
     script.src = 'script.js?v=75&t=' + timestamp + '&nocache=1&cb=' + timestamp + '&r=' + randomId;
     script.onload = function() {
-      console.log('Fresh script loaded at:', new Date().toISOString());
+      // Script loaded successfully
     };
     script.onerror = function() {
-      console.log('Script loading failed, retrying...');
+      // Script loading failed, retrying...
       // Fallback to static script
       const fallbackScript = document.createElement('script');
       fallbackScript.src = 'script.js?fallback=' + Date.now();
@@ -345,13 +345,12 @@
     document.head.appendChild(script);
     </script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
-    <!-- Static script fallback for GitHub Pages -->
-    <script src="script.js"></script>
+    <!-- Static script fallback removed to prevent duplicate loading -->
     <script>
     // Immediate test to see if script is loading
-    console.log('HTML script section loaded');
+    // HTML script section loaded
     if (typeof window !== 'undefined') {
-      console.log('Window object available');
+      // Window object available
     }
     </script>
     <script>
@@ -387,7 +386,7 @@
         localStorage.clear();
         sessionStorage.clear();
       } catch(e) {
-        console.log('Storage clearing failed:', e);
+        // Storage clearing failed
       }
       
       // Clear all cookies for this domain

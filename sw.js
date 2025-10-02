@@ -19,7 +19,7 @@ self.addEventListener('install', (event) => {
           })
         )
       ).then(() => {
-        console.log('Service worker installation completed');
+        // Service worker installation completed
         return Promise.resolve();
       });
     }).then(() => self.skipWaiting())

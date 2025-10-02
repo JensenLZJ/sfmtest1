@@ -1,5 +1,5 @@
 // SamduraFM front-end behaviors and mock data wiring
-console.log('Script.js loaded successfully');
+// Script.js loaded successfully
 
 // Force clear cache on every load
 if ('caches' in window) {
@@ -11,10 +11,11 @@ if ('caches' in window) {
 }
 
 // Hidden easter egg - hiring message
-console.log('%c🥚 Easter Egg Found!', 'color: #f61b58; font-size: 16px; font-weight: bold;');
-console.log('%cLike looking under the hood? We\'re interested in people like you!', 'color: #8b4c93; font-size: 14px;');
-console.log('%cCome and join us: https://samudrafm.com/opportunities/', 'color: #f61b58; font-size: 12px; text-decoration: underline;');
-console.log('%cWe\'re always looking for talented developers! 🚀', 'color: #8b4c93; font-size: 12px; font-style: italic;');
+console.log('%c🥚 Easter Egg Found!\n%cLike looking under the hood? We\'re interested in people like you!\n%cCome and join us: https://samudrafm.com/opportunities/\n%cWe\'re always looking for talented students! 🚀', 
+  'color: #f61b58; font-size: 16px; font-weight: bold;',
+  'color: #8b4c93; font-size: 14px;',
+  'color: #f61b58; font-size: 12px; text-decoration: underline;',
+  'color: #8b4c93; font-size: 12px; font-style: italic;');
 
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.getElementById('nav-menu');
@@ -26,23 +27,23 @@ if (navToggle) {
     // Add animate__fadeInRightBig class on mobile when menu opens
     if (window.innerWidth <= 768) {
       if (open) {
-        console.log('Opening menu on mobile');
+        // Opening menu on mobile
         // Remove any existing animation classes first
         navMenu.classList.remove('animate__fadeInRightBig', 'animate__animated');
         // Force a reflow to ensure the class removal takes effect
         navMenu.offsetHeight;
         // Add both animate__animated and animate__fadeInRightBig classes
         navMenu.classList.add('animate__animated', 'animate__fadeInRightBig');
-        console.log('Added animation classes:', navMenu.classList.toString());
+        // Added animation classes
         // Remove animation class after animation completes
         setTimeout(() => {
           navMenu.classList.remove('animate__fadeInRightBig', 'animate__animated');
-          console.log('Removed animation classes');
+          // Removed animation classes
         }, 1000);
       } else {
         // Remove animation class when closing
         navMenu.classList.remove('animate__fadeInRightBig', 'animate__animated');
-        console.log('Closing menu, removed animation classes');
+        // Closing menu, removed animation classes
       }
     }
   });
@@ -213,7 +214,7 @@ const INSTAGRAM_ACCESS_TOKEN = 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZA
 // Instagram API Integration (Using Instagram Basic Display API)
 async function fetchInstagramPosts() {
   try {
-    console.log('Attempting to fetch Instagram posts from Instagram API...');
+    // Attempting to fetch Instagram posts from Instagram API
     
     // First, get the user's Instagram account ID
     const userId = await getInstagramUserId();
@@ -227,7 +228,7 @@ async function fetchInstagramPosts() {
     
     if (mediaResponse.ok) {
       const mediaData = await mediaResponse.json();
-      console.log('Instagram API data received:', mediaData);
+      // Instagram API data received
       
       if (mediaData.data && mediaData.data.length > 0) {
         // Convert Instagram API data to our post format
@@ -240,7 +241,7 @@ async function fetchInstagramPosts() {
           timestamp: item.timestamp
         }));
         
-        console.log('Converted Instagram API posts:', posts);
+        // Converted Instagram API posts
         return posts;
       } else {
         console.warn('No posts found in Instagram API response');
@@ -255,7 +256,7 @@ async function fetchInstagramPosts() {
     
   } catch (error) {
     console.error('Error fetching Instagram posts from API:', error);
-    console.log('Falling back to custom posts');
+    // Falling back to custom posts
     return await getFallbackInstagramPosts();
   }
 }
@@ -263,12 +264,12 @@ async function fetchInstagramPosts() {
 // Get Instagram user ID from access token
 async function getInstagramUserId() {
   try {
-    console.log('Getting Instagram user ID...');
+    // Getting Instagram user ID
     const response = await fetch(`https://graph.instagram.com/me?fields=id,username&access_token=${INSTAGRAM_ACCESS_TOKEN}`);
     
     if (response.ok) {
       const userData = await response.json();
-      console.log('Instagram user data:', userData);
+      // Instagram user data received
       return userData.id;
     } else {
       const errorData = await response.json();
@@ -284,12 +285,12 @@ async function getInstagramUserId() {
 // Fallback Instagram posts if API fails - loads from custom-posts.json
 async function getFallbackInstagramPosts() {
   try {
-    console.log('Loading fallback posts from custom-posts.json...');
+    // Loading fallback posts from custom-posts.json
     const response = await fetch('custom-posts.json?v=' + Date.now());
     
     if (response.ok) {
       const data = await response.json();
-      console.log('Custom posts data loaded:', data);
+      // Custom posts data loaded
       
       // Convert custom posts to Instagram post format
       const posts = data.posts.map((post, index) => ({
@@ -301,7 +302,7 @@ async function getFallbackInstagramPosts() {
         timestamp: post.date || new Date().toISOString()
       }));
       
-      console.log('Converted custom posts:', posts);
+      // Converted custom posts
       return posts;
     } else {
       console.warn('Could not load custom-posts.json, using hardcoded fallback');
@@ -359,18 +360,18 @@ async function fetchInstagramPostsDirect() {
 
 // Render Instagram posts
 function renderInstagramPosts(posts) {
-  console.log('renderInstagramPosts function called with:', posts);
+  // renderInstagramPosts function called
   const container = document.getElementById('instagram-feed');
-  console.log('Instagram container in renderInstagramPosts:', !!container);
+  // Instagram container found
   if (!container) {
     console.error('Instagram feed container not found in renderInstagramPosts');
     return;
   }
   
-  console.log('Rendering Instagram posts:', posts);
+  // Rendering Instagram posts
   
   if (!posts || posts.length === 0) {
-    console.log('No posts to render, showing no posts message');
+    // No posts to render, showing no posts message
     container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 2rem;">No Instagram posts available</p>';
     return;
   }
@@ -405,16 +406,16 @@ function renderInstagramPosts(posts) {
     `;
   }).join('');
   
-  console.log('Setting Instagram feed HTML:', html);
+  // Setting Instagram feed HTML
   container.innerHTML = html;
-  console.log('Instagram feed HTML set successfully');
-  console.log('Final container innerHTML:', container.innerHTML);
+  // Instagram feed HTML set successfully
+  // Final container innerHTML set
 }
 
 // Google Calendar Integration - Direct API call
 async function fetchGoogleCalendarEvents() {
   try {
-    console.log('Fetching Google Calendar events from API...');
+    // Fetching Google Calendar events from API
     
     const apiKey = 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
     const calendarId = 'samudrafm.com@gmail.com';
@@ -445,7 +446,7 @@ async function fetchGoogleCalendarEvents() {
             throw new Error(`Google Calendar API error: ${data.error.message}`);
           }
           
-          console.log('Successfully fetched Google Calendar events:', data.items ? data.items.length : 0);
+          // Successfully fetched Google Calendar events
           
           // Transform the data to match the expected format
           const events = data.items.map(event => ({
@@ -465,11 +466,11 @@ async function fetchGoogleCalendarEvents() {
           const upcomingEvents = events.filter(event => {
             const eventDate = new Date(event.start.dateTime);
             const isUpcoming = eventDate >= now;
-            console.log(`Event: ${event.summary}, Date: ${eventDate.toISOString()}, Is upcoming: ${isUpcoming}`);
+            // Event processed for upcoming check
             return isUpcoming;
           }).slice(0, 10);
           
-          console.log('Upcoming events:', upcomingEvents.length);
+          // Upcoming events processed
           resolve(upcomingEvents);
         } catch (error) {
           reject(error);
@@ -623,30 +624,30 @@ if (recentGrid) {
 
 // Load coming up events when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM Content Loaded event fired');
+  // DOM Content Loaded event fired
   const comingGrid = document.getElementById('coming-grid');
-  console.log('coming-grid element:', comingGrid);
+  // coming-grid element found
   if (comingGrid) {
-    console.log('DOM ready, loading coming up events...');
+    // DOM ready, loading coming up events
     // Immediate test - set some content right away
     comingGrid.innerHTML = '<div class="test-card">Test content loading...</div>';
-    console.log('Test content set in coming-grid');
+    // Test content set in coming-grid
     
     // Add a small delay to ensure other functions don't interfere
     setTimeout(() => {
-      console.log('Loading coming up events after delay...');
+      // Loading coming up events after delay
       loadComingUpEvents();
     }, 100);
   } else {
-    console.log('coming-grid element not found on DOM ready');
+    // coming-grid element not found on DOM ready
   }
 });
 
 
 async function loadComingUpEvents() {
-  console.log('loadComingUpEvents function called');
+  // loadComingUpEvents function called
   const comingGrid = document.getElementById('coming-grid');
-  console.log('coming-grid found:', !!comingGrid);
+  // coming-grid found
   if (!comingGrid) return;
   
   // Show loading state
@@ -655,16 +656,16 @@ async function loadComingUpEvents() {
   try {
     // Try Google Calendar first
     const events = await fetchGoogleCalendarEvents();
-    console.log('Calendar events received:', events);
+    // Calendar events received
     
     if (events && events.length > 0) {
-      console.log('Processing calendar events...');
+      // Processing calendar events
       const formattedEvents = events.map(formatCalendarEvent);
-      console.log('Formatted events:', formattedEvents);
+      // Formatted events processed
       renderComingUpEvents(formattedEvents);
       return;
     } else {
-      console.log('No calendar events found, using fallback...');
+      // No calendar events found, using fallback
     }
     
   } catch (error) {
@@ -691,26 +692,26 @@ async function loadComingUpEvents() {
     }
   ];
   
-  console.log('Using fallback events:', fallbackEvents);
+  // Using fallback events
   renderComingUpEvents(fallbackEvents);
 }
 
 function renderComingUpEvents(events) {
-  console.log('renderComingUpEvents called with:', events);
+  // renderComingUpEvents called
   const comingGrid = document.getElementById('coming-grid');
-  console.log('coming-grid element:', comingGrid);
+  // coming-grid element found
   if (!comingGrid) {
-    console.log('coming-grid element not found!');
+    // coming-grid element not found
     return;
   }
   
   if (!events || events.length === 0) {
-    console.log('No events provided, showing no-events message');
+    // No events provided, showing no-events message
     comingGrid.innerHTML = '<div class="no-events">No upcoming shows scheduled</div>';
     return;
   }
   
-  console.log('Rendering events:', events.length);
+  // Rendering events
   
   // Show only the 2 latest events
   const limitedEvents = events.slice(0, 2);
@@ -738,7 +739,7 @@ function renderComingUpEvents(events) {
   }).join('');
   
   comingGrid.innerHTML = html;
-  console.log('Coming up events rendered successfully');
+  // Coming up events rendered successfully
 }
 
 // Handle logo click to go to home page
@@ -1014,11 +1015,11 @@ function attachEpisodeClickHandlers() {
 
 // Load episodes when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOM Content Loaded - Episodes loading started');
+  // DOM Content Loaded - Episodes loading started
   const episodesSlider = document.getElementById('episodes-slider');
   if (episodesSlider) {
     episodesSlider.innerHTML = '<div class="test-card">Episodes test content...</div>';
-    console.log('Episodes test content set');
+    // Episodes test content set
   }
   loadMixcloudEpisodes(MIXCLOUD_USERNAME);
   
@@ -1026,7 +1027,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     const slider = document.getElementById('episodes-slider');
     if (slider && !slider.dataset.loaded) {
-      console.log('Using fallback episodes after timeout');
+      // Using fallback episodes after timeout
       episodes = getFallbackEpisodes();
       initEpisodesSlider();
       renderEpisodesSlider();
@@ -1653,7 +1654,7 @@ function updatePlayState(isPlaying) {
   const playPauseBtn = document.getElementById('hero-play-pause');
   
   if (!playPauseBtn) {
-    console.log('Play button not found in updatePlayState');
+    // Play button not found in updatePlayState
     return;
   }
   
@@ -1662,11 +1663,11 @@ function updatePlayState(isPlaying) {
   if (isPlaying) {
     // Show pause icon (Font Awesome)
     playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-    console.log('Set to pause icon');
+    // Set to pause icon
   } else {
     // Show play icon (Font Awesome)
     playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-    console.log('Set to play icon');
+    // Set to play icon
   }
   
   // Force a re-render
@@ -1693,7 +1694,7 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
   
   // Check if elements exist before adding event listeners
   if (!progressBar || !progressHandle || !progressFill || !currentTimeEl || !totalTimeEl) {
-    console.log(`Progress bar elements not found for ${progressBarId}, skipping initialization`);
+    // Progress bar elements not found, skipping initialization
     return;
   }
   
@@ -1716,7 +1717,7 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
     // Restart progress tracking after seeking with longer delay
     if (isCurrentlyPlaying) {
       setTimeout(() => {
-        console.log('Restarting progress tracking after seek');
+        // Restarting progress tracking after seek
         startSimpleProgressTracking();
       }, 500);
     }
@@ -1752,7 +1753,7 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
       // Restart progress tracking after dragging with longer delay
       if (isCurrentlyPlaying) {
         setTimeout(() => {
-          console.log('Restarting progress tracking after drag');
+          // Restarting progress tracking after drag
           startSimpleProgressTracking();
         }, 500);
       }
@@ -1798,11 +1799,11 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
   }
   
   function seekTo(percentage) {
-    console.log('Seeking to percentage:', percentage);
+    // Seeking to percentage
     
     // Prevent multiple seek operations
     if (window.isSeeking) {
-      console.log('Seek already in progress, skipping');
+      // Seek already in progress, skipping
       return;
     }
     
@@ -1815,7 +1816,7 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
         currentWidget.getDuration().then(duration => {
           if (duration && duration > 0) {
             const seekPosition = (percentage / 100) * duration;
-            console.log('Seeking to position:', seekPosition, 'of', duration);
+            // Seeking to position
         currentWidget.seek(seekPosition);
         
             // Reset seeking flag after a delay
@@ -1823,19 +1824,19 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
               window.isSeeking = false;
             }, 1000);
           } else {
-            console.log('No valid duration available for seeking');
+            // No valid duration available for seeking
             window.isSeeking = false;
           }
         }).catch(error => {
-          console.log('Error getting duration for seek:', error);
+          // Error getting duration for seek
           window.isSeeking = false;
         });
       } catch (error) {
-        console.log('Error in seek function:', error);
+        // Error in seek function
         window.isSeeking = false;
       }
     } else {
-      console.log('No current widget available for seeking');
+      // No current widget available for seeking
       window.isSeeking = false;
     }
     
@@ -1861,7 +1862,7 @@ function initVolumeControl() {
   
   // Check if elements exist before adding event listeners
   if (!volumeBar || !volumeFill || !volumeHandle) {
-    console.log('Volume control elements not found, skipping initialization');
+    // Volume control elements not found, skipping initialization
     return;
   }
   
@@ -2013,10 +2014,10 @@ function initVolumeControl() {
         currentWidget.setVolume(volume);
         
       } catch (error) {
-        console.log('Error setting volume:', error);
+        // Error setting volume
       }
     } else {
-      console.log('No widget available for volume control');
+      // No widget available for volume control
     }
   }
   
@@ -2035,7 +2036,7 @@ async function loadHeroLatest(username){
   
   // Check if elements exist before proceeding
   if (!titleEl || !coverEl || !openEl) {
-    console.log('Hero elements not found, skipping loadHeroLatest');
+    // Hero elements not found, skipping loadHeroLatest
     return;
   }
   
@@ -2278,7 +2279,7 @@ function forceUpdatePlayButton() {
 function initPlayButton() {
   const playPauseBtn = document.getElementById('hero-play-pause');
   if (!playPauseBtn) {
-    console.log('Play button not found, skipping initialization');
+    // Play button not found, skipping initialization
     return;
   }
   
@@ -2297,11 +2298,7 @@ function initPlayButton() {
     playPauseBtn.setAttribute('role', 'button');
     playPauseBtn.setAttribute('tabindex', '0');
     
-    console.log('Play button initialized', { 
-      element: playPauseBtn, 
-      hasCurrentEpisode: !!currentEpisode,
-      isCurrentlyPlaying 
-    });
+    // Play button initialized
     
     // Add touch event handling for mobile
     let touchStartTime = 0;
@@ -2312,13 +2309,7 @@ function initPlayButton() {
     playPauseBtn.addEventListener('touchstart', (e) => {
       touchStartTime = Date.now();
       isTouchHandled = false;
-      console.log('Touch start on play button', { 
-        touchStartTime, 
-        isCurrentlyPlaying, 
-        hasCurrentEpisode: !!currentEpisode,
-        isMobile: isMobileDevice(),
-        touchCount: e.touches.length
-      });
+      // Touch start on play button
       
       // Update debug panel
       
@@ -2334,14 +2325,7 @@ function initPlayButton() {
       touchEndTime = Date.now();
       const touchDuration = touchEndTime - touchStartTime;
       
-      console.log('Touch end on play button', { 
-        touchDuration, 
-        isTouchHandled, 
-        isCurrentlyPlaying, 
-        hasCurrentEpisode: !!currentEpisode,
-        hasWidget: !!currentWidget,
-        isMobile: isMobileDevice()
-      });
+      // Touch end on play button
       
       // Only handle if it's a quick tap (less than 500ms) and not already handled
       if (touchDuration < 500 && !isTouchHandled) {
@@ -2718,11 +2702,11 @@ function createPreloadedMixcloudPlayer(episodeUrl) {
 function ensurePlayButtonReady() {
   const playPauseBtn = document.getElementById('hero-play-pause');
   if (playPauseBtn) {
-    console.log('Ensuring play button is ready...', {
-      hasCurrentEpisode: !!currentEpisode,
-      isCurrentlyPlaying,
-      buttonElement: playPauseBtn
-    });
+    //console.log('Ensuring play button is ready...', {
+    //  hasCurrentEpisode: !!currentEpisode,
+    //  isCurrentlyPlaying,
+    //  buttonElement: playPauseBtn
+    //});
     
     // Make sure the button is properly set up
     playPauseBtn.style.pointerEvents = 'auto';
@@ -3425,50 +3409,53 @@ window.testCustomPosts = async function() {
 
 // Initialize Instagram posts when page loads
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM Content Loaded - Instagram loading started');
+  // DOM Content Loaded - Instagram loading started
   const instagramFeed = document.getElementById('instagram-feed');
-  console.log('Instagram feed element:', instagramFeed);
+  //console.log('Instagram feed element:', instagramFeed);
   if (instagramFeed) {
-    console.log('Setting immediate Instagram content...');
+    //console.log('Setting immediate Instagram content...');
     instagramFeed.innerHTML = '<div class="test-card">Instagram test content...</div>';
-    console.log('Instagram test content set, innerHTML:', instagramFeed.innerHTML);
+    //console.log('Instagram test content set, innerHTML:', instagramFeed.innerHTML);
   } else {
-    console.log('Instagram feed element not found!');
+    //console.log('Instagram feed element not found!');
   }
-  // Load Instagram posts
-  console.log('About to call loadInstagramPosts...');
-  loadInstagramPosts();
+  // Load Instagram posts - only on home page
+  //console.log('About to call loadInstagramPosts...');
+  // Only load Instagram posts if we're on the home page (instagram-feed element exists)
+  if (document.getElementById('instagram-feed')) {
+    loadInstagramPosts();
+  }
 });
   
 // Load Instagram posts function
 async function loadInstagramPosts() {
-  console.log('loadInstagramPosts function called');
+  //console.log('loadInstagramPosts function called');
   const container = document.getElementById('instagram-feed');
-  console.log('Instagram container found:', !!container);
+  //console.log('Instagram container found:', !!container);
   if (!container) {
     console.error('Instagram feed container not found');
     return;
   }
   
   // Show loading state
-  console.log('Setting loading state...');
+  //console.log('Setting loading state...');
   container.innerHTML = `
     <div class="instagram-loading" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
       <i class="fab fa-instagram" style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent);"></i>
       <p style="color: var(--muted);">Loading Instagram posts...</p>
     </div>
   `;
-  console.log('Loading state set, container innerHTML:', container.innerHTML);
+  //console.log('Loading state set, container innerHTML:', container.innerHTML);
   
   try {
-    console.log('Fetching Instagram posts...');
+    //console.log('Fetching Instagram posts...');
     const posts = await fetchInstagramPosts();
-    console.log('Instagram posts fetched:', posts);
+    //console.log('Instagram posts fetched:', posts);
     
     if (posts && posts.length > 0) {
-      console.log('About to call renderInstagramPosts...');
+      //console.log('About to call renderInstagramPosts...');
       renderInstagramPosts(posts);
-      console.log('renderInstagramPosts called successfully');
+      //console.log('renderInstagramPosts called successfully');
     } else {
       console.warn('No posts received, showing fallback message');
       container.innerHTML = `
@@ -3504,7 +3491,7 @@ function ensureMainContentVisible() {
   const mainContentGrid = document.querySelector('.main-content-grid');
   if (!mainContentGrid) return;
   
-  console.log('Main content grid found - ensuring visibility');
+  //console.log('Main content grid found - ensuring visibility');
   
   // Force main content grid to be visible
   mainContentGrid.style.setProperty('opacity', '1', 'important');
@@ -3539,14 +3526,14 @@ function ensureMainContentVisible() {
     if (comingGrid) {
       // Only add visibility classes if content is already loaded
       if (comingGrid.children.length > 0) {
-        console.log('coming-grid already has content, preserving it');
+        //console.log('coming-grid already has content, preserving it');
       }
       comingGrid.classList.add('mobile-revealed', 'revealed');
       comingGrid.style.setProperty('opacity', '1', 'important');
       comingGrid.style.setProperty('transform', 'translateY(0)', 'important');
       comingGrid.style.setProperty('pointer-events', 'auto', 'important');
       comingGrid.style.setProperty('visibility', 'visible', 'important');
-      console.log('coming-grid visibility ensured, content preserved');
+      //console.log('coming-grid visibility ensured, content preserved');
     }
   }
 
@@ -3580,7 +3567,7 @@ function ensureMainContentVisible() {
     });
   }
   
-  console.log('Main content grid visibility enforced');
+  //console.log('Main content grid visibility enforced');
 }
 
 // Call the function on mobile devices

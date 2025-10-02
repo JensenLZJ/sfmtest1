@@ -66,6 +66,18 @@
             flex-shrink: 0 !important;
         }
         
+        /* Show presenter images on tablet and larger screens */
+        @media (min-width: 768px) {
+            .schedule-image {
+                display: flex !important;
+                padding: 20px !important;
+            }
+            .schedule-image img {
+                width: 80px !important;
+                height: 80px !important;
+            }
+        }
+        
         .schedule-image img {
             width: 120px !important;
             height: 120px !important;
@@ -164,9 +176,177 @@
             text-align: center !important;
         }
         
+        /* Mobile-specific design using coming up section styling */
+        @media (max-width: 768px) {
+            .schedule-item {
+                /* Use coming up card design on mobile */
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                gap: 16px !important;
+                padding: 18px !important;
+                min-height: 110px !important; /* Increased to accommodate 2-line show titles */
+                background: var(--panel, #1d283c) !important;
+                border: 1px solid var(--border, rgba(255,255,255,0.1)) !important;
+                border-radius: var(--radius, 10px) !important;
+                margin-bottom: 14px !important;
+                position: relative !important;
+                box-shadow: var(--shadow, 0 2px 8px rgba(0,0,0,0.1)) !important;
+                transition: transform 0.2s ease !important;
+            }
+            
+            .schedule-item:hover {
+                transform: translateY(-2px) !important;
+            }
+            
+            /* Show presenter image on mobile like coming up cover */
+            .schedule-image {
+                display: flex !important;
+                flex: 0 0 80px !important;
+                max-width: 80px !important;
+                padding: 0 !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            
+            .schedule-image img {
+                width: 80px !important;
+                height: 80px !important;
+                object-fit: cover !important;
+                border-radius: 16px !important;
+                flex-shrink: 0 !important;
+            }
+            
+            .schedule-content {
+                flex: 1 !important;
+                min-width: 0 !important;
+                padding: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                justify-content: center !important;
+                min-height: auto !important;
+                position: static !important;
+                text-align: left !important; /* Ensure all text aligns left */
+            }
+            
+            .presenter-name {
+                font-size: 16px !important;
+                font-weight: 600 !important;
+                color: var(--text, white) !important;
+                margin: 0 0 4px 0 !important;
+                line-height: 1.2 !important;
+                text-overflow: ellipsis !important;
+                overflow: hidden !important;
+                white-space: nowrap !important;
+                max-width: calc(100% - 15px) !important; /* Account for time badge */
+                padding-right: 5px !important;
+                text-align: left !important; /* Ensure left alignment */
+            }
+            
+            .show-title {
+                font-size: 14px !important;
+                font-weight: 400 !important;
+                color: var(--muted, rgba(255,255,255,0.7)) !important;
+                margin: 0 !important;
+                line-height: 1.3 !important;
+                /* Allow 2-line wrapping instead of ellipsis */
+                white-space: normal !important;
+                overflow: hidden !important;
+                display: -webkit-box !important;
+                -webkit-line-clamp: 2 !important;
+                -webkit-box-orient: vertical !important;
+                line-clamp: 2 !important;
+                max-width: calc(100% - 15px) !important; /* Account for time badge */
+                padding-right: 5px !important;
+                max-height: calc(1.3em * 2) !important; /* Limit to 2 lines */
+                text-align: left !important; /* Ensure left alignment */
+            }
+            
+            /* Hide social actions on mobile */
+            .schedule-actions {
+                display: none !important;
+            }
+            
+            /* Time display styled like coming up time badge */
+            .schedule-time {
+                position: absolute !important;
+                right: 16px !important;
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+                background: #220660 !important; /* Changed to requested purple color */
+                color: white !important;
+                padding: 8px 10px !important; /* Adjusted for 3-line layout */
+                border-radius: 8px !important;
+                text-align: center !important;
+                min-width: 65px !important; /* Slightly smaller for better fit */
+                font-size: 12px !important;
+                font-weight: 500 !important;
+                box-shadow: 0 2px 8px rgba(34, 6, 96, 0.3) !important; /* Updated shadow to match new color */
+                border: none !important;
+                margin: 0 !important;
+                width: auto !important;
+                flex-shrink: 0 !important;
+                min-height: 50px !important; /* Ensure enough height for 3 lines */
+            }
+            
+            .time-slot {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 1px !important;
+                text-align: center !important;
+                line-height: 1.1 !important;
+            }
+            
+            /* Remove the dash/after content from time slot on mobile */
+            .time-slot > div:first-child::after {
+                display: none !important;
+                content: none !important;
+            }
+            
+            /* Date display (e.g., "7 Oct") */
+            .date-day {
+                font-size: 11px !important;
+                font-weight: 600 !important;
+                line-height: 1.1 !important;
+                margin-bottom: 1px !important;
+            }
+            
+            /* Day display (e.g., "Tuesday") */
+            .time-slot .day-name {
+                font-size: 9px !important;
+                font-weight: 500 !important;
+                line-height: 1.1 !important;
+                opacity: 0.9 !important;
+                margin-bottom: 1px !important;
+            }
+            
+            /* Time range display (e.g., "08:50—07:20") */
+            .time-range {
+                font-size: 9px !important;
+                opacity: 0.9 !important;
+                font-weight: 400 !important;
+                line-height: 1.1 !important;
+            }
+            
+            /* Ensure content doesn't overlap with time badge */
+            .schedule-content {
+                margin-right: 100px !important; /* Increased space for time badge */
+                padding-right: 10px !important; /* Additional padding for safety */
+            }
+            
+        }
+        
         @media (min-width: 1280px) {
             .schedule-image {
                 display: flex !important;
+                padding: 32px !important;
+            }
+            .schedule-image img {
+                width: 120px !important;
+                height: 120px !important;
             }
             .schedule-content {
                 padding: 32px !important;
@@ -187,25 +367,37 @@
     }
     
     /* Player styling to match schedule items */
+    .hero-player-section {
+        padding: 40px 0 20px 0;
+    }
+    
     .hero-latest {
         background: #1d283c !important;
         border-radius: 10px !important;
         overflow: hidden !important;
         color: white !important;
-        margin: 24px 0 !important;
-        padding: 16px !important;
+        margin: 0 auto !important;
+        padding: 20px !important;
+        max-width: 100% !important; /* Allow full width instead of 800px limit */
+        width: 100% !important;
     }
     
-    /* Make player cover image smaller on schedule page */
+    /* Player layout */
+    .hero-latest .player-content-row {
+        display: flex !important;
+        align-items: center !important;
+        gap: 20px !important;
+    }
+    
     .hero-latest .player-left {
-        flex: 0 0 25% !important;
-        max-width: 25% !important;
-        aspect-ratio: 1 !important;
+        flex: 0 0 80px !important;
+        max-width: 80px !important;
+        position: relative !important;
     }
     
     .hero-latest .hero-latest-cover {
-        width: 100% !important;
-        height: 100% !important;
+        width: 80px !important;
+        height: 80px !important;
         border-radius: 8px !important;
     }
     
@@ -216,13 +408,484 @@
     .hero-latest .player-right {
         flex: 1 !important;
         min-width: 0 !important;
-        max-width: 75% !important;
     }
     
-    @media (min-width: 1280px) {
-        .hero-latest {
-            padding: 32px !important;
+    /* Mobile player design matching home page */
+    @media (max-width: 768px) {
+        .hero-player-section {
+            padding: 20px 0 10px 0;
         }
+        
+        /* Hero latest panel - full width layout like home page */
+        .hero-latest {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+            min-height: auto !important;
+            margin: 24px 0 4px 0 !important;
+            padding: 16px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Player widget - full width like home page */
+        .hero-latest .player-widget {
+            width: 100% !important;
+            min-height: 120px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            padding: 12px !important;
+        }
+        
+        /* Mobile player content row like home page */
+        .hero-latest .player-content-row {
+            display: flex !important;
+            align-items: center !important;
+            gap: 16px !important;
+            flex: 1 !important;
+        }
+
+        /* Player left - 50/50 layout like home page */
+        .hero-latest .player-left {
+            flex: 0 0 50% !important;
+            max-width: 50% !important;
+            aspect-ratio: 1 !important;
+        }
+        
+        /* Player right - 50/50 layout like home page */
+        .hero-latest .player-right {
+            flex: 0 0 50% !important;
+            max-width: 50% !important;
+        }
+
+        /* Cover styling like home page */
+        .hero-latest .hero-latest-cover {
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 10px !important;
+        }
+
+        /* Play overlay like home page */
+        .hero-latest .play-overlay {
+            pointer-events: auto !important;
+            border-radius: 10px !important;
+        }
+
+        /* Play button like home page */
+        .hero-latest .play-pause-btn {
+            width: 60px !important;
+            height: 60px !important;
+            font-size: 42px !important;
+            background: transparent !important;
+            color: white !important;
+        }
+        
+        /* Player content area - more compact like home page */
+        .hero-latest .player-content {
+            flex: 1 !important;
+            min-width: 0 !important;
+            padding-left: 12px !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+        }
+        
+        .hero-latest .player-content h3 {
+            font-size: 16px !important;
+            margin: 0 0 4px !important;
+            line-height: 1.2 !important;
+        }
+        
+        .hero-latest .player-content p {
+            font-size: 12px !important;
+            margin: 0 0 8px !important;
+            opacity: 0.8 !important;
+        }
+        
+        /* Player controls - align with progress bar */
+        .hero-latest .player-controls {
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            margin-top: 8px !important;
+            width: 100% !important; /* Full width like progress bar */
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 0 !important; /* No padding to match progress bar */
+            overflow: visible !important;
+            position: relative !important;
+        }
+        
+        .hero-latest .volume-control {
+            flex: 1 !important;
+            min-width: 0 !important;
+            max-width: calc(100% - 42px) !important; /* Reserve exact space for button */
+            overflow: visible !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+            margin-right: 6px !important; /* Gap before button */
+        }
+        
+        .hero-latest .volume-slider {
+            width: 100% !important; /* Full width within container */
+            max-width: 100% !important;
+            height: 4px !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            background: transparent !important;
+            cursor: pointer !important;
+            border: none !important;
+            outline: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+        
+        /* Volume slider track styling */
+        .hero-latest .volume-slider::-webkit-slider-track {
+            background: rgba(255, 255, 255, 0.2) !important;
+            height: 4px !important;
+            border-radius: 2px !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        
+        /* Volume slider thumb styling */
+        .hero-latest .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            width: 12px !important;
+            height: 12px !important;
+            border-radius: 50% !important;
+            background: white !important;
+            border: none !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+            cursor: pointer !important;
+        }
+        
+        /* Firefox volume slider styling */
+        .hero-latest .volume-slider::-moz-range-track {
+            background: rgba(255, 255, 255, 0.2) !important;
+            height: 4px !important;
+            border-radius: 2px !important;
+            border: none !important;
+        }
+        
+        .hero-latest .volume-slider::-moz-range-thumb {
+            width: 12px !important;
+            height: 12px !important;
+            border-radius: 50% !important;
+            background: white !important;
+            border: none !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+            cursor: pointer !important;
+        }
+        
+        /* Ensure buttons don't cause overflow */
+        .hero-latest .btn {
+            flex-shrink: 0 !important;
+            max-width: 40px !important; /* Smaller button for more slider space */
+            width: 40px !important;
+            white-space: nowrap !important;
+            font-size: 9px !important; /* Even smaller font */
+            padding: 3px 4px !important; /* Minimal padding */
+            margin: 0 !important;
+            text-overflow: ellipsis !important;
+            overflow: hidden !important;
+        }
+        
+        /* Container constraints to prevent overflow */
+        .hero-latest .player-right {
+            overflow: visible !important; /* Allow slider thumb to show */
+            box-sizing: border-box !important;
+            max-width: 50% !important; /* Enforce 50% width */
+            position: relative !important;
+            padding: 0 !important; /* No padding to match progress bar alignment */
+        }
+        
+        /* Additional safety for player content */
+        .hero-latest .player-content {
+            padding-right: 0 !important; /* No extra padding for alignment */
+        }
+        
+        /* Mobile progress bar - full width below cover like home page */
+        .hero-latest .player-widget > .progress-container {
+            order: 10 !important;
+            width: 100% !important;
+            margin-top: 8px !important;
+        }
+        
+        /* Hide desktop progress bar on mobile */
+        .hero-latest .player-right .progress-container {
+            display: none !important;
+        }
+        
+        /* Adjust schedule section padding on mobile */
+        .schedule-section {
+            padding-top: 20px !important; /* Reduced from default 60px */
+            padding-bottom: 0px !important; /* Remove bottom padding on mobile */
+        }
+    }
+    
+    /* Tablet and small desktop player - 768px to 1024px */
+    @media (min-width: 769px) and (max-width: 1023px) {
+        /* Force full container width for tablet/small desktop */
+        .hero-player-section .container {
+            max-width: none !important;
+            width: 100% !important;
+            padding: 0 20px !important;
+            margin: 0 auto !important;
+            box-sizing: border-box !important;
+        }
+        
+        .hero-player-section {
+            width: 100% !important;
+            max-width: none !important;
+            padding: 40px 0 20px 0 !important;
+        }
+        
+        .hero-latest {
+            padding: 20px !important;
+            max-width: none !important;
+            width: 100% !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+        }
+        
+        .hero-latest .player-widget {
+            width: 100% !important;
+            max-width: none !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 16px !important;
+            padding: 16px !important;
+            box-sizing: border-box !important;
+        }
+        
+        .hero-latest .player-content-row {
+            display: flex !important;
+            width: 100% !important;
+            max-width: none !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 16px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+            flex: 1 !important;
+        }
+        
+        .hero-latest .player-content-row .player-left {
+            flex: 0 0 80px !important;
+            max-width: 80px !important;
+            min-width: 80px !important;
+            width: 80px !important;
+        }
+        
+        .hero-latest .player-content-row .player-right {
+            flex: 1 !important;
+            width: calc(100% - 96px) !important; /* Full width minus cover (80px) and gap (16px) */
+            max-width: none !important;
+            min-width: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            gap: 10px !important;
+        }
+        
+        .hero-latest .player-content-row .player-right .player-info,
+        .hero-latest .player-content-row .player-right .player-controls,
+        .hero-latest .player-content-row .player-right .progress-container {
+            width: 100% !important;
+            max-width: none !important;
+        }
+        
+        /* Hide mobile progress bar on tablet */
+        .hero-latest .player-widget > .progress-container {
+            display: none !important;
+        }
+        
+        /* Show desktop progress bar in player-right on tablet */
+        .hero-latest .player-content-row .player-right .progress-container {
+            display: block !important;
+        }
+    }
+    
+    @media (min-width: 1024px) {
+         /* Force full container width - override global 1200px max-width */
+         .hero-player-section .container {
+             max-width: none !important;
+             width: 100% !important;
+             padding: 0 20px !important;
+             margin: 0 auto !important;
+             box-sizing: border-box !important;
+         }
+         
+         .hero-player-section {
+             width: 100% !important;
+             max-width: none !important;
+             padding: 40px 0 20px 0 !important;
+         }
+         
+         /* Match home page hero-latest styling exactly */
+         .hero-latest {
+             display: grid !important;
+             grid-template-columns: 1fr !important;
+             gap: 12px !important;
+             position: relative !important;
+             background: rgba(255,255,255,0.1) !important;
+             backdrop-filter: blur(20px) !important;
+             -webkit-backdrop-filter: blur(20px) !important;
+             border-radius: var(--radius) !important;
+             padding: 20px !important;
+             margin: 20px 0 !important;
+             border: 1px solid rgba(255,255,255,0.2) !important;
+             box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+             max-width: none !important;
+             width: 100% !important;
+         }
+         
+         /* Match home page player-widget styling exactly */
+         .hero-latest .player-widget {
+             position: relative !important;
+             z-index: 10 !important;
+             background: #21055f !important; /* Solid purple background - 100% opacity */
+             border-radius: var(--radius) !important;
+             box-shadow: var(--shadow) !important;
+             display: flex !important;
+             gap: 16px !important;
+             align-items: center !important;
+             padding: 16px !important;
+             width: 100% !important;
+             max-width: none !important;
+             max-height: 212px !important; /* Set maximum height for desktop */
+             box-sizing: border-box !important;
+         }
+         
+         /* Match home page player-left styling but fit within widget */
+         .hero-latest .player-left {
+             position: relative !important;
+             flex: 0 0 auto !important;
+             width: 180px !important; /* Fixed width to fit within 212px height widget */
+             height: 180px !important; /* Fixed height to fit within widget with padding */
+             max-width: 180px !important;
+             max-height: 180px !important;
+             min-width: 180px !important;
+             min-height: 180px !important;
+         }
+         
+         /* Match home page hero-latest-cover styling exactly */
+         .hero-latest .hero-latest-cover {
+             width: 100% !important;
+             height: 100% !important;
+             border-radius: 12px !important;
+             background-size: cover !important;
+             background-position: center !important;
+             background-repeat: no-repeat !important;
+             image-rendering: high-quality !important;
+             image-rendering: -webkit-optimize-contrast !important;
+         }
+         
+         /* Match home page play-overlay styling exactly */
+         .hero-latest .play-overlay {
+             position: absolute !important;
+             top: 0 !important;
+             left: 0 !important;
+             right: 0 !important;
+             bottom: 0 !important;
+             background: rgba(0,0,0,0.2) !important;
+             border-radius: 12px !important;
+             display: flex !important;
+             align-items: center !important;
+             justify-content: center !important;
+             opacity: 1 !important;
+             transition: opacity 0.2s !important;
+             pointer-events: none !important;
+         }
+         
+         /* Match home page play-pause-btn styling exactly */
+         .hero-latest .play-pause-btn {
+             background: transparent !important;
+             border: none !important;
+             width: 64px !important;
+             height: 64px !important;
+             display: flex !important;
+             align-items: center !important;
+             justify-content: center !important;
+             cursor: pointer !important;
+             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+             pointer-events: auto !important;
+             z-index: 10 !important;
+             position: relative !important;
+             line-height: 1 !important;
+             touch-action: manipulation !important;
+             -webkit-tap-highlight-color: transparent !important;
+             user-select: none !important;
+             font-size: 48px !important;
+             color: white !important;
+             font-weight: bold !important;
+         }
+         
+         .hero-latest .play-pause-btn:hover {
+             transform: scale(1.08) !important;
+         }
+         
+         .hero-latest .play-pause-btn:active {
+             transform: scale(0.95) !important;
+         }
+         
+         /* Match home page player-right styling exactly */
+         .hero-latest .player-right {
+             flex: 1 !important;
+             min-width: 0 !important;
+             max-width: 65% !important;
+         }
+         
+         /* Match home page player-info styling exactly */
+         .hero-latest .player-info {
+             margin-bottom: 12px !important;
+         }
+         
+         /* Match home page track title and artist styling exactly */
+         .hero-latest .track-title {
+             font-size: 18px !important;
+             font-weight: 700 !important;
+             margin: 0 !important;
+             color: var(--text) !important;
+         }
+         
+         .hero-latest .track-artist {
+             font-size: 14px !important;
+             color: var(--muted) !important;
+             margin: 0 !important;
+         }
+         
+         /* Match home page player-controls styling exactly */
+         .hero-latest .player-controls {
+             display: flex !important;
+             align-items: center !important;
+             justify-content: space-between !important;
+             margin-bottom: 12px !important;
+         }
+         
+         /* Hide mobile progress bar on desktop */
+         .hero-latest .player-widget > .progress-container {
+             display: none !important;
+         }
+         
+         /* Show desktop progress bar in player-right */
+         .hero-latest .player-right .progress-container {
+             display: block !important;
+         }
+         
+         /* Ensure player content row doesn't interfere on desktop - match home page */
+         .hero-latest .player-content-row {
+             display: contents !important;
+         }
     }
     
     /* Social Media Button Styles */
@@ -295,35 +958,50 @@
 
     <main class="site-main">
         <!-- Player Section -->
-        <section class="hero" style="display: flex; justify-content: center; align-items: center;">
+        <section class="hero-player-section">
             <div class="container">
-                <div class="panel hero-latest" id="hero-latest" style="width: 100%;">
-                <div class="player-widget">
-                    <div class="player-left">
-                        <div class="hero-latest-cover cover placeholder" id="player-cover"></div>
-                        <div class="play-overlay" id="play-overlay">
-                            <button class="play-pause-btn" id="hero-play-pause"><i class="fa-solid fa-pause"></i></button>
-                        </div>
-                    </div>
-                    <div class="player-right">
-                        <div class="player-info">
-                            <h3 id="hero-ep-title" class="track-title">Loading…</h3>
-                            <p id="hero-ep-artist" class="track-artist">SamudraFM</p>
-                        </div>
-                        <div class="player-controls">
-                            <div class="volume-control">
-                                <span class="volume-icon">🔊</span>
-                                <div class="volume-slider">
-                                    <div class="volume-bar">
-                                        <div class="volume-fill" style="width: 80%"></div>
-                                        <div class="volume-handle"></div>
+                <div class="panel hero-latest" id="hero-latest">
+                    <div class="player-widget">
+                        <div class="player-content-row">
+                            <div class="player-left">
+                                <div class="hero-latest-cover cover placeholder" id="player-cover"></div>
+                                <div class="play-overlay" id="play-overlay">
+                                    <button class="play-pause-btn" id="hero-play-pause"><i class="fa-solid fa-pause"></i></button>
+                                </div>
+                            </div>
+                            <div class="player-right">
+                                <div class="player-info">
+                                    <h3 id="hero-ep-title" class="track-title">Loading…</h3>
+                                    <p id="hero-ep-artist" class="track-artist">SamudraFM</p>
+                                </div>
+                                <div class="player-controls">
+                                    <div class="volume-control">
+                                        <span class="volume-icon">🔊</span>
+                                        <div class="volume-slider">
+                                            <div class="volume-bar">
+                                                <div class="volume-fill" style="width: 80%"></div>
+                                                <div class="volume-handle"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a id="hero-open" class="request-btn" href="request.html" target="_blank" rel="noopener">Send a request</a>
+                                </div>
+                                
+                                <!-- Progress Bar for Desktop -->
+                                <div class="progress-container">
+                                    <div class="progress" id="progress-bar-desktop">
+                                        <div id="hero-progress-desktop" class="bar" style="width:0%"></div>
+                                        <div class="progress-handle" id="progress-handle-desktop"></div>
+                                    </div>
+                                    <div class="time-display">
+                                        <span id="current-time-desktop">0:00</span>
+                                        <span id="total-time-desktop">0:00</span>
                                     </div>
                                 </div>
                             </div>
-                            <a id="hero-open" class="request-btn" href="/opportunities" target="_blank" rel="noopener">Join us</a>
                         </div>
                         
-                        <!-- Custom Player Controls Only -->
+                        <!-- Progress Bar - Full Width on Mobile -->
                         <div class="progress-container">
                             <div class="progress" id="progress-bar">
                                 <div id="hero-progress" class="bar" style="width:0%"></div>
@@ -335,8 +1013,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="hero-embed" hidden></div>
+                    <div class="hero-embed" hidden></div>
                 </div>
             </div>
         </section>
@@ -427,8 +1104,8 @@
         // Initialize schedule page
         document.addEventListener('DOMContentLoaded', function() {
             try {
-                console.log('Schedule page loaded with pagination support');
-                console.log('Pagination variables:', { displayedCount, loadMoreCount, currentDisplayed });
+                // Schedule page loaded with pagination support
+                // Pagination variables initialized
                 forceCacheBust();
                 
                 // Force hard refresh if needed
@@ -501,20 +1178,20 @@
             scheduleContainer.innerHTML = '<p style="text-align: center; color: var(--muted);">Loading schedule...</p>';
             
             try {
-                console.log('Loading schedule data...');
+                // Loading schedule data...
                 
                 // Try to load from Google Calendar first
                 const events = await loadGoogleCalendarEvents();
-                console.log('Google Calendar events:', events);
+                // Google Calendar events loaded
                 
                 if (events && events.length > 0) {
-                    console.log('Using Google Calendar data');
-                    console.log('Google Calendar events count:', events.length);
+                    // Using Google Calendar data
+                    // Google Calendar events processed
                     allScheduleData = events;
                     renderScheduleItemsPaginated(scheduleContainer);
                     return;
                 } else {
-                    console.log('No Google Calendar events found, using fallback data');
+                    // No Google Calendar events found, using fallback data
                 }
                 
                 // Fallback to presenters.json
@@ -604,8 +1281,8 @@
                         day: dayAfter.toLocaleDateString('en-GB', { weekday: 'long' })
                     }
                 ];
-                console.log('Using mock data');
-                console.log('Mock schedule count:', mockSchedule.length);
+                // Using mock data
+                // Mock schedule loaded
                 allScheduleData = mockSchedule;
                 renderScheduleItemsPaginated(scheduleContainer);
                 
@@ -618,11 +1295,11 @@
         // Render schedule items in the new format
         function renderScheduleItems(items, container) {
             if (!items || items.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--muted);">No schedule available for this date.</p>';
+                container.innerHTML = '<p style="text-align: center; color: var(--muted); font-style: italic; padding: 40px 20px;">oh oo! future shows are not yet added :(</p>';
                 return;
             }
             
-            console.log('Rendering schedule items:', items);
+            // Rendering schedule items
             
             const scheduleHTML = items.map((item, index) => {
                 // Ensure all required fields have fallback values
@@ -637,8 +1314,8 @@
                 // Get social media links for this presenter
                 const socialLinks = getSocialMediaLinks(presenter);
                 
-                console.log(`Item ${index}:`, { presenter, show, image, detectedImage: getProfilePicture(presenter) });
-                console.log('Show title will be:', show);
+                // Processing schedule item
+                // Show title processed
                 
                 return `
                     <div class="schedule-item">
@@ -674,21 +1351,24 @@
                 `;
             }).join('');
             
-            container.innerHTML = scheduleHTML;
+            // Add the message at the bottom of the schedule
+            const bottomMessage = '<div style="text-align: center; color: var(--muted); font-style: italic; padding: 40px 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px;">oh oo! future shows are not yet added :(</div>';
+            
+            container.innerHTML = scheduleHTML + bottomMessage;
         }
         
         // Render schedule items with pagination
         function renderScheduleItemsPaginated(container) {
-            console.log('renderScheduleItemsPaginated called');
-            console.log('allScheduleData:', allScheduleData);
-            console.log('allScheduleData.length:', allScheduleData ? allScheduleData.length : 'undefined');
+            // renderScheduleItemsPaginated called
+            // Processing schedule data
+            // Schedule data length checked
             
             if (!allScheduleData || allScheduleData.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--muted);">No schedule available for this date.</p>';
+                container.innerHTML = '<p style="text-align: center; color: var(--muted); font-style: italic; padding: 40px 20px;">oh oo! future shows are not yet added :(</p>';
                 return;
             }
             
-            console.log('Rendering schedule items with pagination:', allScheduleData);
+            // Rendering schedule items with pagination
             
             // Reset displayed count
             currentDisplayed = 0;
@@ -705,7 +1385,7 @@
                 return;
             }
             
-            console.log('Loading more items:', itemsToShow);
+            // Loading more items
             
             const scheduleHTML = itemsToShow.map((item, index) => {
                 // Ensure all required fields have fallback values
@@ -720,7 +1400,7 @@
                 // Get social media links for this presenter
                 const socialLinks = getSocialMediaLinks(presenter);
                 
-                console.log('Show title will be:', show);
+                // Show title processed
                 
                 return `
                     <div class="schedule-item">
@@ -768,6 +1448,15 @@
             
             // Add or update Load More button
             updateLoadMoreButton(container);
+            
+            // If all items are loaded, add the bottom message
+            if (currentDisplayed >= allScheduleData.length) {
+                const existingMessage = container.querySelector('.schedule-bottom-message');
+                if (!existingMessage) {
+                    const bottomMessage = '<div class="schedule-bottom-message" style="text-align: center; color: var(--muted); font-style: italic; padding: 40px 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px;">oh oo! future shows are not yet added :(</div>';
+                    container.insertAdjacentHTML('beforeend', bottomMessage);
+                }
+            }
         }
         
         // Update Load More button
@@ -852,7 +1541,7 @@
                                 throw new Error(`Google Calendar API error: ${data.error.message}`);
                             }
                             
-                            console.log('Successfully fetched Google Calendar events:', data.items ? data.items.length : 0);
+                            // Successfully fetched Google Calendar events
                             
                             // Transform the data to match schedule format
                             const events = data.items.map(event => {

@@ -291,11 +291,11 @@
             const iframe = document.getElementById('google-form-iframe');
             if (iframe) {
                 iframe.onload = function() {
-                    console.log('Google Form iframe loaded successfully');
+                    //console.log('Google Form iframe loaded successfully');
                 };
                 
                 iframe.onerror = function() {
-                    console.log('Google Form iframe failed to load');
+                    //console.log('Google Form iframe failed to load');
                 };
             }
         }
@@ -307,7 +307,7 @@
             try {
                 // If using Google Sheets API
                 if (GOOGLE_SHEETS_ID !== 'YOUR_SHEETS_ID' && GOOGLE_SHEETS_API_KEY !== 'YOUR_API_KEY') {
-                    console.log('Loading recent requests from Google Sheets...');
+                    //console.log('Loading recent requests from Google Sheets...');
                     
                     // First get the correct sheet name
                     const metadataResponse = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${GOOGLE_SHEETS_ID}?key=${GOOGLE_SHEETS_API_KEY}`);
@@ -319,24 +319,24 @@
                     
                     // Get the first sheet name (usually "Form Responses 1" or similar)
                     const sheetName = metadata.sheets && metadata.sheets[0] ? metadata.sheets[0].properties.title : 'Sheet1';
-                    console.log('Using sheet name:', sheetName);
+                    //console.log('Using sheet name:', sheetName);
                     
                     const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${GOOGLE_SHEETS_ID}/values/${sheetName}!A:F?key=${GOOGLE_SHEETS_API_KEY}`);
                     const data = await response.json();
                     
-                    console.log('Google Sheets response:', data);
+                    //console.log('Google Sheets response:', data);
                     
                     if (data.values && data.values.length > 1) {
                         // Get the last 5 requests (most recent)
                         const requests = data.values.slice(1).slice(-5).reverse();
-                        console.log('Recent requests from sheet:', requests);
+                        //console.log('Recent requests from sheet:', requests);
                         displayRecentRequests(requests);
                     } else {
-                        console.log('No data in sheet, showing mock requests');
+                        //console.log('No data in sheet, showing mock requests');
                         showMockRequests();
                     }
                 } else {
-                    console.log('Google Sheets not configured, showing mock requests');
+                    //console.log('Google Sheets not configured, showing mock requests');
                     showMockRequests();
                 }
             } catch (error) {
@@ -417,39 +417,39 @@
         
         // Handle form submission to Google Forms
         document.addEventListener('submit', function(e) {
-            console.log('Form submit event triggered:', e.target);
+            //console.log('Form submit event triggered:', e.target);
             if (e.target.id === 'request-form') {
-                console.log('Preventing default and calling submitToGoogleForm');
+                //console.log('Preventing default and calling submitToGoogleForm');
                 e.preventDefault();
                 submitToGoogleForm(e.target);
             } else {
-                console.log('Form ID does not match:', e.target.id);
+                //console.log('Form ID does not match:', e.target.id);
             }
         });
         
         // Submit form data to Google Forms
         async function submitToGoogleForm(form) {
-            console.log('submitToGoogleForm called with form:', form);
+            //console.log('submitToGoogleForm called with form:', form);
             
             const submitBtn = document.getElementById('submit-btn');
             const btnText = submitBtn.querySelector('.btn-text');
             const btnLoading = submitBtn.querySelector('.btn-loading');
             
-            console.log('Submit button elements found:', { submitBtn, btnText, btnLoading });
+            //console.log('Submit button elements found:', { submitBtn, btnText, btnLoading });
             
             // Show loading state
             submitBtn.disabled = true;
             btnText.style.display = 'none';
             btnLoading.style.display = 'inline-flex';
             
-            console.log('Loading state applied');
+            //console.log('Loading state applied');
             
             try {
                 // Get form data
                 const formData = new FormData(form);
-                console.log('FormData entries:');
+                //console.log('FormData entries:');
                 for (let [key, value] of formData.entries()) {
-                    console.log(`${key}: ${value}`);
+                    //console.log(`${key}: ${value}`);
                 }
                 
                 const requestData = {
@@ -461,9 +461,9 @@
                     timestamp: new Date().toISOString()
                 };
                 
-                console.log('Request data object:', requestData);
+                //console.log('Request data object:', requestData);
                 
-                console.log('Submitting request:', requestData);
+                //console.log('Submitting request:', requestData);
                 
                 // Submit to Google Forms using FormData
                 const success = await submitToGoogleFormsAPI(requestData);
@@ -499,8 +499,8 @@
                 // Google Forms submission endpoint
                 const formAction = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`;
                 
-                console.log('Submitting to:', formAction);
-                console.log('Form data:', data);
+                //console.log('Submitting to:', formAction);
+                //console.log('Form data:', data);
                 
                 // Create form data for Google Forms
                 const googleFormData = new FormData();
@@ -512,9 +512,9 @@
                 googleFormData.append('entry.966807111', data.language);    // Language Preference
                 googleFormData.append('entry.1872415819', data.message);    // Message
                 
-                console.log('Google Form data entries:');
+                //console.log('Google Form data entries:');
                 for (let [key, value] of googleFormData.entries()) {
-                    console.log(`${key}: ${value}`);
+                    //console.log(`${key}: ${value}`);
                 }
                 
                 // Submit using fetch with CORS
@@ -525,7 +525,7 @@
                 });
                 
                 // Since we can't read the response due to no-cors, we'll assume success
-                console.log('Form submitted to Google Forms (no-cors mode)');
+                //console.log('Form submitted to Google Forms (no-cors mode)');
                 
                 return true;
                 

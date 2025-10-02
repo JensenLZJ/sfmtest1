@@ -350,10 +350,10 @@
             const secretButton = document.getElementById('secret-access-button');
             
             if (secretButton) {
-                console.log('Secret access button found');
+                // Secret access button found
                 
                 secretButton.addEventListener('click', function(e) {
-                    console.log('Secret button clicked!');
+                    // Secret button clicked
                     e.preventDefault();
                     // Set bypass flag in sessionStorage for this session only
                     sessionStorage.setItem('samudrafm_bypass', 'true');
@@ -362,12 +362,12 @@
                 });
                 
                 secretButton.addEventListener('touchstart', function(e) {
-                    console.log('Secret button touched!');
+                    // Secret button touched
                     e.preventDefault();
                 });
                 
                 secretButton.addEventListener('touchend', function(e) {
-                    console.log('Secret button touch end!');
+                    // Secret button touch end
                     e.preventDefault();
                     // Set bypass flag in sessionStorage for this session only
                     sessionStorage.setItem('samudrafm_bypass', 'true');
@@ -375,9 +375,9 @@
                     window.location.href = '/?bypass=1';
                 });
                 
-                console.log('Secret button setup complete');
+                // Secret button setup complete
             } else {
-                console.log('Secret access button not found!');
+                // Secret access button not found
             }
         });
         
