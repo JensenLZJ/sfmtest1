@@ -49,8 +49,7 @@
                 <ul id="nav-menu" class="nav-list">
                     <li><a href="/">home</a></li>
                     <li><a href="/schedule">schedule</a></li>
-                    <li><a href="/episodes">episodes</a></li>
-                    <li><a href="/listen">where to listen</a></li>
+                    <li><a href="/team">our team</a></li>
                     <li><a href="/about">about</a></li>
                     <li><a href="/contact" class="active">contact</a></li>
                 </ul>
@@ -59,59 +58,172 @@
     </header>
 
     <main class="site-main">
-        <section class="hero-section" id="contact">
+        <!-- Hero Section -->
+        <section class="contact-hero">
             <div class="container">
                 <div class="hero-content">
-                    <h1>Contact Us</h1>
-                    <p>Get in touch with the SamudraFM team</p>
+                    <div class="hero-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h1>Get in Touch</h1>
+                    <p>Have questions, feedback, or want to join our team? We'd love to hear from you! Send us a message and we'll get back to you as soon as possible.</p>
                 </div>
             </div>
         </section>
 
-        <section class="contact-section">
-            <div class="container">
-                <div class="contact-grid">
-                    <div class="contact-info">
-                        <h2>Get in Touch</h2>
-                        <div class="contact-item">
-                            <i class="fab fa-instagram"></i>
-                            <div>
-                                <h3>Instagram</h3>
-                                <p><a href="https://www.instagram.com/samudrafm/">@samudrafm</a></p>
-                            </div>
+        <!-- Main Content -->
+        <div class="container">
+            <div class="contact-layout">
+                <!-- Form Section -->
+                <section class="contact-form-section">
+                    <div class="form-card">
+                        <!-- Custom Contact Form -->
+                        <div class="form-header">
+                            <h2><i class="fas fa-envelope"></i> Send Us a Message</h2>
+                            <p>Fill out the form below to get in touch with us</p>
                         </div>
-                        <div class="contact-item">
-                            <i class="fab fa-facebook"></i>
-                            <div>
-                                <h3>Facebook</h3>
-                                <p><a href="https://www.facebook.com/SamudraFMSMKTS">SamudraFM SMKTS</a></p>
+                        
+                        <!-- Custom Form UI -->
+                        <form id="contact-form" class="contact-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="contact-name">
+                                        <i class="fas fa-user"></i>
+                                        Your Name *
+                                    </label>
+                                    <input type="text" id="contact-name" name="contactName" required placeholder="e.g., John Doe">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contact-email">
+                                        <i class="fas fa-envelope"></i>
+                                        Email Address *
+                                    </label>
+                                    <input type="email" id="contact-email" name="contactEmail" required placeholder="e.g., john@example.com">
+                                </div>
                             </div>
-                        </div>
-                        <div class="contact-item">
-                            <i class="fab fa-mixcloud"></i>
-                            <div>
-                                <h3>Mixcloud</h3>
-                                <p><a href="https://www.mixcloud.com/SamudraFM/">SamudraFM</a></p>
+                            
+                            <div class="form-group">
+                                <label for="contact-subject">
+                                    <i class="fas fa-tag"></i>
+                                    Subject
+                                </label>
+                                <input type="text" id="contact-subject" name="contactSubject" placeholder="e.g., General Inquiry">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contact-message">
+                                    <i class="fas fa-comment"></i>
+                                    Message *
+                                </label>
+                                <textarea id="contact-message" name="contactMessage" required placeholder="Tell us what's on your mind..." rows="6"></textarea>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn primary">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Send Message
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <!-- Success Message -->
+                        <div id="success-message" class="success-message" style="display: none;">
+                            <div class="success-icon">
+                                <i class="fas fa-check-circle" style="color: white !important; font-size: 32px !important; z-index: 10 !important; position: relative !important;"></i>
+                            </div>
+                            <h3>Message Sent Successfully!</h3>
+                            <p>Thank you for contacting us! We'll get back to you as soon as possible.</p>
+                            <div class="success-actions">
+                                <a href="/" class="btn secondary">Back to Home</a>
+                                <button onclick="sendAnotherMessage()" class="btn secondary">
+                                    <i class="fas fa-plus"></i>
+                                    Send Another Message
+                                </button>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="contact-actions">
-                        <h2>Quick Actions</h2>
-                        <div class="action-buttons">
-                            <a href="request.html" class="btn primary">
+                </section>
+
+                <!-- Sidebar -->
+                <aside class="contact-sidebar">
+                    <!-- Quick Actions Card -->
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                        <div class="quick-actions">
+                            <a href="request.html" class="quick-action-btn">
                                 <i class="fas fa-music"></i>
-                                Request a Song
+                                <div>
+                                    <strong>Request a Song</strong>
+                                    <span>Send us your favorite tracks</span>
+                                </div>
                             </a>
-                            <a href="opportunities.html" class="btn secondary">
+                            <a href="opportunities.html" class="quick-action-btn">
                                 <i class="fas fa-users"></i>
-                                Join Our Team
+                                <div>
+                                    <strong>Join Our Team</strong>
+                                    <span>Become a volunteer</span>
+                                </div>
+                            </a>
+                            <a href="schedule.html" class="quick-action-btn">
+                                <i class="fas fa-calendar"></i>
+                                <div>
+                                    <strong>View Schedule</strong>
+                                    <span>Check our show times</span>
+                                </div>
                             </a>
                         </div>
                     </div>
-                </div>
+
+                    <!-- FAQ Card -->
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-question-circle"></i> Frequently Asked</h3>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <strong>How can I request a song?</strong>
+                                <p>Use our song request form or visit the request page to send us your favorite tracks!</p>
+                            </div>
+                            <div class="faq-item">
+                                <strong>Can I join the team?</strong>
+                                <p>Yes! We're always looking for passionate volunteers. Check out our opportunities page.</p>
+                            </div>
+                            <div class="faq-item">
+                                <strong>When do you broadcast?</strong>
+                                <p>Check our schedule page for the latest show times and upcoming broadcasts.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Response Time Card -->
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-clock"></i> Response Times</h3>
+                        <div class="response-times">
+                            <div class="response-item">
+                                <i class="fas fa-envelope"></i>
+                                <div>
+                                    <strong>General Inquiries</strong>
+                                    <span>24-48 hours</span>
+                                </div>
+                            </div>
+                            <div class="response-item">
+                                <i class="fas fa-music"></i>
+                                <div>
+                                    <strong>Song Requests</strong>
+                                    <span>Same day</span>
+                                </div>
+                            </div>
+                            <div class="response-item">
+                                <i class="fas fa-users"></i>
+                                <div>
+                                    <strong>Team Applications</strong>
+                                    <span>3-5 business days</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
             </div>
-        </section>
+        </div>
     </main>
 
     <footer class="site-footer" id="about">
@@ -155,5 +267,101 @@
     </footer>
 
     <script src="script.js"></script>
+    
+    <script>
+        // Contact Form Prefill Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contact-form');
+            
+            // Function to get URL parameters
+            function getUrlParameter(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+            
+            // Function to decode URL-encoded text
+            function decodeUrlText(text) {
+                return decodeURIComponent(text.replace(/\+/g, ' '));
+            }
+            
+            // Prefill form fields from URL parameters
+            function prefillForm() {
+                const name = getUrlParameter('entry.2005620554');
+                const email = getUrlParameter('entry.730774888');
+                const subject = getUrlParameter('entry.1271111814');
+                const message = getUrlParameter('entry.839337160');
+                
+                if (name) {
+                    document.getElementById('contact-name').value = decodeUrlText(name);
+                }
+                if (email) {
+                    document.getElementById('contact-email').value = decodeUrlText(email);
+                }
+                if (subject) {
+                    document.getElementById('contact-subject').value = decodeUrlText(subject);
+                }
+                if (message) {
+                    document.getElementById('contact-message').value = decodeUrlText(message);
+                }
+            }
+            
+            // Run prefill on page load
+            prefillForm();
+            
+            // Handle form submission
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form data
+                const formData = new FormData(contactForm);
+                const name = formData.get('contactName');
+                const email = formData.get('contactEmail');
+                const subject = formData.get('contactSubject');
+                const message = formData.get('contactMessage');
+                
+                // Create Google Forms submission URL
+                const googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSec_1yniEG6WbcoDHtC6xLWPgUMbZrviddh1366VJ1k6J3GEA/formResponse';
+                
+                // Encode values for URL
+                const encodedName = encodeURIComponent(name);
+                const encodedEmail = encodeURIComponent(email);
+                const encodedSubject = encodeURIComponent(subject);
+                const encodedMessage = encodeURIComponent(message);
+                
+                // Create submission URL
+                const submissionUrl = `${googleFormUrl}?entry.2005620554=${encodedName}&entry.730774888=${encodedEmail}&entry.1271111814=${encodedSubject}&entry.839337160=${encodedMessage}`;
+                
+                // Submit to Google Forms
+                fetch(submissionUrl, {
+                    method: 'POST',
+                    mode: 'no-cors'
+                }).then(() => {
+                    // Show success message
+                    contactForm.style.display = 'none';
+                    document.getElementById('success-message').style.display = 'block';
+                    document.getElementById('success-message').scrollIntoView({ behavior: 'smooth' });
+                }).catch(() => {
+                    // Show error message
+                    alert('There was an error sending your message. Please try again.');
+                });
+            });
+            
+            // Send another message - reset form and show it again
+            window.sendAnotherMessage = function() {
+                // Hide success message
+                document.getElementById('success-message').style.display = 'none';
+                
+                // Show form again
+                contactForm.style.display = 'block';
+                
+                // Reset form
+                contactForm.reset();
+                
+                // Scroll to top of form
+                contactForm.scrollIntoView({ behavior: 'smooth' });
+            };
+        });
+    </script>
+    
 </body>
 </html>

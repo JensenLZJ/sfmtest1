@@ -49,8 +49,7 @@
                 <ul id="nav-menu" class="nav-list">
                     <li><a href="/">home</a></li>
                     <li><a href="/#schedule">schedule</a></li>
-                    <li><a href="/#episodes">episodes</a></li>
-                    <li><a href="/#listen">where to listen</a></li>
+                    <li><a href="/team">our team</a></li>
                     <li><a href="/#about">about</a></li>
                     <li><a href="/#contact">contact</a></li>
                 </ul>
@@ -273,8 +272,7 @@
         // Configuration - Replace with your actual Google Form and Sheets IDs
         const GOOGLE_FORM_ID = '1FAIpQLSdBW4pG2ARks7itmzN98gscfk7QxHig2S_WLFi6rxJ_ACkwIQ'; // Replace with your Google Form ID
         const GOOGLE_SHEETS_ID = '1U6ap5LrMtgo2a1UDyy2A8niUe2xf9rAov9Ojq4f_EkA'; // Replace with your Google Sheets ID
-        // Google Sheets API key is now handled by the secure backend API
-        // No direct API key needed in frontend
+        const GOOGLE_SHEETS_API_KEY = 'AIzaSyA-iGsaqKLpZAnBx8vOBWnRC4XLCb6vsrQ'; // Replace with your Google Sheets API key or leave as is for demo mode
         
         // Year is now handled in the footer design
         
@@ -340,7 +338,7 @@
                     showMockRequests();
                 }
             } catch (error) {
-                console.error('Error loading recent requests:', error);
+                //console.error('Error loading recent requests:', error);
                 showMockRequests();
             }
         }
@@ -383,18 +381,50 @@
         function showMockRequests() {
             const container = document.getElementById('recent-requests');
             const mockRequests = [
-                { song: 'Bohemian Rhapsody', artist: 'Queen', time: '2 hours ago' },
-                { song: 'Blinding Lights', artist: 'The Weeknd', time: '5 hours ago' },
-                { song: 'Levitating', artist: 'Dua Lipa', time: '1 day ago' },
-                { song: 'Watermelon Sugar', artist: 'Harry Styles', time: '2 days ago' },
-                { song: 'Good 4 U', artist: 'Olivia Rodrigo', time: '3 days ago' }
+                { 
+                    song: 'Blinding Lights', 
+                    artist: 'The Weeknd', 
+                    requester: 'Sarah M. (5A1)',
+                    time: '2 hours ago',
+                    message: 'Love this song! Perfect for Friday vibes'
+                },
+                { 
+                    song: 'Levitating', 
+                    artist: 'Dua Lipa', 
+                    requester: 'Alex K. (4B2)',
+                    time: '5 hours ago',
+                    message: 'Such a bop!'
+                },
+                { 
+                    song: 'Good 4 U', 
+                    artist: 'Olivia Rodrigo', 
+                    requester: 'Mike R. (6C1)',
+                    time: '1 day ago',
+                    message: 'This song hits different'
+                },
+                { 
+                    song: 'Stay', 
+                    artist: 'The Kid LAROI & Justin Bieber', 
+                    requester: 'Emma L. (5A3)',
+                    time: '2 days ago',
+                    message: 'Can\'t get enough of this!'
+                },
+                { 
+                    song: 'Industry Baby', 
+                    artist: 'Lil Nas X ft. Jack Harlow', 
+                    requester: 'David C. (4A1)',
+                    time: '3 days ago',
+                    message: 'Fire track!'
+                }
             ];
             
             const html = mockRequests.map(request => `
                 <div class="request-item">
                     <div class="request-info">
                         <strong>${request.song}</strong>
-                        <span>${request.artist}</span>
+                        <span>by ${request.artist}</span>
+                        <small>Requested by ${request.requester}</small>
+                        ${request.message ? `<div class="request-message">"${request.message}"</div>` : ''}
                     </div>
                     <div class="request-time">${request.time}</div>
                 </div>
@@ -483,7 +513,7 @@
                 }
                 
             } catch (error) {
-                console.error('Error submitting form:', error);
+                //console.error('Error submitting form:', error);
                 showErrorMessage('Failed to submit request. Please try again.');
             } finally {
                 // Reset button state
@@ -530,7 +560,7 @@
                 return true;
                 
             } catch (error) {
-                console.error('Google Forms submission error:', error);
+                //console.error('Google Forms submission error:', error);
                 return false;
             }
         }
@@ -588,5 +618,6 @@
             });
         }
     </script>
+    
 </body>
 </html>

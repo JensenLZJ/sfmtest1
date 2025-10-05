@@ -14,7 +14,7 @@ self.addEventListener('install', (event) => {
       return Promise.allSettled(
         CORE_ASSETS.map(asset => 
           cache.add(asset).catch(error => {
-            console.warn(`Failed to cache asset: ${asset}`, error);
+            //console.warn(`Failed to cache asset: ${asset}`, error);
             return null; // Return null for failed assets
           })
         )
@@ -63,7 +63,7 @@ self.addEventListener('fetch', (event) => {
       }).then((res) => {
         return res;
       }).catch((error) => {
-        console.warn('Service worker fetch failed:', error);
+        //console.warn('Service worker fetch failed:', error);
         // Return a basic response instead of letting it fail
         return new Response('Network error - please refresh', { 
           status: 503,

@@ -108,8 +108,7 @@
                 <ul id="nav-menu" class="nav-list">
                     <li><a href="/" class="active">home</a></li>
                     <li><a href="/schedule.html">schedule</a></li>
-                    <li><a href="/episodes.html">episodes</a></li>
-                    <li><a href="/listen.html">where to listen</a></li>
+                    <li><a href="/team.html">our team</a></li>
                     <li><a href="/about.html">about</a></li>
                     <li><a href="/contact.html">contact</a></li>
                 </ul>
@@ -191,7 +190,7 @@
             <!-- Left Side - Instagram Posts -->
             <div class="instagram-section">
                 <div class="section-head">
-                    <h2><span class="dot-particle"></span>SFM Instagram<span class="heading-line"></span></h2>
+                    <h2><span class="dot-particle"></span>SFM Instagram<span class="heading-line">&nbsp;</span></h2>
                     <div class="instagram-nav-controls">
                         <button class="instagram-nav-btn instagram-prev-btn" onclick="scrollInstagramLeft()">
                             <i class="fas fa-chevron-left"></i>
@@ -215,20 +214,23 @@
             </div>
         </section>
 
-        <section id="episodes" class="episodes" aria-labelledby="episodes-heading">
+        <!-- Episodes Section -->
+        <section id="episodes" class="episodes">
             <div class="section-head">
-                <h2 id="episodes-heading"><span class="dot-particle"></span>Shows<span class="heading-line"></span></h2>
+                <h2><span class="dot-particle"></span>Latest Episodes<span class="heading-line">&nbsp;</span></h2>
                 <div class="episodes-nav-controls">
-                    <button class="episodes-nav-btn episodes-prev-btn" onclick="prevEpisode()">
-                        <i class="fas fa-chevron-left"></i>
+                    <button class="episodes-nav-btn" id="episodes-prev" aria-label="Previous episodes">
+                        <i class="fa-solid fa-chevron-left"></i>
                     </button>
-                    <button class="episodes-nav-btn episodes-next-btn" onclick="nextEpisode()">
-                        <i class="fas fa-chevron-right"></i>
+                    <button class="episodes-nav-btn" id="episodes-next" aria-label="Next episodes">
+                        <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
             </div>
             <div class="episodes-slider-container">
-                <div id="episodes-slider" class="episodes-slider"></div>
+                <div id="episodes-slider" class="episodes-slider">
+                    <!-- Episodes will be loaded here by JavaScript -->
+                </div>
             </div>
         </section>
 
@@ -302,7 +304,7 @@
                         if (name === 'src' && value) {
                             const suspiciousDomains = ['infird.com', 'malicious.com', 'tracking.com'];
                             if (suspiciousDomains.some(domain => value.includes(domain))) {
-                                console.warn('Blocked suspicious script:', value);
+                                //console.warn('Blocked suspicious script:', value);
                                 return;
                             }
                         }
@@ -317,7 +319,7 @@
                 mutations.forEach(function(mutation) {
                     mutation.addedNodes.forEach(function(node) {
                         if (node.tagName === 'SCRIPT' && node.src && node.src.includes('infird.com')) {
-                            console.warn('Removed suspicious script:', node.src);
+                            //console.warn('Removed suspicious script:', node.src);
                             node.remove();
                         }
                     });
@@ -424,6 +426,7 @@
     <script>
       // Instagram feed is handled by the main script.js
     </script>
+    
     
 </body>
 </html>

@@ -30,7 +30,50 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="styles.css?v=1734570200">
+    <link rel="stylesheet" href="styles.css?v=1734570300">
+    
+    <style>
+        .founder-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #f61b58, #ff6b9d);
+        }
+        .founder-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+            border-color: #f61b58;
+        }
+        .founder-card:hover .founder-image img {
+            transform: scale(1.05);
+        }
+        .founder-social .social-link:hover {
+            background: #f61b58;
+            color: white;
+            border-color: #f61b58;
+            transform: translateY(-2px);
+        }
+        
+        .station-manager-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+            border-color: #f61b58;
+        }
+        
+        .station-manager-card:hover .station-manager-image img {
+            transform: scale(1.05);
+        }
+        
+        .station-manager-social .social-link:hover {
+            background: #f61b58;
+            color: white;
+            border-color: #f61b58;
+            transform: translateY(-2px);
+        }
+    </style>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
@@ -49,8 +92,7 @@
                 <ul id="nav-menu" class="nav-list">
                     <li><a href="/">home</a></li>
                     <li><a href="/schedule">schedule</a></li>
-                    <li><a href="/episodes">episodes</a></li>
-                    <li><a href="/listen">where to listen</a></li>
+                    <li><a href="/team">our team</a></li>
                     <li><a href="/about" class="active">about</a></li>
                     <li><a href="/contact">contact</a></li>
                 </ul>
@@ -59,35 +101,106 @@
     </header>
 
     <main class="site-main">
-        <section class="hero-section" id="about">
+        <!-- Hero Section -->
+        <section class="about-hero">
             <div class="container">
-                <div class="hero-content">
+                <div class="about-hero-content">
+                    <div class="about-hero-text">
                     <h1>About SamudraFM</h1>
-                    <p>Discover our story, mission, and the team behind the music</p>
+                        <p class="about-hero-subtitle" style="color: #f61b58; font-size: 28px; font-weight: 600; font-style: italic; line-height: 1.4; margin: 0 0 30px; text-align: center;">"What if students can own a radio station?"</p>
+                        <p class="about-hero-story" style="color: rgba(255,255,255,0.9); font-size: 20px; line-height: 1.7; margin: 0 0 20px;">That simple yet powerful question, asked by a visionary English teacher in 2023, was the spark that started it all. From that moment, a group of passionate students took the idea and turned it into something real. And just like that, SamudraFM was born on 6 June 2023.</p>
+                        <p class="about-hero-story" style="color: rgba(255,255,255,0.9); font-size: 20px; line-height: 1.7; margin: 0 0 20px;">Today, SamudraFM proudly stands as Malaysia's first ever student-led school radio station. It's a platform where creativity meets technology, and where every student's voice matters.</p>
+                        <p class="about-hero-story" style="color: rgba(255,255,255,0.9); font-size: 20px; line-height: 1.7; margin: 0 0 20px;">Run entirely by students, for students, SamudraFM is more than just a radio programme. We produce shows that entertain, inform, and inspire. Whether it's music, talk shows, storytelling, or live coverage of school events, SamudraFM gives students the chance to express themselves, develop real-world media skills, and be heard far beyond the classroom walls.</p>
+                        <p class="about-hero-tagline" style="color: #f61b58; font-size: 22px; font-weight: 700; line-height: 1.6; margin: 30px 0 0; text-align: center;">We're not just making noise. We're making history.<br>Welcome to the wave of change. Welcome to SamudraFM.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="about-section">
+        <!-- Founders Section -->
+        <section class="about-founders" style="padding: 80px 0; background: #0f2230;">
             <div class="container">
-                <div class="about-content">
-                    <h2>Our Story</h2>
-                    <p>SamudraFM is a recreational school radio initiative at SMK Taman SEA, designed to give students hands-on broadcasting experience while exploring creativity in music, events, and radio production.</p>
+                <div class="about-founders-content" style="max-width: 1200px; margin: 0 auto;">
+                    <div class="section-header" style="text-align: center; margin-bottom: 60px;">
+                        <h2 class="section-title" style="color: #e9f1f7; font-size: 36px; font-weight: 800; margin: 0 0 20px; text-transform: uppercase; letter-spacing: 2px;">OUR FOUNDERS</h2>
+                        <div class="section-line" style="width: 100px; height: 4px; background: linear-gradient(135deg, #f61b58, #ff6b9d); margin: 0 auto;"></div>
+                    </div>
                     
-                    <h2>Our Mission</h2>
-                    <p>We aim to provide a platform for students to express themselves, develop communication skills, and learn about radio production in a fun and engaging environment.</p>
-                    
-                    <h2>What We Do</h2>
-                    <ul>
-                        <li>Live radio broadcasting</li>
-                        <li>Music curation and playlist creation</li>
-                        <li>Student-led shows and content</li>
-                        <li>Community engagement and events</li>
-                        <li>Technical skills development</li>
-                    </ul>
+                    <div class="founders-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; margin-bottom: 60px;">
+                        <div class="founder-card" style="background: #173246; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px; text-align: center; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                            <div class="founder-image" style="width: 100px; height: 100px; margin: 0 auto 20px; border-radius: 50%; overflow: hidden; border: 3px solid #f61b58; position: relative;">
+                                <img src="assets/avatar/Jensen.jpg" alt="Jensen Lim Zi Jen" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" />
+                            </div>
+                            <div class="founder-info">
+                                <h3 style="color: #e9f1f7; font-size: 20px; font-weight: 700; margin: 0 0 6px;">Jensen Lim Zi Jen</h3>
+                                <p class="founder-role" style="color: #f61b58; font-size: 14px; font-weight: 600; margin: 0 0 12px; text-transform: uppercase; letter-spacing: 0.5px;">Lead Founder & Technical Director</p>
+                                <p class="founder-bio" style="color: #8fa6b7; font-size: 13px; line-height: 1.5; margin: 0 0 20px;">The visionary behind SamudraFM's technical infrastructure and the driving force that brought the radio station to life. Jensen's passion for technology and student empowerment made the impossible possible.</p>
+                                <div class="founder-social" style="display: flex; gap: 12px; justify-content: center;">
+                                    <a href="https://www.instagram.com/jensen_lzj/" target="_blank" class="social-link" style="width: 36px; height: 36px; background: #23394b; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #8fa6b7; text-decoration: none; transition: all 0.3s ease; font-size: 14px;">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="#" target="_blank" class="social-link" style="width: 36px; height: 36px; background: #23394b; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #8fa6b7; text-decoration: none; transition: all 0.3s ease; font-size: 14px;">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="founder-card" style="background: #173246; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px; text-align: center; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                            <div class="founder-image" style="width: 100px; height: 100px; margin: 0 auto 20px; border-radius: 50%; overflow: hidden; border: 3px solid #f61b58; position: relative;">
+                                <img src="assets/avatar/Justin.jpg" alt="Justin Choe" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" />
+                            </div>
+                            <div class="founder-info">
+                                <h3 style="color: #e9f1f7; font-size: 20px; font-weight: 700; margin: 0 0 6px;">Justin Choe</h3>
+                                <p class="founder-role" style="color: #f61b58; font-size: 14px; font-weight: 600; margin: 0 0 12px; text-transform: uppercase; letter-spacing: 0.5px;">Co-Founder & Content Director</p>
+                                <p class="founder-bio" style="color: #8fa6b7; font-size: 13px; line-height: 1.5; margin: 0 0 20px;">The creative mind behind SamudraFM's content strategy and programming. Justin's dedication to student voices and innovative programming has shaped the station's unique identity.</p>
+                                <div class="founder-social" style="display: flex; gap: 12px; justify-content: center;">
+                                    <a href="https://www.instagram.com/justinchoe_/" target="_blank" class="social-link" style="width: 36px; height: 36px; background: #23394b; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #8fa6b7; text-decoration: none; transition: all 0.3s ease; font-size: 14px;">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="#" target="_blank" class="social-link" style="width: 36px; height: 36px; background: #23394b; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #8fa6b7; text-decoration: none; transition: all 0.3s ease; font-size: 14px;">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- Current Station Manager Section -->
+        <section class="about-station-manager" style="padding: 80px 0; background: #1a2a3a;">
+            <div class="container">
+                <div class="station-manager-content" style="max-width: 1200px; margin: 0 auto;">
+                    <div class="section-header" style="text-align: center; margin-bottom: 60px;">
+                        <h2 class="section-title" style="color: #e9f1f7; font-size: 36px; font-weight: 800; margin: 0 0 20px; text-transform: uppercase; letter-spacing: 2px;">CURRENT STATION MANAGER</h2>
+                        <div class="section-line" style="width: 100px; height: 4px; background: linear-gradient(135deg, #f61b58, #ff6b9d); margin: 0 auto;"></div>
+                    </div>
+                    
+                    <div class="station-manager-card" style="background: #173246; border: 2px solid rgba(246, 27, 88, 0.3); border-radius: 20px; padding: 50px; text-align: center; max-width: 600px; margin: 0 auto; box-shadow: 0 8px 30px rgba(246, 27, 88, 0.15); position: relative; overflow: hidden;">
+                        <div class="station-manager-image" style="width: 150px; height: 150px; margin: 0 auto 30px; border-radius: 50%; overflow: hidden; border: 4px solid #f61b58; position: relative;">
+                            <img src="assets/avatar/Srishti.jpg" alt="Srishti" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" />
+                        </div>
+                        <div class="station-manager-info">
+                            <h3 style="color: #e9f1f7; font-size: 28px; font-weight: 700; margin: 0 0 10px;">Srishti</h3>
+                            <p class="station-manager-role" style="color: #f61b58; font-size: 18px; font-weight: 600; margin: 0 0 20px; text-transform: uppercase; letter-spacing: 1px;">Station Manager</p>
+                            <p class="station-manager-bio" style="color: #8fa6b7; font-size: 16px; line-height: 1.6; margin: 0 0 30px;">Leading SamudraFM with dedication and vision, Srishti oversees the daily operations and ensures the station continues to provide quality programming for our school community.</p>
+                            <div class="station-manager-social" style="display: flex; gap: 15px; justify-content: center;">
+                                <a href="https://www.instagram.com/samudrafm/" target="_blank" class="social-link" style="width: 45px; height: 45px; background: #23394b; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #8fa6b7; text-decoration: none; transition: all 0.3s ease; font-size: 16px;">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="https://www.facebook.com/SamudraFMSMKTS" target="_blank" class="social-link" style="width: 45px; height: 45px; background: #23394b; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #8fa6b7; text-decoration: none; transition: all 0.3s ease; font-size: 16px;">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer class="site-footer" id="about">
@@ -131,5 +244,6 @@
     </footer>
 
     <script src="script.js"></script>
+    
 </body>
 </html>

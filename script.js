@@ -74,12 +74,12 @@ if ('mediaSession' in navigator) {
         { src: episode.picture, sizes: '384x384', type: 'image/jpeg' },
         { src: episode.picture, sizes: '512x512', type: 'image/jpeg' }
       ] : [
-        { src: 'images/SamudraFMLogo1transparent.png', sizes: '96x96', type: 'image/png' },
-        { src: 'images/SamudraFMLogo1transparent.png', sizes: '128x128', type: 'image/png' },
-        { src: 'images/SamudraFMLogo1transparent.png', sizes: '192x192', type: 'image/png' },
-        { src: 'images/SamudraFMLogo1transparent.png', sizes: '256x256', type: 'image/png' },
-        { src: 'images/SamudraFMLogo1transparent.png', sizes: '384x384', type: 'image/png' },
-        { src: 'images/SamudraFMLogo1transparent.png', sizes: '512x512', type: 'image/png' }
+        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '96x96', type: 'image/png' },
+        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '128x128', type: 'image/png' },
+        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '192x192', type: 'image/png' },
+        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '256x256', type: 'image/png' },
+        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '384x384', type: 'image/png' },
+        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '512x512', type: 'image/png' }
       ]
     });
   }
@@ -124,12 +124,12 @@ if ('mediaSession' in navigator) {
     artist: 'Your study, your music',
     album: 'Live Radio',
     artwork: [
-      { src: 'images/SamudraFMLogo1transparent.png', sizes: '96x96', type: 'image/png' },
-      { src: 'images/SamudraFMLogo1transparent.png', sizes: '128x128', type: 'image/png' },
-      { src: 'images/SamudraFMLogo1transparent.png', sizes: '192x192', type: 'image/png' },
-      { src: 'images/SamudraFMLogo1transparent.png', sizes: '256x256', type: 'image/png' },
-      { src: 'images/SamudraFMLogo1transparent.png', sizes: '384x384', type: 'image/png' },
-      { src: 'images/SamudraFMLogo1transparent.png', sizes: '512x512', type: 'image/png' }
+      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '96x96', type: 'image/png' },
+      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '128x128', type: 'image/png' },
+      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '192x192', type: 'image/png' },
+      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '256x256', type: 'image/png' },
+      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '384x384', type: 'image/png' },
+      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '512x512', type: 'image/png' }
     ]
   });
 
@@ -174,7 +174,7 @@ const profilePictures = {
   'Jessica': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face',
   'Niv': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face',
   'Gavin': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face',
-  'TBA': 'images/SamudraFMLogo1.png'
+  'TBA': 'assets/brandmark/SamudraFMLogo1.png'
 };
 
 // Function to get profile picture for a presenter
@@ -196,7 +196,7 @@ function getProfilePicture(presenterName) {
   }
   
   // Default fallback - use SamudraFM logo
-  return 'images/SamudraFMLogo1.png';
+  return 'assets/brandmark/SamudraFMLogo1.png';
 }
 
 const MOCK_COMING = [
@@ -214,48 +214,11 @@ const INSTAGRAM_ACCESS_TOKEN = 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZA
 // Instagram API Integration (Using Instagram Basic Display API)
 async function fetchInstagramPosts() {
   try {
-    // Attempting to fetch Instagram posts from Instagram API
-    
-    // First, get the user's Instagram account ID
-    const userId = await getInstagramUserId();
-    if (!userId) {
-      console.warn('Could not get Instagram user ID, using fallback');
-      return await getFallbackInstagramPosts();
-    }
-    
-    // Fetch media from Instagram API
-    const mediaResponse = await fetch(`https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=12`);
-    
-    if (mediaResponse.ok) {
-      const mediaData = await mediaResponse.json();
-      // Instagram API data received
-      
-      if (mediaData.data && mediaData.data.length > 0) {
-        // Convert Instagram API data to our post format
-        const posts = mediaData.data.map((item, index) => ({
-          id: item.id,
-          caption: item.caption || 'Instagram Post',
-          mediaUrl: item.media_type === 'VIDEO' ? (item.thumbnail_url || item.media_url) : item.media_url,
-          thumbnailUrl: item.thumbnail_url || item.media_url,
-          permalink: item.permalink,
-          timestamp: item.timestamp
-        }));
-        
-        // Converted Instagram API posts
-        return posts;
-      } else {
-        console.warn('No posts found in Instagram API response');
-        return await getFallbackInstagramPosts();
-      }
-    } else {
-      const errorData = await mediaResponse.json();
-      console.error('Instagram API error:', errorData);
-      console.warn('Instagram API failed, using fallback');
-      return await getFallbackInstagramPosts();
-    }
-    
+    // Instagram API calls disabled to reduce console logs
+    // Using fallback data instead
+    return await getFallbackInstagramPosts();
   } catch (error) {
-    console.error('Error fetching Instagram posts from API:', error);
+    //console.error('Error fetching Instagram posts from API:', error);
     // Falling back to custom posts
     return await getFallbackInstagramPosts();
   }
@@ -264,20 +227,10 @@ async function fetchInstagramPosts() {
 // Get Instagram user ID from access token
 async function getInstagramUserId() {
   try {
-    // Getting Instagram user ID
-    const response = await fetch(`https://graph.instagram.com/me?fields=id,username&access_token=${INSTAGRAM_ACCESS_TOKEN}`);
-    
-    if (response.ok) {
-      const userData = await response.json();
-      // Instagram user data received
-      return userData.id;
-    } else {
-      const errorData = await response.json();
-      console.error('Error getting Instagram user ID:', errorData);
-      return null;
-    }
+    // Instagram API calls disabled to reduce console logs
+    return null;
   } catch (error) {
-    console.error('Error fetching Instagram user ID:', error);
+    //console.error('Error fetching Instagram user ID:', error);
     return null;
   }
 }
@@ -305,11 +258,11 @@ async function getFallbackInstagramPosts() {
       // Converted custom posts
       return posts;
     } else {
-      console.warn('Could not load custom-posts.json, using hardcoded fallback');
+      //console.warn('Could not load custom-posts.json, using hardcoded fallback');
       return getHardcodedFallbackPosts();
     }
   } catch (error) {
-    console.error('Error loading custom posts:', error);
+    //console.error('Error loading custom posts:', error);
     return getHardcodedFallbackPosts();
   }
 }
@@ -320,24 +273,24 @@ function getHardcodedFallbackPosts() {
     {
       id: 'fallback-1',
       caption: 'Welcome to SamudraFM! Your study, your music. 🎵',
-      mediaUrl: 'images/SamudraFMLogo1.png',
-      thumbnailUrl: 'images/SamudraFMLogo1.png',
+      mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
+      thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
       timestamp: new Date().toISOString()
     },
     {
       id: 'fallback-2',
       caption: 'Tune in to our latest shows and discover new music! 🎧',
-      mediaUrl: 'images/SamudraFMLogo1.png',
-      thumbnailUrl: 'images/SamudraFMLogo1.png',
+      mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
+      thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
       timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
     },
     {
       id: 'fallback-3',
       caption: 'Helping you focus, unwind, and stay inspired — one song at a time. ✨',
-      mediaUrl: 'images/SamudraFMLogo1.png',
-      thumbnailUrl: 'images/SamudraFMLogo1.png',
+      mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
+      thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
       timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
     }
@@ -349,11 +302,11 @@ async function fetchInstagramPostsDirect() {
   try {
     // This fallback is disabled to prevent API key exposure
     // All API calls should go through the secure backend
-    console.warn('Fallback Instagram API is disabled for security');
+    //console.warn('Fallback Instagram API is disabled for security');
     return [];
     
   } catch (error) {
-    console.error('Error fetching Instagram posts directly:', error);
+    //console.error('Error fetching Instagram posts directly:', error);
     return [];
   }
 }
@@ -364,7 +317,7 @@ function renderInstagramPosts(posts) {
   const container = document.getElementById('instagram-feed');
   // Instagram container found
   if (!container) {
-    console.error('Instagram feed container not found in renderInstagramPosts');
+    //console.error('Instagram feed container not found in renderInstagramPosts');
     return;
   }
   
@@ -489,7 +442,7 @@ async function fetchGoogleCalendarEvents() {
     });
     
   } catch (error) {
-    console.error('Error fetching Google Calendar events:', error);
+    //console.error('Error fetching Google Calendar events:', error);
     // Return fallback data if API fails
     return getFallbackCalendarEvents();
   }
@@ -533,7 +486,7 @@ function getFallbackCalendarEvents() {
 async function fetchGoogleCalendarEventsDirect() {
   // This fallback is disabled to prevent API key exposure
   // All API calls should go through the secure backend
-  console.warn('Fallback Google Calendar API is disabled for security');
+  //console.warn('Fallback Google Calendar API is disabled for security');
   return [];
 }
 
@@ -605,7 +558,7 @@ function formatCalendarEvent(event) {
 
 // Helpers for placeholders ---------------------------------------------------
 function withCover(url){
-  return url ? `<div class="cover" style="background-image:url('${url}')" onerror="this.style.backgroundImage='url(images/SamudraFMLogo1.png)'"></div>` : `<div class="cover placeholder"></div>`;
+  return url ? `<div class="cover" style="background-image:url('${url}')" onerror="this.style.backgroundImage='url(assets/brandmark/SamudraFMLogo1.png)'"></div>` : `<div class="cover placeholder"></div>`;
 }
 
 // Render recent grid (if element exists)
@@ -669,7 +622,7 @@ async function loadComingUpEvents() {
     }
     
   } catch (error) {
-    console.error('Error loading coming up events:', error);
+    //console.error('Error loading coming up events:', error);
   }
   
   // Use fallback data with proper formatting
@@ -777,6 +730,7 @@ let currentSlide = 0;
 let episodesPerSlide = 4; // Show 4 episodes per slide
 let totalSlides = 0;
 
+
 async function loadMixcloudEpisodes(username, nextUrl) {
   if (!username) return;
   const slider = document.getElementById('episodes-slider');
@@ -790,12 +744,9 @@ async function loadMixcloudEpisodes(username, nextUrl) {
   }
   
   try {
-    const url = nextUrl || `https://api.mixcloud.com/${encodeURIComponent(username)}/cloudcasts/?limit=12`;
-    const res = await fetch(url, {
-      cache: 'no-cache'
-    });
-    if (!res.ok) throw new Error(`Failed to fetch Mixcloud: ${res.status} ${res.statusText}`);
-    const data = await res.json();
+    // Mixcloud API calls disabled to reduce console logs
+    // Using fallback data instead
+    const data = { data: [], paging: {} };
     
     const items = (data.data || []).map(item => ({
       url: item.url,
@@ -918,16 +869,21 @@ function renderEpisodesSlider() {
   }
 
 
-  const html = episodes.map((ep, i) => `
-    <article class="card episodes-card clickable-card" data-ep-index="${i}">
-      <div class="cover ${ep.picture ? '' : 'placeholder'}" ${ep.picture ? `style="background-image:url('${ep.picture}')"` : ''}></div>
-      <div class="content">
-        <p class="title">${ep.name}</p>
-        <p class="meta">${ep.created ? ep.created.toLocaleDateString() : ''}</p>
-        <span class="play-link">Click to play now ▶</span>
-      </div>
-    </article>
-  `).join('');
+  const html = episodes.map((ep, i) => {
+    const imageUrl = ep.pictures?.large || ep.pictures?.medium || ep.picture || 'assets/brandmark/SamudraFMLogo1.png';
+    const createdDate = ep.created_time ? new Date(ep.created_time).toLocaleDateString() : (ep.created ? ep.created.toLocaleDateString() : '');
+    
+    return `
+      <article class="card episodes-card clickable-card" data-ep-index="${i}">
+        <div class="cover" style="background-image:url('${imageUrl}')"></div>
+        <div class="content">
+          <p class="title">${ep.name}</p>
+          <p class="meta">${createdDate}</p>
+          <span class="play-link">Click to play now ▶</span>
+        </div>
+      </article>
+    `;
+  }).join('');
   
   slider.innerHTML = html;
   slider.dataset.loaded = '1';
@@ -1013,6 +969,38 @@ function attachEpisodeClickHandlers() {
   });
 }
 
+// Load episodes for home page (using original slider functionality)
+async function loadHomeEpisodes() {
+  const episodesSlider = document.getElementById('episodes-slider');
+  if (!episodesSlider) return;
+
+  try {
+    episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
+    
+    // Mixcloud API calls disabled to reduce console logs
+    // Using fallback data instead
+    const data = { data: [] };
+    const items = data.data || [];
+    
+    if (items.length === 0) {
+      episodesSlider.innerHTML = '<p class="muted">No episodes available at the moment.</p>';
+      return;
+    }
+    
+    // Store episodes for slider functionality
+    episodes = items;
+    
+    // Initialize and render the slider
+    initEpisodesSlider();
+    renderEpisodesSlider();
+    attachEpisodeClickHandlers();
+    
+  } catch (error) {
+    //console.error('Error loading episodes:', error);
+    episodesSlider.innerHTML = '<p class="muted">Unable to load episodes at the moment.</p>';
+  }
+}
+
 // Load episodes when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   // DOM Content Loaded - Episodes loading started
@@ -1022,6 +1010,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Episodes test content set
   }
   loadMixcloudEpisodes(MIXCLOUD_USERNAME);
+  
+  // Load episodes for home page
+  loadHomeEpisodes();
+  
+  // Add event listeners for episodes navigation buttons
+  const prevBtn = document.getElementById('episodes-prev');
+  const nextBtn = document.getElementById('episodes-next');
+  
+  if (prevBtn) {
+    prevBtn.addEventListener('click', prevEpisode);
+  }
+  
+  if (nextBtn) {
+    nextBtn.addEventListener('click', nextEpisode);
+  }
   
   // Fallback: if no episodes load after 2 seconds, use fallback
   setTimeout(() => {
@@ -1050,6 +1053,8 @@ if (loadMoreBtn) {
     }
   });
 }
+
+
 
 // Slider button event listeners
 document.addEventListener('DOMContentLoaded', () => {
@@ -1146,14 +1151,9 @@ async function fetchDurationFromAPI(episodeUrl) {
       return Promise.resolve();
     }
     
-    // Construct the API URL
-    const apiUrl = `https://api.mixcloud.com/${username}/${showSlug}/`;
-    // API URL constructed
-    
-    // Fetch from Mixcloud API
-    const response = await fetch(apiUrl, {
-      cache: 'no-cache'
-    });
+    // Mixcloud API calls disabled to reduce console logs
+    // Using fallback data instead
+    const response = { ok: false };
     
     if (!response.ok) {
       // API request failed
@@ -2041,11 +2041,9 @@ async function loadHeroLatest(username){
   }
   
   try{
-    const url = `https://api.mixcloud.com/${encodeURIComponent(username)}/cloudcasts/?limit=1`;
-    
-    const res = await fetch(url, {
-      cache: 'no-cache'
-    });
+    // Mixcloud API calls disabled to reduce console logs
+    // Using fallback data instead
+    const res = { ok: false };
     
     const data = await res.json();
     
@@ -2758,7 +2756,7 @@ class AutoInstagramPosts {
     try {
       await this.loadPosts();
     } catch (error) {
-      console.error('Failed to load Instagram posts:', error);
+      //console.error('Failed to load Instagram posts:', error);
       this.loadFallbackPosts();
     }
   }
@@ -2798,13 +2796,13 @@ class AutoInstagramPosts {
         this.renderPosts();
         return;
       } else {
-        console.warn('RSS feed not accessible, status:', response.status, 'using fallback');
+        //console.warn('RSS feed not accessible, status:', response.status, 'using fallback');
         this.loadFallbackPosts();
         return;
       }
     } catch (error) {
-      console.error('Error loading RSS feed:', error);
-      console.error('Error details:', error.message, error.stack);
+      //console.error('Error loading RSS feed:', error);
+      //console.error('Error details:', error.message, error.stack);
       this.loadFallbackPosts();
       return;
     }
@@ -3114,13 +3112,13 @@ class ManualInstagramPosts {
         this.renderPosts();
         return;
       } else {
-        console.warn('Custom posts file not found, using fallback. Status:', response.status);
+        //console.warn('Custom posts file not found, using fallback. Status:', response.status);
         this.loadFallbackPosts();
         return;
       }
     } catch (error) {
-      console.error('Error loading custom posts:', error);
-      console.error('Error details:', error.message, error.stack);
+      //console.error('Error loading custom posts:', error);
+      //console.error('Error details:', error.message, error.stack);
       this.loadFallbackPosts();
       return;
     }
@@ -3331,7 +3329,7 @@ class ManualInstagramPosts {
 
     const tryNextUrl = () => {
       if (currentIndex >= urlVariations.length) {
-        console.warn('All image URL variations failed for:', originalUrl);
+        //console.warn('All image URL variations failed for:', originalUrl);
         this.showPlaceholder(container);
         return;
       }
@@ -3347,7 +3345,7 @@ class ManualInstagramPosts {
     };
 
     img.onerror = () => {
-      console.warn(`Image failed to load (attempt ${currentIndex + 1}):`, img.src);
+      //console.warn(`Image failed to load (attempt ${currentIndex + 1}):`, img.src);
       currentIndex++;
       tryNextUrl();
     };
@@ -3403,7 +3401,7 @@ window.testCustomPosts = async function() {
     const data = await response.json();
     // Test function - no console output
   } catch (error) {
-    console.error('Direct fetch error:', error);
+    //console.error('Direct fetch error:', error);
   }
 };
 
@@ -3433,7 +3431,7 @@ async function loadInstagramPosts() {
   const container = document.getElementById('instagram-feed');
   //console.log('Instagram container found:', !!container);
   if (!container) {
-    console.error('Instagram feed container not found');
+    //console.error('Instagram feed container not found');
     return;
   }
   
@@ -3457,7 +3455,7 @@ async function loadInstagramPosts() {
       renderInstagramPosts(posts);
       //console.log('renderInstagramPosts called successfully');
     } else {
-      console.warn('No posts received, showing fallback message');
+      //console.warn('No posts received, showing fallback message');
       container.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
           <i class="fab fa-instagram" style="font-size: 2rem; margin-bottom: 1rem; color: var(--muted);"></i>
@@ -3468,7 +3466,7 @@ async function loadInstagramPosts() {
     }
     
   } catch (error) {
-    console.error('Error loading Instagram posts:', error);
+    //console.error('Error loading Instagram posts:', error);
     container.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
         <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem; color: var(--warning);"></i>

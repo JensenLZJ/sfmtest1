@@ -594,8 +594,7 @@
                 <ul id="nav-menu" class="nav-list">
                     <li><a href="/">home</a></li>
                     <li><a href="/#schedule">schedule</a></li>
-                    <li><a href="/#episodes">episodes</a></li>
-                    <li><a href="/#listen">where to listen</a></li>
+                    <li><a href="/team">our team</a></li>
                     <li><a href="/#about">about</a></li>
                     <li><a href="/#contact">contact</a></li>
                 </ul>
@@ -808,7 +807,7 @@
         <div class="footer-content">
             <div class="footer-column">
            <div class="footer-logo">
-               <img src="/assets/brandmark/SamudraFMLogo1.png" alt="SamudraFM Logo" onload="console.log('Logo loaded successfully');" onerror="console.log('Logo failed to load, trying fallback'); this.src='/images/SamudraFMLogo1.png'; this.onerror=null;" />
+               <img src="/assets/brandmark/SamudraFMLogo1.png" alt="SamudraFM Logo" onerror="this.src='/images/SamudraFMLogo1.png'; this.onerror=null;" />
            </div>
                 <h2 class="footer-brand-title">SamudraFM</h2>
                 <p class="footer-description">
@@ -884,7 +883,7 @@
                     timestamp: new Date().toISOString()
                 };
                 
-                console.log('Application submitted:', applicationData);
+                //console.log('Application submitted:', applicationData);
                 
                 // Simulate API call
                 await new Promise(resolve => setTimeout(resolve, 2000));
@@ -895,7 +894,7 @@
                 document.getElementById('success-message').scrollIntoView({ behavior: 'smooth' });
                 
             } catch (error) {
-                console.error('Error submitting application:', error);
+                //console.error('Error submitting application:', error);
                 showErrorMessage('Failed to submit application. Please try again.');
             } finally {
                 // Reset button state
@@ -1140,5 +1139,6 @@
             margin-top: 8px !important;
         }
     </style>
+    
 </body>
 </html>
