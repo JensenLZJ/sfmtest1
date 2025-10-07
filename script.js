@@ -1,13 +1,22 @@
 // SamduraFM front-end behaviors and mock data wiring
 // Script.js loaded successfully
 
-// Force clear cache on every load
+// Mobile detection
+function isMobile() {
+  return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// Player ready state tracking
+let isPlayerReady = false;
+let isPlayerLoading = false;
+
+// Clear any existing caches and force fresh content loading
 if ('caches' in window) {
-    caches.keys().then(function(names) {
-        for (let name of names) {
-            caches.delete(name);
-        }
-    });
+  caches.keys().then(function(names) {
+    for (let name of names) {
+      caches.delete(name);
+    }
+  });
 }
 
 // Hidden easter egg - hiring message
@@ -594,18 +603,30 @@ if (recentGrid) {
 // Load coming up events when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM Content Loaded - initializing Coming up section');
-  const comingGrid = document.getElementById('coming-grid');
   
-  if (comingGrid) {
-    console.log('Coming up grid found, loading events');
-    // Show loading state immediately
-    comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
+  // Add a small delay to ensure all elements are ready
+  setTimeout(() => {
+    const comingGrid = document.getElementById('coming-grid');
     
-    // Load events with retry logic
-    loadComingUpEventsWithRetry();
-  } else {
-    console.warn('Coming up grid not found');
-  }
+    if (comingGrid) {
+      console.log('Coming up grid found, loading events');
+      // Show loading state immediately
+      comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
+      
+      // Load events with retry logic
+      loadComingUpEventsWithRetry();
+    } else {
+      console.warn('Coming up grid not found, retrying...');
+      // Retry after a longer delay
+      setTimeout(() => {
+        const retryGrid = document.getElementById('coming-grid');
+        if (retryGrid) {
+          retryGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
+          loadComingUpEventsWithRetry();
+        }
+      }, 1000);
+    }
+  }, 100);
 });
 
 // Load coming up events with retry logic
@@ -1013,18 +1034,30 @@ async function loadHomeEpisodes() {
 // Load episodes when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM Content Loaded - initializing Episodes section');
-  const episodesSlider = document.getElementById('episodes-slider');
   
-  if (episodesSlider) {
-    console.log('Episodes slider found, loading episodes');
-    // Show loading state immediately
-    episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
+  // Add a small delay to ensure all elements are ready
+  setTimeout(() => {
+    const episodesSlider = document.getElementById('episodes-slider');
     
-    // Load episodes with retry logic
-    loadEpisodesWithRetry();
-  } else {
-    console.warn('Episodes slider not found');
-  }
+    if (episodesSlider) {
+      console.log('Episodes slider found, loading episodes');
+      // Show loading state immediately
+      episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
+      
+      // Load episodes with retry logic
+      loadEpisodesWithRetry();
+    } else {
+      console.warn('Episodes slider not found, retrying...');
+      // Retry after a longer delay
+      setTimeout(() => {
+        const retrySlider = document.getElementById('episodes-slider');
+        if (retrySlider) {
+          retrySlider.innerHTML = '<p class="muted">Loading episodes...</p>';
+          loadEpisodesWithRetry();
+        }
+      }, 1000);
+    }
+  }, 100);
 });
 
 // Load episodes with retry logic
@@ -1169,6 +1202,11 @@ function stopCurrentPlayer() {
   updatePlayState(false);
   isCurrentlyPlaying = false;
   
+  // Hide play button on mobile when player is stopped
+  if (isMobileDevice()) {
+    setPlayerReady(false);
+  }
+  
   // Current player stopped
 }
 
@@ -1235,6 +1273,11 @@ async function fetchDurationFromAPI(episodeUrl) {
 
 function playEpisode(episode) {
   
+  // Hide play button on mobile when starting to load new episode
+  if (isMobileDevice()) {
+    setPlayerReady(false);
+  }
+  
   // If already playing the same episode, don't restart
   if (isCurrentlyPlaying && currentEpisode && currentEpisode.url === episode.url) {
     return;
@@ -1249,6 +1292,10 @@ function playEpisode(episode) {
         isCurrentlyPlaying = true;
         updatePlayState(true);
         startSimpleProgressTracking();
+        // Show play button on mobile when resuming
+        if (isMobileDevice()) {
+          setPlayerReady(true);
+        }
         return;
       }
     } catch (error) {
@@ -1357,6 +1404,7 @@ function playWithMixcloudWidget(episode) {
           
           // Mark widget as ready
           window.mixcloudWidgetReady = true;
+          setPlayerReady(true);
           
           // Set up event listeners for sync
           if (currentWidget && currentWidget.events) {
@@ -2520,14 +2568,49 @@ function debugAlert(message) {
 }
 
 
+function hidePlayButtonOnMobile() {
+  const playPauseBtn = document.getElementById('hero-play-pause');
+  if (playPauseBtn && isMobileDevice()) {
+    playPauseBtn.style.display = 'none';
+    playPauseBtn.style.opacity = '0';
+    playPauseBtn.style.visibility = 'hidden';
+    playPauseBtn.style.pointerEvents = 'none';
+    isPlayerReady = false;
+    console.log('Play button hidden on mobile - player not ready');
+  }
+}
+
 function showPlayButtonWhenReady() {
   const playPauseBtn = document.getElementById('hero-play-pause');
   if (playPauseBtn && isMobileDevice()) {
-    playPauseBtn.style.display = 'flex';
-    
-    
-    // Set the play icon now that widget is ready
-    updatePlayState(false);
+    // Only show if player is actually ready
+    if (isPlayerReady && (currentWidget || window.preloadedWidget)) {
+      playPauseBtn.style.display = 'flex';
+      playPauseBtn.style.opacity = '1';
+      playPauseBtn.style.visibility = 'visible';
+      playPauseBtn.style.transition = 'opacity 0.3s ease-in-out';
+      playPauseBtn.style.pointerEvents = 'auto';
+      
+      console.log('Play button shown on mobile - player is ready');
+      
+      // Set the play icon now that widget is ready
+      updatePlayState(false);
+    } else {
+      console.log('Play button not shown - player not ready yet');
+    }
+  }
+}
+
+function setPlayerReady(ready) {
+  isPlayerReady = ready;
+  if (ready) {
+    console.log('Player marked as ready');
+    showPlayButtonWhenReady();
+  } else {
+    console.log('Player marked as not ready');
+    if (isMobileDevice()) {
+      hidePlayButtonOnMobile();
+    }
   }
 }
 
@@ -2752,6 +2835,9 @@ function preloadCurrentEpisode(episode) {
           window.preloadedWidget = window.Mixcloud.PlayerWidget(preloadIframe);
           console.log('Preloaded widget controls initialized');
           window.mixcloudWidgetReady = true;
+          
+          // Mark player as ready when preloaded widget is ready
+          setPlayerReady(true);
         } catch (error) {
           console.error('Error initializing preloaded widget:', error);
         }
@@ -2834,7 +2920,7 @@ function createPreloadedMixcloudPlayer(episodeUrl) {
         try {
           currentWidget = window.Mixcloud.PlayerWidget(iframe);
           
-          showPlayButtonWhenReady();
+          setPlayerReady(true);
         } catch (error) {
           
         }
@@ -2846,7 +2932,7 @@ function createPreloadedMixcloudPlayer(episodeUrl) {
             try {
               currentWidget = window.Mixcloud.PlayerWidget(iframe);
               
-              showPlayButtonWhenReady();
+              setPlayerReady(true);
             } catch (error) {
               
             }
@@ -2875,6 +2961,11 @@ function ensurePlayButtonReady() {
     //  isCurrentlyPlaying,
     //  buttonElement: playPauseBtn
     //});
+    
+    // Hide play button on mobile initially until player is ready
+    if (isMobileDevice()) {
+      hidePlayButtonOnMobile();
+    }
     
     // Make sure the button is properly set up
     playPauseBtn.style.pointerEvents = 'auto';
@@ -3578,18 +3669,30 @@ window.testCustomPosts = async function() {
 // Initialize Instagram posts when page loads
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM Content Loaded - initializing Instagram section');
-  const instagramFeed = document.getElementById('instagram-feed');
   
-  if (instagramFeed) {
-    console.log('Instagram feed found, loading posts');
-    // Show loading state immediately
-    instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
+  // Add a small delay to ensure all elements are ready
+  setTimeout(() => {
+    const instagramFeed = document.getElementById('instagram-feed');
     
-    // Load Instagram posts with retry logic
-    loadInstagramPostsWithRetry();
-  } else {
-    console.warn('Instagram feed not found');
-  }
+    if (instagramFeed) {
+      console.log('Instagram feed found, loading posts');
+      // Show loading state immediately
+      instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
+      
+      // Load Instagram posts with retry logic
+      loadInstagramPostsWithRetry();
+    } else {
+      console.warn('Instagram feed not found, retrying...');
+      // Retry after a longer delay
+      setTimeout(() => {
+        const retryFeed = document.getElementById('instagram-feed');
+        if (retryFeed) {
+          retryFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
+          loadInstagramPostsWithRetry();
+        }
+      }, 1000);
+    }
+  }, 100);
 });
 
 // Load Instagram posts with retry logic
@@ -3769,6 +3872,35 @@ if (window.innerWidth <= 768) {
   // Also call after a short delay to ensure all content is loaded
   setTimeout(ensureMainContentVisible, 1000);
 }
+
+// Backup loading for sections that might not load on first try
+window.addEventListener('load', () => {
+  console.log('Window loaded - checking for unloaded sections');
+  
+  // Check Instagram section
+  const instagramFeed = document.getElementById('instagram-feed');
+  if (instagramFeed && instagramFeed.innerHTML.trim() === '') {
+    console.log('Instagram section empty on window load, retrying...');
+    instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
+    loadInstagramPostsWithRetry();
+  }
+  
+  // Check Coming up section
+  const comingGrid = document.getElementById('coming-grid');
+  if (comingGrid && comingGrid.innerHTML.trim() === '') {
+    console.log('Coming up section empty on window load, retrying...');
+    comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
+    loadComingUpEventsWithRetry();
+  }
+  
+  // Check Episodes section
+  const episodesSlider = document.getElementById('episodes-slider');
+  if (episodesSlider && episodesSlider.innerHTML.trim() === '') {
+    console.log('Episodes section empty on window load, retrying...');
+    episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
+    loadEpisodesWithRetry();
+  }
+});
 
 // Instagram Navigation Functions
 function scrollInstagramLeft() {
