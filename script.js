@@ -214,14 +214,30 @@ const INSTAGRAM_ACCESS_TOKEN = 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZA
 // Instagram API Integration (Using Instagram Basic Display API)
 async function fetchInstagramPosts() {
   try {
-    // Instagram API calls disabled to reduce console logs
-    // Using fallback data instead
-    return await getFallbackInstagramPosts();
+    // Try to load from custom-posts.json first
+    const response = await fetch('custom-posts.json?v=' + Date.now());
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Instagram posts loaded from custom-posts.json');
+      
+      // Convert custom posts to Instagram post format
+      const posts = data.posts.map((post, index) => ({
+        id: post.id || `custom-${index}`,
+        caption: post.content || post.title || 'Instagram Post',
+        mediaUrl: post.image,
+        thumbnailUrl: post.image,
+        permalink: post.link || 'https://www.instagram.com/samudrafm/',
+        timestamp: post.date || new Date().toISOString()
+      }));
+      
+      return posts;
+    }
   } catch (error) {
-    //console.error('Error fetching Instagram posts from API:', error);
-    // Falling back to custom posts
-    return await getFallbackInstagramPosts();
+    console.error('Error loading Instagram posts from custom-posts.json:', error);
   }
+  
+  // Fallback to hardcoded posts
+  return await getFallbackInstagramPosts();
 }
 
 // Get Instagram user ID from access token
@@ -577,24 +593,48 @@ if (recentGrid) {
 
 // Load coming up events when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // DOM Content Loaded event fired
+  console.log('DOM Content Loaded - initializing Coming up section');
   const comingGrid = document.getElementById('coming-grid');
-  // coming-grid element found
+  
   if (comingGrid) {
-    // DOM ready, loading coming up events
-    // Immediate test - set some content right away
-    comingGrid.innerHTML = '<div class="test-card">Test content loading...</div>';
-    // Test content set in coming-grid
+    console.log('Coming up grid found, loading events');
+    // Show loading state immediately
+    comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
     
-    // Add a small delay to ensure other functions don't interfere
-    setTimeout(() => {
-      // Loading coming up events after delay
-      loadComingUpEvents();
-    }, 100);
+    // Load events with retry logic
+    loadComingUpEventsWithRetry();
   } else {
-    // coming-grid element not found on DOM ready
+    console.warn('Coming up grid not found');
   }
 });
+
+// Load coming up events with retry logic
+async function loadComingUpEventsWithRetry() {
+  const comingGrid = document.getElementById('coming-grid');
+  if (!comingGrid) return;
+  
+  let retryCount = 0;
+  const maxRetries = 3;
+  
+  while (retryCount < maxRetries) {
+    try {
+      await loadComingUpEvents();
+      console.log('Coming up events loaded successfully');
+      return; // Success, exit retry loop
+    } catch (error) {
+      retryCount++;
+      console.warn(`Coming up events load attempt ${retryCount} failed:`, error);
+      
+      if (retryCount < maxRetries) {
+        // Wait before retrying
+        await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+      } else {
+        console.error('All attempts to load coming up events failed');
+        comingGrid.innerHTML = '<div class="no-events">Unable to load upcoming shows</div>';
+      }
+    }
+  }
+}
 
 
 async function loadComingUpEvents() {
@@ -744,9 +784,23 @@ async function loadMixcloudEpisodes(username, nextUrl) {
   }
   
   try {
-    // Mixcloud API calls disabled to reduce console logs
-    // Using fallback data instead
-    const data = { data: [], paging: {} };
+    // Load episodes from Mixcloud API directly
+    const apiUrl = nextUrl || `https://api.mixcloud.com/${username}/cloudcasts/?limit=12`;
+    const res = await fetch(apiUrl, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
+    const data = await res.json();
+    console.log('Episodes data loaded:', data);
     
     const items = (data.data || []).map(item => ({
       url: item.url,
@@ -757,11 +811,8 @@ async function loadMixcloudEpisodes(username, nextUrl) {
     
     mixcloudNextUrl = data.paging && data.paging.next ? data.paging.next : null;
     if (!items.length) {
-      // Use fallback episodes
-      episodes = getFallbackEpisodes();
-      initEpisodesSlider();
-      renderEpisodesSlider();
-      attachEpisodeClickHandlers();
+      // No episodes available
+      slider.innerHTML = '<p class="muted">No episodes available at the moment.</p>';
       return;
     }
     
@@ -787,13 +838,10 @@ async function loadMixcloudEpisodes(username, nextUrl) {
       }
     }
   } catch (err) {
+    console.error('Error loading episodes:', err);
     
-    
-    // Use fallback episodes instead of showing error
-    episodes = getFallbackEpisodes();
-    initEpisodesSlider();
-    renderEpisodesSlider();
-    attachEpisodeClickHandlers();
+    // Show error message when API fails
+    slider.innerHTML = '<p class="muted">Unable to load episodes at the moment.</p>';
   }
   
   // After episodes are loaded, ensure play button is ready
@@ -802,58 +850,7 @@ async function loadMixcloudEpisodes(username, nextUrl) {
   }, 100);
 }
 
-function getFallbackEpisodes() {
-  return [
-    {
-      url: 'https://www.mixcloud.com/samudrafm/tasty-tuesday-show-27-june-2023/',
-      name: 'Tasty Tuesday Show (27 June 2023)',
-      created: new Date('2023-06-27T10:00:00Z'),
-      picture: 'https://via.placeholder.com/400x300/f61b58/ffffff?text=Tasty+Tuesday'
-    },
-    {
-      url: 'https://www.mixcloud.com/samudrafm/friday-frequency-frenzy-23-june-2023/',
-      name: 'Friday Frequency Frenzy (23 June 2023)',
-      created: new Date('2023-06-23T15:30:00Z'),
-      picture: 'https://via.placeholder.com/400x300/8b4c93/ffffff?text=Friday+Frenzy'
-    },
-    {
-      url: 'https://www.mixcloud.com/samudrafm/feel-good-friday-9-june-2023/',
-      name: 'Feel Good Friday (9 June 2023)',
-      created: new Date('2023-06-09T18:00:00Z'),
-      picture: 'https://via.placeholder.com/400x300/4a2c8a/ffffff?text=Feel+Good'
-    },
-    {
-      url: 'https://www.mixcloud.com/samudrafm/the-tasty-tuesday-show-6-june-2023/',
-      name: 'The Tasty Tuesday Show (6 June 2023)',
-      created: new Date('2023-06-06T14:15:00Z'),
-      picture: 'https://via.placeholder.com/400x300/6b4c93/ffffff?text=Tasty+Tuesday+2'
-    },
-    {
-      url: 'https://www.mixcloud.com/samudrafm/morning-coffee-with-us-20-june-2023/',
-      name: 'Morning Coffee with Us! (20 June 2023)',
-      created: new Date('2023-06-20T08:00:00Z'),
-      picture: 'https://via.placeholder.com/400x300/2c5aa0/ffffff?text=Morning+Coffee'
-    },
-    {
-      url: 'https://www.mixcloud.com/samudrafm/retro-moodboosters-16-june-2023/',
-      name: 'Retro Moodboosters (16 June 2023)',
-      created: new Date('2023-06-16T16:30:00Z'),
-      picture: 'https://via.placeholder.com/400x300/8b4c93/ffffff?text=Retro+Mood'
-    },
-    {
-      url: 'https://www.mixcloud.com/samudrafm/sahabat-kirib-15-jun-2023/',
-      name: 'Sahabat Kirib (15 Jun 2023)',
-      created: new Date('2023-06-15T12:00:00Z'),
-      picture: 'https://via.placeholder.com/400x300/4a2c8a/ffffff?text=Sahabat+Kirib'
-    },
-    {
-      url: 'https://www.mixcloud.com/samudrafm/weekend-vibes-10-june-2023/',
-      name: 'Weekend Vibes (10 June 2023)',
-      created: new Date('2023-06-10T20:00:00Z'),
-      picture: 'https://via.placeholder.com/400x300/f61b58/ffffff?text=Weekend+Vibes'
-    }
-  ];
-}
+// Fallback episodes function removed - using real Mixcloud data only
 
 function initEpisodesSlider() {
   totalSlides = Math.ceil(episodes.length / episodesPerSlide);
@@ -977,9 +974,21 @@ async function loadHomeEpisodes() {
   try {
     episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
     
-    // Mixcloud API calls disabled to reduce console logs
-    // Using fallback data instead
-    const data = { data: [] };
+    // Load episodes from Mixcloud API directly
+    const res = await fetch(`https://api.mixcloud.com/${MIXCLOUD_USERNAME}/cloudcasts/?limit=12`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
+    const data = await res.json();
     const items = data.data || [];
     
     if (items.length === 0) {
@@ -996,25 +1005,58 @@ async function loadHomeEpisodes() {
     attachEpisodeClickHandlers();
     
   } catch (error) {
-    //console.error('Error loading episodes:', error);
+    console.error('Error loading home episodes:', error);
     episodesSlider.innerHTML = '<p class="muted">Unable to load episodes at the moment.</p>';
   }
 }
 
 // Load episodes when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // DOM Content Loaded - Episodes loading started
+  console.log('DOM Content Loaded - initializing Episodes section');
   const episodesSlider = document.getElementById('episodes-slider');
+  
   if (episodesSlider) {
-    episodesSlider.innerHTML = '<div class="test-card">Episodes test content...</div>';
-    // Episodes test content set
+    console.log('Episodes slider found, loading episodes');
+    // Show loading state immediately
+    episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
+    
+    // Load episodes with retry logic
+    loadEpisodesWithRetry();
+  } else {
+    console.warn('Episodes slider not found');
   }
-  loadMixcloudEpisodes(MIXCLOUD_USERNAME);
+});
+
+// Load episodes with retry logic
+async function loadEpisodesWithRetry() {
+  const episodesSlider = document.getElementById('episodes-slider');
+  if (!episodesSlider) return;
   
-  // Load episodes for home page
-  loadHomeEpisodes();
+  let retryCount = 0;
+  const maxRetries = 3;
   
-  // Add event listeners for episodes navigation buttons
+  while (retryCount < maxRetries) {
+    try {
+      await loadHomeEpisodes();
+      console.log('Episodes loaded successfully');
+      return; // Success, exit retry loop
+    } catch (error) {
+      retryCount++;
+      console.warn(`Episodes load attempt ${retryCount} failed:`, error);
+      
+      if (retryCount < maxRetries) {
+        // Wait before retrying
+        await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+      } else {
+        console.error('All attempts to load episodes failed');
+        episodesSlider.innerHTML = '<p class="muted">Unable to load episodes at the moment.</p>';
+      }
+    }
+  }
+}
+
+// Add event listeners for episodes navigation buttons
+document.addEventListener('DOMContentLoaded', () => {
   const prevBtn = document.getElementById('episodes-prev');
   const nextBtn = document.getElementById('episodes-next');
   
@@ -1026,18 +1068,13 @@ document.addEventListener('DOMContentLoaded', () => {
     nextBtn.addEventListener('click', nextEpisode);
   }
   
-  // Fallback: if no episodes load after 2 seconds, use fallback
+  // Timeout: if no episodes load after 5 seconds, show message
   setTimeout(() => {
     const slider = document.getElementById('episodes-slider');
     if (slider && !slider.dataset.loaded) {
-      // Using fallback episodes after timeout
-      episodes = getFallbackEpisodes();
-      initEpisodesSlider();
-      renderEpisodesSlider();
-      attachEpisodeClickHandlers();
-      slider.dataset.loaded = 'true';
+      slider.innerHTML = '<p class="muted">Loading episodes...</p>';
     }
-  }, 2000);
+  }, 5000);
 });
 
 const loadMoreBtn = document.getElementById('episodes-load');
@@ -1203,7 +1240,23 @@ function playEpisode(episode) {
     return;
   }
   
-  // Stop any existing player first
+  // If resuming the same episode and widget exists, just resume it
+  if (!isCurrentlyPlaying && currentEpisode && currentEpisode.url === episode.url && currentWidget) {
+    console.log('Resuming same episode with existing widget');
+    try {
+      if (typeof currentWidget.play === 'function') {
+        currentWidget.play();
+        isCurrentlyPlaying = true;
+        updatePlayState(true);
+        startSimpleProgressTracking();
+        return;
+      }
+    } catch (error) {
+      console.error('Error resuming existing widget:', error);
+    }
+  }
+  
+  // Stop any existing player first (only if different episode)
   stopCurrentPlayer();
   
   currentEpisode = episode;
@@ -1230,7 +1283,7 @@ function playEpisode(episode) {
 }
 
 function playWithMixcloudWidget(episode) {
-  // Loading Mixcloud player
+  console.log('Loading Mixcloud player for episode:', episode);
   
   // Stop any existing player first
   if (currentWidget) {
@@ -1239,7 +1292,7 @@ function playWithMixcloudWidget(episode) {
         currentWidget.pause();
       }
     } catch (error) {
-      // Error stopping previous widget
+      console.error('Error stopping previous widget:', error);
     }
     currentWidget = null;
   }
@@ -1247,7 +1300,7 @@ function playWithMixcloudWidget(episode) {
   // Use Mixcloud's official embed URL that allows iframe embedding
   const playerContainer = document.getElementById('mixcloud-player');
   if (!playerContainer) {
-    // Mixcloud player container not found
+    console.warn('Mixcloud player container not found');
     return;
   }
   
@@ -1270,17 +1323,40 @@ function playWithMixcloudWidget(episode) {
   iframe.style.border = 'none';
   iframe.id = 'mixcloud-iframe';
   
+  // Add error handling for iframe loading
+  iframe.onerror = () => {
+    console.error('Mixcloud iframe failed to load');
+    // Retry loading after a delay
+    setTimeout(() => {
+      console.log('Retrying Mixcloud iframe load');
+      playWithMixcloudWidget(episode);
+    }, 2000);
+  };
+  
+  // Add timeout for iframe loading
+  const iframeTimeout = setTimeout(() => {
+    console.warn('Mixcloud iframe loading timeout');
+    if (!window.mixcloudWidgetReady) {
+      console.log('Retrying iframe load due to timeout');
+      playWithMixcloudWidget(episode);
+    }
+  }, 2000); // 2 second timeout
+  
   // Add event listeners to debug iframe loading
   iframe.onload = () => {
-    
+    console.log('Mixcloud iframe loaded');
+    clearTimeout(iframeTimeout);
     
     // Try to set up widget controls after iframe loads
     setTimeout(() => {
-      // Setting up widget controls
+      console.log('Setting up widget controls');
       if (window.Mixcloud) {
         try {
           currentWidget = window.Mixcloud.PlayerWidget(iframe);
-          // Mixcloud widget initialized for controls
+          console.log('Mixcloud widget initialized for controls');
+          
+          // Mark widget as ready
+          window.mixcloudWidgetReady = true;
           
           // Set up event listeners for sync
           if (currentWidget && currentWidget.events) {
@@ -2041,19 +2117,30 @@ async function loadHeroLatest(username){
   }
   
   try{
-    // Mixcloud API calls disabled to reduce console logs
-    // Using fallback data instead
-    const res = { ok: false };
+    // Load latest episode from Mixcloud API directly
+    const res = await fetch(`https://api.mixcloud.com/${username}/cloudcasts/?limit=1`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
     
     const data = await res.json();
+    console.log('Latest episode data loaded:', data);
     
     const ep = data.data && data.data[0];
     
     if (!ep) {
-      // Fallback to radio stream info
-      titleEl.textContent = 'SamudraFM Live Stream';
+      // No episodes available
+      titleEl.textContent = 'No episodes available';
       openEl.href = 'request.html';
-      currentEpisode = { name: 'SamudraFM Live Stream', url: '#' };
+      currentEpisode = null;
       updatePlayState(false);
       return;
     }
@@ -2064,6 +2151,9 @@ async function loadHeroLatest(username){
     // Set current episode for play button
     currentEpisode = ep;
     
+    // Preload the Mixcloud widget for instant playback
+    console.log('Preloading Mixcloud widget for current episode:', ep.name);
+    preloadCurrentEpisode(ep);
     
     // Update play button state
     updatePlayState(false);
@@ -2084,9 +2174,10 @@ async function loadHeroLatest(username){
     coverEl.innerHTML = '';
     
   } catch(e){ 
+    console.error('Error loading latest episode:', e);
     
-    // Show simple loading state when API fails
-    titleEl.textContent = 'Loading...';
+    // Show error state when API fails
+    titleEl.textContent = 'Unable to load episodes';
     openEl.href = 'request.html';
     currentEpisode = null;
     updatePlayState(false);
@@ -2101,7 +2192,23 @@ async function loadHeroLatest(username){
 
 // Only load hero latest if we're on a page with hero elements
 if (document.getElementById('hero-ep-title')) {
-loadHeroLatest(MIXCLOUD_USERNAME);
+  loadHeroLatest(MIXCLOUD_USERNAME);
+  
+  // Preload Mixcloud widget for better first-time performance
+  setTimeout(() => {
+    console.log('Preloading Mixcloud widget...');
+    // Create a hidden iframe to preload the widget
+    const preloadIframe = document.createElement('iframe');
+    preloadIframe.src = 'https://player-widget.mixcloud.com/widget/iframe/?hide_artwork=1&autoplay=0';
+    preloadIframe.style.display = 'none';
+    preloadIframe.style.position = 'absolute';
+    preloadIframe.style.left = '-9999px';
+    preloadIframe.onload = () => {
+      console.log('Mixcloud widget preloaded');
+      window.mixcloudPreloaded = true;
+    };
+    document.body.appendChild(preloadIframe);
+  }, 2000);
 }
 
 // Initialize player controls
@@ -2461,13 +2568,11 @@ window.handlePlayOnly = function() {
 
 // Make handlePlayPause globally accessible
 window.handlePlayPause = function() {
-  // Handle play/pause button click
-  
-  // Update debug panel
+  console.log('Play button clicked');
   
   // If no current episode, try to get the latest episode from the episodes grid
   if (!currentEpisode) {
-    
+    console.log('No current episode, trying to get from episodes grid');
     const episodesGrid = document.getElementById('episodes-grid');
     if (episodesGrid) {
       const firstEpisodeCard = episodesGrid.querySelector('.episodes-card');
@@ -2479,123 +2584,188 @@ window.handlePlayPause = function() {
             name: episodeTitle,
             url: episodeLink
           };
-          
+          console.log('Found episode from grid:', currentEpisode);
         }
       }
     }
   }
   
   if (currentEpisode) {
+    console.log('Current episode:', currentEpisode);
+    
     if (isCurrentlyPlaying) {
       // Currently playing, pause the episode
+      console.log('Pausing episode');
       
       if (currentWidget) {
         try {
           if (typeof currentWidget.pause === 'function') {
             currentWidget.pause();
-            
-            // Immediately update UI as fallback
-            setTimeout(() => {
-              updatePlayState(false);
-              isCurrentlyPlaying = false;
-              // Stop progress tracking
-              if (window.currentProgressInterval) {
-                clearInterval(window.currentProgressInterval);
-                window.currentProgressInterval = null;
-              }
-            }, 100);
-          } else {
-            
-            updatePlayState(false);
-            isCurrentlyPlaying = false;
-            // Stop progress tracking
-            if (window.currentProgressInterval) {
-              clearInterval(window.currentProgressInterval);
-              window.currentProgressInterval = null;
-            }
+            console.log('Widget paused');
           }
         } catch (error) {
-          
-          updatePlayState(false);
-          isCurrentlyPlaying = false;
-          // Stop progress tracking
-          if (window.currentProgressInterval) {
-            clearInterval(window.currentProgressInterval);
-            window.currentProgressInterval = null;
-          }
-        }
-      } else {
-        
-        updatePlayState(false);
-        isCurrentlyPlaying = false;
-        // Stop progress tracking
-        if (window.currentProgressInterval) {
-          clearInterval(window.currentProgressInterval);
-          window.currentProgressInterval = null;
+          console.error('Error pausing widget:', error);
         }
       }
+      
+      // Update UI state
+      updatePlayState(false);
+      isCurrentlyPlaying = false;
+      
+      // Stop progress tracking
+      if (window.currentProgressInterval) {
+        clearInterval(window.currentProgressInterval);
+        window.currentProgressInterval = null;
+      }
+      
+      // Hide player container
+      const container = document.getElementById('mixcloud-player-container');
+      if (container) {
+        container.style.bottom = '-200px';
+      }
+      
     } else {
       // Currently paused, play the episode
+      console.log('Resuming episode:', currentEpisode);
       
+      // Show player container
+      const container = document.getElementById('mixcloud-player-container');
+      if (container) {
+        container.style.bottom = '0px';
+      }
       
-      // Widget should already be pre-loaded and ready
-      
-      
+      // Check if we have an existing widget that we can resume
       if (currentWidget) {
+        console.log('Resuming existing widget');
         try {
-          // Show the pre-loaded player
-          const container = document.getElementById('mixcloud-player-container');
-          if (container) {
-            container.style.bottom = '0px';
-            
-          }
-          
-          // Try to use widget controls
           if (typeof currentWidget.play === 'function') {
             currentWidget.play();
+            console.log('Widget resumed from pause position');
             
-            // Immediately update UI as fallback
-            setTimeout(() => {
-              updatePlayState(true);
-              isCurrentlyPlaying = true;
-              // Start progress tracking
-              
-              startSimpleProgressTracking();
-            }, 100);
+            // Update UI state
+            updatePlayState(true);
+            isCurrentlyPlaying = true;
+            startSimpleProgressTracking();
           } else {
-            
+            // Widget doesn't have play function, create new one
             playEpisode(currentEpisode);
           }
         } catch (error) {
-          
-          // Fallback to reloading the player
+          console.error('Error resuming widget:', error);
+          // Fallback to creating new widget
+          playEpisode(currentEpisode);
+        }
+      } else if (window.preloadedWidget && window.mixcloudWidgetReady) {
+        console.log('Using preloaded widget for resume');
+        
+        // Use the preloaded widget
+        currentWidget = window.preloadedWidget;
+        
+        try {
+          if (typeof currentWidget.play === 'function') {
+            currentWidget.play();
+            console.log('Preloaded widget started playing');
+            
+            // Update UI state
+            updatePlayState(true);
+            isCurrentlyPlaying = true;
+            startSimpleProgressTracking();
+          } else {
+            // Fallback to regular playEpisode
+            playEpisode(currentEpisode);
+          }
+        } catch (error) {
+          console.error('Error playing preloaded widget:', error);
+          // Fallback to regular playEpisode
           playEpisode(currentEpisode);
         }
       } else {
-        // No widget available, reload the player
+        // No existing widget, create new one
+        console.log('No existing widget, creating new one');
         
+        // Show loading state on play button
+        const playPauseBtn = document.getElementById('hero-play-pause');
+        if (playPauseBtn) {
+          playPauseBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+          playPauseBtn.disabled = true;
+        }
+        
+        // Play the episode using the existing playEpisode function
         playEpisode(currentEpisode);
+        
+        // Reset button state after a delay
+        setTimeout(() => {
+          if (playPauseBtn) {
+            playPauseBtn.disabled = false;
+            updatePlayState(true);
+          }
+        }, 3000);
       }
     }
   } else {
-    
-    // Try to load the latest episode if none is available
-    if (typeof loadHeroLatest === 'function') {
-      loadHeroLatest(MIXCLOUD_USERNAME);
-      // Wait a bit and try again
-      setTimeout(() => {
-        if (currentEpisode) {
-          
-          handlePlayPause();
-        } else {
-          
-        }
-      }, 1000);
-    } else {
-      
-    }
+    console.warn('No current episode available for playback');
+    alert('No episode available to play. Please wait for episodes to load.');
   }
 };
+
+// Function to preload the current episode for instant playback
+function preloadCurrentEpisode(episode) {
+  console.log('Preloading current episode widget:', episode.name);
+  
+  // Stop any existing preloaded widget
+  if (window.preloadedWidget) {
+    try {
+      if (typeof window.preloadedWidget.pause === 'function') {
+        window.preloadedWidget.pause();
+      }
+    } catch (error) {
+      console.error('Error stopping preloaded widget:', error);
+    }
+    window.preloadedWidget = null;
+  }
+  
+  // Create a hidden iframe to preload the specific episode
+  const preloadContainer = document.getElementById('mixcloud-player');
+  if (!preloadContainer) {
+    console.warn('Mixcloud player container not found for preloading');
+    return;
+  }
+  
+  // Create hidden preload iframe
+  const preloadIframe = document.createElement('iframe');
+  preloadIframe.src = `https://player-widget.mixcloud.com/widget/iframe/?hide_artwork=1&autoplay=0&feed=${encodeURIComponent(episode.url)}`;
+  preloadIframe.style.display = 'none';
+  preloadIframe.style.position = 'absolute';
+  preloadIframe.style.left = '-9999px';
+  preloadIframe.style.width = '1px';
+  preloadIframe.style.height = '1px';
+  preloadIframe.id = 'mixcloud-iframe-preloaded';
+  preloadIframe.allow = 'encrypted-media; fullscreen; autoplay; idle-detection; web-share;';
+  
+  preloadIframe.onload = () => {
+    console.log('Current episode widget preloaded');
+    
+    // Set up widget controls for the preloaded episode
+    setTimeout(() => {
+      if (window.Mixcloud) {
+        try {
+          window.preloadedWidget = window.Mixcloud.PlayerWidget(preloadIframe);
+          console.log('Preloaded widget controls initialized');
+          window.mixcloudWidgetReady = true;
+        } catch (error) {
+          console.error('Error initializing preloaded widget:', error);
+        }
+      }
+    }, 1000);
+  };
+  
+  preloadIframe.onerror = () => {
+    console.error('Failed to preload current episode widget');
+  };
+  
+  // Add to hidden container
+  preloadContainer.appendChild(preloadIframe);
+}
 
 // Function to pre-load Mixcloud player for mobile devices
 function preloadMixcloudPlayer() {
@@ -3407,23 +3577,48 @@ window.testCustomPosts = async function() {
 
 // Initialize Instagram posts when page loads
 document.addEventListener('DOMContentLoaded', function() {
-  // DOM Content Loaded - Instagram loading started
+  console.log('DOM Content Loaded - initializing Instagram section');
   const instagramFeed = document.getElementById('instagram-feed');
-  //console.log('Instagram feed element:', instagramFeed);
+  
   if (instagramFeed) {
-    //console.log('Setting immediate Instagram content...');
-    instagramFeed.innerHTML = '<div class="test-card">Instagram test content...</div>';
-    //console.log('Instagram test content set, innerHTML:', instagramFeed.innerHTML);
+    console.log('Instagram feed found, loading posts');
+    // Show loading state immediately
+    instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
+    
+    // Load Instagram posts with retry logic
+    loadInstagramPostsWithRetry();
   } else {
-    //console.log('Instagram feed element not found!');
-  }
-  // Load Instagram posts - only on home page
-  //console.log('About to call loadInstagramPosts...');
-  // Only load Instagram posts if we're on the home page (instagram-feed element exists)
-  if (document.getElementById('instagram-feed')) {
-    loadInstagramPosts();
+    console.warn('Instagram feed not found');
   }
 });
+
+// Load Instagram posts with retry logic
+async function loadInstagramPostsWithRetry() {
+  const instagramFeed = document.getElementById('instagram-feed');
+  if (!instagramFeed) return;
+  
+  let retryCount = 0;
+  const maxRetries = 3;
+  
+  while (retryCount < maxRetries) {
+    try {
+      await loadInstagramPosts();
+      console.log('Instagram posts loaded successfully');
+      return; // Success, exit retry loop
+    } catch (error) {
+      retryCount++;
+      console.warn(`Instagram posts load attempt ${retryCount} failed:`, error);
+      
+      if (retryCount < maxRetries) {
+        // Wait before retrying
+        await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+      } else {
+        console.error('All attempts to load Instagram posts failed');
+        instagramFeed.innerHTML = '<div class="no-posts">Unable to load Instagram posts</div>';
+      }
+    }
+  }
+}
   
 // Load Instagram posts function
 async function loadInstagramPosts() {

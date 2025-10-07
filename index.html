@@ -39,12 +39,7 @@
             sessionStorage.setItem('samudrafm_visited', 'true');
             sessionStorage.setItem('samudrafm_bypass', 'true');
             
-            // Show construction warning popup for bypassed users
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    alert('⚠️ WARNING ⚠️\n\nThis website is still under construction!\n\nSome features may not work properly.\n\nReport bugs to: 0176858799');
-                }, 1000);
-            });
+            // Construction warning popup removed for better user experience
         }
     </script>
     
@@ -86,9 +81,12 @@
     <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
     
     <!-- Content Security Policy and Permissions Policy -->
-    <meta http-equiv="Permissions-Policy" content="encrypted-media=*; autoplay=*; microphone=*; camera=*; fullscreen=*; geolocation=*; payment=*; usb=*; accelerometer=*; gyroscope=*; magnetometer=*; display-capture=*; web-share=*; clipboard-read=*; clipboard-write=*; picture-in-picture=*">
-    <meta http-equiv="Feature-Policy" content="encrypted-media *; autoplay *; microphone *; camera *; fullscreen *; geolocation *; payment *; usb *; accelerometer *; gyroscope *; magnetometer *; display-capture *; web-share *; clipboard-read *; clipboard-write *; picture-in-picture *">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; script-src-elem 'self' 'unsafe-inline' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://api.allorigins.win https://cors-anywhere.herokuapp.com https://thingproxy.freeboard.io https://www.googleapis.com https://graph.instagram.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Permissions-Policy" content="encrypted-media=(self https://player-widget.mixcloud.com https://www.mixcloud.com); autoplay=(self https://player-widget.mixcloud.com https://www.mixcloud.com); microphone=(); camera=(); fullscreen=(self https://player-widget.mixcloud.com https://www.mixcloud.com); geolocation=(); payment=(); usb=(); accelerometer=(); gyroscope=(); magnetometer=(); display-capture=(); web-share=(self); clipboard-read=(); clipboard-write=(); picture-in-picture=(self)">
+    <meta http-equiv="Feature-Policy" content="encrypted-media 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; autoplay 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; microphone 'none'; camera 'none'; fullscreen 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; geolocation 'none'; payment 'none'; usb 'none'; accelerometer 'none'; gyroscope 'none'; magnetometer 'none'; display-capture 'none'; web-share 'self'; clipboard-read 'none'; clipboard-write 'none'; picture-in-picture 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; script-src-elem 'self' 'unsafe-inline' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://api.allorigins.win https://cors-anywhere.herokuapp.com https://thingproxy.freeboard.io https://www.googleapis.com https://graph.instagram.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; child-src 'self';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 </head>
 <body>
     <!-- Ribbon Effects -->
@@ -326,6 +324,309 @@
                 });
             });
             observer.observe(document.body, { childList: true, subtree: true });
+        })();
+    </script>
+    
+    <!-- Extension Blocking Script -->
+    <script>
+        (function() {
+            'use strict';
+            
+            // Extension detection and blocking
+            const extensionBlocking = {
+                // Known extension identifiers and patterns
+                extensionPatterns: [
+                    /chrome-extension:\/\//i,
+                    /moz-extension:\/\//i,
+                    /safari-extension:\/\//i,
+                    /ms-browser-extension:\/\//i,
+                    /extension:\/\//i,
+                    /chrome\.runtime\./i,
+                    /browser\.runtime\./i,
+                    /chrome\.tabs\./i,
+                    /browser\.tabs\./i,
+                    /chrome\.storage\./i,
+                    /browser\.storage\./i,
+                    /chrome\.webRequest\./i,
+                    /browser\.webRequest\./i,
+                    /chrome\.contextMenus\./i,
+                    /browser\.contextMenus\./i,
+                    /chrome\.alarms\./i,
+                    /browser\.alarms\./i,
+                    /chrome\.notifications\./i,
+                    /browser\.notifications\./i,
+                    /chrome\.cookies\./i,
+                    /browser\.cookies\./i,
+                    /chrome\.history\./i,
+                    /browser\.history\./i,
+                    /chrome\.bookmarks\./i,
+                    /browser\.bookmarks\./i,
+                    /chrome\.downloads\./i,
+                    /browser\.downloads\./i,
+                    /chrome\.management\./i,
+                    /browser\.management\./i,
+                    /chrome\.permissions\./i,
+                    /browser\.permissions\./i,
+                    /chrome\.commands\./i,
+                    /browser\.commands\./i,
+                    /chrome\.sessions\./i,
+                    /browser\.sessions\./i,
+                    /chrome\.topSites\./i,
+                    /browser\.topSites\./i,
+                    /chrome\.omnibox\./i,
+                    /browser\.omnibox\./i,
+                    /chrome\.pageAction\./i,
+                    /browser\.pageAction\./i,
+                    /chrome\.browserAction\./i,
+                    /browser\.browserAction\./i,
+                    /chrome\.windows\./i,
+                    /browser\.windows\./i,
+                    /chrome\.devtools\./i,
+                    /browser\.devtools\./i,
+                    /chrome\.debugger\./i,
+                    /browser\.debugger\./i,
+                    /chrome\.scripting\./i,
+                    /browser\.scripting\./i,
+                    /chrome\.declarativeNetRequest\./i,
+                    /browser\.declarativeNetRequest\./i,
+                    /chrome\.webNavigation\./i,
+                    /browser\.webNavigation\./i,
+                    /chrome\.identity\./i,
+                    /browser\.identity\./i,
+                    /chrome\.gcm\./i,
+                    /browser\.gcm\./i,
+                    /chrome\.pushMessaging\./i,
+                    /browser\.pushMessaging\./i,
+                    /chrome\.tts\./i,
+                    /browser\.tts\./i,
+                    /chrome\.ttsEngine\./i,
+                    /browser\.ttsEngine\./i,
+                    /chrome\.input\.ime\./i,
+                    /browser\.input\.ime\./i,
+                    /chrome\.system\./i,
+                    /browser\.system\./i,
+                    /chrome\.enterprise\./i,
+                    /browser\.enterprise\./i,
+                    /chrome\.loginState\./i,
+                    /browser\.loginState\./i,
+                    /chrome\.certificateProvider\./i,
+                    /browser\.certificateProvider\./i,
+                    /chrome\.platformKeys\./i,
+                    /browser\.platformKeys\./i,
+                    /chrome\.mdns\./i,
+                    /browser\.mdns\./i,
+                    /chrome\.printerProvider\./i,
+                    /browser\.printerProvider\./i,
+                    /chrome\.fileSystemProvider\./i,
+                    /browser\.fileSystemProvider\./i,
+                    /chrome\.fileManager\./i,
+                    /browser\.fileManager\./i,
+                    /chrome\.documentScan\./i,
+                    /browser\.documentScan\./i,
+                    /chrome\.mediaGalleries\./i,
+                    /browser\.mediaGalleries\./i,
+                    /chrome\.accessibilityFeatures\./i,
+                    /browser\.accessibilityFeatures\./i,
+                    /chrome\.fontSettings\./i,
+                    /browser\.fontSettings\./i,
+                    /chrome\.languageSettings\./i,
+                    /browser\.languageSettings\./i,
+                    /chrome\.inputMethod\./i,
+                    /browser\.inputMethod\./i,
+                    /chrome\.contentSettings\./i,
+                    /browser\.contentSettings\./i,
+                    /chrome\.privacy\./i,
+                    /browser\.privacy\./i,
+                    /chrome\.proxy\./i,
+                    /browser\.proxy\./i,
+                    /chrome\.webstore\./i,
+                    /browser\.webstore\./i,
+                    /chrome\.management\./i,
+                    /browser\.management\./i,
+                    /chrome\.developerPrivate\./i,
+                    /browser\.developerPrivate\./i,
+                    /chrome\.system\.display\./i,
+                    /browser\.system\.display\./i,
+                    /chrome\.system\.memory\./i,
+                    /browser\.system\.memory\./i,
+                    /chrome\.system\.storage\./i,
+                    /browser\.system\.storage\./i,
+                    /chrome\.system\.cpu\./i,
+                    /browser\.system\.cpu\./i,
+                    /chrome\.system\.network\./i,
+                    /browser\.system\.network\./i,
+                    /chrome\.system\.power\./i,
+                    /browser\.system\.power\./i,
+                    /chrome\.system\.display\./i,
+                    /browser\.system\.display\./i,
+                    /chrome\.system\.memory\./i,
+                    /browser\.system\.memory\./i,
+                    /chrome\.system\.storage\./i,
+                    /browser\.system\.storage\./i,
+                    /chrome\.system\.cpu\./i,
+                    /browser\.system\.cpu\./i,
+                    /chrome\.system\.network\./i,
+                    /browser\.system\.network\./i,
+                    /chrome\.system\.power\./i,
+                    /browser\.system\.power\./i
+                ],
+                
+                // Extension detection methods
+                detectExtensions: function() {
+                    const detected = [];
+                    
+                    // Check for extension APIs
+                    if (typeof chrome !== 'undefined' && chrome.runtime) {
+                        detected.push('Chrome Extension API detected');
+                    }
+                    if (typeof browser !== 'undefined' && browser.runtime) {
+                        detected.push('Firefox Extension API detected');
+                    }
+                    
+                    // Check for extension-specific objects
+                    if (typeof chrome !== 'undefined') {
+                        const chromeKeys = Object.keys(chrome);
+                        const extensionKeys = chromeKeys.filter(key => 
+                            this.extensionPatterns.some(pattern => pattern.test(key))
+                        );
+                        if (extensionKeys.length > 0) {
+                            detected.push('Chrome extension objects detected: ' + extensionKeys.join(', '));
+                        }
+                    }
+                    
+                    // Check for extension-specific global variables
+                    const globalVars = Object.keys(window);
+                    const extensionVars = globalVars.filter(key => 
+                        this.extensionPatterns.some(pattern => pattern.test(key))
+                    );
+                    if (extensionVars.length > 0) {
+                        detected.push('Extension global variables detected: ' + extensionVars.join(', '));
+                    }
+                    
+                    // Check for extension-specific scripts in DOM
+                    const scripts = document.querySelectorAll('script[src]');
+                    scripts.forEach(script => {
+                        if (this.extensionPatterns.some(pattern => pattern.test(script.src))) {
+                            detected.push('Extension script detected: ' + script.src);
+                        }
+                    });
+                    
+                    return detected;
+                },
+                
+                // Block extension functionality
+                blockExtensions: function() {
+                    // Override extension APIs
+                    if (typeof chrome !== 'undefined') {
+                        try {
+                            Object.defineProperty(window, 'chrome', {
+                                value: undefined,
+                                writable: false,
+                                configurable: false
+                            });
+                        } catch (e) {
+                            // Chrome object already protected or doesn't exist
+                        }
+                    }
+                    
+                    if (typeof browser !== 'undefined') {
+                        try {
+                            Object.defineProperty(window, 'browser', {
+                                value: undefined,
+                                writable: false,
+                                configurable: false
+                            });
+                        } catch (e) {
+                            // Browser object already protected or doesn't exist
+                        }
+                    }
+                    
+                    // Block extension script loading
+                    const originalCreateElement = document.createElement;
+                    document.createElement = function(tagName) {
+                        const element = originalCreateElement.call(this, tagName);
+                        if (tagName.toLowerCase() === 'script') {
+                            const originalSetAttribute = element.setAttribute;
+                            element.setAttribute = function(name, value) {
+                                if (name === 'src' && value) {
+                                    if (extensionBlocking.extensionPatterns.some(pattern => pattern.test(value))) {
+                                        console.warn('Blocked extension script:', value);
+                                        return;
+                                    }
+                                }
+                                return originalSetAttribute.call(this, name, value);
+                            };
+                        }
+                        return element;
+                    };
+                    
+                    // Monitor for extension script injection
+                    const observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                            mutation.addedNodes.forEach(function(node) {
+                                if (node.tagName === 'SCRIPT' && node.src) {
+                                    if (extensionBlocking.extensionPatterns.some(pattern => pattern.test(node.src))) {
+                                        console.warn('Removed extension script:', node.src);
+                                        node.remove();
+                                    }
+                                }
+                            });
+                        });
+                    });
+                    observer.observe(document.body, { childList: true, subtree: true });
+                },
+                
+                // Show warning if extensions detected
+                showWarning: function(detected) {
+                    if (detected.length > 0) {
+                        const warning = document.createElement('div');
+                        warning.style.cssText = `
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            background: #ff4444;
+                            color: white;
+                            padding: 10px;
+                            text-align: center;
+                            z-index: 10000;
+                            font-family: Arial, sans-serif;
+                            font-size: 14px;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                        `;
+                        warning.innerHTML = `
+                            <strong>⚠️ Extension Detected ⚠️</strong><br>
+                            Browser extensions have been detected and blocked for security reasons.<br>
+                            Please disable all extensions and refresh the page for the best experience.
+                        `;
+                        document.body.insertBefore(warning, document.body.firstChild);
+                        
+                        // Auto-hide after 10 seconds
+                        setTimeout(() => {
+                            if (warning.parentNode) {
+                                warning.parentNode.removeChild(warning);
+                            }
+                        }, 10000);
+                    }
+                },
+                
+                // Initialize extension blocking
+                init: function() {
+                    this.blockExtensions();
+                    
+                    // Check for extensions after a short delay
+                    setTimeout(() => {
+                        const detected = this.detectExtensions();
+                        if (detected.length > 0) {
+                            console.warn('Extensions detected:', detected);
+                            this.showWarning(detected);
+                        }
+                    }, 1000);
+                }
+            };
+            
+            // Initialize extension blocking
+            extensionBlocking.init();
         })();
     </script>
     <script>
