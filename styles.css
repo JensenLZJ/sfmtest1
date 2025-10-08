@@ -2063,10 +2063,21 @@ body{
     order: 1;
     margin: 0;
     padding: 0;
+    width: 100%;
+    max-width: 100%;
   }
   
   .coming h2 {
     margin: 8px 0 14px 0;
+  }
+  
+  /* Coming up section full width on mobile */
+  .coming .card-col {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
   }
   
   .instagram-section {
@@ -2360,11 +2371,20 @@ body{
     margin-top: 6px;
   }
   
-  /* Coming up cards on mobile - maintain horizontal layout but adjust spacing */
+  /* Coming up cards on mobile - use full width */
   .coming .card {
     padding: 18px;
     gap: 16px;
     min-height: 100px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Coming up cards container on mobile */
+  .coming .card-col {
+    width: 100%;
+    max-width: 100%;
   }
   
 /* Episode Cards */
@@ -4463,6 +4483,13 @@ body{
     height: 80px;
   }
   
+  /* Coming up card content full width on mobile */
+  .coming .card .content {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
+  
   /* Coming up time display on mobile */
   .coming-up-time {
     right: 12px;
@@ -4486,6 +4513,25 @@ body{
     padding: 12px;
     margin: 12px 0;
     gap: 12px;
+  }
+  
+  /* Coming up cards on very small screens */
+  .coming .card {
+    padding: 14px;
+    gap: 12px;
+    min-height: 90px;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .coming .card .cover {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .coming .card .content {
+    flex: 1;
+    min-width: 0;
   }
   
   .player-left {
