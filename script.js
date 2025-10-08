@@ -432,6 +432,53 @@ function debugApiCall(url, method = 'GET') {
   }
 }
 
+// CORS Proxy configuration for live domains
+const CORS_PROXIES = [
+  'https://cors-anywhere.herokuapp.com/',
+  'https://thingproxy.freeboard.io/fetch/',
+  'https://api.allorigins.win/raw?url='
+];
+
+// Function to try multiple CORS proxies
+async function fetchWithCorsProxies(url, options = {}) {
+  const isLiveDomain = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+  
+  if (!isLiveDomain) {
+    // On localhost, try direct call first
+    try {
+      const response = await fetch(url, options);
+      if (response.ok) return response;
+    } catch (error) {
+      console.log('Direct call failed on localhost, trying proxies...');
+    }
+  }
+  
+  // Try each CORS proxy
+  for (let i = 0; i < CORS_PROXIES.length; i++) {
+    const proxy = CORS_PROXIES[i];
+    let proxyUrl;
+    
+    if (proxy.includes('allorigins.win')) {
+      proxyUrl = `${proxy}${encodeURIComponent(url)}`;
+    } else {
+      proxyUrl = `${proxy}${url}`;
+    }
+    
+    try {
+      console.log(`🔄 Trying CORS proxy ${i + 1}/${CORS_PROXIES.length}: ${proxy}`);
+      const response = await fetch(proxyUrl, options);
+      if (response.ok) {
+        console.log(`✅ CORS proxy ${i + 1} successful`);
+        return response;
+      }
+    } catch (error) {
+      console.log(`❌ CORS proxy ${i + 1} failed:`, error.message);
+    }
+  }
+  
+  throw new Error('All CORS proxies failed');
+}
+
 // Instagram API Integration (Using Instagram Basic Display API)
 async function fetchInstagramPosts() {
   try {
@@ -442,40 +489,18 @@ async function fetchInstagramPosts() {
       return await getFallbackInstagramPosts();
     }
     
-    // Try direct API call first, then CORS proxy if needed
-    let mediaResponse;
+    // Use CORS proxy system for live domains
     const mediaUrl = `https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=${INSTAGRAM_POST_LIMIT}`;
     
     debugApiCall(mediaUrl);
     
-    try {
-      mediaResponse = await fetch(mediaUrl, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-        mode: 'cors'
-      });
-      
-      if (!mediaResponse.ok) {
-        throw new Error(`Instagram API error: ${mediaResponse.status} ${mediaResponse.statusText}`);
+    const mediaResponse = await fetchWithCorsProxies(mediaUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
       }
-      
-    } catch (corsError) {
-      console.warn('Direct API call failed, trying CORS proxy...', corsError);
-      // Try with CORS proxy as fallback
-      const proxyUrl = `https://cors-anywhere.herokuapp.com/https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=${INSTAGRAM_POST_LIMIT}`;
-      
-      debugApiCall(proxyUrl);
-      
-      mediaResponse = await fetch(proxyUrl, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-        }
-      });
-    }
+    });
     
     if (!mediaResponse.ok) {
       throw new Error(`Instagram API error: ${mediaResponse.status} ${mediaResponse.statusText}`);
@@ -541,27 +566,17 @@ async function fetchInstagramPosts() {
 // Get Instagram user ID from access token
 async function getInstagramUserId() {
   try {
-    let response;
+    const userIdUrl = `https://graph.instagram.com/me?fields=id&access_token=${INSTAGRAM_ACCESS_TOKEN}`;
     
-    try {
-      response = await fetch(`https://graph.instagram.com/me?fields=id&access_token=${INSTAGRAM_ACCESS_TOKEN}`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-        mode: 'cors'
-      });
-    } catch (corsError) {
-      console.warn('Direct user ID API call failed, trying CORS proxy...');
-      const proxyUrl = `https://cors-anywhere.herokuapp.com/https://graph.instagram.com/me?fields=id&access_token=${INSTAGRAM_ACCESS_TOKEN}`;
-      response = await fetch(proxyUrl, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-        }
-      });
-    }
+    debugApiCall(userIdUrl);
+    
+    const response = await fetchWithCorsProxies(userIdUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
     
     if (!response.ok) {
       throw new Error(`Instagram API error: ${response.status} ${response.statusText}`);
@@ -1121,14 +1136,13 @@ async function loadMixcloudEpisodes(username, nextUrl) {
   }
   
   try {
-    // Load episodes from Mixcloud API directly
+    // Load episodes from Mixcloud API using CORS proxy system
     const apiUrl = nextUrl || `https://api.mixcloud.com/${username}/cloudcasts/?limit=12`;
     
     debugApiCall(apiUrl);
     
-    const res = await fetch(apiUrl, {
+    const res = await fetchWithCorsProxies(apiUrl, {
       method: 'GET',
-      mode: 'cors',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -1335,14 +1349,13 @@ async function loadHomeEpisodes() {
   try {
     episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
     
-    // Load episodes from Mixcloud API directly
+    // Load episodes from Mixcloud API using CORS proxy system
     const apiUrl = `https://api.mixcloud.com/${MIXCLOUD_USERNAME}/cloudcasts/?limit=12`;
     
     debugApiCall(apiUrl);
     
-    const res = await fetch(apiUrl, {
+    const res = await fetchWithCorsProxies(apiUrl, {
       method: 'GET',
-      mode: 'cors',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -2932,14 +2945,13 @@ async function loadHeroLatest(username){
   }
   
   try{
-    // Load latest episode from Mixcloud API directly
+    // Load latest episode from Mixcloud API using CORS proxy system
     const apiUrl = `https://api.mixcloud.com/${username}/cloudcasts/?limit=1`;
     
     debugApiCall(apiUrl);
     
-    const res = await fetch(apiUrl, {
+    const res = await fetchWithCorsProxies(apiUrl, {
       method: 'GET',
-      mode: 'cors',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -5321,3 +5333,85 @@ document.addEventListener('DOMContentLoaded', function() {
     feed.addEventListener('scroll', updateInstagramNavButtons);
   }
 });
+
+// Test API connectivity for debugging
+async function testApiConnectivity() {
+  console.log('🧪 Testing API connectivity...');
+  
+  const testUrls = [
+    'https://api.mixcloud.com/SamudraFM/cloudcasts/?limit=1',
+    'https://graph.instagram.com/me?fields=id&access_token=test'
+  ];
+  
+  for (const url of testUrls) {
+    try {
+      console.log(`🔍 Testing: ${url}`);
+      const response = await fetchWithCorsProxies(url, { method: 'GET' });
+      console.log(`✅ Success: ${url} - Status: ${response.status}`);
+    } catch (error) {
+      console.log(`❌ Failed: ${url} - Error: ${error.message}`);
+    }
+  }
+}
+
+// Run connectivity test on page load
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(testApiConnectivity, 1000);
+});
+
+// Global diagnostic function for manual testing
+window.diagnoseLiveIssues = async function() {
+  console.log('🔧 Starting comprehensive diagnostic...');
+  console.log(`📍 Domain: ${window.location.hostname}`);
+  console.log(`🔒 Protocol: ${window.location.protocol}`);
+  console.log(`🌍 User Agent: ${navigator.userAgent}`);
+  
+  // Test 1: Check if we're on live domain
+  const isLiveDomain = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+  console.log(`🌐 Live Domain: ${isLiveDomain}`);
+  
+  // Test 2: Check CORS proxies
+  console.log('🔄 Testing CORS proxies...');
+  for (let i = 0; i < CORS_PROXIES.length; i++) {
+    const proxy = CORS_PROXIES[i];
+    try {
+      const testUrl = `${proxy}https://httpbin.org/get`;
+      const response = await fetch(testUrl, { method: 'GET' });
+      console.log(`✅ CORS Proxy ${i + 1} working: ${proxy}`);
+    } catch (error) {
+      console.log(`❌ CORS Proxy ${i + 1} failed: ${proxy} - ${error.message}`);
+    }
+  }
+  
+  // Test 3: Test Mixcloud API
+  console.log('🎵 Testing Mixcloud API...');
+  try {
+    const mixcloudUrl = 'https://api.mixcloud.com/SamudraFM/cloudcasts/?limit=1';
+    const response = await fetchWithCorsProxies(mixcloudUrl, { method: 'GET' });
+    console.log(`✅ Mixcloud API working - Status: ${response.status}`);
+  } catch (error) {
+    console.log(`❌ Mixcloud API failed: ${error.message}`);
+  }
+  
+  // Test 4: Test Instagram API (with dummy token)
+  console.log('📸 Testing Instagram API...');
+  try {
+    const instagramUrl = 'https://graph.instagram.com/me?fields=id&access_token=test';
+    const response = await fetchWithCorsProxies(instagramUrl, { method: 'GET' });
+    console.log(`✅ Instagram API accessible - Status: ${response.status}`);
+  } catch (error) {
+    console.log(`❌ Instagram API failed: ${error.message}`);
+  }
+  
+  // Test 5: Check Content Security Policy
+  console.log('🛡️ Checking Content Security Policy...');
+  const metaTags = document.querySelectorAll('meta[http-equiv="Content-Security-Policy"]');
+  if (metaTags.length > 0) {
+    console.log('✅ CSP meta tag found');
+    console.log('CSP Content:', metaTags[0].getAttribute('content'));
+  } else {
+    console.log('❌ No CSP meta tag found');
+  }
+  
+  console.log('🔧 Diagnostic complete! Check the results above.');
+};
