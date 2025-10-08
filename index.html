@@ -155,7 +155,7 @@
                         <div class="player-left">
                             <div class="hero-latest-cover cover placeholder" id="player-cover"></div>
                             <div class="play-overlay" id="play-overlay">
-                                <button class="play-pause-btn" id="hero-play-pause"><i class="fa-solid fa-pause"></i></button>
+                                <button class="play-pause-btn" id="hero-play-pause" onclick="if(window.innerWidth <= 768) { window.handlePlayPause && window.handlePlayPause(); }"><i class="fa-solid fa-pause"></i></button>
                             </div>
                         </div>
                         <div class="player-right">
