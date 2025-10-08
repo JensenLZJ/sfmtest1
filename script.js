@@ -1111,7 +1111,10 @@ async function loadHomeEpisodes() {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM Content Loaded - initializing Episodes section');
   
-  // Add a small delay to ensure all elements are ready
+  // Mobile gets immediate loading, desktop gets small delay
+  const isMobile = isMobileDevice();
+  const delay = isMobile ? 0 : 100;
+  
   setTimeout(() => {
     const episodesSlider = document.getElementById('episodes-slider');
     
@@ -1131,9 +1134,9 @@ document.addEventListener('DOMContentLoaded', () => {
           retrySlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
           loadEpisodesWithRetry();
         }
-      }, 1000);
+      }, isMobile ? 500 : 1000);
     }
-  }, 100);
+  }, delay);
 });
 
 // Load episodes with retry logic
@@ -4341,7 +4344,10 @@ window.testCustomPosts = async function() {
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM Content Loaded - initializing Instagram section');
   
-  // Add a small delay to ensure all elements are ready
+  // Mobile gets immediate loading, desktop gets small delay
+  const isMobile = isMobileDevice();
+  const delay = isMobile ? 0 : 100;
+  
   setTimeout(() => {
     const instagramFeed = document.getElementById('instagram-feed');
     
@@ -4361,9 +4367,9 @@ document.addEventListener('DOMContentLoaded', function() {
           retryFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
           loadInstagramPostsWithRetry();
         }
-      }, 1000);
+      }, isMobile ? 500 : 1000);
     }
-  }, 100);
+  }, delay);
 });
 
 // Load Instagram posts with retry logic
@@ -4531,14 +4537,31 @@ function ensureMainContentVisible() {
   //console.log('Main content grid visibility enforced');
 }
 
-// Mobile-specific initialization - simplified
-if (window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+// Mobile-specific initialization - using consistent mobile detection
+if (isMobileDevice()) {
+  console.log('Mobile device detected - initializing mobile-specific features');
+  
   document.addEventListener('DOMContentLoaded', ensureMainContentVisible);
   // Also call after a short delay to ensure all content is loaded
   setTimeout(ensureMainContentVisible, 1000);
   
+  // Mobile debug function
+  function debugMobileLoading() {
+    console.log('Mobile debug - checking content status:', {
+      instagramFeed: document.getElementById('instagram-feed')?.innerHTML?.substring(0, 50) + '...',
+      episodesSlider: document.getElementById('episodes-slider')?.innerHTML?.substring(0, 50) + '...',
+      mixcloudWidgetReady: window.mixcloudWidgetReady,
+      isPlayerReady: isPlayerReady
+    });
+  }
+  
+  // Debug after 1 second
+  setTimeout(debugMobileLoading, 1000);
+  
   // Simple mobile backup loading - only if content is still empty after 3 seconds
   setTimeout(() => {
+    debugMobileLoading();
+    
     const instagramFeed = document.getElementById('instagram-feed');
     const episodesSlider = document.getElementById('episodes-slider');
     
