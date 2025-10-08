@@ -2789,8 +2789,20 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Pre-load Mixcloud player for mobile devices
   if (isMobileDevice()) {
-    
+    console.log('Mobile: Pre-loading Mixcloud player');
     preloadMixcloudPlayer();
+    
+    // Additional mobile Mixcloud initialization
+    setTimeout(() => {
+      console.log('Mobile: Additional Mixcloud initialization');
+      if (!window.mixcloudWidgetReady) {
+        console.log('Mobile: Mixcloud not ready, forcing initialization');
+        // Force initialize the first episode for mobile
+        if (episodes && episodes.length > 0) {
+          playEpisode(episodes[0]);
+        }
+      }
+    }, 2000);
   }
   
   // Force update play button after Font Awesome loads
@@ -4537,46 +4549,97 @@ function ensureMainContentVisible() {
   //console.log('Main content grid visibility enforced');
 }
 
-// Mobile-specific initialization - using consistent mobile detection
-if (isMobileDevice()) {
-  console.log('Mobile device detected - initializing mobile-specific features');
+// Mobile-specific initialization - more aggressive approach
+function initializeMobileContent() {
+  console.log('Mobile initialization - forcing content load');
   
-  document.addEventListener('DOMContentLoaded', ensureMainContentVisible);
-  // Also call after a short delay to ensure all content is loaded
-  setTimeout(ensureMainContentVisible, 1000);
-  
-  // Mobile debug function
-  function debugMobileLoading() {
-    console.log('Mobile debug - checking content status:', {
-      instagramFeed: document.getElementById('instagram-feed')?.innerHTML?.substring(0, 50) + '...',
-      episodesSlider: document.getElementById('episodes-slider')?.innerHTML?.substring(0, 50) + '...',
-      mixcloudWidgetReady: window.mixcloudWidgetReady,
-      isPlayerReady: isPlayerReady
-    });
+  // Force load Instagram
+  const instagramFeed = document.getElementById('instagram-feed');
+  if (instagramFeed) {
+    console.log('Mobile: Forcing Instagram load');
+    instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
+    loadInstagramPostsWithRetry();
   }
   
-  // Debug after 1 second
-  setTimeout(debugMobileLoading, 1000);
+  // Force load episodes
+  const episodesSlider = document.getElementById('episodes-slider');
+  if (episodesSlider) {
+    console.log('Mobile: Forcing episodes load');
+    episodesSlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
+    loadEpisodesWithRetry();
+  }
   
-  // Simple mobile backup loading - only if content is still empty after 3 seconds
-  setTimeout(() => {
-    debugMobileLoading();
+  // Force load coming up events
+  const comingGrid = document.getElementById('coming-grid');
+  if (comingGrid) {
+    console.log('Mobile: Forcing coming up events load');
+    comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
+    loadComingUpEventsWithRetry();
+  }
+}
+
+// Mobile detection and initialization
+if (isMobileDevice()) {
+  console.log('Mobile device detected - setting up mobile-specific loading');
+  
+  // Immediate mobile initialization
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('Mobile DOMContentLoaded - initializing content');
+    ensureMainContentVisible();
+    initializeMobileContent();
+  });
+  
+  // Backup initialization after window load
+  window.addEventListener('load', () => {
+    console.log('Mobile window load - checking content');
+    setTimeout(() => {
+      const instagramFeed = document.getElementById('instagram-feed');
+      const episodesSlider = document.getElementById('episodes-slider');
+      
+      if (!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) {
+        console.log('Mobile window load: Reloading Instagram');
+        initializeMobileContent();
+      }
+    }, 1000);
+  });
+  
+  // Additional mobile backup - every 2 seconds for first 10 seconds
+  let mobileBackupCount = 0;
+  const mobileBackupInterval = setInterval(() => {
+    mobileBackupCount++;
+    console.log(`Mobile backup check ${mobileBackupCount}`);
     
     const instagramFeed = document.getElementById('instagram-feed');
     const episodesSlider = document.getElementById('episodes-slider');
     
-    if (instagramFeed && (instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading'))) {
-      console.log('Mobile backup: Loading Instagram');
-      instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
-      loadInstagramPostsWithRetry();
+    if ((!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) ||
+        (!episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
+      console.log('Mobile backup: Content still loading, forcing reload');
+      initializeMobileContent();
     }
     
-    if (episodesSlider && (episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
-      console.log('Mobile backup: Loading episodes');
-      episodesSlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
-      loadEpisodesWithRetry();
+    if (mobileBackupCount >= 5) {
+      clearInterval(mobileBackupInterval);
+      console.log('Mobile backup checks completed');
     }
-  }, 3000);
+  }, 2000);
+  
+  // Mobile page visibility handler
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && isMobileDevice()) {
+      console.log('Mobile: Page became visible, checking content');
+      setTimeout(() => {
+        const instagramFeed = document.getElementById('instagram-feed');
+        const episodesSlider = document.getElementById('episodes-slider');
+        
+        if ((!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) ||
+            (!episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
+          console.log('Mobile: Page visible - content still loading, forcing reload');
+          initializeMobileContent();
+        }
+      }, 500);
+    }
+  });
 }
 
 // Backup loading for sections that might not load on first try
