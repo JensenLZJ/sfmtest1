@@ -6,6 +6,56 @@ function isMobile() {
   return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
+// Alias for compatibility
+function isMobileDevice() {
+  return isMobile();
+}
+
+// Mobile-specific play button initialization
+function initMobilePlayButton() {
+  if (!isMobileDevice()) return;
+  
+  console.log('Initializing mobile play button...');
+  
+  const playPauseBtn = document.getElementById('hero-play-pause');
+  if (!playPauseBtn) {
+    console.log('Mobile: Play button not found');
+    return;
+  }
+  
+  // Initially hide the button
+  playPauseBtn.classList.remove('mixcloud-ready');
+  playPauseBtn.style.display = 'none';
+  playPauseBtn.style.opacity = '0';
+  playPauseBtn.style.visibility = 'hidden';
+  playPauseBtn.style.pointerEvents = 'none';
+  isPlayButtonHiddenOnMobile = true;
+  
+  console.log('Mobile: Play button initially hidden');
+  
+  // Set up a more aggressive check for when Mixcloud is ready
+  const checkMixcloudReady = () => {
+    if (window.mixcloudWidgetReady && (currentWidget || window.preloadedWidget)) {
+      console.log('Mobile: Mixcloud is ready, showing play button');
+      showPlayButtonWhenReady();
+    } else {
+      // Check again in 500ms
+      setTimeout(checkMixcloudReady, 500);
+    }
+  };
+  
+  // Start checking after a short delay
+  setTimeout(checkMixcloudReady, 1000);
+  
+  // Fallback: Force show play button after 10 seconds if still hidden
+  setTimeout(() => {
+    if (isPlayButtonHiddenOnMobile && playPauseBtn) {
+      console.log('Mobile: Fallback - forcing play button to show after timeout');
+      showPlayButtonWhenReady();
+    }
+  }, 10000);
+}
+
 // Player ready state tracking
 let isPlayerReady = false;
 let isPlayerLoading = false;
@@ -2868,18 +2918,8 @@ if (document.getElementById('hero-ep-title')) {
 
 // Initialize player controls
 document.addEventListener('DOMContentLoaded', () => {
-  // Immediately hide play button on mobile before any other initialization
-  if (isMobileDevice()) {
-    const playPauseBtn = document.getElementById('hero-play-pause');
-    if (playPauseBtn) {
-      playPauseBtn.classList.remove('mixcloud-ready');
-      playPauseBtn.style.display = 'none';
-      playPauseBtn.style.opacity = '0';
-      playPauseBtn.style.visibility = 'hidden';
-      playPauseBtn.style.pointerEvents = 'none';
-      console.log('Play button immediately hidden on mobile');
-    }
-  }
+  // Initialize mobile play button
+  initMobilePlayButton();
   
   // Only initialize if we're on a page with player elements
   if (document.getElementById('progress-bar') || document.getElementById('play-pause-btn')) {
@@ -3224,9 +3264,9 @@ function showPlayButtonWhenReady() {
     hasPreloadedWidget: !!window.preloadedWidget
   });
   
-  if (playPauseBtn && isMobileDevice() && isPlayButtonHiddenOnMobile) {
-    // Only show if player is actually ready and Mixcloud widget is loaded
-    if (isPlayerReady && window.mixcloudWidgetReady && (currentWidget || window.preloadedWidget)) {
+  if (playPauseBtn && isMobileDevice()) {
+    // Show if Mixcloud widget is loaded (regardless of isPlayButtonHiddenOnMobile state)
+    if (window.mixcloudWidgetReady && (currentWidget || window.preloadedWidget)) {
       // Add CSS class to show the button
       playPauseBtn.classList.add('mixcloud-ready');
       
@@ -3293,6 +3333,23 @@ function setPlayerReady(ready) {
 // Function to only play (for Listen now button)
 window.handlePlayOnly = function() {
   // Handle play only - no toggle
+  
+  // On mobile, ensure play button is visible when user clicks "Listen now"
+  if (isMobileDevice()) {
+    console.log('Mobile: Listen now clicked, ensuring play button is visible');
+    const playPauseBtn = document.getElementById('hero-play-pause');
+    if (playPauseBtn) {
+      // Force show the play button
+      playPauseBtn.classList.add('mixcloud-ready');
+      playPauseBtn.style.display = 'flex';
+      playPauseBtn.style.opacity = '1';
+      playPauseBtn.style.visibility = 'visible';
+      playPauseBtn.style.pointerEvents = 'auto';
+      isPlayButtonHiddenOnMobile = false;
+      console.log('Mobile: Play button forced to show for Listen now');
+    }
+  }
+  
   if (!currentEpisode) {
     // If no current episode, try to get the latest episode from the episodes grid
     const episodesGrid = document.getElementById('episodes-grid');
@@ -3787,17 +3844,23 @@ function createPreloadedMixcloudPlayer(episodeUrl) {
 function ensurePlayButtonReady() {
   const playPauseBtn = document.getElementById('hero-play-pause');
   if (playPauseBtn) {
-    //console.log('Ensuring play button is ready...', {
-    //  hasCurrentEpisode: !!currentEpisode,
-    //  isCurrentlyPlaying,
-    //  buttonElement: playPauseBtn
-    //});
+    console.log('Ensuring play button is ready...', {
+      hasCurrentEpisode: !!currentEpisode,
+      isCurrentlyPlaying,
+      buttonElement: playPauseBtn,
+      isMobileDevice: isMobileDevice(),
+      mixcloudWidgetReady: window.mixcloudWidgetReady,
+      isPlayerReady,
+      isPlayButtonHiddenOnMobile
+    });
     
     // Hide play button on mobile initially until player is ready
     if (isMobileDevice()) {
-      if (!window.mixcloudWidgetReady || !isPlayerReady) {
+      if (!window.mixcloudWidgetReady) {
+        console.log('Mobile: Hiding play button - widget not ready');
         hidePlayButtonOnMobile();
-      } else if (isPlayButtonHiddenOnMobile) {
+      } else {
+        console.log('Mobile: Widget is ready, showing play button');
         showPlayButtonWhenReady();
       }
     }

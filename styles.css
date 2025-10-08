@@ -4662,10 +4662,30 @@ body{
     padding-top: 80px !important;
   }
   
-  /* Hide Send a request buttons on mobile */
-  .cta-row .btn[href="request.html"],
-  .request-btn {
+  /* Hide Listen now button on mobile, show Send a request button */
+  .cta-row .btn.primary {
     display: none !important;
+  }
+  
+  .cta-row .btn[href="request.html"] {
+    display: inline-flex !important;
+    background: linear-gradient(135deg, #f61b58, #ff4d6d) !important;
+    color: white !important;
+    border: 0 !important;
+    padding: 18px 32px !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    min-height: 56px !important;
+    box-shadow: 0 4px 15px rgba(246, 27, 88, 0.3) !important;
+    animation: pulse 2s infinite !important;
+  }
+  
+  .cta-row .btn[href="request.html"]:hover {
+    background: transparent !important;
+    border: 2px solid #f61b58 !important;
+    color: #f61b58 !important;
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 25px rgba(246, 27, 88, 0.3), 0 0 0 1px rgba(246, 27, 88, 0.2) !important;
   }
   
   /* Ensure episodes slider works on mobile */
@@ -4924,9 +4944,9 @@ body{
     display: none;
   }
   
-  /* Hide send a request button on mobile */
+  /* Show send a request button on mobile in player widget */
   .player-widget .request-btn {
-    display: none;
+    display: inline-flex;
   }
   
   /* Make volume slider shorter on mobile */
@@ -5063,8 +5083,9 @@ body{
   .main-content-grid > *:not(.hero) {
     opacity: 1;
     transform: translateY(0);
-  transition: all 0.6s ease-out;
-  pointer-events: auto;
+    transition: all 0.6s ease-out;
+    pointer-events: auto;
+  }
 }
 
 /* Mobile: Remove primary button animations on home page */
