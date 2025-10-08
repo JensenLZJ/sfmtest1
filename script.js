@@ -1111,10 +1111,7 @@ async function loadHomeEpisodes() {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM Content Loaded - initializing Episodes section');
   
-  // Mobile-specific loading with longer delay
-  const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const delay = isMobile ? 500 : 100;
-  
+  // Add a small delay to ensure all elements are ready
   setTimeout(() => {
     const episodesSlider = document.getElementById('episodes-slider');
     
@@ -1127,16 +1124,16 @@ document.addEventListener('DOMContentLoaded', () => {
       loadEpisodesWithRetry();
     } else {
       console.warn('Episodes slider not found, retrying...');
-      // Retry after a longer delay, especially on mobile
+      // Retry after a longer delay
       setTimeout(() => {
         const retrySlider = document.getElementById('episodes-slider');
         if (retrySlider) {
           retrySlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
           loadEpisodesWithRetry();
         }
-      }, isMobile ? 2000 : 1000);
+      }, 1000);
     }
-  }, delay);
+  }, 100);
 });
 
 // Load episodes with retry logic
@@ -4344,10 +4341,7 @@ window.testCustomPosts = async function() {
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM Content Loaded - initializing Instagram section');
   
-  // Mobile-specific loading with longer delay
-  const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  const delay = isMobile ? 500 : 100;
-  
+  // Add a small delay to ensure all elements are ready
   setTimeout(() => {
     const instagramFeed = document.getElementById('instagram-feed');
     
@@ -4360,16 +4354,16 @@ document.addEventListener('DOMContentLoaded', function() {
       loadInstagramPostsWithRetry();
     } else {
       console.warn('Instagram feed not found, retrying...');
-      // Retry after a longer delay, especially on mobile
+      // Retry after a longer delay
       setTimeout(() => {
         const retryFeed = document.getElementById('instagram-feed');
         if (retryFeed) {
           retryFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
           loadInstagramPostsWithRetry();
         }
-      }, isMobile ? 2000 : 1000);
+      }, 1000);
     }
-  }, delay);
+  }, 100);
 });
 
 // Load Instagram posts with retry logic
@@ -4537,32 +4531,29 @@ function ensureMainContentVisible() {
   //console.log('Main content grid visibility enforced');
 }
 
-// Mobile-specific initialization
+// Mobile-specific initialization - simplified
 if (window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
   document.addEventListener('DOMContentLoaded', ensureMainContentVisible);
   // Also call after a short delay to ensure all content is loaded
   setTimeout(ensureMainContentVisible, 1000);
   
-  // Additional mobile-specific loading
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('Mobile device detected - ensuring content loads properly');
+  // Simple mobile backup loading - only if content is still empty after 3 seconds
+  setTimeout(() => {
+    const instagramFeed = document.getElementById('instagram-feed');
+    const episodesSlider = document.getElementById('episodes-slider');
     
-    // Force load Instagram and episodes after a delay
-    setTimeout(() => {
-      const instagramFeed = document.getElementById('instagram-feed');
-      const episodesSlider = document.getElementById('episodes-slider');
-      
-      if (instagramFeed && instagramFeed.innerHTML.includes('Loading')) {
-        console.log('Mobile: Forcing Instagram reload');
-        loadInstagramPostsWithRetry();
-      }
-      
-      if (episodesSlider && episodesSlider.innerHTML.includes('Loading')) {
-        console.log('Mobile: Forcing episodes reload');
-        loadEpisodesWithRetry();
-      }
-    }, 2000);
-  });
+    if (instagramFeed && (instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading'))) {
+      console.log('Mobile backup: Loading Instagram');
+      instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
+      loadInstagramPostsWithRetry();
+    }
+    
+    if (episodesSlider && (episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
+      console.log('Mobile backup: Loading episodes');
+      episodesSlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
+      loadEpisodesWithRetry();
+    }
+  }, 3000);
 }
 
 // Backup loading for sections that might not load on first try
@@ -4594,32 +4585,6 @@ window.addEventListener('load', () => {
   }
 });
 
-// Handle mobile orientation changes and resize events
-window.addEventListener('resize', () => {
-  const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  
-  if (isMobile) {
-    console.log('Mobile resize detected - checking content');
-    
-    // Check if content needs to be reloaded
-    setTimeout(() => {
-      const instagramFeed = document.getElementById('instagram-feed');
-      const episodesSlider = document.getElementById('episodes-slider');
-      
-      if (instagramFeed && (instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading'))) {
-        console.log('Mobile resize: Reloading Instagram');
-        instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
-        loadInstagramPostsWithRetry();
-      }
-      
-      if (episodesSlider && (episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
-        console.log('Mobile resize: Reloading episodes');
-        episodesSlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
-        loadEpisodesWithRetry();
-      }
-    }, 500);
-  }
-});
 
 // Instagram Navigation Functions
 function scrollInstagramLeft() {
