@@ -47,13 +47,51 @@ function initMobilePlayButton() {
   // Start checking after a short delay
   setTimeout(checkMixcloudReady, 1000);
   
-  // Fallback: Force show play button after 10 seconds if still hidden
+  // Immediate mobile play button - show after 1 second regardless of Mixcloud state
+  setTimeout(() => {
+    if (playPauseBtn) {
+      console.log('Mobile: Immediate fallback - showing play button after 1 second');
+      playPauseBtn.classList.add('mixcloud-ready');
+      playPauseBtn.style.display = 'flex';
+      playPauseBtn.style.opacity = '1';
+      playPauseBtn.style.visibility = 'visible';
+      playPauseBtn.style.pointerEvents = 'auto';
+      playPauseBtn.style.cursor = 'pointer';
+      playPauseBtn.style.zIndex = '10';
+      isPlayButtonHiddenOnMobile = false;
+    }
+  }, 1000);
+  
+  // Fallback: Force show play button after 5 seconds if still hidden
   setTimeout(() => {
     if (isPlayButtonHiddenOnMobile && playPauseBtn) {
       console.log('Mobile: Fallback - forcing play button to show after timeout');
       showPlayButtonWhenReady();
     }
-  }, 10000);
+  }, 5000);
+  
+  // Additional fallback: Always show play button after 3 seconds regardless of Mixcloud state
+  setTimeout(() => {
+    if (playPauseBtn) {
+      console.log('Mobile: Emergency fallback - showing play button regardless of Mixcloud state');
+      playPauseBtn.classList.add('mixcloud-ready');
+      playPauseBtn.style.display = 'flex';
+      playPauseBtn.style.opacity = '1';
+      playPauseBtn.style.visibility = 'visible';
+      playPauseBtn.style.pointerEvents = 'auto';
+      playPauseBtn.style.cursor = 'pointer';
+      playPauseBtn.style.zIndex = '10';
+      isPlayButtonHiddenOnMobile = false;
+      
+      // Add a direct click handler for mobile emergency fallback
+      playPauseBtn.addEventListener('click', function(e) {
+        console.log('Mobile: Emergency play button clicked');
+        e.preventDefault();
+        e.stopPropagation();
+        window.handlePlayOnly();
+      });
+    }
+  }, 3000);
 }
 
 // Player ready state tracking
@@ -3281,6 +3319,8 @@ function showPlayButtonWhenReady() {
       playPauseBtn.style.width = '72px';
       playPauseBtn.style.height = '72px';
       playPauseBtn.style.overflow = 'visible';
+      playPauseBtn.style.cursor = 'pointer';
+      playPauseBtn.style.zIndex = '10';
       
       isPlayButtonHiddenOnMobile = false;
       
