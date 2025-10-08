@@ -4677,15 +4677,15 @@ body{
     font-weight: 700 !important;
     min-height: 56px !important;
     box-shadow: 0 4px 15px rgba(246, 27, 88, 0.3) !important;
-    animation: pulse 2s infinite !important;
+    /* Removed animation and hover effects for mobile */
   }
   
   .cta-row .btn[href="request.html"]:hover {
-    background: transparent !important;
-    border: 2px solid #f61b58 !important;
-    color: #f61b58 !important;
-    transform: translateY(-4px) !important;
-    box-shadow: 0 8px 25px rgba(246, 27, 88, 0.3), 0 0 0 1px rgba(246, 27, 88, 0.2) !important;
+    /* No hover effects on mobile */
+    background: linear-gradient(135deg, #f61b58, #ff4d6d) !important;
+    color: white !important;
+    transform: none !important;
+    box-shadow: 0 4px 15px rgba(246, 27, 88, 0.3) !important;
   }
   
   /* Ensure episodes slider works on mobile */
@@ -4944,9 +4944,11 @@ body{
     display: none;
   }
   
-  /* Show send a request button on mobile in player widget */
-  .player-widget .request-btn {
-    display: inline-flex;
+  /* Hide send a request button on mobile in player widget */
+  .player-widget .request-btn,
+  .player-widget a[href="request.html"],
+  .player-widget .btn[href="request.html"] {
+    display: none !important;
   }
   
   /* Make volume slider shorter on mobile */
