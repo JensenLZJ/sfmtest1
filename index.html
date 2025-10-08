@@ -83,28 +83,6 @@
     <link rel="apple-touch-icon" href="images/SamudraFMLogo1.png">
     <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
     
-    <!-- Immediately hide play button on mobile -->
-    <script>
-        (function() {
-            function isMobile() {
-                return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            }
-            
-            if (isMobile()) {
-                document.addEventListener('DOMContentLoaded', function() {
-                    const playBtn = document.getElementById('hero-play-pause');
-                    if (playBtn) {
-                        playBtn.style.display = 'none';
-                        playBtn.style.opacity = '0';
-                        playBtn.style.visibility = 'hidden';
-                        playBtn.style.pointerEvents = 'none';
-                        console.log('Play button hidden immediately on mobile');
-                    }
-                });
-            }
-        })();
-    </script>
-    
     <!-- Content Security Policy and Permissions Policy -->
     <meta http-equiv="Permissions-Policy" content="encrypted-media=*, autoplay=*, microphone=(), camera=(), fullscreen=*, geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=(), display-capture=(), web-share=*, clipboard-read=(), clipboard-write=(), picture-in-picture=*">
     <meta http-equiv="Feature-Policy" content="encrypted-media *; autoplay *; microphone 'none'; camera 'none'; fullscreen *; geolocation 'none'; payment 'none'; usb 'none'; accelerometer 'none'; gyroscope 'none'; magnetometer 'none'; display-capture 'none'; web-share *; clipboard-read 'none'; clipboard-write 'none'; picture-in-picture *">
@@ -298,9 +276,8 @@
             </div>
             
             <div class="footer-column">
-                <h3>Links</h3>
+                <h3>Legal</h3>
                 <ul class="footer-links">
-                    <li><a href="opportunities.html">Opportunities</a></li>
                     <li><a href="privacy-policy.html">Privacy Policy</a></li>
                 </ul>
             </div>
@@ -309,7 +286,7 @@
         <div class="footer-separator"></div>
         
         <div class="footer-bottom">
-            <p>© 2025 SamudraFM. Designed with passion by Jensen. 📻</p>
+            <p>© 2025 SamudraFM. Designed with passion by Jensen Lim Zi Jen 📻</p>
         </div>
     </footer>
 
@@ -660,9 +637,6 @@
             extensionBlocking.init();
         })();
     </script>
-    <!-- Instagram Configuration -->
-    <script src="instagram-config.js"></script>
-    
     <script>
     // Dynamic script loading with aggressive cache busting
     const script = document.createElement('script');
