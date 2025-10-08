@@ -38,6 +38,18 @@ function initMobilePlayButton() {
     if (window.mixcloudWidgetReady && (currentWidget || window.preloadedWidget)) {
       console.log('Mobile: Mixcloud is ready, showing play button');
       showPlayButtonWhenReady();
+      
+      // Ensure current episode is set for mobile
+      if (!currentEpisode && episodes && episodes.length > 0) {
+        currentEpisode = episodes[0];
+        console.log('Mobile: Set current episode to first available:', currentEpisode.name);
+        
+        // Update hero display
+        const titleEl = document.getElementById('hero-ep-title');
+        if (titleEl) {
+          titleEl.textContent = currentEpisode.name;
+        }
+      }
     } else {
       // Check again in 500ms
       setTimeout(checkMixcloudReady, 500);
@@ -51,6 +63,19 @@ function initMobilePlayButton() {
   setTimeout(() => {
     if (playPauseBtn) {
       console.log('Mobile: Immediate fallback - showing play button after 1 second');
+      
+      // Ensure we have a current episode
+      if (!currentEpisode && episodes && episodes.length > 0) {
+        currentEpisode = episodes[0];
+        console.log('Mobile: Immediate fallback - set current episode:', currentEpisode.name);
+        
+        // Update hero display
+        const titleEl = document.getElementById('hero-ep-title');
+        if (titleEl) {
+          titleEl.textContent = currentEpisode.name;
+        }
+      }
+      
       playPauseBtn.classList.add('mixcloud-ready');
       playPauseBtn.style.display = 'flex';
       playPauseBtn.style.opacity = '1';
@@ -74,6 +99,19 @@ function initMobilePlayButton() {
   setTimeout(() => {
     if (playPauseBtn) {
       console.log('Mobile: Emergency fallback - showing play button regardless of Mixcloud state');
+      
+      // Ensure we have a current episode for emergency fallback
+      if (!currentEpisode && episodes && episodes.length > 0) {
+        currentEpisode = episodes[0];
+        console.log('Mobile: Emergency fallback - set current episode:', currentEpisode.name);
+        
+        // Update hero display
+        const titleEl = document.getElementById('hero-ep-title');
+        if (titleEl) {
+          titleEl.textContent = currentEpisode.name;
+        }
+      }
+      
       playPauseBtn.classList.add('mixcloud-ready');
       playPauseBtn.style.display = 'flex';
       playPauseBtn.style.opacity = '1';
@@ -2976,7 +3014,33 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pre-load Mixcloud player for mobile devices
   if (isMobileDevice()) {
     console.log('Mobile: Pre-loading Mixcloud player');
-    preloadMixcloudPlayer();
+    
+    // Wait for episodes to load first, then preload with current episode
+    const waitForEpisodesAndPreload = () => {
+      if (episodes && episodes.length > 0) {
+        console.log('Mobile: Episodes loaded, preloading with current episode');
+        const firstEpisode = episodes[0];
+        if (firstEpisode) {
+          // Set current episode
+          currentEpisode = firstEpisode;
+          
+          // Update hero display
+          const titleEl = document.getElementById('hero-ep-title');
+          if (titleEl) {
+            titleEl.textContent = firstEpisode.name;
+          }
+          
+          // Preload the widget with this episode
+          preloadCurrentEpisode(firstEpisode);
+        }
+      } else {
+        // Check again in 500ms
+        setTimeout(waitForEpisodesAndPreload, 500);
+      }
+    };
+    
+    // Start checking for episodes
+    setTimeout(waitForEpisodesAndPreload, 1000);
     
     // Additional mobile Mixcloud initialization - without auto-play
     setTimeout(() => {
@@ -3391,24 +3455,37 @@ window.handlePlayOnly = function() {
   }
   
   if (!currentEpisode) {
-    // If no current episode, try to get the latest episode from the episodes grid
-    const episodesGrid = document.getElementById('episodes-grid');
-    if (episodesGrid && episodesGrid.children.length > 0) {
-      const firstEpisode = episodesGrid.children[0];
-      const episodeData = firstEpisode.dataset.episode;
-      if (episodeData) {
-        try {
-          currentEpisode = JSON.parse(episodeData);
-          
-          playEpisode(currentEpisode);
-          return;
-        } catch (error) {
-          
+    // If no current episode, try to get the latest episode from the episodes array first
+    if (episodes && episodes.length > 0) {
+      currentEpisode = episodes[0];
+      console.log('Mobile: Using first episode from episodes array:', currentEpisode.name);
+      
+      // Update hero display
+      const titleEl = document.getElementById('hero-ep-title');
+      if (titleEl) {
+        titleEl.textContent = currentEpisode.name;
+      }
+    } else {
+      // Fallback: try to get from episodes grid
+      const episodesGrid = document.getElementById('episodes-grid');
+      if (episodesGrid && episodesGrid.children.length > 0) {
+        const firstEpisode = episodesGrid.children[0];
+        const episodeData = firstEpisode.dataset.episode;
+        if (episodeData) {
+          try {
+            currentEpisode = JSON.parse(episodeData);
+            console.log('Mobile: Using episode from grid:', currentEpisode.name);
+          } catch (error) {
+            console.error('Error parsing episode data:', error);
+          }
         }
       }
     }
     
-    return;
+    if (!currentEpisode) {
+      console.log('Mobile: No episode available to play');
+      return;
+    }
   }
   
   // If already playing, don't do anything
