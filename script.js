@@ -20,6 +20,59 @@ if ('caches' in window) {
   });
 }
 
+// Mobile-specific cache clearing on every visit
+if (isMobileDevice()) {
+  console.log('Mobile device detected - clearing all caches');
+  
+  // Clear all possible caches
+  if ('caches' in window) {
+    caches.keys().then(function(names) {
+      for (let name of names) {
+        caches.delete(name);
+        console.log('Mobile: Deleted cache:', name);
+      }
+    });
+  }
+  
+  // Clear localStorage
+  try {
+    localStorage.clear();
+    console.log('Mobile: Cleared localStorage');
+  } catch (e) {
+    console.log('Mobile: Could not clear localStorage:', e);
+  }
+  
+  // Clear sessionStorage
+  try {
+    sessionStorage.clear();
+    console.log('Mobile: Cleared sessionStorage');
+  } catch (e) {
+    console.log('Mobile: Could not clear sessionStorage:', e);
+  }
+  
+  // Force reload without cache
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for (let registration of registrations) {
+        registration.unregister();
+        console.log('Mobile: Unregistered service worker:', registration);
+      }
+    });
+  }
+  
+  // Add cache-busting parameter to all fetch requests
+  const originalFetch = window.fetch;
+  window.fetch = function(url, options = {}) {
+    if (typeof url === 'string') {
+      const separator = url.includes('?') ? '&' : '?';
+      url += `${separator}_cb=${Date.now()}&_mobile=1`;
+    }
+    return originalFetch(url, options);
+  };
+  
+  console.log('Mobile: Added cache-busting to all fetch requests');
+}
+
 // Mobile browser memory management fix
 let mobileLoadAttempts = 0;
 const maxMobileAttempts = 10;
@@ -2844,14 +2897,15 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Mobile: Pre-loading Mixcloud player');
     preloadMixcloudPlayer();
     
-    // Additional mobile Mixcloud initialization
+    // Additional mobile Mixcloud initialization - without auto-play
     setTimeout(() => {
       console.log('Mobile: Additional Mixcloud initialization');
       if (!window.mixcloudWidgetReady) {
-        console.log('Mobile: Mixcloud not ready, forcing initialization');
-        // Force initialize the first episode for mobile
+        console.log('Mobile: Mixcloud not ready, initializing without auto-play');
+        // Initialize the first episode for mobile but don't play it
         if (episodes && episodes.length > 0) {
-          playEpisode(episodes[0]);
+          // Just load the episode without playing
+          loadEpisodeForMobile(episodes[0]);
         }
       }
     }, 2000);
@@ -4804,6 +4858,23 @@ if (isMobileDevice()) {
   }
 }
 
+
+// Load episode for mobile without auto-play
+function loadEpisodeForMobile(episode) {
+  console.log('Mobile: Loading episode without auto-play:', episode.name);
+  
+  // Update episode info without playing
+  updateEpisodeInfo(episode);
+  
+  // Load the widget but don't start playback
+  if (episode.mixcloudUrl) {
+    const iframe = document.getElementById('mixcloud-iframe');
+    if (iframe) {
+      iframe.src = episode.mixcloudUrl;
+      console.log('Mobile: Episode loaded, ready for manual play');
+    }
+  }
+}
 
 // Mobile refresh function
 function handleMobileRefresh() {
