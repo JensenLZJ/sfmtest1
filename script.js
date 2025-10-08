@@ -1,99 +1,58 @@
 // SamduraFM front-end behaviors and mock data wiring
 // Script.js loaded successfully
 
-// Mobile detection
+// Ensure this script runs regardless of DOMContentLoaded events
+console.log('Script.js loaded - DOM ready state:', document.readyState);
+
+// Ensure scripts run regardless of DOM state
+console.log('Script execution - DOM ready state:', document.readyState);
+
+// Run immediately if DOM is ready, otherwise wait for DOMContentLoaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOMContentLoaded fired - scripts running');
+    });
+} else {
+    // DOM is already ready, scripts will run immediately
+    console.log('DOM already ready - scripts running immediately');
+}
+
+// Also run on window load as backup
+window.addEventListener('load', function() {
+    console.log('Window loaded - backup execution');
+});
+
+// Robust mobile detection that works on cache loads
 function isMobile() {
-  return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-// Alias for compatibility
-function isMobileDevice() {
-  return isMobile();
-}
-
-// Mobile-specific play button initialization
-function initMobilePlayButton() {
-  if (!isMobileDevice()) return;
+  // Primary detection: User agent (most reliable)
+  const userAgentMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   
-  console.log('Initializing mobile play button...');
+  // Secondary detection: Touch capabilities
+  const touchMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
   
-  const playPauseBtn = document.getElementById('hero-play-pause');
-  if (!playPauseBtn) {
-    console.log('Mobile: Play button not found');
-    return;
-  }
+  // Tertiary detection: Screen width (only if available)
+  const screenMobile = window.innerWidth && window.innerWidth <= 768;
   
-  // Initially hide the button and show loading state
-  playPauseBtn.classList.remove('mixcloud-ready');
-  playPauseBtn.style.display = 'flex';
-  playPauseBtn.style.opacity = '0.5';
-  playPauseBtn.style.visibility = 'visible';
-  playPauseBtn.style.pointerEvents = 'none';
-  playPauseBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-  isPlayButtonHiddenOnMobile = true;
+  const isMobileResult = userAgentMobile || touchMobile || screenMobile;
   
-  console.log('Mobile: Play button showing loading state');
+  // Debug logging for mobile detection
+  console.log('Mobile detection:', {
+    userAgent: userAgentMobile,
+    touch: touchMobile,
+    screen: screenMobile,
+    result: isMobileResult,
+    userAgent: navigator.userAgent,
+    innerWidth: window.innerWidth,
+    touchPoints: navigator.maxTouchPoints
+  });
   
-  // Set up check for when Mixcloud is ready - only show button when widget is loaded
-  const checkMixcloudReady = () => {
-    if (window.mixcloudWidgetReady && (currentWidget || window.preloadedWidget)) {
-      console.log('Mobile: Mixcloud widget is ready, showing play button');
-      
-      // Ensure current episode is set for mobile
-      if (!currentEpisode && episodes && episodes.length > 0) {
-        currentEpisode = episodes[0];
-        console.log('Mobile: Set current episode to first available:', currentEpisode.name);
-        
-        // Update hero display
-        const titleEl = document.getElementById('hero-ep-title');
-        if (titleEl) {
-          titleEl.textContent = currentEpisode.name;
-        }
-      }
-      
-      // Show button only when widget is ready
-      showPlayButtonWhenReady();
-    } else {
-      // Check again in 500ms
-      setTimeout(checkMixcloudReady, 500);
-    }
-  };
-  
-  // Start checking after a short delay
-  setTimeout(checkMixcloudReady, 1000);
-  
-  // Fallback: Show button after 10 seconds if widget still not ready
-  setTimeout(() => {
-    if (isPlayButtonHiddenOnMobile && playPauseBtn) {
-      console.log('Mobile: Widget timeout - showing play button anyway after 10 seconds');
-      
-      // Ensure current episode is set
-      if (!currentEpisode && episodes && episodes.length > 0) {
-        currentEpisode = episodes[0];
-        console.log('Mobile: Fallback - set current episode:', currentEpisode.name);
-        
-        // Update hero display
-        const titleEl = document.getElementById('hero-ep-title');
-        if (titleEl) {
-          titleEl.textContent = currentEpisode.name;
-        }
-      }
-      
-      // Force show button
-      showPlayButtonWhenReady();
-    }
-  }, 10000);
+  return isMobileResult;
 }
 
 // Player ready state tracking
 let isPlayerReady = false;
 let isPlayerLoading = false;
-
-// Global mobile play button handler - uses existing system
-window.mobilePlayButton = function() {
-  console.log('Mobile: Global play button called');
-  window.handlePlayPause();
-};
+let isPlayButtonHiddenOnMobile = false;
 
 // Clear any existing caches and force fresh content loading
 if ('caches' in window) {
@@ -102,114 +61,6 @@ if ('caches' in window) {
       caches.delete(name);
     }
   });
-}
-
-// Mobile-specific cache clearing on every visit - more targeted approach
-if (isMobileDevice()) {
-  console.log('Mobile device detected - applying S24 Ultra fixes');
-  
-  // Only clear specific caches, not everything
-  if ('caches' in window) {
-    caches.keys().then(function(names) {
-      for (let name of names) {
-        if (name.includes('samudra') || name.includes('instagram') || name.includes('mixcloud')) {
-          caches.delete(name);
-          console.log('Mobile: Deleted specific cache:', name);
-        }
-      }
-    });
-  }
-  
-  // Clear only specific localStorage items
-  try {
-    const keysToRemove = ['instagram_posts', 'episodes_data', 'mixcloud_data'];
-    keysToRemove.forEach(key => {
-      localStorage.removeItem(key);
-    });
-    console.log('Mobile: Cleared specific localStorage items');
-  } catch (e) {
-    console.log('Mobile: Could not clear localStorage:', e);
-  }
-  
-  // Add cache-busting parameter to specific requests only
-  const originalFetch = window.fetch;
-  window.fetch = function(url, options = {}) {
-    if (typeof url === 'string' && (url.includes('instagram') || url.includes('mixcloud') || url.includes('episodes'))) {
-      const separator = url.includes('?') ? '&' : '?';
-      url += `${separator}_cb=${Date.now()}&_mobile=1`;
-    }
-    return originalFetch(url, options);
-  };
-  
-  console.log('Mobile: Applied S24 Ultra specific fixes');
-}
-
-// S24 Ultra specific loading system
-let s24LoadAttempts = 0;
-const maxS24Attempts = 15;
-let s24LoadInterval = null;
-let s24ContentLoaded = false;
-
-function handleS24UltraLoading() {
-  if (!isMobileDevice()) return;
-  
-  console.log('S24 Ultra loading system activated');
-  
-  // Clear any existing interval
-  if (s24LoadInterval) {
-    clearInterval(s24LoadInterval);
-  }
-  
-  // More aggressive checking for S24 Ultra
-  s24LoadInterval = setInterval(() => {
-    s24LoadAttempts++;
-    
-    const instagramFeed = document.getElementById('instagram-feed');
-    const episodesSlider = document.getElementById('episodes-slider');
-    const comingGrid = document.getElementById('coming-grid');
-    
-    const instagramEmpty = !instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading');
-    const episodesEmpty = !episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading');
-    const comingEmpty = !comingGrid || comingGrid.innerHTML.trim() === '' || comingGrid.innerHTML.includes('Loading');
-    
-    if (instagramEmpty || episodesEmpty || comingEmpty) {
-      console.log(`S24 Ultra load attempt ${s24LoadAttempts}: Content missing, forcing reload`);
-      
-      // Force reload all content
-      if (instagramEmpty && instagramFeed) {
-        instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
-        setTimeout(() => loadInstagramPostsWithRetry(), 100);
-      }
-      
-      if (episodesEmpty && episodesSlider) {
-        episodesSlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
-        setTimeout(() => loadEpisodesWithRetry(), 100);
-      }
-      
-      if (comingEmpty && comingGrid) {
-        comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
-        setTimeout(() => loadComingUpEventsWithRetry(), 100);
-      }
-      
-      // Also check Mixcloud widget
-      if (!window.mixcloudWidgetReady && episodes && episodes.length > 0) {
-        console.log('S24 Ultra: Mixcloud not ready, forcing initialization');
-        forceMobileMixcloudInit();
-      }
-    } else {
-      console.log('S24 Ultra: All content loaded successfully');
-      s24ContentLoaded = true;
-      clearInterval(s24LoadInterval);
-      s24LoadInterval = null;
-    }
-    
-    if (s24LoadAttempts >= maxS24Attempts) {
-      console.log('S24 Ultra: Max attempts reached, showing refresh button');
-      clearInterval(s24LoadInterval);
-      s24LoadInterval = null;
-      showMobileRefreshButton();
-    }
-  }, 300); // Faster checking for S24 Ultra
 }
 
 // Hidden easter egg - hiring message
@@ -410,136 +261,124 @@ const MOCK_COMING = [
 // MOCK_NOW, MOCK_RECENT, MOCK_COMING kept for potential future use
 
 // Instagram API Configuration
-// Replace with your actual Instagram access token
-const INSTAGRAM_ACCESS_TOKEN = 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD';
+// Load configuration from external file
+const INSTAGRAM_ACCESS_TOKEN = window.INSTAGRAM_CONFIG?.accessToken || 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD';
+const INSTAGRAM_POST_LIMIT = window.INSTAGRAM_CONFIG?.postLimit || 12;
 
-// Debug function to log API calls
-function debugApiCall(url, method = 'GET') {
-  console.log(`🌐 API Call: ${method} ${url}`);
-  console.log(`📍 Current domain: ${window.location.hostname}`);
-  console.log(`🔒 Protocol: ${window.location.protocol}`);
-  console.log(`🌍 User Agent: ${navigator.userAgent}`);
-  
-  // Check for potential issues
-  if (window.location.protocol === 'http:' && url.includes('https:')) {
-    console.warn('⚠️ Mixed content warning: HTTP page trying to access HTTPS API');
-  }
-  
-  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    console.log('🌐 Live domain detected - checking CORS policies');
-  }
-}
-
-// Using fallback data instead of API calls
-// (Server-side APIs don't exist, direct APIs blocked by CORS)
-
-// Function to get Mixcloud data - using mock data for now
-async function fetchMixcloudData(endpoint, params = {}) {
-  console.log('🎵 Mixcloud: Using mock data');
-  
-  // Mock data for development
-  const mockData = {
-    data: [
-      {
-        key: 'samudrafm-tasty-tuesday-show-27-june-2023',
-        name: 'Tasty Tuesday Show - 27 June 2023',
-        url: 'https://www.mixcloud.com/SamudraFM/tasty-tuesday-show-27-june-2023/',
-        created_time: '2023-06-27T10:00:00Z',
-        pictures: {
-          large: 'assets/brandmark/SamudraFMLogo1.png'
-        },
-        user: {
-          name: 'SamudraFM',
-          url: 'https://www.mixcloud.com/SamudraFM/'
-        }
-      },
-      {
-        key: 'samudrafm-weekend-vibes-25-june-2023',
-        name: 'Weekend Vibes - 25 June 2023',
-        url: 'https://www.mixcloud.com/SamudraFM/weekend-vibes-25-june-2023/',
-        created_time: '2023-06-25T15:00:00Z',
-        pictures: {
-          large: 'assets/brandmark/SamudraFMLogo2.png'
-        },
-        user: {
-          name: 'SamudraFM',
-          url: 'https://www.mixcloud.com/SamudraFM/'
-        }
-      },
-      {
-        key: 'samudrafm-midnight-sessions-23-june-2023',
-        name: 'Midnight Sessions - 23 June 2023',
-        url: 'https://www.mixcloud.com/SamudraFM/midnight-sessions-23-june-2023/',
-        created_time: '2023-06-23T22:00:00Z',
-        pictures: {
-          large: 'assets/brandmark/SamudraFMLogo3.png'
-        },
-        user: {
-          name: 'SamudraFM',
-          url: 'https://www.mixcloud.com/SamudraFM/'
-        }
-      }
-    ],
-    paging: {
-      next: null
-    }
-  };
-  
-  return {
-    ok: true,
-    status: 200,
-    statusText: 'OK',
-    json: async () => mockData
-  };
-}
-
-// Instagram API Integration - Using fallback posts
+// Instagram API Integration (Using Instagram Basic Display API)
 async function fetchInstagramPosts() {
-<<<<<<< HEAD
-  console.log('📸 Instagram: Using fallback posts (direct API calls blocked by CORS)');
-  
-  // Return hardcoded posts for now
-  return getHardcodedFallbackPosts();
-=======
   try {
-    // Try to load from custom-posts.json first
-    const response = await fetch('custom-posts.json?v=' + Date.now());
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Instagram posts loaded from custom-posts.json');
-      
-      // Convert custom posts to Instagram post format
-      const posts = data.posts.map((post, index) => ({
-        id: post.id || `custom-${index}`,
-        caption: post.content || post.title || 'Instagram Post',
-        mediaUrl: post.image,
-        thumbnailUrl: post.image,
-        permalink: post.link || 'https://www.instagram.com/samudrafm/',
-        timestamp: post.date || new Date().toISOString()
+    // First, get the Instagram user ID
+    const userId = await getInstagramUserId();
+    if (!userId) {
+      console.warn('No Instagram user ID found, falling back to custom posts');
+      return await getFallbackInstagramPosts();
+    }
+    
+    // Try direct API call first, then CORS proxy if needed
+    let mediaResponse;
+    try {
+      mediaResponse = await fetch(`https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=${INSTAGRAM_POST_LIMIT}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+        mode: 'cors'
+      });
+    } catch (corsError) {
+      console.warn('Direct API call failed, trying CORS proxy...');
+      // Try with CORS proxy as fallback
+      const proxyUrl = `https://cors-anywhere.herokuapp.com/https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=${INSTAGRAM_POST_LIMIT}`;
+      mediaResponse = await fetch(proxyUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
+    }
+    
+    if (!mediaResponse.ok) {
+      throw new Error(`Instagram API error: ${mediaResponse.status} ${mediaResponse.statusText}`);
+    }
+    
+    const mediaData = await mediaResponse.json();
+    
+    if (mediaData.data && mediaData.data.length > 0) {
+      const posts = mediaData.data.map(post => ({
+        id: post.id,
+        caption: post.caption || 'Instagram Post',
+        mediaUrl: post.media_url || post.thumbnail_url,
+        thumbnailUrl: post.thumbnail_url || post.media_url,
+        permalink: post.permalink,
+        timestamp: post.timestamp,
+        mediaType: post.media_type
       }));
       
       return posts;
+    } else {
+      console.warn('No posts found in Instagram API response');
+      return await getFallbackInstagramPosts();
     }
+    
   } catch (error) {
-    console.error('Error loading Instagram posts from custom-posts.json:', error);
+    console.error('Error fetching real Instagram posts:', error);
+    
+    // Check if it's a CORS error
+    if (error.message.includes('CORS') || error.message.includes('cross-origin')) {
+      console.warn('CORS error detected. Instagram API cannot be called directly from browser.');
+      console.log('Consider using a backend server or CORS proxy for production.');
+    }
+    
+    // Check if it's an authentication error
+    if (error.message.includes('401') || error.message.includes('403')) {
+      console.warn('Instagram API authentication failed. Please check your access token.');
+      console.log('Follow the setup guide in INSTAGRAM_SETUP.md to get a valid token.');
+    }
+    
+    console.log('Falling back to custom posts...');
+    return await getFallbackInstagramPosts();
   }
-  
-  // Fallback to hardcoded posts
-  return await getFallbackInstagramPosts();
->>>>>>> parent of 0601791 (best)
 }
 
-// Instagram user ID function - not needed since we use fallback data
+// Get Instagram user ID from access token
 async function getInstagramUserId() {
-<<<<<<< HEAD
-  console.log('📸 Instagram: Skipping user ID fetch (using fallback data)');
-  return null;
-=======
   try {
-    // Instagram API calls disabled to reduce console logs
-    return null;
+    let response;
+    
+    try {
+      response = await fetch(`https://graph.instagram.com/me?fields=id&access_token=${INSTAGRAM_ACCESS_TOKEN}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+        mode: 'cors'
+      });
+    } catch (corsError) {
+      console.warn('Direct user ID API call failed, trying CORS proxy...');
+      const proxyUrl = `https://cors-anywhere.herokuapp.com/https://graph.instagram.com/me?fields=id&access_token=${INSTAGRAM_ACCESS_TOKEN}`;
+      response = await fetch(proxyUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
+    }
+    
+    if (!response.ok) {
+      throw new Error(`Instagram API error: ${response.status} ${response.statusText}`);
+    }
+    
+    const userData = await response.json();
+    
+    if (userData.id) {
+      return userData.id;
+    } else {
+      throw new Error('No user ID found in Instagram API response');
+    }
   } catch (error) {
-    //console.error('Error fetching Instagram user ID:', error);
+    console.error('Error fetching Instagram user ID:', error);
     return null;
   }
 }
@@ -574,16 +413,14 @@ async function getFallbackInstagramPosts() {
     //console.error('Error loading custom posts:', error);
     return getHardcodedFallbackPosts();
   }
->>>>>>> parent of 0601791 (best)
 }
 
 // Hardcoded fallback posts as last resort
 function getHardcodedFallbackPosts() {
-  console.log('📸 Instagram: Using hardcoded fallback posts');
   return [
     {
       id: 'fallback-1',
-      caption: 'Welcome to SamudraFM! 🎵 Fresh beats and great vibes!',
+      caption: 'Welcome to SamudraFM! Your study, your music. 🎵',
       mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
       thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
@@ -591,23 +428,22 @@ function getHardcodedFallbackPosts() {
     },
     {
       id: 'fallback-2',
-      caption: 'Behind the Scenes 📻 Our amazing team working hard!',
-      mediaUrl: 'assets/brandmark/SamudraFMLogo2.png',
-      thumbnailUrl: 'assets/brandmark/SamudraFMLogo2.png',
+      caption: 'Tune in to our latest shows and discover new music! 🎧',
+      mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
+      thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
-      timestamp: new Date(Date.now() - 86400000).toISOString()
+      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
     },
     {
       id: 'fallback-3',
-      caption: 'New Episode Alert! 🔥 Check out our latest episode!',
-      mediaUrl: 'assets/brandmark/SamudraFMLogo3.png',
-      thumbnailUrl: 'assets/brandmark/SamudraFMLogo3.png',
+      caption: 'Helping you focus, unwind, and stay inspired — one song at a time. ✨',
+      mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
+      thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
-      timestamp: new Date(Date.now() - 172800000).toISOString()
+      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
     }
   ];
 }
-
 
 // Fallback direct Instagram API (for development)
 async function fetchInstagramPostsDirect() {
@@ -625,15 +461,11 @@ async function fetchInstagramPostsDirect() {
 
 // Render Instagram posts
 function renderInstagramPosts(posts) {
-  // renderInstagramPosts function called
   const container = document.getElementById('instagram-feed');
-  // Instagram container found
   if (!container) {
-    //console.error('Instagram feed container not found in renderInstagramPosts');
+    console.error('Instagram feed container not found in renderInstagramPosts');
     return;
   }
-  
-  // Rendering Instagram posts
   
   if (!posts || posts.length === 0) {
     // No posts to render, showing no posts message
@@ -946,9 +778,9 @@ async function loadComingUpEventsWithRetry() {
 
 
 async function loadComingUpEvents() {
-  console.log('📅 Coming Up: loadComingUpEvents function called');
+  // loadComingUpEvents function called
   const comingGrid = document.getElementById('coming-grid');
-  console.log('📅 Coming Up: coming-grid found:', !!comingGrid);
+  // coming-grid found
   if (!comingGrid) return;
   
   // Show loading state
@@ -1092,12 +924,19 @@ async function loadMixcloudEpisodes(username, nextUrl) {
   }
   
   try {
-    // Load episodes using fallback system (server-side first, then direct API)
-    const params = { username, limit: 12 };
-    const res = await fetchMixcloudData('/cloudcasts', params);
+    // Load episodes from Mixcloud API directly
+    const apiUrl = nextUrl || `https://api.mixcloud.com/${username}/cloudcasts/?limit=12`;
+    const res = await fetch(apiUrl, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
     
     if (!res.ok) {
-      throw new Error(`Mixcloud API error: ${res.status} ${res.statusText}`);
+      throw new Error(`HTTP error! status: ${res.status}`);
     }
     
     const data = await res.json();
@@ -1140,27 +979,6 @@ async function loadMixcloudEpisodes(username, nextUrl) {
     }
   } catch (err) {
     console.error('Error loading episodes:', err);
-    
-    // Detailed error analysis for live domain debugging
-    console.log('🔍 Mixcloud Error Analysis:');
-    console.log(`📍 Domain: ${window.location.hostname}`);
-    console.log(`🔒 Protocol: ${window.location.protocol}`);
-    console.log(`❌ Error Type: ${err.name}`);
-    console.log(`📝 Error Message: ${err.message}`);
-    
-    // Check if it's a CORS error
-    if (err.message.includes('CORS') || err.message.includes('cross-origin') || err.message.includes('blocked')) {
-      console.warn('🚫 CORS error detected for Mixcloud API.');
-      console.log('💡 Solutions:');
-      console.log('1. Check if your domain is allowed in Mixcloud API settings');
-      console.log('2. Verify Content Security Policy allows api.mixcloud.com');
-      console.log('3. Check server-level CORS headers');
-    }
-    
-    // Check if it's a network error
-    if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-      console.warn('🌐 Network error detected for Mixcloud API.');
-    }
     
     // Show error message when API fails
     slider.innerHTML = '<p class="muted">Unable to load episodes at the moment.</p>';
@@ -1296,12 +1114,18 @@ async function loadHomeEpisodes() {
   try {
     episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
     
-    // Load episodes using fallback system (server-side first, then direct API)
-    const params = { username: MIXCLOUD_USERNAME, limit: 12 };
-    const res = await fetchMixcloudData('/cloudcasts', params);
+    // Load episodes from Mixcloud API directly
+    const res = await fetch(`https://api.mixcloud.com/${MIXCLOUD_USERNAME}/cloudcasts/?limit=12`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
     
     if (!res.ok) {
-      throw new Error(`Mixcloud API error: ${res.status} ${res.statusText}`);
+      throw new Error(`HTTP error! status: ${res.status}`);
     }
     
     const data = await res.json();
@@ -1330,32 +1154,29 @@ async function loadHomeEpisodes() {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM Content Loaded - initializing Episodes section');
   
-  // Load immediately for all devices
-  const episodesSlider = document.getElementById('episodes-slider');
-  
-  if (episodesSlider) {
-    console.log('Episodes slider found, loading episodes');
-    episodesSlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
-    loadEpisodesWithRetry();
-  } else {
-    console.warn('Episodes slider not found, retrying...');
-    // Multiple retry attempts
-    setTimeout(() => {
-      const retrySlider = document.getElementById('episodes-slider');
-      if (retrySlider) {
-        retrySlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
-        loadEpisodesWithRetry();
-      }
-    }, 500);
+  // Add a small delay to ensure all elements are ready
+  setTimeout(() => {
+    const episodesSlider = document.getElementById('episodes-slider');
     
-    setTimeout(() => {
-      const retrySlider = document.getElementById('episodes-slider');
-      if (retrySlider) {
-        retrySlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
-        loadEpisodesWithRetry();
-      }
-    }, 2000);
-  }
+    if (episodesSlider) {
+      console.log('Episodes slider found, loading episodes');
+      // Show loading state immediately
+      episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
+      
+      // Load episodes with retry logic
+      loadEpisodesWithRetry();
+    } else {
+      console.warn('Episodes slider not found, retrying...');
+      // Retry after a longer delay
+      setTimeout(() => {
+        const retrySlider = document.getElementById('episodes-slider');
+        if (retrySlider) {
+          retrySlider.innerHTML = '<p class="muted">Loading episodes...</p>';
+          loadEpisodesWithRetry();
+        }
+      }, 1000);
+    }
+  }, 100);
 });
 
 // Load episodes with retry logic
@@ -1467,6 +1288,162 @@ function nextEpisode() {
 let currentEpisode = null;
 let isCurrentlyPlaying = false;
 let currentWidget = null;
+let currentEpisodeIndex = 0; // Track current episode index for auto-play
+
+// Function to get the next episode for auto-play
+function getNextEpisode() {
+  console.log('getNextEpisode called', {
+    episodesLength: episodes ? episodes.length : 0,
+    currentEpisode: currentEpisode ? currentEpisode.name : 'none',
+    currentEpisodeUrl: currentEpisode ? currentEpisode.url : 'none'
+  });
+  
+  if (!episodes || episodes.length === 0) {
+    console.log('No episodes available for auto-play');
+    return null;
+  }
+  
+  // Find current episode index
+  const currentIndex = episodes.findIndex(ep => 
+    currentEpisode && ep.url === currentEpisode.url
+  );
+  
+  console.log('Current episode index found:', currentIndex);
+  
+  if (currentIndex === -1) {
+    console.log('Current episode not found in episodes list');
+    console.log('Available episodes:', episodes.map(ep => ({ name: ep.name, url: ep.url })));
+    return null;
+  }
+  
+  // Get next episode (wrap around to first if at end)
+  const nextIndex = (currentIndex + 1) % episodes.length;
+  const nextEpisode = episodes[nextIndex];
+  
+  console.log(`Auto-play: Current episode ${currentIndex + 1}/${episodes.length}, next: ${nextIndex + 1}`);
+  console.log('Next episode:', nextEpisode ? nextEpisode.name : 'none');
+  return nextEpisode;
+}
+
+// Function to handle auto-play next episode
+function handleAutoPlayNext() {
+  console.log('handleAutoPlayNext called');
+  const nextEpisode = getNextEpisode();
+  if (nextEpisode) {
+    console.log(`Auto-playing next episode: ${nextEpisode.name}`);
+    
+    // Update current episode index
+    currentEpisodeIndex = episodes.findIndex(ep => ep.url === nextEpisode.url);
+    console.log('Updated currentEpisodeIndex to:', currentEpisodeIndex);
+    
+    // Set auto-play flag
+    window.isAutoPlaying = true;
+    
+    // Special handling for mobile auto-play
+    console.log('Auto-play debug:', {
+      isMobileDevice: isMobileDevice(),
+      isAutoPlaying: window.isAutoPlaying,
+      userAgent: navigator.userAgent
+    });
+    
+    if (isMobileDevice()) {
+      console.log('Mobile auto-play: Ensuring play button is ready');
+      
+      // Ensure play button is visible and ready for mobile
+      const playPauseBtn = document.getElementById('hero-play-pause');
+      if (playPauseBtn) {
+        // Show play button immediately for auto-play
+        playPauseBtn.classList.add('mixcloud-ready');
+        playPauseBtn.style.display = 'flex';
+        playPauseBtn.style.opacity = '1';
+        playPauseBtn.style.visibility = 'visible';
+        playPauseBtn.style.pointerEvents = 'auto';
+        playPauseBtn.style.position = 'relative';
+        playPauseBtn.style.left = 'auto';
+        playPauseBtn.style.top = 'auto';
+        playPauseBtn.style.width = '72px';
+        playPauseBtn.style.height = '72px';
+        playPauseBtn.style.overflow = 'visible';
+        
+        console.log('Mobile play button made visible for auto-play');
+      } else {
+        console.log('Play button not found for mobile auto-play');
+      }
+    } else {
+      console.log('Not on mobile device, skipping mobile auto-play logic');
+    }
+    
+    // Play the next episode
+    playEpisode(nextEpisode);
+    
+    // Mobile auto-play will be handled by the ready event listeners
+    if (isMobileDevice()) {
+      console.log('Mobile auto-play: Episode loading, ready event listeners will handle play');
+    }
+    
+    // Clear auto-play flag after a delay
+    setTimeout(() => {
+      window.isAutoPlaying = false;
+    }, 5000); // Increased delay to allow mobile auto-play to complete
+    
+    // Show notification
+    showAutoPlayNotification(nextEpisode.name);
+  } else {
+    console.log('No next episode available for auto-play');
+  }
+}
+
+// Function to show auto-play notification
+function showAutoPlayNotification(episodeName) {
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = 'auto-play-notification';
+  notification.innerHTML = `
+    <div class="notification-content">
+      <i class="fa-solid fa-play"></i>
+      <span>Now playing: ${episodeName}</span>
+    </div>
+  `;
+  
+  // Add styles
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 10000;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  `;
+  
+  // Add to page
+  document.body.appendChild(notification);
+  
+  // Animate in
+  setTimeout(() => {
+    notification.style.opacity = '1';
+    notification.style.transform = 'translateX(0)';
+  }, 100);
+  
+  // Remove after 3 seconds
+  setTimeout(() => {
+    notification.style.opacity = '0';
+    notification.style.transform = 'translateX(100%)';
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 300);
+  }, 3000);
+}
+
 
 function stopCurrentPlayer() {
   // Stopping current player
@@ -1571,9 +1548,13 @@ async function fetchDurationFromAPI(episodeUrl) {
 
 function playEpisode(episode) {
   
-  // Hide play button on mobile when starting to load new episode
+  // Hide play button on mobile when starting to load new episode (unless it's auto-play)
   if (isMobileDevice()) {
-    setPlayerReady(false);
+    // Don't hide play button if this is an auto-play transition
+    const isAutoPlay = window.isAutoPlaying || false;
+    if (!isAutoPlay) {
+      setPlayerReady(false);
+    }
   }
   
   // If already playing the same episode, don't restart
@@ -1606,6 +1587,15 @@ function playEpisode(episode) {
   
   currentEpisode = episode;
   isCurrentlyPlaying = true;
+  
+  // Update current episode index for auto-play
+  if (episodes && episodes.length > 0) {
+    const episodeIndex = episodes.findIndex(ep => ep.url === episode.url);
+    if (episodeIndex !== -1) {
+      currentEpisodeIndex = episodeIndex;
+      console.log(`Current episode index updated: ${currentEpisodeIndex + 1}/${episodes.length}`);
+    }
+  }
   
   // Update the hero player title and info
   const titleEl = document.getElementById('hero-ep-title');
@@ -1704,6 +1694,127 @@ function playWithMixcloudWidget(episode) {
           window.mixcloudWidgetReady = true;
           setPlayerReady(true);
           
+          // For mobile auto-play, wait for widget ready event then start play
+          if (isMobileDevice() && window.isAutoPlaying) {
+            console.log('Mobile auto-play: Waiting for widget ready event');
+            
+            // Listen for widget ready event
+            if (currentWidget && currentWidget.events && currentWidget.events.ready) {
+              currentWidget.events.ready.on(() => {
+                console.log('Mobile auto-play: Widget ready event received, starting play');
+                
+                const playPauseBtn = document.getElementById('hero-play-pause');
+                if (playPauseBtn) {
+                  console.log('Mobile auto-play: Clicking play button after ready event');
+                  playPauseBtn.click();
+                }
+                
+                if (currentWidget && typeof currentWidget.play === 'function') {
+                  console.log('Mobile auto-play: Calling widget play after ready event');
+                  currentWidget.play();
+                  isCurrentlyPlaying = true;
+                  updatePlayState(true);
+                  startSimpleProgressTracking();
+                }
+              });
+            } else {
+              // Fallback if no ready event available
+              console.log('Mobile auto-play: No ready event available, using timeout fallback');
+              setTimeout(() => {
+                const playPauseBtn = document.getElementById('hero-play-pause');
+                if (playPauseBtn) {
+                  console.log('Mobile auto-play: Fallback play button click');
+                  playPauseBtn.click();
+                }
+                
+                if (currentWidget && typeof currentWidget.play === 'function') {
+                  console.log('Mobile auto-play: Fallback widget play');
+                  currentWidget.play();
+                }
+              }, 1000);
+            }
+          }
+          
+          // Show play button on mobile now that Mixcloud is ready
+          console.log('Widget ready debug:', {
+            isMobileDevice: isMobileDevice(),
+            isAutoPlaying: window.isAutoPlaying,
+            hasCurrentWidget: !!currentWidget,
+            widgetPlayFunction: currentWidget ? typeof currentWidget.play : 'no widget'
+          });
+          
+          if (isMobileDevice()) {
+            // For auto-play, ensure button is immediately visible
+            if (window.isAutoPlaying) {
+              console.log('Auto-play detected in widget initialization');
+              const playPauseBtn = document.getElementById('hero-play-pause');
+              if (playPauseBtn) {
+                playPauseBtn.classList.add('mixcloud-ready');
+                playPauseBtn.style.display = 'flex';
+                playPauseBtn.style.opacity = '1';
+                playPauseBtn.style.visibility = 'visible';
+                playPauseBtn.style.pointerEvents = 'auto';
+                console.log('Mobile play button shown immediately for auto-play');
+              }
+              
+              // Explicitly start playback for mobile auto-play
+              setTimeout(() => {
+                console.log('Attempting first play call for mobile auto-play');
+                
+                // Try multiple approaches to start playback
+                const playPauseBtn = document.getElementById('hero-play-pause');
+                
+                // Method 1: Direct widget play call
+                if (currentWidget && typeof currentWidget.play === 'function') {
+                  console.log('Starting playback for mobile auto-play (widget method)');
+                  currentWidget.play();
+                  isCurrentlyPlaying = true;
+                  updatePlayState(true);
+                  startSimpleProgressTracking();
+                }
+                
+                // Method 2: Programmatically click the play button
+                if (playPauseBtn) {
+                  console.log('Clicking play button for mobile auto-play');
+                  playPauseBtn.click();
+                }
+                
+                // Method 3: Trigger the play button's click event
+                if (playPauseBtn) {
+                  console.log('Triggering play button event for mobile auto-play');
+                  const clickEvent = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true
+                  });
+                  playPauseBtn.dispatchEvent(clickEvent);
+                }
+                
+                // Hit play again after a short delay to ensure it actually starts
+                setTimeout(() => {
+                  console.log('Second attempt for mobile auto-play');
+                  
+                  // Try widget play again
+                  if (currentWidget && typeof currentWidget.play === 'function') {
+                    console.log('Hitting play again for mobile auto-play (widget method)');
+                    currentWidget.play();
+                  }
+                  
+                  // Try clicking play button again
+                  if (playPauseBtn) {
+                    console.log('Clicking play button again for mobile auto-play');
+                    playPauseBtn.click();
+                  }
+                }, 1000);
+              }, 500); // Small delay to ensure widget is fully ready
+            } else {
+              console.log('No auto-play flag detected, using normal mobile logic');
+              showPlayButtonWhenReady();
+            }
+          } else {
+            console.log('Not on mobile device, using desktop logic');
+          }
+          
           // Set up event listeners for sync
           if (currentWidget && currentWidget.events) {
             // Setting up sync event listeners
@@ -1768,7 +1879,11 @@ function playWithMixcloudWidget(episode) {
           window.syncInterval = syncInterval;
           
           if (currentWidget.events.ended) {
+            console.log('Setting up ended event listener');
             currentWidget.events.ended.on(() => {
+              console.log('Episode ended, checking for auto-play');
+              console.log('Current episode when ended:', currentEpisode ? currentEpisode.name : 'none');
+              console.log('Episodes available:', episodes ? episodes.length : 0);
               
               updatePlayState(false);
               isCurrentlyPlaying = false;
@@ -1777,7 +1892,15 @@ function playWithMixcloudWidget(episode) {
                 clearInterval(window.currentProgressInterval);
                 window.currentProgressInterval = null;
               }
+              
+              // Trigger auto-play next episode
+              setTimeout(() => {
+                console.log('Triggering auto-play after delay');
+                handleAutoPlayNext();
+              }, 1000); // Small delay to ensure clean state
             });
+          } else {
+            console.log('No ended event available on currentWidget');
           }
           
           // Add progress event listener if available
@@ -2001,6 +2124,24 @@ function startSimpleProgressTracking() {
           if (position !== null && duration !== null && duration > 0) {
             const percentage = (position / duration) * 100;
             updateProgressBar(percentage, position, duration);
+            
+            // Check if episode has ended (within 2 seconds of duration)
+            if (duration - position <= 2) {
+              console.log('Episode completed via main progress tracking - triggering auto-play');
+              console.log(`Position: ${position}s, Duration: ${duration}s, Remaining: ${duration - position}s`);
+              clearInterval(window.currentProgressInterval);
+              window.currentProgressInterval = null;
+              
+              // Update play state
+              updatePlayState(false);
+              isCurrentlyPlaying = false;
+              
+              // Trigger auto-play
+              setTimeout(() => {
+                console.log('Triggering auto-play from main progress tracking');
+                handleAutoPlayNext();
+              }, 1000);
+            }
           } else {
             
             // Try fallback if we can't get valid data
@@ -2061,11 +2202,20 @@ function startFallbackProgressTracking() {
       const percentage = Math.min((progress / totalDuration) * 100, 100);
       updateProgressBar(percentage, progress, totalDuration);
       
-      if (progress >= totalDuration) {
+      // Check if episode has ended (within 2 seconds of duration)
+      if (totalDuration - progress <= 2) {
         // Episode finished
+        console.log('Episode finished via fallback progress tracking - triggering auto-play');
+        console.log(`Progress: ${progress}s, Duration: ${totalDuration}s, Remaining: ${totalDuration - progress}s`);
         isCurrentlyPlaying = false;
         updatePlayState(false);
         clearInterval(window.currentProgressInterval);
+        
+        // Trigger auto-play next episode
+        setTimeout(() => {
+          console.log('Triggering auto-play from fallback progress tracking');
+          handleAutoPlayNext();
+        }, 1000);
       }
     }
   }, 1000);
@@ -2121,6 +2271,8 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
   }
   
   let isDragging = false;
+  let isTouching = false;
+  let touchStartX = 0;
   
   // Click to seek
   progressBar.addEventListener('click', (e) => {
@@ -2181,6 +2333,95 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
       }
     }
   });
+  
+  // Touch events for mobile
+  progressBar.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    isTouching = true;
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    
+    const rect = progressBar.getBoundingClientRect();
+    const touchX = touch.clientX - rect.left;
+    const percentage = Math.max(0, Math.min(100, (touchX / rect.width) * 100));
+    
+    // Stop automatic progress tracking when user starts touching
+    if (window.currentProgressInterval) {
+      clearInterval(window.currentProgressInterval);
+      window.currentProgressInterval = null;
+    }
+    
+    // Update progress immediately on touch start
+    updateProgress(percentage);
+  }, { passive: false });
+  
+  progressBar.addEventListener('touchmove', (e) => {
+    if (isTouching) {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const rect = progressBar.getBoundingClientRect();
+      const touchX = touch.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(100, (touchX / rect.width) * 100));
+      updateProgress(percentage);
+    }
+  }, { passive: false });
+  
+  progressBar.addEventListener('touchend', (e) => {
+    if (isTouching) {
+      e.preventDefault();
+      isTouching = false;
+      const percentage = parseFloat(progressFill.style.width);
+      seekTo(percentage);
+      
+      // Restart progress tracking after touch with longer delay
+      if (isCurrentlyPlaying) {
+        setTimeout(() => {
+          // Restarting progress tracking after touch
+          startSimpleProgressTracking();
+        }, 500);
+      }
+    }
+  }, { passive: false });
+  
+  // Handle touch on progress handle for dragging
+  progressHandle.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    isTouching = true;
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    
+    // Stop automatic progress tracking when user starts dragging handle
+    if (window.currentProgressInterval) {
+      clearInterval(window.currentProgressInterval);
+      window.currentProgressInterval = null;
+    }
+  }, { passive: false });
+  
+  // Add visual feedback for mobile
+  progressBar.addEventListener('touchstart', () => {
+    progressBar.style.opacity = '0.8';
+    progressHandle.style.transform = 'scale(1.2)';
+    
+    // Haptic feedback if available
+    if (navigator.vibrate) {
+      navigator.vibrate(10);
+    }
+  });
+  
+  progressBar.addEventListener('touchend', () => {
+    progressBar.style.opacity = '1';
+    progressHandle.style.transform = 'scale(1)';
+  });
+  
+  // Prevent scrolling when interacting with progress bar
+  progressBar.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+  }, { passive: false });
+  
+  progressBar.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+  }, { passive: false });
   
   function updateProgress(percentage) {
     progressFill.style.width = percentage + '%';
@@ -2463,12 +2704,18 @@ async function loadHeroLatest(username){
   }
   
   try{
-    // Load latest episode using fallback system (server-side first, then direct API)
-    const params = { username, limit: 1 };
-    const res = await fetchMixcloudData('/cloudcasts', params);
+    // Load latest episode from Mixcloud API directly
+    const res = await fetch(`https://api.mixcloud.com/${username}/cloudcasts/?limit=1`, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
     
     if (!res.ok) {
-      throw new Error(`Mixcloud API error: ${res.status} ${res.statusText}`);
+      throw new Error(`HTTP error! status: ${res.status}`);
     }
     
     const data = await res.json();
@@ -2553,20 +2800,21 @@ if (document.getElementById('hero-ep-title')) {
 
 // Initialize player controls
 document.addEventListener('DOMContentLoaded', () => {
-<<<<<<< HEAD
-  // Initialize mobile play button
-  initMobilePlayButton();
-  
-  // Ensure play button is initialized on mobile
-  if (isMobileDevice() && document.getElementById('hero-play-pause')) {
-    console.log('Mobile: Initializing play button event listeners');
-    initPlayButton();
+  // Immediately hide play button on mobile before any other initialization
+  if (isMobileDevice()) {
+    const playPauseBtn = document.getElementById('hero-play-pause');
+    if (playPauseBtn) {
+      playPauseBtn.classList.remove('mixcloud-ready');
+      playPauseBtn.style.display = 'none';
+      playPauseBtn.style.opacity = '0';
+      playPauseBtn.style.visibility = 'hidden';
+      playPauseBtn.style.pointerEvents = 'none';
+      console.log('Play button immediately hidden on mobile');
+    }
   }
   
-=======
->>>>>>> parent of 0601791 (best)
   // Only initialize if we're on a page with player elements
-  if (document.getElementById('progress-bar') || document.getElementById('play-pause-btn') || document.getElementById('hero-play-pause')) {
+  if (document.getElementById('progress-bar') || document.getElementById('play-pause-btn')) {
   initProgressBar();
   initVolumeControl();
   initPlayButton();
@@ -2581,35 +2829,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Pre-load Mixcloud player for mobile devices
   if (isMobileDevice()) {
-    console.log('Mobile: Pre-loading Mixcloud player');
     
-  // Simple mobile initialization - just wait for episodes and set current episode
-  setTimeout(() => {
-    if (episodes && episodes.length > 0) {
-      console.log('Mobile: Episodes loaded, setting current episode');
-      const firstEpisode = episodes[0];
-      if (firstEpisode) {
-        // Set current episode
-        currentEpisode = firstEpisode;
-        
-        // Update hero display
-        const titleEl = document.getElementById('hero-ep-title');
-        if (titleEl) {
-          titleEl.textContent = firstEpisode.name;
-        }
-      }
-    }
-  }, 2000);
-    
-    // Additional mobile Mixcloud initialization - without auto-play
-    setTimeout(() => {
-      console.log('Mobile: Additional Mixcloud initialization');
-      if (!window.mixcloudWidgetReady) {
-        console.log('Mobile: Mixcloud not ready, forcing initialization');
-        // Force initialize Mixcloud widget
-        forceMobileMixcloudInit();
-      }
-    }, 2000);
+    preloadMixcloudPlayer();
   }
   
   // Force update play button after Font Awesome loads
@@ -2772,8 +2993,11 @@ function initPlayButton() {
     
     // Hide play button initially on mobile until widget is ready
     if (isMobileDevice()) {
-      playPauseBtn.style.display = 'none';
-      
+      // Remove CSS class to ensure button is hidden
+      playPauseBtn.classList.remove('mixcloud-ready');
+      isPlayerReady = false;
+      isPlayButtonHiddenOnMobile = true;
+      console.log('Play button hidden on mobile - waiting for Mixcloud');
     }
     
     // Ensure the button is clickable and has proper event handling
@@ -2883,9 +3107,8 @@ function initPlayButton() {
 
 // Mobile detection and debugging
 function isMobileDevice() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-         ('ontouchstart' in window) || 
-         (navigator.maxTouchPoints > 0);
+  // Use the same robust detection as isMobile()
+  return isMobile();
 }
 
 // Simple debugging function that works without console
@@ -2902,18 +3125,16 @@ function debugAlert(message) {
 function hidePlayButtonOnMobile() {
   const playPauseBtn = document.getElementById('hero-play-pause');
   if (playPauseBtn && isMobileDevice()) {
-    playPauseBtn.style.display = 'none';
-    playPauseBtn.style.opacity = '0';
-    playPauseBtn.style.visibility = 'hidden';
-    playPauseBtn.style.pointerEvents = 'none';
+    // Remove CSS class to hide the button
+    playPauseBtn.classList.remove('mixcloud-ready');
     isPlayerReady = false;
+    isPlayButtonHiddenOnMobile = true;
     console.log('Play button hidden on mobile - player not ready');
   }
 }
 
 function showPlayButtonWhenReady() {
   const playPauseBtn = document.getElementById('hero-play-pause');
-<<<<<<< HEAD
   console.log('showPlayButtonWhenReady called', {
     hasPlayPauseBtn: !!playPauseBtn,
     isMobileDevice: isMobileDevice(),
@@ -2924,44 +3145,51 @@ function showPlayButtonWhenReady() {
     hasPreloadedWidget: !!window.preloadedWidget
   });
   
-  if (playPauseBtn && isMobileDevice()) {
-    // Show if Mixcloud widget is loaded (regardless of isPlayButtonHiddenOnMobile state)
-    if (window.mixcloudWidgetReady && (currentWidget || window.preloadedWidget)) {
-      console.log('Mobile: Widget is ready, showing play button');
+  if (playPauseBtn && isMobileDevice() && isPlayButtonHiddenOnMobile) {
+    // Only show if player is actually ready and Mixcloud widget is loaded
+    if (isPlayerReady && window.mixcloudWidgetReady && (currentWidget || window.preloadedWidget)) {
       // Add CSS class to show the button
       playPauseBtn.classList.add('mixcloud-ready');
       
       // Fallback: also set inline styles to ensure visibility
-=======
-  if (playPauseBtn && isMobileDevice()) {
-    // Only show if player is actually ready
-    if (isPlayerReady && (currentWidget || window.preloadedWidget)) {
->>>>>>> parent of 0601791 (best)
       playPauseBtn.style.display = 'flex';
       playPauseBtn.style.opacity = '1';
       playPauseBtn.style.visibility = 'visible';
-      playPauseBtn.style.transition = 'opacity 0.3s ease-in-out';
       playPauseBtn.style.pointerEvents = 'auto';
-<<<<<<< HEAD
       playPauseBtn.style.position = 'relative';
       playPauseBtn.style.left = 'auto';
       playPauseBtn.style.top = 'auto';
       playPauseBtn.style.width = '72px';
       playPauseBtn.style.height = '72px';
       playPauseBtn.style.overflow = 'visible';
-      playPauseBtn.style.cursor = 'pointer';
-      playPauseBtn.style.zIndex = '10';
-=======
->>>>>>> parent of 0601791 (best)
       
-      console.log('Play button shown on mobile - player is ready');
+      isPlayButtonHiddenOnMobile = false;
+      
+      console.log('Play button shown on mobile - Mixcloud is ready');
+      console.log('Button classes after adding mixcloud-ready:', playPauseBtn.className);
+      console.log('Button computed styles:', {
+        display: getComputedStyle(playPauseBtn).display,
+        opacity: getComputedStyle(playPauseBtn).opacity,
+        visibility: getComputedStyle(playPauseBtn).visibility
+      });
       
       // Set the play icon now that widget is ready
-      playPauseBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
       updatePlayState(false);
     } else {
-      console.log('Play button not shown - player not ready yet');
+      console.log('Play button not shown - Mixcloud not ready yet', {
+        isPlayerReady,
+        mixcloudWidgetReady: window.mixcloudWidgetReady,
+        hasCurrentWidget: !!currentWidget,
+        hasPreloadedWidget: !!window.preloadedWidget,
+        isPlayButtonHiddenOnMobile
+      });
     }
+  } else {
+    console.log('showPlayButtonWhenReady conditions not met', {
+      hasPlayPauseBtn: !!playPauseBtn,
+      isMobileDevice: isMobileDevice(),
+      isPlayButtonHiddenOnMobile
+    });
   }
 }
 
@@ -2969,7 +3197,12 @@ function setPlayerReady(ready) {
   isPlayerReady = ready;
   if (ready) {
     console.log('Player marked as ready');
-    showPlayButtonWhenReady();
+    // Only show play button if Mixcloud is actually ready
+    if (window.mixcloudWidgetReady) {
+      showPlayButtonWhenReady();
+    } else {
+      console.log('Player ready but Mixcloud widget not ready yet');
+    }
   } else {
     console.log('Player marked as not ready');
     if (isMobileDevice()) {
@@ -2981,55 +3214,25 @@ function setPlayerReady(ready) {
 // Function to only play (for Listen now button)
 window.handlePlayOnly = function() {
   // Handle play only - no toggle
-  
-  // On mobile, ensure play button is visible when user clicks "Listen now"
-  if (isMobileDevice()) {
-    console.log('Mobile: Listen now clicked, ensuring play button is visible');
-    const playPauseBtn = document.getElementById('hero-play-pause');
-    if (playPauseBtn) {
-      // Force show the play button
-      playPauseBtn.classList.add('mixcloud-ready');
-      playPauseBtn.style.display = 'flex';
-      playPauseBtn.style.opacity = '1';
-      playPauseBtn.style.visibility = 'visible';
-      playPauseBtn.style.pointerEvents = 'auto';
-      isPlayButtonHiddenOnMobile = false;
-      console.log('Mobile: Play button forced to show for Listen now');
-    }
-  }
-  
   if (!currentEpisode) {
-    // If no current episode, try to get the latest episode from the episodes array first
-    if (episodes && episodes.length > 0) {
-      currentEpisode = episodes[0];
-      console.log('Mobile: Using first episode from episodes array:', currentEpisode.name);
-      
-      // Update hero display
-      const titleEl = document.getElementById('hero-ep-title');
-      if (titleEl) {
-        titleEl.textContent = currentEpisode.name;
-      }
-    } else {
-      // Fallback: try to get from episodes grid
-      const episodesGrid = document.getElementById('episodes-grid');
-      if (episodesGrid && episodesGrid.children.length > 0) {
-        const firstEpisode = episodesGrid.children[0];
-        const episodeData = firstEpisode.dataset.episode;
-        if (episodeData) {
-          try {
-            currentEpisode = JSON.parse(episodeData);
-            console.log('Mobile: Using episode from grid:', currentEpisode.name);
-          } catch (error) {
-            console.error('Error parsing episode data:', error);
-          }
+    // If no current episode, try to get the latest episode from the episodes grid
+    const episodesGrid = document.getElementById('episodes-grid');
+    if (episodesGrid && episodesGrid.children.length > 0) {
+      const firstEpisode = episodesGrid.children[0];
+      const episodeData = firstEpisode.dataset.episode;
+      if (episodeData) {
+        try {
+          currentEpisode = JSON.parse(episodeData);
+          
+          playEpisode(currentEpisode);
+          return;
+        } catch (error) {
+          
         }
       }
     }
     
-    if (!currentEpisode) {
-      console.log('Mobile: No episode available to play');
-      return;
-    }
+    return;
   }
   
   // If already playing, don't do anything
@@ -3232,6 +3435,118 @@ function preloadCurrentEpisode(episode) {
           
           // Mark player as ready when preloaded widget is ready
           setPlayerReady(true);
+          
+          // For mobile auto-play, wait for preloaded widget ready event then start play
+          if (isMobileDevice() && window.isAutoPlaying) {
+            console.log('Mobile auto-play: Waiting for preloaded widget ready event');
+            
+            // Listen for preloaded widget ready event
+            if (window.preloadedWidget && window.preloadedWidget.events && window.preloadedWidget.events.ready) {
+              window.preloadedWidget.events.ready.on(() => {
+                console.log('Mobile auto-play: Preloaded widget ready event received, starting play');
+                
+                const playPauseBtn = document.getElementById('hero-play-pause');
+                if (playPauseBtn) {
+                  console.log('Mobile auto-play: Clicking play button after preloaded ready event');
+                  playPauseBtn.click();
+                }
+                
+                if (window.preloadedWidget && typeof window.preloadedWidget.play === 'function') {
+                  console.log('Mobile auto-play: Calling preloaded widget play after ready event');
+                  window.preloadedWidget.play();
+                  currentWidget = window.preloadedWidget;
+                  isCurrentlyPlaying = true;
+                  updatePlayState(true);
+                  startSimpleProgressTracking();
+                }
+              });
+            } else {
+              // Fallback if no ready event available
+              console.log('Mobile auto-play: No preloaded ready event available, using timeout fallback');
+              setTimeout(() => {
+                const playPauseBtn = document.getElementById('hero-play-pause');
+                if (playPauseBtn) {
+                  console.log('Mobile auto-play: Fallback play button click (preloaded)');
+                  playPauseBtn.click();
+                }
+                
+                if (window.preloadedWidget && typeof window.preloadedWidget.play === 'function') {
+                  console.log('Mobile auto-play: Fallback preloaded widget play');
+                  window.preloadedWidget.play();
+                }
+              }, 1000);
+            }
+          }
+          
+          // Show play button on mobile now that Mixcloud is ready
+          if (isMobileDevice()) {
+            // For auto-play, ensure button is immediately visible
+            if (window.isAutoPlaying) {
+              const playPauseBtn = document.getElementById('hero-play-pause');
+              if (playPauseBtn) {
+                playPauseBtn.classList.add('mixcloud-ready');
+                playPauseBtn.style.display = 'flex';
+                playPauseBtn.style.opacity = '1';
+                playPauseBtn.style.visibility = 'visible';
+                playPauseBtn.style.pointerEvents = 'auto';
+                console.log('Mobile play button shown immediately for auto-play (preloaded)');
+              }
+              
+              // Explicitly start playback for mobile auto-play with preloaded widget
+              setTimeout(() => {
+                console.log('Attempting play call for mobile auto-play (preloaded widget)');
+                
+                // Try multiple approaches to start playback
+                const playPauseBtn = document.getElementById('hero-play-pause');
+                
+                // Method 1: Direct preloaded widget play call
+                if (window.preloadedWidget && typeof window.preloadedWidget.play === 'function') {
+                  console.log('Starting playback for mobile auto-play (preloaded widget method)');
+                  window.preloadedWidget.play();
+                  currentWidget = window.preloadedWidget;
+                  isCurrentlyPlaying = true;
+                  updatePlayState(true);
+                  startSimpleProgressTracking();
+                }
+                
+                // Method 2: Programmatically click the play button
+                if (playPauseBtn) {
+                  console.log('Clicking play button for mobile auto-play (preloaded)');
+                  playPauseBtn.click();
+                }
+                
+                // Method 3: Trigger the play button's click event
+                if (playPauseBtn) {
+                  console.log('Triggering play button event for mobile auto-play (preloaded)');
+                  const clickEvent = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true
+                  });
+                  playPauseBtn.dispatchEvent(clickEvent);
+                }
+                
+                // Hit play again after a short delay to ensure it actually starts
+                setTimeout(() => {
+                  console.log('Second attempt for mobile auto-play (preloaded)');
+                  
+                  // Try preloaded widget play again
+                  if (window.preloadedWidget && typeof window.preloadedWidget.play === 'function') {
+                    console.log('Hitting play again for mobile auto-play (preloaded widget method)');
+                    window.preloadedWidget.play();
+                  }
+                  
+                  // Try clicking play button again
+                  if (playPauseBtn) {
+                    console.log('Clicking play button again for mobile auto-play (preloaded)');
+                    playPauseBtn.click();
+                  }
+                }, 1000);
+              }, 500); // Small delay to ensure widget is fully ready
+            } else {
+              showPlayButtonWhenReady();
+            }
+          }
         } catch (error) {
           console.error('Error initializing preloaded widget:', error);
         }
@@ -3249,77 +3564,34 @@ function preloadCurrentEpisode(episode) {
 
 // Function to pre-load Mixcloud player for mobile devices
 function preloadMixcloudPlayer() {
-  console.log('Mobile: Starting simplified Mixcloud preload');
+  
   
   // Wait for episodes to be loaded first
   const checkForEpisodes = () => {
-    if (episodes && episodes.length > 0) {
-      console.log('Mobile: Episodes available, initializing Mixcloud');
+    const episodesGrid = document.getElementById('episodes-grid');
+    if (episodesGrid && episodesGrid.querySelector('.episodes-card')) {
+      
       
       // Get the first episode
-      const firstEpisode = episodes[0];
+      const firstEpisodeCard = episodesGrid.querySelector('.episodes-card');
+      const episodeTitle = firstEpisodeCard.querySelector('.title')?.textContent;
+      const episodeLink = firstEpisodeCard.querySelector('.play-link')?.href;
       
-      if (firstEpisode && firstEpisode.mixcloudUrl) {
-        console.log('Mobile: Initializing with episode:', firstEpisode.name);
-        
+      if (episodeTitle && episodeLink) {
         // Set current episode
-        currentEpisode = firstEpisode;
-        updateEpisodeInfo(firstEpisode);
+        currentEpisode = {
+          name: episodeTitle,
+          url: episodeLink
+        };
         
-        // Initialize the main iframe directly
-        const iframe = document.getElementById('mixcloud-iframe');
-        if (iframe) {
-          iframe.src = firstEpisode.mixcloudUrl;
-          console.log('Mobile: Set iframe source to:', firstEpisode.mixcloudUrl);
-          
-          // Initialize widget when iframe loads
-          iframe.onload = () => {
-            console.log('Mobile: Main iframe loaded, initializing widget');
-            
-            // Wait for Mixcloud to be available
-            const initWidget = () => {
-              if (window.Mixcloud) {
-                try {
-                  currentWidget = window.Mixcloud.PlayerWidget(iframe);
-                  console.log('Mobile: Mixcloud widget initialized successfully');
-                  
-                  // Mark as ready
-                  window.mixcloudWidgetReady = true;
-                  setPlayerReady(true);
-                  
-                  // Show play button on mobile
-                  const playPauseBtn = document.getElementById('hero-play-pause');
-                  if (playPauseBtn) {
-                    playPauseBtn.classList.add('mixcloud-ready');
-                    playPauseBtn.style.display = 'flex';
-                    playPauseBtn.style.opacity = '1';
-                    playPauseBtn.style.visibility = 'visible';
-                    console.log('Mobile: Play button shown and ready');
-                  }
-                } catch (error) {
-                  console.error('Mobile: Error initializing Mixcloud widget:', error);
-                  // Retry after delay
-                  setTimeout(initWidget, 2000);
-                }
-              } else {
-                console.log('Mobile: Mixcloud not ready, retrying...');
-                setTimeout(initWidget, 1000);
-              }
-            };
-            
-            // Start widget initialization
-            setTimeout(initWidget, 500);
-          };
-        } else {
-          console.error('Mobile: Mixcloud iframe not found');
-        }
-      } else {
-        console.warn('Mobile: No episode with Mixcloud URL found');
+        
+        
+        // Create the Mixcloud player but keep it hidden
+        createPreloadedMixcloudPlayer(episodeLink);
       }
     } else {
-      // Episodes not loaded yet, try again
-      console.log('Mobile: Episodes not ready, retrying...');
-      setTimeout(checkForEpisodes, 1000);
+      // Episodes not loaded yet, try again in 500ms
+      setTimeout(checkForEpisodes, 500);
     }
   };
   
@@ -3393,29 +3665,19 @@ function createPreloadedMixcloudPlayer(episodeUrl) {
 function ensurePlayButtonReady() {
   const playPauseBtn = document.getElementById('hero-play-pause');
   if (playPauseBtn) {
-    console.log('Ensuring play button is ready...', {
-      hasCurrentEpisode: !!currentEpisode,
-      isCurrentlyPlaying,
-      buttonElement: playPauseBtn,
-      isMobileDevice: isMobileDevice(),
-      mixcloudWidgetReady: window.mixcloudWidgetReady,
-      isPlayerReady,
-      isPlayButtonHiddenOnMobile
-    });
+    //console.log('Ensuring play button is ready...', {
+    //  hasCurrentEpisode: !!currentEpisode,
+    //  isCurrentlyPlaying,
+    //  buttonElement: playPauseBtn
+    //});
     
     // Hide play button on mobile initially until player is ready
     if (isMobileDevice()) {
-<<<<<<< HEAD
-      if (!window.mixcloudWidgetReady) {
-        console.log('Mobile: Hiding play button - widget not ready');
+      if (!window.mixcloudWidgetReady || !isPlayerReady) {
         hidePlayButtonOnMobile();
-      } else {
-        console.log('Mobile: Widget is ready, showing play button');
+      } else if (isPlayButtonHiddenOnMobile) {
         showPlayButtonWhenReady();
       }
-=======
-      hidePlayButtonOnMobile();
->>>>>>> parent of 0601791 (best)
     }
     
     // Make sure the button is properly set up
@@ -4117,36 +4379,33 @@ window.testCustomPosts = async function() {
   }
 };
 
-// Initialize Instagram posts when page loads - simplified approach
+// Initialize Instagram posts when page loads
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM Content Loaded - initializing Instagram section');
   
-  // Load immediately for all devices
-  const instagramFeed = document.getElementById('instagram-feed');
-  
-  if (instagramFeed) {
-    console.log('Instagram feed found, loading posts');
-    instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
-    loadInstagramPostsWithRetry();
-  } else {
-    console.warn('Instagram feed not found, retrying...');
-    // Multiple retry attempts
-    setTimeout(() => {
-      const retryFeed = document.getElementById('instagram-feed');
-      if (retryFeed) {
-        retryFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
-        loadInstagramPostsWithRetry();
-      }
-    }, 500);
+  // Add a small delay to ensure all elements are ready
+  setTimeout(() => {
+    const instagramFeed = document.getElementById('instagram-feed');
     
-    setTimeout(() => {
-      const retryFeed = document.getElementById('instagram-feed');
-      if (retryFeed) {
-        retryFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
-        loadInstagramPostsWithRetry();
-      }
-    }, 2000);
-  }
+    if (instagramFeed) {
+      console.log('Instagram feed found, loading posts');
+      // Show loading state immediately
+      instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
+      
+      // Load Instagram posts with retry logic
+      loadInstagramPostsWithRetry();
+    } else {
+      console.warn('Instagram feed not found, retrying...');
+      // Retry after a longer delay
+      setTimeout(() => {
+        const retryFeed = document.getElementById('instagram-feed');
+        if (retryFeed) {
+          retryFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
+          loadInstagramPostsWithRetry();
+        }
+      }, 1000);
+    }
+  }, 100);
 });
 
 // Load Instagram posts with retry logic
@@ -4179,35 +4438,29 @@ async function loadInstagramPostsWithRetry() {
   
 // Load Instagram posts function
 async function loadInstagramPosts() {
-  //console.log('loadInstagramPosts function called');
   const container = document.getElementById('instagram-feed');
-  //console.log('Instagram container found:', !!container);
   if (!container) {
-    //console.error('Instagram feed container not found');
+    console.error('Instagram feed container not found');
     return;
   }
   
   // Show loading state
-  console.log('📸 Instagram: Setting loading state...');
+  //console.log('Setting loading state...');
   container.innerHTML = `
     <div class="instagram-loading" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
       <i class="fab fa-instagram" style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent);"></i>
       <p style="color: var(--muted);">Loading Instagram posts...</p>
     </div>
   `;
-  console.log('📸 Instagram: Loading state set, container innerHTML:', container.innerHTML);
+  //console.log('Loading state set, container innerHTML:', container.innerHTML);
   
   try {
-    //console.log('Fetching Instagram posts...');
     const posts = await fetchInstagramPosts();
-    //console.log('Instagram posts fetched:', posts);
     
     if (posts && posts.length > 0) {
-      //console.log('About to call renderInstagramPosts...');
       renderInstagramPosts(posts);
-      //console.log('renderInstagramPosts called successfully');
     } else {
-      //console.warn('No posts received, showing fallback message');
+      console.warn('No posts received, showing fallback message');
       container.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
           <i class="fab fa-instagram" style="font-size: 2rem; margin-bottom: 1rem; color: var(--muted);"></i>
@@ -4218,7 +4471,7 @@ async function loadInstagramPosts() {
     }
     
   } catch (error) {
-    //console.error('Error loading Instagram posts:', error);
+    console.error('Error loading Instagram posts:', error);
     container.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
         <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem; color: var(--warning);"></i>
@@ -4320,356 +4573,36 @@ function ensureMainContentVisible() {
   //console.log('Main content grid visibility enforced');
 }
 
-// Mobile-specific initialization - more aggressive approach
-function initializeMobileContent() {
-  console.log('Mobile initialization - forcing content load');
-  
-  // Force load Instagram
-  const instagramFeed = document.getElementById('instagram-feed');
-  if (instagramFeed) {
-    console.log('Mobile: Forcing Instagram load');
-    instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
-    loadInstagramPostsWithRetry();
-  }
-  
-  // Force load episodes
-  const episodesSlider = document.getElementById('episodes-slider');
-  if (episodesSlider) {
-    console.log('Mobile: Forcing episodes load');
-    episodesSlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
-    loadEpisodesWithRetry();
-  }
-  
-  // Force load coming up events
-  const comingGrid = document.getElementById('coming-grid');
-  if (comingGrid) {
-    console.log('Mobile: Forcing coming up events load');
-    comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
-    loadComingUpEventsWithRetry();
-  }
-}
-
-// S24 Ultra detection and initialization
-if (isMobileDevice()) {
-  console.log('S24 Ultra detected - setting up specialized loading system');
-  
-  // Immediate S24 Ultra initialization
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('S24 Ultra DOMContentLoaded - initializing content');
-    ensureMainContentVisible();
-    initializeMobileContent();
-    
-    // Start S24 Ultra loading system
-    setTimeout(() => {
-      handleS24UltraLoading();
-    }, 500);
-  });
-  
-  // Backup initialization after window load
-  window.addEventListener('load', () => {
-    console.log('S24 Ultra window load - checking content');
-    setTimeout(() => {
-      if (!s24ContentLoaded) {
-        console.log('S24 Ultra window load: Content not loaded, forcing reload');
-        initializeMobileContent();
-        handleS24UltraLoading();
-      }
-    }, 1000);
-  });
-  
-  // S24 Ultra page visibility handler
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && isMobileDevice()) {
-      console.log('S24 Ultra: Page became visible, checking content');
-      setTimeout(() => {
-        const instagramFeed = document.getElementById('instagram-feed');
-        const episodesSlider = document.getElementById('episodes-slider');
-        
-        if ((!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) ||
-            (!episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
-          console.log('S24 Ultra: Page visible - content missing, forcing reload');
-          initializeMobileContent();
-          handleS24UltraLoading();
-        }
-      }, 300);
-    }
-  });
-  
-  // S24 Ultra window focus handler
-  window.addEventListener('focus', () => {
-    console.log('S24 Ultra: Window focused, checking content');
-    setTimeout(() => {
-      if (!s24ContentLoaded) {
-        console.log('S24 Ultra: Content not loaded on focus, forcing reload');
-        initializeMobileContent();
-        handleS24UltraLoading();
-      }
-    }, 300);
-  });
-  
-  // Mobile page visibility handler
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && isMobileDevice()) {
-      console.log('Mobile: Page became visible, checking content');
-      setTimeout(() => {
-        const instagramFeed = document.getElementById('instagram-feed');
-        const episodesSlider = document.getElementById('episodes-slider');
-        
-        if ((!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) ||
-            (!episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
-          console.log('Mobile: Page visible - content still loading, forcing reload');
-          initializeMobileContent();
-        }
-      }, 500);
-    }
-  });
-}
-
-// Universal loading function
-function forceLoadAllContent() {
-  console.log('Force loading all content...');
-  
-  // Force load Instagram
-  const instagramFeed = document.getElementById('instagram-feed');
-  if (instagramFeed && (instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading'))) {
-    console.log('Force loading Instagram');
-    instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
-    loadInstagramPostsWithRetry();
-  }
-  
-  // Force load episodes
-  const episodesSlider = document.getElementById('episodes-slider');
-  if (episodesSlider && (episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
-    console.log('Force loading episodes');
-    episodesSlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
-    loadEpisodesWithRetry();
-  }
-  
-  // Force load coming up events
-  const comingGrid = document.getElementById('coming-grid');
-  if (comingGrid && (comingGrid.innerHTML.trim() === '' || comingGrid.innerHTML.includes('Loading'))) {
-    console.log('Force loading coming up events');
-    comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
-    loadComingUpEventsWithRetry();
-  }
-}
+// Simplified mobile content visibility - removed complex logic that might cause issues
 
 // Backup loading for sections that might not load on first try
 window.addEventListener('load', () => {
   console.log('Window loaded - checking for unloaded sections');
-  forceLoadAllContent();
-});
-
-// Additional universal loading attempts
-setTimeout(forceLoadAllContent, 1000);
-setTimeout(forceLoadAllContent, 3000);
-setTimeout(forceLoadAllContent, 5000);
-
-// Debug function to check mobile loading
-function debugMobileStatus() {
-  console.log('=== MOBILE DEBUG STATUS ===');
-  console.log('User Agent:', navigator.userAgent);
-  console.log('Screen Width:', window.innerWidth);
-  console.log('Is Mobile Device:', isMobileDevice());
-  console.log('Instagram Feed:', document.getElementById('instagram-feed')?.innerHTML?.substring(0, 100));
-  console.log('Episodes Slider:', document.getElementById('episodes-slider')?.innerHTML?.substring(0, 100));
-  console.log('Mixcloud Widget Ready:', window.mixcloudWidgetReady);
-  console.log('Is Player Ready:', isPlayerReady);
-  console.log('========================');
-}
-
-// Debug on mobile devices
-if (isMobileDevice()) {
-  setTimeout(debugMobileStatus, 2000);
-  setTimeout(debugMobileStatus, 5000);
-}
-
-// Mobile browser memory management handlers
-if (isMobileDevice()) {
-  // Start mobile inconsistent loading handler
-  document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(handleMobileInconsistentLoading, 1000);
-  });
   
-  // Handle page visibility changes (app switching, tab switching)
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      console.log('Mobile: Page became visible, checking content');
-      setTimeout(() => {
-        const instagramFeed = document.getElementById('instagram-feed');
-        const episodesSlider = document.getElementById('episodes-slider');
-        
-        if ((!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) ||
-            (!episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
-          console.log('Mobile: Content missing after visibility change, forcing reload');
-          handleMobileInconsistentLoading();
-        }
-      }, 500);
-    }
-  });
-  
-  // Handle page focus (returning to tab)
-  window.addEventListener('focus', () => {
-    console.log('Mobile: Window focused, checking content');
-    setTimeout(() => {
-      const instagramFeed = document.getElementById('instagram-feed');
-      const episodesSlider = document.getElementById('episodes-slider');
-      
-      if ((!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) ||
-          (!episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
-        console.log('Mobile: Content missing after focus, forcing reload');
-        handleMobileInconsistentLoading();
-      }
-    }, 500);
-  });
-  
-  // Handle memory pressure (if supported)
-  if ('memory' in performance) {
-    setInterval(() => {
-      const memory = performance.memory;
-      if (memory.usedJSHeapSize / memory.jsHeapSizeLimit > 0.8) {
-        console.log('Mobile: High memory usage detected, clearing and reloading content');
-        handleMobileInconsistentLoading();
-      }
-    }, 10000);
-  }
-}
-
-
-// Force mobile Mixcloud initialization
-function forceMobileMixcloudInit() {
-  console.log('Mobile: Force initializing Mixcloud widget');
-  
-  if (episodes && episodes.length > 0) {
-    const firstEpisode = episodes[0];
-    
-    if (firstEpisode && firstEpisode.mixcloudUrl) {
-      console.log('Mobile: Force loading episode:', firstEpisode.name);
-      
-      // Set current episode
-      currentEpisode = firstEpisode;
-      updateEpisodeInfo(firstEpisode);
-      
-      // Get or create iframe
-      let iframe = document.getElementById('mixcloud-iframe');
-      if (!iframe) {
-        console.log('Mobile: Creating Mixcloud iframe');
-        iframe = document.createElement('iframe');
-        iframe.id = 'mixcloud-iframe';
-        iframe.width = '100%';
-        iframe.height = '400';
-        iframe.frameBorder = '0';
-        iframe.allow = 'encrypted-media; fullscreen; autoplay; idle-detection; web-share;';
-        iframe.style.border = 'none';
-        
-        // Add to player container
-        const playerContainer = document.getElementById('mixcloud-player');
-        if (playerContainer) {
-          playerContainer.appendChild(iframe);
-        }
-      }
-      
-      // Set source
-      iframe.src = firstEpisode.mixcloudUrl;
-      console.log('Mobile: Set iframe source to:', firstEpisode.mixcloudUrl);
-      
-      // Initialize widget when loaded
-      iframe.onload = () => {
-        console.log('Mobile: Force iframe loaded, initializing widget');
-        
-        const initWidget = () => {
-          if (window.Mixcloud) {
-            try {
-              currentWidget = window.Mixcloud.PlayerWidget(iframe);
-              console.log('Mobile: Force Mixcloud widget initialized');
-              
-              window.mixcloudWidgetReady = true;
-              setPlayerReady(true);
-              
-              // Show play button
-              const playPauseBtn = document.getElementById('hero-play-pause');
-              if (playPauseBtn) {
-                playPauseBtn.classList.add('mixcloud-ready');
-                playPauseBtn.style.display = 'flex';
-                playPauseBtn.style.opacity = '1';
-                playPauseBtn.style.visibility = 'visible';
-                console.log('Mobile: Force play button shown');
-              }
-            } catch (error) {
-              console.error('Mobile: Force widget error:', error);
-              setTimeout(initWidget, 2000);
-            }
-          } else {
-            console.log('Mobile: Force Mixcloud not ready, retrying...');
-            setTimeout(initWidget, 1000);
-          }
-        };
-        
-        setTimeout(initWidget, 500);
-      };
-    }
-  }
-}
-
-// Load episode for mobile without auto-play
-function loadEpisodeForMobile(episode) {
-  console.log('Mobile: Loading episode without auto-play:', episode.name);
-  
-  // Update episode info without playing
-  updateEpisodeInfo(episode);
-  
-  // Load the widget but don't start playback
-  if (episode.mixcloudUrl) {
-    const iframe = document.getElementById('mixcloud-iframe');
-    if (iframe) {
-      iframe.src = episode.mixcloudUrl;
-      console.log('Mobile: Episode loaded, ready for manual play');
-    }
-  }
-}
-
-// Mobile refresh function
-function handleMobileRefresh() {
-  console.log('Mobile refresh button clicked');
-  
-  // Show loading states
+  // Check Instagram section
   const instagramFeed = document.getElementById('instagram-feed');
-  const episodesSlider = document.getElementById('episodes-slider');
+  if (instagramFeed && instagramFeed.innerHTML.trim() === '') {
+    console.log('Instagram section empty on window load, retrying...');
+    instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
+    loadInstagramPostsWithRetry();
+  }
+  
+  // Check Coming up section
   const comingGrid = document.getElementById('coming-grid');
-  
-  if (instagramFeed) {
-    instagramFeed.innerHTML = '<div class="loading-state">Refreshing Instagram posts...</div>';
-  }
-  if (episodesSlider) {
-    episodesSlider.innerHTML = '<div class="loading-state">Refreshing episodes...</div>';
-  }
-  if (comingGrid) {
-    comingGrid.innerHTML = '<div class="loading-state">Refreshing upcoming shows...</div>';
+  if (comingGrid && comingGrid.innerHTML.trim() === '') {
+    console.log('Coming up section empty on window load, retrying...');
+    comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
+    loadComingUpEventsWithRetry();
   }
   
-  // Hide refresh button
-  const refreshBtn = document.getElementById('mobile-refresh-btn');
-  if (refreshBtn) {
-    refreshBtn.style.display = 'none';
+  // Check Episodes section
+  const episodesSlider = document.getElementById('episodes-slider');
+  if (episodesSlider && episodesSlider.innerHTML.trim() === '') {
+    console.log('Episodes section empty on window load, retrying...');
+    episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
+    loadEpisodesWithRetry();
   }
-  
-  // Force reload all content
-  setTimeout(() => {
-    forceLoadAllContent();
-    handleMobileInconsistentLoading();
-  }, 500);
-}
-
-// Show mobile refresh button when content fails to load
-function showMobileRefreshButton() {
-  if (!isMobileDevice()) return;
-  
-  const refreshBtn = document.getElementById('mobile-refresh-btn');
-  if (refreshBtn) {
-    refreshBtn.style.display = 'block';
-    console.log('Mobile: Showing refresh button due to loading failure');
-  }
-}
+});
 
 // Instagram Navigation Functions
 function scrollInstagramLeft() {
@@ -4726,124 +4659,3 @@ document.addEventListener('DOMContentLoaded', function() {
     feed.addEventListener('scroll', updateInstagramNavButtons);
   }
 });
-
-// Test API connectivity for debugging
-async function testApiConnectivity() {
-  console.log('🧪 Testing fallback data systems...');
-  
-  // Test Mixcloud fallback
-  console.log('🎵 Testing Mixcloud fallback...');
-  try {
-    const params = { username: 'SamudraFM', limit: 1 };
-    const response = await fetchMixcloudData('/cloudcasts', params);
-    console.log(`✅ Mixcloud fallback working - Status: ${response.status}`);
-    
-    if (response.ok) {
-      const data = await response.json();
-      console.log('📊 Mixcloud Fallback Data:', data);
-    }
-  } catch (error) {
-    console.log(`❌ Mixcloud fallback failed: ${error.message}`);
-  }
-  
-  // Test Instagram fallback
-  console.log('📸 Testing Instagram fallback...');
-  try {
-    const posts = await fetchInstagramPosts();
-    console.log(`✅ Instagram fallback working - Posts: ${posts.length}`);
-    console.log('📊 Instagram Fallback Data:', posts);
-  } catch (error) {
-    console.log(`❌ Instagram fallback failed: ${error.message}`);
-  }
-}
-
-// Specific Mixcloud diagnostic function
-window.testMixcloudAPI = async function() {
-  console.log('🎵 Testing Mixcloud fallback system...');
-  
-  const params = { username: 'SamudraFM', limit: 1 };
-  
-  try {
-    console.log('🔍 Testing with fallback system...');
-    const response = await fetchMixcloudData('/cloudcasts', params);
-    console.log(`✅ Mixcloud fallback working - Status: ${response.status}`);
-    
-    if (response.ok) {
-      const data = await response.json();
-      console.log('📊 Full Mixcloud Fallback Data:', data);
-      
-      if (data.data && data.data.length > 0) {
-        console.log('✅ Episodes found:', data.data.length);
-        console.log('📝 First episode:', data.data[0]);
-      } else {
-        console.log('⚠️ No episodes found in fallback data');
-      }
-    }
-  } catch (error) {
-    console.log(`❌ Mixcloud fallback failed: ${error.message}`);
-    console.log('💡 This means the fallback system has an issue');
-  }
-};
-
-// Run connectivity test on page load
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(testApiConnectivity, 1000);
-});
-
-// Simple test function to debug fallback systems
-window.testAPIs = async function() {
-  console.log('🧪 Testing fallback systems...');
-  console.log(`📍 Domain: ${window.location.hostname}`);
-  console.log(`🔒 Protocol: ${window.location.protocol}`);
-  
-  // Test 1: Test Mixcloud fallback
-  console.log('🎵 Testing Mixcloud fallback...');
-  try {
-    const params = { username: 'SamudraFM', limit: 1 };
-    const response = await fetchMixcloudData('/cloudcasts', params);
-    console.log(`✅ Mixcloud fallback working - Status: ${response.status}`);
-    
-    if (response.ok) {
-      const data = await response.json();
-      console.log('📊 Mixcloud Fallback Data:', data);
-    }
-  } catch (error) {
-    console.log(`❌ Mixcloud fallback failed: ${error.message}`);
-  }
-  
-  // Test 2: Test Instagram fallback
-  console.log('📸 Testing Instagram fallback...');
-  try {
-    const posts = await fetchInstagramPosts();
-    console.log(`✅ Instagram fallback working - Posts: ${posts.length}`);
-    console.log('📊 Instagram Fallback Data:', posts);
-  } catch (error) {
-    console.log(`❌ Instagram fallback failed: ${error.message}`);
-    console.log(`🔍 Error details:`, error);
-  }
-  
-  console.log('🔧 Fallback system testing complete! Check the results above.');
-};
-
-// Global diagnostic function for manual testing
-window.diagnoseLiveIssues = async function() {
-  console.log('🔧 Starting fallback system diagnostic...');
-  console.log(`📍 Domain: ${window.location.hostname}`);
-  console.log(`🔒 Protocol: ${window.location.protocol}`);
-  console.log(`🌍 User Agent: ${navigator.userAgent}`);
-  
-  // Run the simple fallback test
-  await window.testAPIs();
-  
-  // Test 3: Check Content Security Policy
-  console.log('🛡️ Checking Content Security Policy...');
-  const metaTags = document.querySelectorAll('meta[http-equiv="Content-Security-Policy"]');
-  if (metaTags.length > 0) {
-    console.log('✅ CSP meta tag found');
-    console.log('CSP Content:', metaTags[0].getAttribute('content'));
-  } else {
-    console.log('❌ No CSP meta tag found');
-  }
-  
-  console.log('🔧 Fallback system diagnostic complete! Check the results above.');
-};

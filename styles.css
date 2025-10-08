@@ -8,79 +8,10 @@
   --brand:#f61b58;
   --accent:#6b4c93;
   --live:#ff4d6d;
+  --warning:#ff6b35;
   --border:rgba(255,255,255,0.08);
   --radius:14px;
   --shadow:0 10px 30px rgba(0,0,0,.25);
-}
-
-/* Ambient background */
-body {
-  position: relative;
-  overflow-x: hidden;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.15) 0%, transparent 60%),
-    radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.15) 0%, transparent 60%),
-    radial-gradient(circle at 40% 40%, rgba(246, 27, 88, 0.12) 0%, transparent 60%),
-    radial-gradient(circle at 70% 90%, rgba(107, 76, 147, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 10% 30%, rgba(255, 77, 109, 0.08) 0%, transparent 45%),
-    linear-gradient(135deg, rgba(15, 34, 48, 0.3) 0%, rgba(23, 50, 70, 0.2) 50%, rgba(35, 57, 75, 0.1) 100%);
-  z-index: -2;
-  animation: ambientFloat 20s ease-in-out infinite;
-}
-
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at 60% 20%, rgba(120, 119, 198, 0.12) 0%, transparent 50%),
-    radial-gradient(circle at 30% 70%, rgba(255, 107, 53, 0.12) 0%, transparent 50%),
-    radial-gradient(circle at 70% 60%, rgba(246, 27, 88, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 90% 10%, rgba(107, 76, 147, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 15% 85%, rgba(255, 77, 109, 0.06) 0%, transparent 35%);
-  z-index: -1;
-  animation: ambientFloat 25s ease-in-out infinite reverse;
-}
-
-/* Additional ambient color layer */
-body {
-  background: 
-    radial-gradient(circle at 50% 50%, rgba(246, 27, 88, 0.03) 0%, transparent 70%),
-    radial-gradient(circle at 25% 25%, rgba(120, 119, 198, 0.04) 0%, transparent 60%),
-    radial-gradient(circle at 75% 75%, rgba(255, 107, 53, 0.03) 0%, transparent 65%);
-  background-attachment: fixed;
-}
-
-
-@keyframes ambientFloat {
-  0%, 100% {
-    transform: translate(0, 0) scale(1) rotate(0deg);
-    opacity: 0.8;
-  }
-  25% {
-    transform: translate(-3%, -2%) scale(1.05) rotate(1deg);
-    opacity: 0.9;
-  }
-  50% {
-    transform: translate(2%, -3%) scale(0.95) rotate(-1deg);
-    opacity: 0.7;
-  }
-  75% {
-    transform: translate(-2%, 2%) scale(1.02) rotate(0.5deg);
-    opacity: 0.85;
-  }
 }
 
 /* Loading states */
@@ -514,6 +445,8 @@ body{
   padding: 18px;
   box-shadow: var(--shadow);
   width: 100%; /* Responsive width */
+  display: flex;
+  flex-direction: column;
 }
 
 .instagram-header {
@@ -641,7 +574,7 @@ body{
 
 .instagram-cover {
   position: relative;
-  height: 200px;
+  height: 230px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -797,7 +730,8 @@ body{
 .instagram-feed {
   display: flex;
   gap: 14px;
-  height: 275px;
+  flex: 1;
+  min-height: 275px;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
@@ -1702,7 +1636,7 @@ body{
 .footer-content {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
-    gap: 40px;
+    gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
@@ -1715,6 +1649,52 @@ body{
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* Align the second column (Connect & Listen) to the right with padding */
+.footer-column:nth-child(2) {
+    text-align: right;
+    padding-right: 20px;
+}
+
+.footer-column:nth-child(2) h3 {
+    text-align: right;
+    margin-bottom: 12px;
+}
+
+.footer-column:nth-child(2) .social-links {
+    text-align: right;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.footer-column:nth-child(2) .social-links li {
+    text-align: right;
+    margin-bottom: 8px;
+}
+
+.footer-column:nth-child(2) .social-links .social-link {
+    justify-content: flex-end;
+}
+
+/* Align the third column (Links) to the right with padding */
+.footer-column:nth-child(3) {
+    text-align: right;
+    padding-right: 20px;
+}
+
+.footer-column:nth-child(3) h3 {
+    text-align: right;
+    margin-bottom: 12px;
+}
+
+.footer-column:nth-child(3) .footer-links {
+    text-align: right;
+}
+
+.footer-column:nth-child(3) .footer-links li {
+    text-align: right;
+    margin-bottom: 8px;
 }
 
 .footer-logo {
@@ -1818,9 +1798,19 @@ body{
         text-align: center;
     }
     
+    /* Reset right alignment on mobile for better readability */
+    .footer-column:nth-child(2) {
+        text-align: center;
+    }
+    
     .footer-column h3 {
         margin-bottom: 10px; /* Reduced from 15px */
         font-size: 14px; /* Reduced from 16px */
+    }
+    
+    .footer-column:nth-child(2) h3,
+    .footer-column:nth-child(3) h3 {
+        text-align: center;
     }
     
     .footer-brand-title {
@@ -1885,7 +1875,8 @@ body{
   .instagram-feed {
     display: flex;
     gap: 12px;
-    height: 275px; /* Match desktop height for consistency */
+    flex: 1;
+    min-height: 275px; /* Match desktop height for consistency */
     overflow-x: auto;
     overflow-y: hidden;
     scroll-behavior: smooth;
@@ -1929,7 +1920,7 @@ body{
   
   /* Instagram cover on mobile */
   .instagram-cover {
-    height: 200px !important;
+    height: 230px !important;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1965,6 +1956,8 @@ body{
     max-width: 100% !important;
     margin: 0 auto;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
   
   /* Instagram feed container width fix */
@@ -1985,21 +1978,10 @@ body{
     order: 1;
     margin: 0;
     padding: 0;
-    width: 100%;
-    max-width: 100%;
   }
   
   .coming h2 {
     margin: 8px 0 14px 0;
-  }
-  
-  /* Coming up section full width on mobile */
-  .coming .card-col {
-    width: 100%;
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
   }
   
   .instagram-section {
@@ -2034,6 +2016,41 @@ body{
 
 /* Mobile-specific improvements - placed at end for highest priority */
 @media (max-width: 768px) {
+  /* Initially hide play button on mobile until Mixcloud is ready */
+  .play-pause-btn,
+  #hero-play-pause,
+  .play-overlay .play-pause-btn,
+  .player-widget .play-pause-btn {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  /* Show play button when Mixcloud is ready */
+  .play-pause-btn.mixcloud-ready,
+  #hero-play-pause.mixcloud-ready,
+  .play-overlay .play-pause-btn.mixcloud-ready,
+  .player-widget .play-pause-btn.mixcloud-ready {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 72px !important;
+    height: 72px !important;
+    overflow: visible !important;
+    transition: opacity 0.3s ease-in-out !important;
+  }
+  
   .play-pause-btn {
     width: 72px;
     height: 72px;
@@ -2042,6 +2059,52 @@ body{
     min-width: 44px;
     background: transparent !important;
     color: white !important;
+  }
+  
+  
+  /* Enhanced mobile progress bar interactivity */
+  .progress-bar {
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+  }
+  
+  .progress-bar:hover,
+  .progress-bar:active {
+    opacity: 0.9;
+  }
+  
+  .progress-handle {
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: transform 0.1s ease;
+  }
+  
+  .progress-handle:active {
+    transform: scale(1.2);
+  }
+  
+  /* Larger touch targets for mobile */
+  .progress-bar {
+    min-height: 44px;
+    padding: 8px 0;
+  }
+  
+  .progress-handle {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
   }
   
   /* Player width on mobile - make it more compact */
@@ -2212,20 +2275,11 @@ body{
     margin-top: 6px;
   }
   
-  /* Coming up cards on mobile - use full width */
+  /* Coming up cards on mobile - maintain horizontal layout but adjust spacing */
   .coming .card {
     padding: 18px;
     gap: 16px;
     min-height: 100px;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-  
-  /* Coming up cards container on mobile */
-  .coming .card-col {
-    width: 100%;
-    max-width: 100%;
   }
   
 /* Episode Cards */
@@ -4324,13 +4378,6 @@ body{
     height: 80px;
   }
   
-  /* Coming up card content full width on mobile */
-  .coming .card .content {
-    flex: 1;
-    min-width: 0;
-    width: 100%;
-  }
-  
   /* Coming up time display on mobile */
   .coming-up-time {
     right: 12px;
@@ -4354,25 +4401,6 @@ body{
     padding: 12px;
     margin: 12px 0;
     gap: 12px;
-  }
-  
-  /* Coming up cards on very small screens */
-  .coming .card {
-    padding: 14px;
-    gap: 12px;
-    min-height: 90px;
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  .coming .card .cover {
-    width: 70px;
-    height: 70px;
-  }
-  
-  .coming .card .content {
-    flex: 1;
-    min-width: 0;
   }
   
   .player-left {
@@ -4549,30 +4577,10 @@ body{
     padding-top: 80px !important;
   }
   
-  /* Hide Listen now button on mobile, show Send a request button */
-  .cta-row .btn.primary {
+  /* Hide Send a request buttons on mobile */
+  .cta-row .btn[href="request.html"],
+  .request-btn {
     display: none !important;
-  }
-  
-  .cta-row .btn[href="request.html"] {
-    display: inline-flex !important;
-    background: linear-gradient(135deg, #f61b58, #ff4d6d) !important;
-    color: white !important;
-    border: 0 !important;
-    padding: 18px 32px !important;
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    min-height: 56px !important;
-    box-shadow: 0 4px 15px rgba(246, 27, 88, 0.3) !important;
-    /* Removed animation and hover effects for mobile */
-  }
-  
-  .cta-row .btn[href="request.html"]:hover {
-    /* No hover effects on mobile */
-    background: linear-gradient(135deg, #f61b58, #ff4d6d) !important;
-    color: white !important;
-    transform: none !important;
-    box-shadow: 0 4px 15px rgba(246, 27, 88, 0.3) !important;
   }
   
   /* Ensure episodes slider works on mobile */
@@ -4831,11 +4839,9 @@ body{
     display: none;
   }
   
-  /* Hide send a request button on mobile in player widget */
-  .player-widget .request-btn,
-  .player-widget a[href="request.html"],
-  .player-widget .btn[href="request.html"] {
-    display: none !important;
+  /* Hide send a request button on mobile */
+  .player-widget .request-btn {
+    display: none;
   }
   
   /* Make volume slider shorter on mobile */
@@ -4972,9 +4978,8 @@ body{
   .main-content-grid > *:not(.hero) {
     opacity: 1;
     transform: translateY(0);
-    transition: all 0.6s ease-out;
-    pointer-events: auto;
-  }
+  transition: all 0.6s ease-out;
+  pointer-events: auto;
 }
 
 /* Mobile: Remove primary button animations on home page */

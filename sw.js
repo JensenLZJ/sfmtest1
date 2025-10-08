@@ -1,28 +1,19 @@
-const CACHE_NAME = 'samudrafm-v' + Date.now();
-const CORE_ASSETS = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/script.js'
-  // Note: Images are now protected and cached differently
-];
+// NO CACHE VERSION - Clear all caches immediately
+const CACHE_NAME = 'samudrafm-no-cache-v' + Date.now();
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      // Try to cache each asset individually to identify which ones fail
-      return Promise.allSettled(
-        CORE_ASSETS.map(asset => 
-          cache.add(asset).catch(error => {
-            //console.warn(`Failed to cache asset: ${asset}`, error);
-            return null; // Return null for failed assets
-          })
-        )
-      ).then(() => {
-        // Service worker installation completed
-        return Promise.resolve();
-      });
-    }).then(() => self.skipWaiting())
+    // Don't cache anything - just clear all existing caches
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          return caches.delete(cacheName);
+        })
+      );
+    }).then(() => {
+      console.log('All caches cleared on install');
+      return self.skipWaiting();
+    })
   );
 });
 
@@ -35,7 +26,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Handle fetch events with proper error handling
+// NO CACHE - Always fetch from network
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   const url = new URL(req.url);
@@ -54,16 +45,17 @@ self.addEventListener('fetch', (event) => {
   // Only handle same-origin requests
   if (url.origin === self.location.origin) {
     event.respondWith(
+      // Always fetch from network with no-cache headers
       fetch(req, {
         cache: 'no-cache',
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache'
         }
-      }).then((res) => {
-        return res;
+      }).then((response) => {
+        return response;
       }).catch((error) => {
-        //console.warn('Service worker fetch failed:', error);
+        console.warn('Service worker fetch failed:', error);
         // Return a basic response instead of letting it fail
         return new Response('Network error - please refresh', { 
           status: 503,

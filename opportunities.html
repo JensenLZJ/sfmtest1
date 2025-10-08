@@ -182,10 +182,73 @@
             margin: 40px 0;
         }
         
+        /* Mobile Header Styles - Same as home page */
+        @media (max-width: 900px) {
+            .header-inner {
+                padding: 12px 0; /* Reduced from 18px */
+            }
+            
+            .brand-subtitle {
+                display: none; /* Hide subtitle on mobile to save space */
+            }
+            
+            .nav-toggle {
+                display: inline-block !important;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            
+            .nav-toggle:hover {
+                transform: scale(1.05);
+                background: rgba(246, 27, 88, 0.1);
+                border-color: #f61b58;
+            }
+            
+            .nav-toggle:active {
+                transform: scale(0.95);
+            }
+            
+            .nav-list {
+                position: absolute;
+                right: 4%;
+                top: 64px;
+                background: #0f2230;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 10px 12px;
+                flex-direction: column;
+                gap: 10px;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+            }
+            
+            .nav-list.open {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+        }
+        
         @media (max-width: 768px) {
             .request-layout {
                 grid-template-columns: 1fr;
                 gap: 30px;
+            }
+            
+            /* Reorder sections on mobile - positions above form */
+            .request-layout {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .request-sidebar {
+                order: 1; /* Positions section first */
+            }
+            
+            .request-form-section {
+                order: 2; /* Form section second */
             }
         }
         
@@ -627,7 +690,7 @@
                             <p>Fill out the form below to express your interest in joining our team</p>
                         </div>
                         
-                        <!-- Custom Form UI -->
+                        <!-- Custom Form UI - Integrated with Google Form -->
                         <form id="request-form" class="request-form">
                             <div class="form-row">
                                 <div class="form-group">
@@ -635,96 +698,83 @@
                                         <i class="fas fa-user"></i>
                                         Full Name *
                                     </label>
-                                    <input type="text" id="applicant-name" name="fullName" required placeholder="e.g., John Doe">
+                                    <input type="text" id="applicant-name" name="name" required placeholder="Your answer">
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="email">
+                                    <label for="applicant-email">
                                         <i class="fas fa-envelope"></i>
-                                        Email Address *
+                                        Email *
                                     </label>
-                                    <input type="email" id="email" name="email" required placeholder="e.g., john@example.com">
+                                    <input type="email" id="applicant-email" name="email" required placeholder="Your answer">
                                 </div>
                             </div>
                             
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="applicant-phone">
-                                        <i class="fas fa-phone"></i>
-                                        Phone Number
-                                    </label>
-                                    <input type="tel" id="applicant-phone" name="phone" placeholder="e.g., +60123456789">
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="applicant-role">
-                                        <i class="fas fa-briefcase"></i>
-                                        Role of Interest *
-                                    </label>
-                                    <select id="applicant-role" name="role" required>
-                                        <option value="">Select a role...</option>
-                                        <option value="Radio Presenter">Radio Presenter</option>
-                                        <option value="Music Coordinator">Music Coordinator</option>
-                                        <option value="Script Planner/Researcher">Script Planner/Researcher</option>
-                                        <option value="Event Planner">Event Planner</option>
-                                        <option value="Sound Editor">Sound Editor</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
+                            <div class="form-group">
+                                <label for="applicant-phone">
+                                    <i class="fas fa-phone"></i>
+                                    Phone number *
+                                </label>
+                                <input type="tel" id="applicant-phone" name="phone" required placeholder="e.g., 60123456789 or 0123456789" pattern="^(601|01)[0-9]{5,13}$" title="Please enter a valid Malaysian phone number starting with 601 or 01 (7-15 digits total)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="applicant-role">
+                                    <i class="fas fa-briefcase"></i>
+                                    Role of interest *
+                                </label>
+                                <select id="applicant-role" name="role" required>
+                                    <option value="">Select an option</option>
+                                    <option value="Radio Presenter">Radio Presenter</option>
+                                    <option value="Music Coordinator">Music Coordinator</option>
+                                    <option value="Script Planner/Researcher">Script Planner/Researcher</option>
+                                    <option value="Event Planner">Event Planner</option>
+                                    <option value="Sound Editor">Sound Editor</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
                             
                             <div class="form-group">
                                 <label for="applicant-experience">
                                     <i class="fas fa-star"></i>
-                                    Experience Level
+                                    Experience Level *
                                 </label>
                                 <select id="applicant-experience" name="experience" required>
-                                    <option value="">Select experience level...</option>
-                                    <option value="Beginner">Beginner - Just starting out</option>
-                                    <option value="Intermediate">Intermediate - Some experience</option>
-                                    <option value="Advanced">Advanced - Experienced professional</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="applicant-availability">
-                                    <i class="fas fa-clock"></i>
-                                    Availability
-                                </label>
-                                <select id="applicant-availability" name="availability" required>
-                                    <option value="">Select availability...</option>
-                                    <option value="Weekdays">Weekdays only</option>
-                                    <option value="Weekends">Weekends only</option>
-                                    <option value="Flexible">Flexible - Any time</option>
-                                    <option value="Evenings">Evenings only</option>
+                                    <option value="">Select an option</option>
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Advanced">Advanced</option>
                                 </select>
                             </div>
                             
                             <div class="form-group">
                                 <label for="applicant-motivation">
                                     <i class="fas fa-heart"></i>
-                                    Why do you want to join SamudraFM? *
+                                    Why do you want to join samudrafm? *
                                 </label>
-                                <textarea id="applicant-motivation" name="motivation" rows="4" required placeholder="Tell us what excites you about joining our team..."></textarea>
+                                <textarea id="applicant-motivation" name="motivation" rows="4" required placeholder="Your answer"></textarea>
                             </div>
                             
                             <div class="form-group">
                                 <label for="applicant-skills">
                                     <i class="fas fa-tools"></i>
-                                    Skills & Interests (Optional)
+                                    Skills & interest
                                 </label>
-                                <textarea id="applicant-skills" name="skills" rows="3" placeholder="What skills do you bring to the table? Any special interests or hobbies?"></textarea>
+                                <textarea id="applicant-skills" name="skills" rows="3" placeholder="Your answer"></textarea>
                             </div>
                             
                             <button type="submit" class="btn primary submit-btn" id="submit-btn">
                                 <i class="fas fa-paper-plane"></i>
-                                <span class="btn-text">Submit Application</span>
+                                <span class="btn-text">Submit</span>
                                 <span class="btn-loading" style="display: none;">
                                     <i class="fas fa-spinner fa-spin"></i>
                                     Submitting...
                                 </span>
                             </button>
                         </form>
+                        
+                        <!-- Hidden iframe for form submission -->
+                        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
                         
                         <div id="success-message" class="success-message" style="display: none;">
                             <div class="success-icon">
@@ -807,7 +857,7 @@
         <div class="footer-content">
             <div class="footer-column">
            <div class="footer-logo">
-               <img src="/assets/brandmark/SamudraFMLogo1.png" alt="SamudraFM Logo" onerror="this.src='/images/SamudraFMLogo1.png'; this.onerror=null;" />
+               <img src="assets/brandmark/SamudraFMLogo1.png" alt="SamudraFM Logo" />
            </div>
                 <h2 class="footer-brand-title">SamudraFM</h2>
                 <p class="footer-description">
@@ -829,8 +879,9 @@
             </div>
             
             <div class="footer-column">
-                <h3>Legal</h3>
+                <h3>Links</h3>
                 <ul class="footer-links">
+                    <li><a href="opportunities.html">Opportunities</a></li>
                     <li><a href="privacy-policy.html">Privacy Policy</a></li>
                 </ul>
             </div>
@@ -839,7 +890,7 @@
         <div class="footer-separator"></div>
         
         <div class="footer-bottom">
-            <p>© 2025 SamudraFM. Designed with passion by Jensen Lim Zi Jen 📻</p>
+            <p>© 2025 SamudraFM. Designed with passion by Jensen. 📻</p>
         </div>
     </footer>
 
@@ -857,7 +908,7 @@
             }
         });
         
-        // Submit application
+        // Submit application to Google Forms
         async function submitApplication(form) {
             const submitBtn = document.getElementById('submit-btn');
             const btnText = submitBtn.querySelector('.btn-text');
@@ -871,27 +922,75 @@
             try {
                 // Get form data
                 const formData = new FormData(form);
-                const applicationData = {
-                    fullName: formData.get('fullName'),
-                    email: formData.get('email'),
-                    phone: formData.get('phone') || '',
-                    role: formData.get('role'),
-                    experience: formData.get('experience'),
-                    availability: formData.get('availability'),
-                    motivation: formData.get('motivation'),
-                    skills: formData.get('skills') || '',
-                    timestamp: new Date().toISOString()
-                };
                 
-                //console.log('Application submitted:', applicationData);
+                // Validate required fields
+                const name = formData.get('name');
+                const email = formData.get('email');
+                const phone = formData.get('phone');
+                const role = formData.get('role');
+                const experience = formData.get('experience');
+                const motivation = formData.get('motivation');
                 
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                if (!name || !email || !phone || !role || !experience || !motivation) {
+                    throw new Error('Please fill in all required fields');
+                }
+                
+                // Validate phone number format (Malaysian format: 601xxxxxxx or 01xxxxxxx, 7-15 digits total)
+                const phonePattern = /^(601|01)[0-9]{5,13}$/;
+                if (!phonePattern.test(phone)) {
+                    throw new Error('Please enter a valid Malaysian phone number starting with 601 or 01 (7-15 digits total)');
+                }
+                
+                // Simulate processing time
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Create Google Form submission
+                const googleFormAction = 'https://docs.google.com/forms/d/e/1FAIpQLSd1LUl84gB_JDb3vydgKek9U2FZP5iIu4_cypad3OL1nyaKTQ/formResponse';
+                
+                // Create a hidden form for submission
+                const hiddenForm = document.createElement('form');
+                hiddenForm.action = googleFormAction;
+                hiddenForm.method = 'POST';
+                hiddenForm.target = 'hidden_iframe';
+                hiddenForm.style.display = 'none';
+                
+                // Add form fields - using generic entry names that should work
+                const fields = [
+                    { name: 'entry.2005620554', value: name }, // Name field
+                    { name: 'entry.1045781291', value: email }, // Email field
+                    { name: 'entry.1166974658', value: formData.get('phone') || '' }, // Phone field
+                    { name: 'entry.839337160', value: formData.get('role') || '' }, // Role field
+                    { name: 'entry.1065046570', value: formData.get('experience') || '' }, // Experience field
+                    { name: 'entry.1974380732', value: motivation }, // Motivation field
+                    { name: 'entry.839337160', value: formData.get('skills') || '' } // Skills field
+                ];
+                
+                fields.forEach(field => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = field.name;
+                    input.value = field.value;
+                    hiddenForm.appendChild(input);
+                });
+                
+                // Submit the form
+                document.body.appendChild(hiddenForm);
+                hiddenForm.submit();
+                document.body.removeChild(hiddenForm);
                 
                 // Show success message
                 form.style.display = 'none';
-                document.getElementById('success-message').style.display = 'block';
-                document.getElementById('success-message').scrollIntoView({ behavior: 'smooth' });
+                const successMessage = document.getElementById('success-message');
+                successMessage.innerHTML = `
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Application Submitted Successfully!</h3>
+                    <p>Thank you for your interest in joining SamudraFM. Your application has been submitted and we'll review it soon.</p>
+                    <p>Only accepted participants will be notified via email and whatsapp.</p>
+                `;
+                successMessage.style.display = 'block';
+                successMessage.scrollIntoView({ behavior: 'smooth' });
                 
             } catch (error) {
                 //console.error('Error submitting application:', error);
@@ -944,16 +1043,30 @@
             document.getElementById('applicant-name').focus();
         }
         
-        // Mobile navigation toggle
+        // Mobile navigation toggle - Same as home page
         function setupMobileNavigation() {
             const navToggle = document.querySelector('.nav-toggle');
-            const navMenu = document.querySelector('#nav-menu');
+            const navMenu = document.getElementById('nav-menu');
             
-            navToggle.addEventListener('click', function() {
-                const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                this.setAttribute('aria-expanded', !isExpanded);
-                navMenu.classList.toggle('active');
-            });
+            if (navToggle) {
+                navToggle.addEventListener('click', () => {
+                    const open = navMenu.classList.toggle('open');
+                    navToggle.setAttribute('aria-expanded', String(open));
+                    
+                    // Add animate__fadeInRightBig class on mobile when menu opens
+                    if (window.innerWidth <= 768) {
+                        if (open) {
+                            // Opening menu on mobile
+                            // Remove any existing animation classes first
+                            navMenu.classList.remove('animate__fadeInRightBig', 'animate__animated');
+                            // Force a reflow to ensure the class removal takes effect
+                            navMenu.offsetHeight;
+                            // Add the animation classes
+                            navMenu.classList.add('animate__animated', 'animate__fadeInRightBig');
+                        }
+                    }
+                });
+            }
         }
     </script>
 

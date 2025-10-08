@@ -6,29 +6,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>SamudraFM — Your study, your music.</title>
+    <title>SamudraFM — Your study, your music. (v<script>document.write(Date.now())</script>)</title>
     <meta name="description" content="SamudraFM - Non-stop hits, live shows, and requests.">
     
-    <!-- Force cache clearing on every visit -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <!-- Force cache clearing on every visit - Enhanced for mobile -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, private, no-transform">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="cache-control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta name="cache-control" content="no-cache, no-store, must-revalidate, max-age=0, private, no-transform">
     <meta name="expires" content="0">
     <meta name="pragma" content="no-cache">
     
-    <!-- Coming Soon Redirect - Always redirect to coming soon page -->
+    <!-- Additional mobile cache prevention -->
+    <meta http-equiv="Last-Modified" content="0">
+    <meta http-equiv="ETag" content="0">
+    <meta http-equiv="Vary" content="*">
+    
+    <!-- Additional mobile cache prevention -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Force fresh load on every visit -->
+    <script>
+        // Immediately redirect with cache busting parameter
+        if (!window.location.search.includes('cb=')) {
+            window.location.replace(window.location.href + (window.location.search ? '&' : '?') + 'cb=' + Date.now());
+        }
+        
+        // Ensure JavaScript runs regardless of how page is loaded
+        function ensureScriptsRun() {
+            console.log('Ensuring scripts run - DOM ready state:', document.readyState);
+            
+            // Force DOMContentLoaded event if it hasn't fired
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    console.log('DOMContentLoaded fired');
+                });
+            } else {
+                console.log('DOM already loaded - triggering events manually');
+                // Manually trigger DOMContentLoaded if it already loaded
+                const event = new Event('DOMContentLoaded');
+                document.dispatchEvent(event);
+            }
+        }
+        
+        // Run immediately and also on load
+        ensureScriptsRun();
+        window.addEventListener('load', ensureScriptsRun);
+    </script>
+    
+    <!-- Aggressive cache busting for mobile -->
+    <script>
+        // Global error handler to prevent JavaScript errors from breaking page load
+        window.addEventListener('error', function(e) {
+            console.warn('JavaScript error caught:', e.message, 'at', e.filename, 'line', e.lineno);
+            // Don't let errors break the page
+            return true;
+        });
+        
+        // Global unhandled promise rejection handler
+        window.addEventListener('unhandledrejection', function(e) {
+            console.warn('Unhandled promise rejection:', e.reason);
+            // Prevent the error from breaking the page
+            e.preventDefault();
+        });
+        
+        // URL-based cache busting (redundant with above, keeping for safety)
+        console.log('Page load detected - ensuring cache busting');
+        
+        // Clear all caches for fresh loads
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                names.forEach(function(name) {
+                    caches.delete(name);
+                });
+                console.log('All caches cleared');
+            }).catch(function(err) {
+                console.warn('Cache clearing failed:', err);
+            });
+        }
+        
+        // Simple cache busting without complex queuing
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options = {}) {
+            try {
+                if (typeof url === 'string' && !url.includes('http') && !url.includes('//')) {
+                    const separator = url.includes('?') ? '&' : '?';
+                    url += separator + 'cb=' + Date.now() + '&r=' + Math.random();
+                }
+                return originalFetch(url, options);
+            } catch (err) {
+                console.warn('Fetch error:', err);
+                return originalFetch(url, options);
+            }
+        };
+    </script>
+    
+    <!-- Coming Soon Redirect - Fixed logic to prevent second visit redirects -->
     <script>
         // Check if this is a fresh bypass (not a refresh)
         const urlParams = new URLSearchParams(window.location.search);
         const hasBypassParam = urlParams.has('bypass');
         const isRefresh = sessionStorage.getItem('samudrafm_visited') === 'true';
         
-        // If no bypass parameter OR if it's a refresh, redirect to coming soon
-        if (!hasBypassParam || isRefresh) {
+        // Only redirect to coming soon if NO bypass parameter AND it's the first visit
+        // This prevents redirects on second visits
+        if (!hasBypassParam && !isRefresh) {
             // Clear any existing bypass data
             localStorage.removeItem('samudrafm_bypass');
             sessionStorage.removeItem('samudrafm_bypass');
@@ -38,7 +122,7 @@
             // Force redirect to coming soon page
             window.location.href = '/coming-soon.html';
         } else {
-            // Mark as visited and set session flag
+            // Mark as visited and set session flag (for subsequent visits)
             sessionStorage.setItem('samudrafm_visited', 'true');
             sessionStorage.setItem('samudrafm_bypass', 'true');
             
@@ -75,7 +159,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="styles.css?v=43&t=1734570400&force=20&nocache=1&cb=1734570400">
+    <link rel="stylesheet" href="styles.css?v=44&t=1734571000&force=21&nocache=1&cb=1734571000">
     
     
     <!-- Favicon -->
@@ -83,10 +167,12 @@
     <link rel="apple-touch-icon" href="images/SamudraFMLogo1.png">
     <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
     
+    <!-- Simplified mobile handling - removed complex detection that might cause conflicts -->
+    
     <!-- Content Security Policy and Permissions Policy -->
-    <meta http-equiv="Permissions-Policy" content="encrypted-media=*, autoplay=*, microphone=(), camera=(), fullscreen=*, geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=(), display-capture=(), web-share=*, clipboard-read=(), clipboard-write=(), picture-in-picture=*">
-    <meta http-equiv="Feature-Policy" content="encrypted-media *; autoplay *; microphone 'none'; camera 'none'; fullscreen *; geolocation 'none'; payment 'none'; usb 'none'; accelerometer 'none'; gyroscope 'none'; magnetometer 'none'; display-capture 'none'; web-share *; clipboard-read 'none'; clipboard-write 'none'; picture-in-picture *">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; script-src-elem 'self' 'unsafe-inline' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://www.googleapis.com https://graph.instagram.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; child-src 'self';">
+    <meta http-equiv="Permissions-Policy" content="encrypted-media=(self https://player-widget.mixcloud.com https://www.mixcloud.com); autoplay=(self https://player-widget.mixcloud.com https://www.mixcloud.com); microphone=(); camera=(); fullscreen=(self https://player-widget.mixcloud.com https://www.mixcloud.com); geolocation=(); payment=(); usb=(); accelerometer=(); gyroscope=(); magnetometer=(); display-capture=(); web-share=(self); clipboard-read=(); clipboard-write=(); picture-in-picture=(self)">
+    <meta http-equiv="Feature-Policy" content="encrypted-media 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; autoplay 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; microphone 'none'; camera 'none'; fullscreen 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; geolocation 'none'; payment 'none'; usb 'none'; accelerometer 'none'; gyroscope 'none'; magnetometer 'none'; display-capture 'none'; web-share 'self'; clipboard-read 'none'; clipboard-write 'none'; picture-in-picture 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; script-src-elem 'self' 'unsafe-inline' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://api.allorigins.win https://cors-anywhere.herokuapp.com https://thingproxy.freeboard.io https://www.googleapis.com https://graph.instagram.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; child-src 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -133,7 +219,7 @@
                         <div class="player-left">
                             <div class="hero-latest-cover cover placeholder" id="player-cover"></div>
                             <div class="play-overlay" id="play-overlay">
-                                <button class="play-pause-btn" id="hero-play-pause" onclick="if(window.innerWidth <= 768) { window.handlePlayPause && window.handlePlayPause(); }"><i class="fa-solid fa-pause"></i></button>
+                                <button class="play-pause-btn" id="hero-play-pause"><i class="fa-solid fa-pause"></i></button>
                             </div>
                         </div>
                         <div class="player-right">
@@ -204,11 +290,6 @@
                 <div class="instagram-feed" id="instagram-feed">
                     <!-- Instagram posts will be loaded here by JavaScript -->
                 </div>
-                <div id="mobile-refresh-btn" style="display: none; text-align: center; margin-top: 20px;">
-                    <button onclick="handleMobileRefresh()" style="background: var(--brand); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-                        🔄 Refresh Content
-                    </button>
-                </div>
             </div>
 
             <!-- Right Side - Coming Up -->
@@ -276,8 +357,9 @@
             </div>
             
             <div class="footer-column">
-                <h3>Legal</h3>
+                <h3>Links</h3>
                 <ul class="footer-links">
+                    <li><a href="opportunities.html">Opportunities</a></li>
                     <li><a href="privacy-policy.html">Privacy Policy</a></li>
                 </ul>
             </div>
@@ -286,7 +368,7 @@
         <div class="footer-separator"></div>
         
         <div class="footer-bottom">
-            <p>© 2025 SamudraFM. Designed with passion by Jensen Lim Zi Jen 📻</p>
+            <p>© 2025 SamudraFM. Designed with passion by Jensen. 📻</p>
         </div>
     </footer>
 
@@ -637,18 +719,21 @@
             extensionBlocking.init();
         })();
     </script>
+    <!-- Instagram Configuration -->
+    <script src="instagram-config.js"></script>
+    
     <script>
-    // Dynamic script loading with aggressive cache busting
+    // Simple script loading with cache busting
     const script = document.createElement('script');
-    const timestamp = Date.now();
-    const randomId = Math.random().toString(36).substring(2, 15);
-    script.src = 'script.js?v=75&t=' + timestamp + '&nocache=1&cb=' + timestamp + '&r=' + randomId;
+    const scriptTimestamp = Date.now();
+    const scriptRandomId = Math.random().toString(36).substring(2, 15);
+    script.src = 'script.js?v=78&t=' + scriptTimestamp + '&nocache=1&cb=' + scriptTimestamp + '&r=' + scriptRandomId;
     script.onload = function() {
-      // Script loaded successfully
+      console.log('Script loaded successfully');
     };
     script.onerror = function() {
-      // Script loading failed, retrying...
-      // Fallback to static script
+      console.warn('Script loading failed, retrying...');
+      // Simple fallback
       const fallbackScript = document.createElement('script');
       fallbackScript.src = 'script.js?fallback=' + Date.now();
       document.head.appendChild(fallbackScript);
@@ -667,7 +752,7 @@
     <script>
     // Aggressive cache clearing on every visit
     (function() {
-      const timestamp = Date.now();
+      const swTimestamp = Date.now();
       
       // Clear all browser caches
       if ('caches' in window) {
@@ -688,7 +773,8 @@
         
         // Register new service worker after clearing
         window.addEventListener('load', function(){ 
-          navigator.serviceWorker.register('/sw.js?v=' + timestamp + '&cb=' + timestamp); 
+          // Temporarily disable service worker to test cache issue
+          // navigator.serviceWorker.register('/sw.js?v=' + timestamp + '&cb=' + timestamp); 
         });
       }
       
@@ -705,17 +791,7 @@
         document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
       });
       
-      // Force reload if page is loaded from cache (back/forward navigation)
-      window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
-          window.location.reload(true);
-        }
-      });
-      
-      // Force reload on browser back button
-      window.addEventListener('popstate', function(event) {
-        window.location.reload(true);
-      });
+      // Removed problematic reload events that were causing infinite reloads on mobile
       
       // Prevent caching of this page
       window.addEventListener('beforeunload', function() {
