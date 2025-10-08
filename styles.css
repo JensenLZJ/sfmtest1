@@ -8,6 +8,7 @@
   --brand:#f61b58;
   --accent:#6b4c93;
   --live:#ff4d6d;
+  --warning:#ff6b35;
   --border:rgba(255,255,255,0.08);
   --radius:14px;
   --shadow:0 10px 30px rgba(0,0,0,.25);
@@ -444,6 +445,8 @@ body{
   padding: 18px;
   box-shadow: var(--shadow);
   width: 100%; /* Responsive width */
+  display: flex;
+  flex-direction: column;
 }
 
 .instagram-header {
@@ -571,7 +574,7 @@ body{
 
 .instagram-cover {
   position: relative;
-  height: 200px;
+  height: 230px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -727,7 +730,8 @@ body{
 .instagram-feed {
   display: flex;
   gap: 14px;
-  height: 275px;
+  flex: 1;
+  min-height: 275px;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
@@ -1632,7 +1636,7 @@ body{
 .footer-content {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
-    gap: 40px;
+    gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
@@ -1645,6 +1649,52 @@ body{
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* Align the second column (Connect & Listen) to the right with padding */
+.footer-column:nth-child(2) {
+    text-align: right;
+    padding-right: 20px;
+}
+
+.footer-column:nth-child(2) h3 {
+    text-align: right;
+    margin-bottom: 12px;
+}
+
+.footer-column:nth-child(2) .social-links {
+    text-align: right;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.footer-column:nth-child(2) .social-links li {
+    text-align: right;
+    margin-bottom: 8px;
+}
+
+.footer-column:nth-child(2) .social-links .social-link {
+    justify-content: flex-end;
+}
+
+/* Align the third column (Links) to the right with padding */
+.footer-column:nth-child(3) {
+    text-align: right;
+    padding-right: 20px;
+}
+
+.footer-column:nth-child(3) h3 {
+    text-align: right;
+    margin-bottom: 12px;
+}
+
+.footer-column:nth-child(3) .footer-links {
+    text-align: right;
+}
+
+.footer-column:nth-child(3) .footer-links li {
+    text-align: right;
+    margin-bottom: 8px;
 }
 
 .footer-logo {
@@ -1748,9 +1798,19 @@ body{
         text-align: center;
     }
     
+    /* Reset right alignment on mobile for better readability */
+    .footer-column:nth-child(2) {
+        text-align: center;
+    }
+    
     .footer-column h3 {
         margin-bottom: 10px; /* Reduced from 15px */
         font-size: 14px; /* Reduced from 16px */
+    }
+    
+    .footer-column:nth-child(2) h3,
+    .footer-column:nth-child(3) h3 {
+        text-align: center;
     }
     
     .footer-brand-title {
@@ -1815,7 +1875,8 @@ body{
   .instagram-feed {
     display: flex;
     gap: 12px;
-    height: 275px; /* Match desktop height for consistency */
+    flex: 1;
+    min-height: 275px; /* Match desktop height for consistency */
     overflow-x: auto;
     overflow-y: hidden;
     scroll-behavior: smooth;
@@ -1859,7 +1920,7 @@ body{
   
   /* Instagram cover on mobile */
   .instagram-cover {
-    height: 200px !important;
+    height: 230px !important;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1895,6 +1956,8 @@ body{
     max-width: 100% !important;
     margin: 0 auto;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
   
   /* Instagram feed container width fix */
@@ -1953,6 +2016,41 @@ body{
 
 /* Mobile-specific improvements - placed at end for highest priority */
 @media (max-width: 768px) {
+  /* Initially hide play button on mobile until Mixcloud is ready */
+  .play-pause-btn,
+  #hero-play-pause,
+  .play-overlay .play-pause-btn,
+  .player-widget .play-pause-btn {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  /* Show play button when Mixcloud is ready */
+  .play-pause-btn.mixcloud-ready,
+  #hero-play-pause.mixcloud-ready,
+  .play-overlay .play-pause-btn.mixcloud-ready,
+  .player-widget .play-pause-btn.mixcloud-ready {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 72px !important;
+    height: 72px !important;
+    overflow: visible !important;
+    transition: opacity 0.3s ease-in-out !important;
+  }
+  
   .play-pause-btn {
     width: 72px;
     height: 72px;
@@ -1961,6 +2059,52 @@ body{
     min-width: 44px;
     background: transparent !important;
     color: white !important;
+  }
+  
+  
+  /* Enhanced mobile progress bar interactivity */
+  .progress-bar {
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+  }
+  
+  .progress-bar:hover,
+  .progress-bar:active {
+    opacity: 0.9;
+  }
+  
+  .progress-handle {
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: transform 0.1s ease;
+  }
+  
+  .progress-handle:active {
+    transform: scale(1.2);
+  }
+  
+  /* Larger touch targets for mobile */
+  .progress-bar {
+    min-height: 44px;
+    padding: 8px 0;
+  }
+  
+  .progress-handle {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
   }
   
   /* Player width on mobile - make it more compact */
