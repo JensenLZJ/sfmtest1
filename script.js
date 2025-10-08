@@ -20,109 +20,106 @@ if ('caches' in window) {
   });
 }
 
-// Mobile-specific cache clearing on every visit
+// Mobile-specific cache clearing on every visit - more targeted approach
 if (isMobileDevice()) {
-  console.log('Mobile device detected - clearing all caches');
+  console.log('Mobile device detected - applying S24 Ultra fixes');
   
-  // Clear all possible caches
+  // Only clear specific caches, not everything
   if ('caches' in window) {
     caches.keys().then(function(names) {
       for (let name of names) {
-        caches.delete(name);
-        console.log('Mobile: Deleted cache:', name);
+        if (name.includes('samudra') || name.includes('instagram') || name.includes('mixcloud')) {
+          caches.delete(name);
+          console.log('Mobile: Deleted specific cache:', name);
+        }
       }
     });
   }
   
-  // Clear localStorage
+  // Clear only specific localStorage items
   try {
-    localStorage.clear();
-    console.log('Mobile: Cleared localStorage');
+    const keysToRemove = ['instagram_posts', 'episodes_data', 'mixcloud_data'];
+    keysToRemove.forEach(key => {
+      localStorage.removeItem(key);
+    });
+    console.log('Mobile: Cleared specific localStorage items');
   } catch (e) {
     console.log('Mobile: Could not clear localStorage:', e);
   }
   
-  // Clear sessionStorage
-  try {
-    sessionStorage.clear();
-    console.log('Mobile: Cleared sessionStorage');
-  } catch (e) {
-    console.log('Mobile: Could not clear sessionStorage:', e);
-  }
-  
-  // Force reload without cache
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-      for (let registration of registrations) {
-        registration.unregister();
-        console.log('Mobile: Unregistered service worker:', registration);
-      }
-    });
-  }
-  
-  // Add cache-busting parameter to all fetch requests
+  // Add cache-busting parameter to specific requests only
   const originalFetch = window.fetch;
   window.fetch = function(url, options = {}) {
-    if (typeof url === 'string') {
+    if (typeof url === 'string' && (url.includes('instagram') || url.includes('mixcloud') || url.includes('episodes'))) {
       const separator = url.includes('?') ? '&' : '?';
       url += `${separator}_cb=${Date.now()}&_mobile=1`;
     }
     return originalFetch(url, options);
   };
   
-  console.log('Mobile: Added cache-busting to all fetch requests');
+  console.log('Mobile: Applied S24 Ultra specific fixes');
 }
 
-// Mobile browser memory management fix
-let mobileLoadAttempts = 0;
-const maxMobileAttempts = 10;
-let mobileLoadInterval = null;
+// S24 Ultra specific loading system
+let s24LoadAttempts = 0;
+const maxS24Attempts = 15;
+let s24LoadInterval = null;
+let s24ContentLoaded = false;
 
-function handleMobileInconsistentLoading() {
+function handleS24UltraLoading() {
   if (!isMobileDevice()) return;
   
-  console.log('Mobile inconsistent loading detected - implementing fix');
+  console.log('S24 Ultra loading system activated');
   
   // Clear any existing interval
-  if (mobileLoadInterval) {
-    clearInterval(mobileLoadInterval);
+  if (s24LoadInterval) {
+    clearInterval(s24LoadInterval);
   }
   
-  // Check content every 500ms for first 5 seconds
-  mobileLoadInterval = setInterval(() => {
-    mobileLoadAttempts++;
+  // More aggressive checking for S24 Ultra
+  s24LoadInterval = setInterval(() => {
+    s24LoadAttempts++;
     
     const instagramFeed = document.getElementById('instagram-feed');
     const episodesSlider = document.getElementById('episodes-slider');
+    const comingGrid = document.getElementById('coming-grid');
     
     const instagramEmpty = !instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading');
     const episodesEmpty = !episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading');
+    const comingEmpty = !comingGrid || comingGrid.innerHTML.trim() === '' || comingGrid.innerHTML.includes('Loading');
     
-    if (instagramEmpty || episodesEmpty) {
-      console.log(`Mobile load attempt ${mobileLoadAttempts}: Content missing, forcing reload`);
+    if (instagramEmpty || episodesEmpty || comingEmpty) {
+      console.log(`S24 Ultra load attempt ${s24LoadAttempts}: Content missing, forcing reload`);
       
+      // Force reload all content
       if (instagramEmpty && instagramFeed) {
         instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
-        loadInstagramPostsWithRetry();
+        setTimeout(() => loadInstagramPostsWithRetry(), 100);
       }
       
       if (episodesEmpty && episodesSlider) {
         episodesSlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
-        loadEpisodesWithRetry();
+        setTimeout(() => loadEpisodesWithRetry(), 100);
+      }
+      
+      if (comingEmpty && comingGrid) {
+        comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
+        setTimeout(() => loadComingUpEventsWithRetry(), 100);
       }
     } else {
-      console.log('Mobile content loaded successfully');
-      clearInterval(mobileLoadInterval);
-      mobileLoadInterval = null;
+      console.log('S24 Ultra: All content loaded successfully');
+      s24ContentLoaded = true;
+      clearInterval(s24LoadInterval);
+      s24LoadInterval = null;
     }
     
-    if (mobileLoadAttempts >= maxMobileAttempts) {
-      console.log('Mobile max attempts reached, stopping interval');
-      clearInterval(mobileLoadInterval);
-      mobileLoadInterval = null;
+    if (s24LoadAttempts >= maxS24Attempts) {
+      console.log('S24 Ultra: Max attempts reached, showing refresh button');
+      clearInterval(s24LoadInterval);
+      s24LoadInterval = null;
       showMobileRefreshButton();
     }
-  }, 500);
+  }, 300); // Faster checking for S24 Ultra
 }
 
 // Hidden easter egg - hiring message
@@ -4684,51 +4681,63 @@ function initializeMobileContent() {
   }
 }
 
-// Mobile detection and initialization
+// S24 Ultra detection and initialization
 if (isMobileDevice()) {
-  console.log('Mobile device detected - setting up mobile-specific loading');
+  console.log('S24 Ultra detected - setting up specialized loading system');
   
-  // Immediate mobile initialization
+  // Immediate S24 Ultra initialization
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('Mobile DOMContentLoaded - initializing content');
+    console.log('S24 Ultra DOMContentLoaded - initializing content');
     ensureMainContentVisible();
     initializeMobileContent();
+    
+    // Start S24 Ultra loading system
+    setTimeout(() => {
+      handleS24UltraLoading();
+    }, 500);
   });
   
   // Backup initialization after window load
   window.addEventListener('load', () => {
-    console.log('Mobile window load - checking content');
+    console.log('S24 Ultra window load - checking content');
     setTimeout(() => {
-      const instagramFeed = document.getElementById('instagram-feed');
-      const episodesSlider = document.getElementById('episodes-slider');
-      
-      if (!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) {
-        console.log('Mobile window load: Reloading Instagram');
+      if (!s24ContentLoaded) {
+        console.log('S24 Ultra window load: Content not loaded, forcing reload');
         initializeMobileContent();
+        handleS24UltraLoading();
       }
     }, 1000);
   });
   
-  // Additional mobile backup - every 2 seconds for first 10 seconds
-  let mobileBackupCount = 0;
-  const mobileBackupInterval = setInterval(() => {
-    mobileBackupCount++;
-    console.log(`Mobile backup check ${mobileBackupCount}`);
-    
-    const instagramFeed = document.getElementById('instagram-feed');
-    const episodesSlider = document.getElementById('episodes-slider');
-    
-    if ((!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) ||
-        (!episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
-      console.log('Mobile backup: Content still loading, forcing reload');
-      initializeMobileContent();
+  // S24 Ultra page visibility handler
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && isMobileDevice()) {
+      console.log('S24 Ultra: Page became visible, checking content');
+      setTimeout(() => {
+        const instagramFeed = document.getElementById('instagram-feed');
+        const episodesSlider = document.getElementById('episodes-slider');
+        
+        if ((!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) ||
+            (!episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
+          console.log('S24 Ultra: Page visible - content missing, forcing reload');
+          initializeMobileContent();
+          handleS24UltraLoading();
+        }
+      }, 300);
     }
-    
-    if (mobileBackupCount >= 5) {
-      clearInterval(mobileBackupInterval);
-      console.log('Mobile backup checks completed');
-    }
-  }, 2000);
+  });
+  
+  // S24 Ultra window focus handler
+  window.addEventListener('focus', () => {
+    console.log('S24 Ultra: Window focused, checking content');
+    setTimeout(() => {
+      if (!s24ContentLoaded) {
+        console.log('S24 Ultra: Content not loaded on focus, forcing reload');
+        initializeMobileContent();
+        handleS24UltraLoading();
+      }
+    }, 300);
+  });
   
   // Mobile page visibility handler
   document.addEventListener('visibilitychange', () => {
