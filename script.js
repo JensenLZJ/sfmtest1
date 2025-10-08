@@ -20,6 +20,58 @@ if ('caches' in window) {
   });
 }
 
+// Mobile browser memory management fix
+let mobileLoadAttempts = 0;
+const maxMobileAttempts = 10;
+let mobileLoadInterval = null;
+
+function handleMobileInconsistentLoading() {
+  if (!isMobileDevice()) return;
+  
+  console.log('Mobile inconsistent loading detected - implementing fix');
+  
+  // Clear any existing interval
+  if (mobileLoadInterval) {
+    clearInterval(mobileLoadInterval);
+  }
+  
+  // Check content every 500ms for first 5 seconds
+  mobileLoadInterval = setInterval(() => {
+    mobileLoadAttempts++;
+    
+    const instagramFeed = document.getElementById('instagram-feed');
+    const episodesSlider = document.getElementById('episodes-slider');
+    
+    const instagramEmpty = !instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading');
+    const episodesEmpty = !episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading');
+    
+    if (instagramEmpty || episodesEmpty) {
+      console.log(`Mobile load attempt ${mobileLoadAttempts}: Content missing, forcing reload`);
+      
+      if (instagramEmpty && instagramFeed) {
+        instagramFeed.innerHTML = '<div class="loading-state">Loading Instagram posts...</div>';
+        loadInstagramPostsWithRetry();
+      }
+      
+      if (episodesEmpty && episodesSlider) {
+        episodesSlider.innerHTML = '<div class="loading-state">Loading episodes...</div>';
+        loadEpisodesWithRetry();
+      }
+    } else {
+      console.log('Mobile content loaded successfully');
+      clearInterval(mobileLoadInterval);
+      mobileLoadInterval = null;
+    }
+    
+    if (mobileLoadAttempts >= maxMobileAttempts) {
+      console.log('Mobile max attempts reached, stopping interval');
+      clearInterval(mobileLoadInterval);
+      mobileLoadInterval = null;
+      showMobileRefreshButton();
+    }
+  }, 500);
+}
+
 // Hidden easter egg - hiring message
 console.log('%c🥚 Easter Egg Found!\n%cLike looking under the hood? We\'re interested in people like you!\n%cCome and join us: https://samudrafm.com/opportunities/\n%cWe\'re always looking for talented students! 🚀', 
   'color: #f61b58; font-size: 16px; font-weight: bold;',
@@ -4701,6 +4753,100 @@ if (isMobileDevice()) {
   setTimeout(debugMobileStatus, 5000);
 }
 
+// Mobile browser memory management handlers
+if (isMobileDevice()) {
+  // Start mobile inconsistent loading handler
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(handleMobileInconsistentLoading, 1000);
+  });
+  
+  // Handle page visibility changes (app switching, tab switching)
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      console.log('Mobile: Page became visible, checking content');
+      setTimeout(() => {
+        const instagramFeed = document.getElementById('instagram-feed');
+        const episodesSlider = document.getElementById('episodes-slider');
+        
+        if ((!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) ||
+            (!episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
+          console.log('Mobile: Content missing after visibility change, forcing reload');
+          handleMobileInconsistentLoading();
+        }
+      }, 500);
+    }
+  });
+  
+  // Handle page focus (returning to tab)
+  window.addEventListener('focus', () => {
+    console.log('Mobile: Window focused, checking content');
+    setTimeout(() => {
+      const instagramFeed = document.getElementById('instagram-feed');
+      const episodesSlider = document.getElementById('episodes-slider');
+      
+      if ((!instagramFeed || instagramFeed.innerHTML.trim() === '' || instagramFeed.innerHTML.includes('Loading')) ||
+          (!episodesSlider || episodesSlider.innerHTML.trim() === '' || episodesSlider.innerHTML.includes('Loading'))) {
+        console.log('Mobile: Content missing after focus, forcing reload');
+        handleMobileInconsistentLoading();
+      }
+    }, 500);
+  });
+  
+  // Handle memory pressure (if supported)
+  if ('memory' in performance) {
+    setInterval(() => {
+      const memory = performance.memory;
+      if (memory.usedJSHeapSize / memory.jsHeapSizeLimit > 0.8) {
+        console.log('Mobile: High memory usage detected, clearing and reloading content');
+        handleMobileInconsistentLoading();
+      }
+    }, 10000);
+  }
+}
+
+
+// Mobile refresh function
+function handleMobileRefresh() {
+  console.log('Mobile refresh button clicked');
+  
+  // Show loading states
+  const instagramFeed = document.getElementById('instagram-feed');
+  const episodesSlider = document.getElementById('episodes-slider');
+  const comingGrid = document.getElementById('coming-grid');
+  
+  if (instagramFeed) {
+    instagramFeed.innerHTML = '<div class="loading-state">Refreshing Instagram posts...</div>';
+  }
+  if (episodesSlider) {
+    episodesSlider.innerHTML = '<div class="loading-state">Refreshing episodes...</div>';
+  }
+  if (comingGrid) {
+    comingGrid.innerHTML = '<div class="loading-state">Refreshing upcoming shows...</div>';
+  }
+  
+  // Hide refresh button
+  const refreshBtn = document.getElementById('mobile-refresh-btn');
+  if (refreshBtn) {
+    refreshBtn.style.display = 'none';
+  }
+  
+  // Force reload all content
+  setTimeout(() => {
+    forceLoadAllContent();
+    handleMobileInconsistentLoading();
+  }, 500);
+}
+
+// Show mobile refresh button when content fails to load
+function showMobileRefreshButton() {
+  if (!isMobileDevice()) return;
+  
+  const refreshBtn = document.getElementById('mobile-refresh-btn');
+  if (refreshBtn) {
+    refreshBtn.style.display = 'block';
+    console.log('Mobile: Showing refresh button due to loading failure');
+  }
+}
 
 // Instagram Navigation Functions
 function scrollInstagramLeft() {
