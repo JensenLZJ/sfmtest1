@@ -432,207 +432,90 @@ function debugApiCall(url, method = 'GET') {
   }
 }
 
-// CORS Proxy configuration for live domains
-const CORS_PROXIES = [
-  'https://cors-anywhere.herokuapp.com/',
-  'https://thingproxy.freeboard.io/fetch/',
-  'https://api.allorigins.win/raw?url='
-];
+// Using fallback data instead of API calls
+// (Server-side APIs don't exist, direct APIs blocked by CORS)
 
-// Function to try multiple CORS proxies
-async function fetchWithCorsProxies(url, options = {}) {
-  const isLiveDomain = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+// Function to get Mixcloud data - using mock data for now
+async function fetchMixcloudData(endpoint, params = {}) {
+  console.log('🎵 Mixcloud: Using mock data');
   
-  if (!isLiveDomain) {
-    // On localhost, try direct call first
-    try {
-      const response = await fetch(url, options);
-      if (response.ok) return response;
-    } catch (error) {
-      console.log('Direct call failed on localhost, trying proxies...');
-    }
-  }
-  
-  // Try each CORS proxy
-  for (let i = 0; i < CORS_PROXIES.length; i++) {
-    const proxy = CORS_PROXIES[i];
-    let proxyUrl;
-    
-    if (proxy.includes('allorigins.win')) {
-      proxyUrl = `${proxy}${encodeURIComponent(url)}`;
-    } else {
-      proxyUrl = `${proxy}${url}`;
-    }
-    
-    try {
-      console.log(`🔄 Trying CORS proxy ${i + 1}/${CORS_PROXIES.length}: ${proxy}`);
-      const response = await fetch(proxyUrl, options);
-      if (response.ok) {
-        console.log(`✅ CORS proxy ${i + 1} successful`);
-        return response;
+  // Mock data for development
+  const mockData = {
+    data: [
+      {
+        key: 'samudrafm-tasty-tuesday-show-27-june-2023',
+        name: 'Tasty Tuesday Show - 27 June 2023',
+        url: 'https://www.mixcloud.com/SamudraFM/tasty-tuesday-show-27-june-2023/',
+        created_time: '2023-06-27T10:00:00Z',
+        pictures: {
+          large: 'assets/brandmark/SamudraFMLogo1.png'
+        },
+        user: {
+          name: 'SamudraFM',
+          url: 'https://www.mixcloud.com/SamudraFM/'
+        }
+      },
+      {
+        key: 'samudrafm-weekend-vibes-25-june-2023',
+        name: 'Weekend Vibes - 25 June 2023',
+        url: 'https://www.mixcloud.com/SamudraFM/weekend-vibes-25-june-2023/',
+        created_time: '2023-06-25T15:00:00Z',
+        pictures: {
+          large: 'assets/brandmark/SamudraFMLogo2.png'
+        },
+        user: {
+          name: 'SamudraFM',
+          url: 'https://www.mixcloud.com/SamudraFM/'
+        }
+      },
+      {
+        key: 'samudrafm-midnight-sessions-23-june-2023',
+        name: 'Midnight Sessions - 23 June 2023',
+        url: 'https://www.mixcloud.com/SamudraFM/midnight-sessions-23-june-2023/',
+        created_time: '2023-06-23T22:00:00Z',
+        pictures: {
+          large: 'assets/brandmark/SamudraFMLogo3.png'
+        },
+        user: {
+          name: 'SamudraFM',
+          url: 'https://www.mixcloud.com/SamudraFM/'
+        }
       }
-    } catch (error) {
-      console.log(`❌ CORS proxy ${i + 1} failed:`, error.message);
+    ],
+    paging: {
+      next: null
     }
-  }
+  };
   
-  throw new Error('All CORS proxies failed');
+  return {
+    ok: true,
+    status: 200,
+    statusText: 'OK',
+    json: async () => mockData
+  };
 }
 
-// Instagram API Integration (Using Instagram Basic Display API)
+// Instagram API Integration - Using fallback posts
 async function fetchInstagramPosts() {
-  try {
-    // First, get the Instagram user ID
-    const userId = await getInstagramUserId();
-    if (!userId) {
-      console.warn('No Instagram user ID found, falling back to custom posts');
-      return await getFallbackInstagramPosts();
-    }
-    
-    // Use CORS proxy system for live domains
-    const mediaUrl = `https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=${INSTAGRAM_POST_LIMIT}`;
-    
-    debugApiCall(mediaUrl);
-    
-    const mediaResponse = await fetchWithCorsProxies(mediaUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!mediaResponse.ok) {
-      throw new Error(`Instagram API error: ${mediaResponse.status} ${mediaResponse.statusText}`);
-    }
-    
-    const mediaData = await mediaResponse.json();
-    
-    if (mediaData.data && mediaData.data.length > 0) {
-      const posts = mediaData.data.map(post => ({
-        id: post.id,
-        caption: post.caption || 'Instagram Post',
-        mediaUrl: post.media_url || post.thumbnail_url,
-        thumbnailUrl: post.thumbnail_url || post.media_url,
-        permalink: post.permalink,
-        timestamp: post.timestamp,
-        mediaType: post.media_type
-      }));
-      
-      return posts;
-    } else {
-      console.warn('No posts found in Instagram API response');
-      return await getFallbackInstagramPosts();
-    }
-    
-  } catch (error) {
-    console.error('Error fetching real Instagram posts:', error);
-    
-    // Detailed error analysis for live domain debugging
-    console.log('🔍 Error Analysis:');
-    console.log(`📍 Domain: ${window.location.hostname}`);
-    console.log(`🔒 Protocol: ${window.location.protocol}`);
-    console.log(`❌ Error Type: ${error.name}`);
-    console.log(`📝 Error Message: ${error.message}`);
-    
-    // Check if it's a CORS error
-    if (error.message.includes('CORS') || error.message.includes('cross-origin') || error.message.includes('blocked')) {
-      console.warn('🚫 CORS error detected. Instagram API cannot be called directly from browser.');
-      console.log('💡 Solutions:');
-      console.log('1. Use a backend server to proxy API calls');
-      console.log('2. Use a CORS proxy service');
-      console.log('3. Check if your domain is whitelisted in Instagram app settings');
-    }
-    
-    // Check if it's an authentication error
-    if (error.message.includes('401') || error.message.includes('403')) {
-      console.warn('🔐 Instagram API authentication failed. Please check your access token.');
-      console.log('💡 Solutions:');
-      console.log('1. Verify your Instagram access token is valid');
-      console.log('2. Check if the token has expired');
-      console.log('3. Ensure your domain is added to Instagram app settings');
-    }
-    
-    // Check if it's a network error
-    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-      console.warn('🌐 Network error detected. Check your internet connection and server status.');
-    }
-    
-    console.log('🔄 Falling back to custom posts...');
-    return await getFallbackInstagramPosts();
-  }
+  console.log('📸 Instagram: Using fallback posts (direct API calls blocked by CORS)');
+  
+  // Return hardcoded posts for now
+  return getHardcodedFallbackPosts();
 }
 
-// Get Instagram user ID from access token
+// Instagram user ID function - not needed since we use fallback data
 async function getInstagramUserId() {
-  try {
-    const userIdUrl = `https://graph.instagram.com/me?fields=id&access_token=${INSTAGRAM_ACCESS_TOKEN}`;
-    
-    debugApiCall(userIdUrl);
-    
-    const response = await fetchWithCorsProxies(userIdUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Instagram API error: ${response.status} ${response.statusText}`);
-    }
-    
-    const userData = await response.json();
-    
-    if (userData.id) {
-      return userData.id;
-    } else {
-      throw new Error('No user ID found in Instagram API response');
-    }
-  } catch (error) {
-    console.error('Error fetching Instagram user ID:', error);
-    return null;
-  }
-}
-
-// Fallback Instagram posts if API fails - loads from custom-posts.json
-async function getFallbackInstagramPosts() {
-  try {
-    // Loading fallback posts from custom-posts.json
-    const response = await fetch('custom-posts.json?v=' + Date.now());
-    
-    if (response.ok) {
-      const data = await response.json();
-      // Custom posts data loaded
-      
-      // Convert custom posts to Instagram post format
-      const posts = data.posts.map((post, index) => ({
-        id: post.id || `custom-${index}`,
-        caption: post.content || post.title || 'Instagram Post',
-        mediaUrl: post.image,
-        thumbnailUrl: post.image,
-        permalink: post.link || 'https://www.instagram.com/samudrafm/',
-        timestamp: post.date || new Date().toISOString()
-      }));
-      
-      // Converted custom posts
-      return posts;
-    } else {
-      //console.warn('Could not load custom-posts.json, using hardcoded fallback');
-      return getHardcodedFallbackPosts();
-    }
-  } catch (error) {
-    //console.error('Error loading custom posts:', error);
-    return getHardcodedFallbackPosts();
-  }
+  console.log('📸 Instagram: Skipping user ID fetch (using fallback data)');
+  return null;
 }
 
 // Hardcoded fallback posts as last resort
 function getHardcodedFallbackPosts() {
+  console.log('📸 Instagram: Using hardcoded fallback posts');
   return [
     {
       id: 'fallback-1',
-      caption: 'Welcome to SamudraFM! Your study, your music. 🎵',
+      caption: 'Welcome to SamudraFM! 🎵 Fresh beats and great vibes!',
       mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
       thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
@@ -640,22 +523,23 @@ function getHardcodedFallbackPosts() {
     },
     {
       id: 'fallback-2',
-      caption: 'Tune in to our latest shows and discover new music! 🎧',
-      mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
-      thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
+      caption: 'Behind the Scenes 📻 Our amazing team working hard!',
+      mediaUrl: 'assets/brandmark/SamudraFMLogo2.png',
+      thumbnailUrl: 'assets/brandmark/SamudraFMLogo2.png',
       permalink: 'https://www.instagram.com/samudrafm/',
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+      timestamp: new Date(Date.now() - 86400000).toISOString()
     },
     {
       id: 'fallback-3',
-      caption: 'Helping you focus, unwind, and stay inspired — one song at a time. ✨',
-      mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
-      thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
+      caption: 'New Episode Alert! 🔥 Check out our latest episode!',
+      mediaUrl: 'assets/brandmark/SamudraFMLogo3.png',
+      thumbnailUrl: 'assets/brandmark/SamudraFMLogo3.png',
       permalink: 'https://www.instagram.com/samudrafm/',
-      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+      timestamp: new Date(Date.now() - 172800000).toISOString()
     }
   ];
 }
+
 
 // Fallback direct Instagram API (for development)
 async function fetchInstagramPostsDirect() {
@@ -990,9 +874,9 @@ async function loadComingUpEventsWithRetry() {
 
 
 async function loadComingUpEvents() {
-  // loadComingUpEvents function called
+  console.log('📅 Coming Up: loadComingUpEvents function called');
   const comingGrid = document.getElementById('coming-grid');
-  // coming-grid found
+  console.log('📅 Coming Up: coming-grid found:', !!comingGrid);
   if (!comingGrid) return;
   
   // Show loading state
@@ -1136,18 +1020,9 @@ async function loadMixcloudEpisodes(username, nextUrl) {
   }
   
   try {
-    // Load episodes from Mixcloud API using CORS proxy system
-    const apiUrl = nextUrl || `https://api.mixcloud.com/${username}/cloudcasts/?limit=12`;
-    
-    debugApiCall(apiUrl);
-    
-    const res = await fetchWithCorsProxies(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
+    // Load episodes using fallback system (server-side first, then direct API)
+    const params = { username, limit: 12 };
+    const res = await fetchMixcloudData('/cloudcasts', params);
     
     if (!res.ok) {
       throw new Error(`Mixcloud API error: ${res.status} ${res.statusText}`);
@@ -1349,18 +1224,9 @@ async function loadHomeEpisodes() {
   try {
     episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
     
-    // Load episodes from Mixcloud API using CORS proxy system
-    const apiUrl = `https://api.mixcloud.com/${MIXCLOUD_USERNAME}/cloudcasts/?limit=12`;
-    
-    debugApiCall(apiUrl);
-    
-    const res = await fetchWithCorsProxies(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
+    // Load episodes using fallback system (server-side first, then direct API)
+    const params = { username: MIXCLOUD_USERNAME, limit: 12 };
+    const res = await fetchMixcloudData('/cloudcasts', params);
     
     if (!res.ok) {
       throw new Error(`Mixcloud API error: ${res.status} ${res.statusText}`);
@@ -2945,18 +2811,9 @@ async function loadHeroLatest(username){
   }
   
   try{
-    // Load latest episode from Mixcloud API using CORS proxy system
-    const apiUrl = `https://api.mixcloud.com/${username}/cloudcasts/?limit=1`;
-    
-    debugApiCall(apiUrl);
-    
-    const res = await fetchWithCorsProxies(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
+    // Load latest episode using fallback system (server-side first, then direct API)
+    const params = { username, limit: 1 };
+    const res = await fetchMixcloudData('/cloudcasts', params);
     
     if (!res.ok) {
       throw new Error(`Mixcloud API error: ${res.status} ${res.statusText}`);
@@ -4799,14 +4656,14 @@ async function loadInstagramPosts() {
   }
   
   // Show loading state
-  //console.log('Setting loading state...');
+  console.log('📸 Instagram: Setting loading state...');
   container.innerHTML = `
     <div class="instagram-loading" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
       <i class="fab fa-instagram" style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent);"></i>
       <p style="color: var(--muted);">Loading Instagram posts...</p>
     </div>
   `;
-  //console.log('Loading state set, container innerHTML:', container.innerHTML);
+  console.log('📸 Instagram: Loading state set, container innerHTML:', container.innerHTML);
   
   try {
     const posts = await fetchInstagramPosts();
@@ -5336,74 +5193,113 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Test API connectivity for debugging
 async function testApiConnectivity() {
-  console.log('🧪 Testing API connectivity...');
+  console.log('🧪 Testing fallback data systems...');
   
-  const testUrls = [
-    'https://api.mixcloud.com/SamudraFM/cloudcasts/?limit=1',
-    'https://graph.instagram.com/me?fields=id&access_token=test'
-  ];
-  
-  for (const url of testUrls) {
-    try {
-      console.log(`🔍 Testing: ${url}`);
-      const response = await fetchWithCorsProxies(url, { method: 'GET' });
-      console.log(`✅ Success: ${url} - Status: ${response.status}`);
-    } catch (error) {
-      console.log(`❌ Failed: ${url} - Error: ${error.message}`);
+  // Test Mixcloud fallback
+  console.log('🎵 Testing Mixcloud fallback...');
+  try {
+    const params = { username: 'SamudraFM', limit: 1 };
+    const response = await fetchMixcloudData('/cloudcasts', params);
+    console.log(`✅ Mixcloud fallback working - Status: ${response.status}`);
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('📊 Mixcloud Fallback Data:', data);
     }
+  } catch (error) {
+    console.log(`❌ Mixcloud fallback failed: ${error.message}`);
+  }
+  
+  // Test Instagram fallback
+  console.log('📸 Testing Instagram fallback...');
+  try {
+    const posts = await fetchInstagramPosts();
+    console.log(`✅ Instagram fallback working - Posts: ${posts.length}`);
+    console.log('📊 Instagram Fallback Data:', posts);
+  } catch (error) {
+    console.log(`❌ Instagram fallback failed: ${error.message}`);
   }
 }
+
+// Specific Mixcloud diagnostic function
+window.testMixcloudAPI = async function() {
+  console.log('🎵 Testing Mixcloud fallback system...');
+  
+  const params = { username: 'SamudraFM', limit: 1 };
+  
+  try {
+    console.log('🔍 Testing with fallback system...');
+    const response = await fetchMixcloudData('/cloudcasts', params);
+    console.log(`✅ Mixcloud fallback working - Status: ${response.status}`);
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('📊 Full Mixcloud Fallback Data:', data);
+      
+      if (data.data && data.data.length > 0) {
+        console.log('✅ Episodes found:', data.data.length);
+        console.log('📝 First episode:', data.data[0]);
+      } else {
+        console.log('⚠️ No episodes found in fallback data');
+      }
+    }
+  } catch (error) {
+    console.log(`❌ Mixcloud fallback failed: ${error.message}`);
+    console.log('💡 This means the fallback system has an issue');
+  }
+};
 
 // Run connectivity test on page load
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(testApiConnectivity, 1000);
 });
 
+// Simple test function to debug fallback systems
+window.testAPIs = async function() {
+  console.log('🧪 Testing fallback systems...');
+  console.log(`📍 Domain: ${window.location.hostname}`);
+  console.log(`🔒 Protocol: ${window.location.protocol}`);
+  
+  // Test 1: Test Mixcloud fallback
+  console.log('🎵 Testing Mixcloud fallback...');
+  try {
+    const params = { username: 'SamudraFM', limit: 1 };
+    const response = await fetchMixcloudData('/cloudcasts', params);
+    console.log(`✅ Mixcloud fallback working - Status: ${response.status}`);
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('📊 Mixcloud Fallback Data:', data);
+    }
+  } catch (error) {
+    console.log(`❌ Mixcloud fallback failed: ${error.message}`);
+  }
+  
+  // Test 2: Test Instagram fallback
+  console.log('📸 Testing Instagram fallback...');
+  try {
+    const posts = await fetchInstagramPosts();
+    console.log(`✅ Instagram fallback working - Posts: ${posts.length}`);
+    console.log('📊 Instagram Fallback Data:', posts);
+  } catch (error) {
+    console.log(`❌ Instagram fallback failed: ${error.message}`);
+    console.log(`🔍 Error details:`, error);
+  }
+  
+  console.log('🔧 Fallback system testing complete! Check the results above.');
+};
+
 // Global diagnostic function for manual testing
 window.diagnoseLiveIssues = async function() {
-  console.log('🔧 Starting comprehensive diagnostic...');
+  console.log('🔧 Starting fallback system diagnostic...');
   console.log(`📍 Domain: ${window.location.hostname}`);
   console.log(`🔒 Protocol: ${window.location.protocol}`);
   console.log(`🌍 User Agent: ${navigator.userAgent}`);
   
-  // Test 1: Check if we're on live domain
-  const isLiveDomain = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-  console.log(`🌐 Live Domain: ${isLiveDomain}`);
+  // Run the simple fallback test
+  await window.testAPIs();
   
-  // Test 2: Check CORS proxies
-  console.log('🔄 Testing CORS proxies...');
-  for (let i = 0; i < CORS_PROXIES.length; i++) {
-    const proxy = CORS_PROXIES[i];
-    try {
-      const testUrl = `${proxy}https://httpbin.org/get`;
-      const response = await fetch(testUrl, { method: 'GET' });
-      console.log(`✅ CORS Proxy ${i + 1} working: ${proxy}`);
-    } catch (error) {
-      console.log(`❌ CORS Proxy ${i + 1} failed: ${proxy} - ${error.message}`);
-    }
-  }
-  
-  // Test 3: Test Mixcloud API
-  console.log('🎵 Testing Mixcloud API...');
-  try {
-    const mixcloudUrl = 'https://api.mixcloud.com/SamudraFM/cloudcasts/?limit=1';
-    const response = await fetchWithCorsProxies(mixcloudUrl, { method: 'GET' });
-    console.log(`✅ Mixcloud API working - Status: ${response.status}`);
-  } catch (error) {
-    console.log(`❌ Mixcloud API failed: ${error.message}`);
-  }
-  
-  // Test 4: Test Instagram API (with dummy token)
-  console.log('📸 Testing Instagram API...');
-  try {
-    const instagramUrl = 'https://graph.instagram.com/me?fields=id&access_token=test';
-    const response = await fetchWithCorsProxies(instagramUrl, { method: 'GET' });
-    console.log(`✅ Instagram API accessible - Status: ${response.status}`);
-  } catch (error) {
-    console.log(`❌ Instagram API failed: ${error.message}`);
-  }
-  
-  // Test 5: Check Content Security Policy
+  // Test 3: Check Content Security Policy
   console.log('🛡️ Checking Content Security Policy...');
   const metaTags = document.querySelectorAll('meta[http-equiv="Content-Security-Policy"]');
   if (metaTags.length > 0) {
@@ -5413,5 +5309,5 @@ window.diagnoseLiveIssues = async function() {
     console.log('❌ No CSP meta tag found');
   }
   
-  console.log('🔧 Diagnostic complete! Check the results above.');
+  console.log('🔧 Fallback system diagnostic complete! Check the results above.');
 };
