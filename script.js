@@ -59,40 +59,15 @@ function initMobilePlayButton() {
   // Start checking after a short delay
   setTimeout(checkMixcloudReady, 1000);
   
-  // Very early mobile play button - show immediately
+  // Simple mobile play button - show after 2 seconds
   setTimeout(() => {
     if (playPauseBtn) {
-      console.log('Mobile: Very early play button - showing immediately');
-      
-      // Show button immediately
-      playPauseBtn.classList.add('mixcloud-ready');
-      playPauseBtn.style.display = 'flex';
-      playPauseBtn.style.opacity = '1';
-      playPauseBtn.style.visibility = 'visible';
-      playPauseBtn.style.pointerEvents = 'auto';
-      playPauseBtn.style.cursor = 'pointer';
-      playPauseBtn.style.zIndex = '10';
-      isPlayButtonHiddenOnMobile = false;
-      
-      // Add direct click handler
-      playPauseBtn.addEventListener('click', function(e) {
-        console.log('Mobile: Very early play button clicked');
-        e.preventDefault();
-        e.stopPropagation();
-        mobileDirectPlay();
-      });
-    }
-  }, 500);
-  
-  // Immediate mobile play button - show after 1 second regardless of Mixcloud state
-  setTimeout(() => {
-    if (playPauseBtn) {
-      console.log('Mobile: Immediate fallback - showing play button after 1 second');
+      console.log('Mobile: Showing play button after 2 seconds');
       
       // Ensure we have a current episode
       if (!currentEpisode && episodes && episodes.length > 0) {
         currentEpisode = episodes[0];
-        console.log('Mobile: Immediate fallback - set current episode:', currentEpisode.name);
+        console.log('Mobile: Set current episode:', currentEpisode.name);
         
         // Update hero display
         const titleEl = document.getElementById('hero-ep-title');
@@ -101,6 +76,7 @@ function initMobilePlayButton() {
         }
       }
       
+      // Show button
       playPauseBtn.classList.add('mixcloud-ready');
       playPauseBtn.style.display = 'flex';
       playPauseBtn.style.opacity = '1';
@@ -109,66 +85,8 @@ function initMobilePlayButton() {
       playPauseBtn.style.cursor = 'pointer';
       playPauseBtn.style.zIndex = '10';
       isPlayButtonHiddenOnMobile = false;
-      
-      // Add direct click handler for immediate mobile play
-      playPauseBtn.addEventListener('click', function(e) {
-        console.log('Mobile: Immediate play button clicked');
-        e.preventDefault();
-        e.stopPropagation();
-        mobileDirectPlay();
-      });
     }
-  }, 1000);
-  
-  // Fallback: Force show play button after 5 seconds if still hidden
-  setTimeout(() => {
-    if (isPlayButtonHiddenOnMobile && playPauseBtn) {
-      console.log('Mobile: Fallback - forcing play button to show after timeout');
-      showPlayButtonWhenReady();
-    }
-  }, 5000);
-  
-  // Additional fallback: Always show play button after 3 seconds regardless of Mixcloud state
-  setTimeout(() => {
-    if (playPauseBtn) {
-      console.log('Mobile: Emergency fallback - showing play button regardless of Mixcloud state');
-      
-      // Ensure we have a current episode for emergency fallback
-      if (!currentEpisode && episodes && episodes.length > 0) {
-        currentEpisode = episodes[0];
-        console.log('Mobile: Emergency fallback - set current episode:', currentEpisode.name);
-        
-        // Update hero display
-        const titleEl = document.getElementById('hero-ep-title');
-        if (titleEl) {
-          titleEl.textContent = currentEpisode.name;
-        }
-      }
-      
-      playPauseBtn.classList.add('mixcloud-ready');
-      playPauseBtn.style.display = 'flex';
-      playPauseBtn.style.opacity = '1';
-      playPauseBtn.style.visibility = 'visible';
-      playPauseBtn.style.pointerEvents = 'auto';
-      playPauseBtn.style.cursor = 'pointer';
-      playPauseBtn.style.zIndex = '10';
-      isPlayButtonHiddenOnMobile = false;
-      
-      // Remove any existing click handlers to avoid conflicts
-      const newPlayBtn = playPauseBtn.cloneNode(true);
-      playPauseBtn.parentNode.replaceChild(newPlayBtn, playPauseBtn);
-      
-      // Add a simple, direct click handler for mobile emergency fallback
-      newPlayBtn.addEventListener('click', function(e) {
-        console.log('Mobile: Emergency play button clicked - starting direct play');
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // Direct mobile play function
-        mobileDirectPlay();
-      });
-    }
-  }, 3000);
+  }, 2000);
 }
 
 // Player ready state tracking
@@ -176,82 +94,22 @@ let isPlayerReady = false;
 let isPlayerLoading = false;
 let isPlayButtonHiddenOnMobile = false;
 
-// Direct mobile play function - bypasses all complex logic
+// Simple mobile play function
 function mobileDirectPlay() {
-  console.log('Mobile: Direct play function called');
-  
-  // Visual feedback for debugging
-  const playPauseBtn = document.getElementById('hero-play-pause');
-  if (playPauseBtn) {
-    playPauseBtn.style.backgroundColor = 'rgba(0, 255, 0, 0.3)';
-    setTimeout(() => {
-      playPauseBtn.style.backgroundColor = 'transparent';
-    }, 500);
-  }
+  console.log('Mobile: Play button clicked');
   
   // Get current episode
+  if (!currentEpisode && episodes && episodes.length > 0) {
+    currentEpisode = episodes[0];
+  }
+  
   if (!currentEpisode) {
-    if (episodes && episodes.length > 0) {
-      currentEpisode = episodes[0];
-      console.log('Mobile: Set current episode to first available:', currentEpisode.name);
-    } else {
-      console.log('Mobile: No episodes available');
-      alert('No episodes available to play');
-      return;
-    }
-  }
-  
-  console.log('Mobile: Playing episode:', currentEpisode.name);
-  
-  // Create or get the Mixcloud iframe
-  let iframe = document.getElementById('mixcloud-iframe');
-  if (!iframe) {
-    console.log('Mobile: Creating Mixcloud iframe');
-    iframe = document.createElement('iframe');
-    iframe.id = 'mixcloud-iframe';
-    iframe.width = '100%';
-    iframe.height = '120';
-    iframe.frameBorder = '0';
-    iframe.allow = 'autoplay';
-    
-    // Add to player container
-    const playerContainer = document.getElementById('mixcloud-player');
-    if (playerContainer) {
-      playerContainer.appendChild(iframe);
-    }
-  }
-  
-  // Set the iframe source to the episode
-  if (currentEpisode.mixcloudUrl) {
-    iframe.src = currentEpisode.mixcloudUrl;
-    console.log('Mobile: Set iframe src to:', currentEpisode.mixcloudUrl);
-  } else if (currentEpisode.url) {
-    iframe.src = currentEpisode.url;
-    console.log('Mobile: Set iframe src to episode URL:', currentEpisode.url);
-  } else {
-    console.log('Mobile: No valid URL for episode');
-    alert('No valid URL for this episode');
+    console.log('Mobile: No episode available');
     return;
   }
   
-  // Show the player container
-  const container = document.getElementById('mixcloud-player-container');
-  if (container) {
-    container.style.bottom = '0px';
-    console.log('Mobile: Showed player container');
-  }
-  
-  // Update play button state
-  const playPauseBtn = document.getElementById('hero-play-pause');
-  if (playPauseBtn) {
-    playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-    console.log('Mobile: Updated play button to pause icon');
-  }
-  
-  // Set playing state
-  isCurrentlyPlaying = true;
-  
-  console.log('Mobile: Direct play completed');
+  // Use the existing playEpisode function
+  playEpisode(currentEpisode);
 }
 
 // Global mobile play button handler
@@ -3138,32 +2996,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (isMobileDevice()) {
     console.log('Mobile: Pre-loading Mixcloud player');
     
-    // Wait for episodes to load first, then preload with current episode
-    const waitForEpisodesAndPreload = () => {
-      if (episodes && episodes.length > 0) {
-        console.log('Mobile: Episodes loaded, preloading with current episode');
-        const firstEpisode = episodes[0];
-        if (firstEpisode) {
-          // Set current episode
-          currentEpisode = firstEpisode;
-          
-          // Update hero display
-          const titleEl = document.getElementById('hero-ep-title');
-          if (titleEl) {
-            titleEl.textContent = firstEpisode.name;
-          }
-          
-          // Preload the widget with this episode
-          preloadCurrentEpisode(firstEpisode);
+  // Simple mobile initialization - just wait for episodes and set current episode
+  setTimeout(() => {
+    if (episodes && episodes.length > 0) {
+      console.log('Mobile: Episodes loaded, setting current episode');
+      const firstEpisode = episodes[0];
+      if (firstEpisode) {
+        // Set current episode
+        currentEpisode = firstEpisode;
+        
+        // Update hero display
+        const titleEl = document.getElementById('hero-ep-title');
+        if (titleEl) {
+          titleEl.textContent = firstEpisode.name;
         }
-      } else {
-        // Check again in 500ms
-        setTimeout(waitForEpisodesAndPreload, 500);
       }
-    };
-    
-    // Start checking for episodes
-    setTimeout(waitForEpisodesAndPreload, 1000);
+    }
+  }, 2000);
     
     // Additional mobile Mixcloud initialization - without auto-play
     setTimeout(() => {
