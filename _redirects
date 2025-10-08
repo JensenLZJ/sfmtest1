@@ -1,8 +1,26 @@
-# Netlify-style redirects (if using Netlify)
-# For GitHub Pages, we'll use a different approach
-
+# Netlify-style redirects for clean URLs
 # Redirect root to index.html
 / /index.html 200
+
+# Clean URLs - redirect .html requests to clean URLs
+/about.html /about 301
+/contact.html /contact 301
+/schedule.html /schedule 301
+/team.html /team 301
+/opportunities.html /opportunities 301
+/privacy-policy.html /privacy-policy 301
+/request.html /request 301
+/coming-soon.html /coming-soon 301
+
+# Serve clean URLs with .html files
+/about /about.html 200
+/contact /contact.html 200
+/schedule /schedule.html 200
+/team /team.html 200
+/opportunities /opportunities.html 200
+/privacy-policy /privacy-policy.html 200
+/request /request.html 200
+/coming-soon /coming-soon.html 200
 
 # Allow all images and assets to load normally
 

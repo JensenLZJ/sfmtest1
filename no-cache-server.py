@@ -2,6 +2,7 @@
 import http.server
 import socketserver
 import os
+import urllib.parse
 
 class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -15,6 +16,26 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         # Additional headers to prevent any caching
         self.send_header('Clear-Site-Data', '"cache", "cookies", "storage"')
         super().end_headers()
+    
+    def do_GET(self):
+        # Handle clean URLs by mapping them to .html files
+        clean_urls = {
+            '/about': '/about.html',
+            '/contact': '/contact.html',
+            '/schedule': '/schedule.html',
+            '/team': '/team.html',
+            '/opportunities': '/opportunities.html',
+            '/privacy-policy': '/privacy-policy.html',
+            '/request': '/request.html',
+            '/coming-soon': '/coming-soon.html'
+        }
+        
+        # Check if this is a clean URL that needs to be mapped
+        if self.path in clean_urls:
+            self.path = clean_urls[self.path]
+        
+        # Call the parent method to handle the request
+        super().do_GET()
 
 if __name__ == "__main__":
     PORT = 8080

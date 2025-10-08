@@ -1604,7 +1604,7 @@ function playEpisode(episode) {
     titleEl.textContent = episode.name;
   }
   if (openEl) {
-    openEl.href = 'request.html';
+    openEl.href = 'request';
   }
   
   // Reset progress bar to beginning for new episode
@@ -2726,14 +2726,14 @@ async function loadHeroLatest(username){
     if (!ep) {
       // No episodes available
       titleEl.textContent = 'No episodes available';
-      openEl.href = 'request.html';
+      openEl.href = 'request';
       currentEpisode = null;
       updatePlayState(false);
       return;
     }
     
     titleEl.textContent = ep.name;
-    openEl.href = 'request.html';
+    openEl.href = 'request';
     
     // Set current episode for play button
     currentEpisode = ep;
@@ -2765,7 +2765,7 @@ async function loadHeroLatest(username){
     
     // Show error state when API fails
     titleEl.textContent = 'Unable to load episodes';
-    openEl.href = 'request.html';
+    openEl.href = 'request';
     currentEpisode = null;
     updatePlayState(false);
     
@@ -2861,7 +2861,7 @@ document.addEventListener('DOMContentLoaded', () => {
       listenBtn.textContent = 'Send a request';
       listenBtn.onclick = function(e) {
         e.preventDefault();
-        window.location.href = 'request.html';
+        window.location.href = 'request';
       };
     }
   }
