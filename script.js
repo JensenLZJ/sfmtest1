@@ -59,6 +59,31 @@ function initMobilePlayButton() {
   // Start checking after a short delay
   setTimeout(checkMixcloudReady, 1000);
   
+  // Very early mobile play button - show immediately
+  setTimeout(() => {
+    if (playPauseBtn) {
+      console.log('Mobile: Very early play button - showing immediately');
+      
+      // Show button immediately
+      playPauseBtn.classList.add('mixcloud-ready');
+      playPauseBtn.style.display = 'flex';
+      playPauseBtn.style.opacity = '1';
+      playPauseBtn.style.visibility = 'visible';
+      playPauseBtn.style.pointerEvents = 'auto';
+      playPauseBtn.style.cursor = 'pointer';
+      playPauseBtn.style.zIndex = '10';
+      isPlayButtonHiddenOnMobile = false;
+      
+      // Add direct click handler
+      playPauseBtn.addEventListener('click', function(e) {
+        console.log('Mobile: Very early play button clicked');
+        e.preventDefault();
+        e.stopPropagation();
+        mobileDirectPlay();
+      });
+    }
+  }, 500);
+  
   // Immediate mobile play button - show after 1 second regardless of Mixcloud state
   setTimeout(() => {
     if (playPauseBtn) {
@@ -84,6 +109,14 @@ function initMobilePlayButton() {
       playPauseBtn.style.cursor = 'pointer';
       playPauseBtn.style.zIndex = '10';
       isPlayButtonHiddenOnMobile = false;
+      
+      // Add direct click handler for immediate mobile play
+      playPauseBtn.addEventListener('click', function(e) {
+        console.log('Mobile: Immediate play button clicked');
+        e.preventDefault();
+        e.stopPropagation();
+        mobileDirectPlay();
+      });
     }
   }, 1000);
   
@@ -121,12 +154,18 @@ function initMobilePlayButton() {
       playPauseBtn.style.zIndex = '10';
       isPlayButtonHiddenOnMobile = false;
       
-      // Add a direct click handler for mobile emergency fallback
-      playPauseBtn.addEventListener('click', function(e) {
-        console.log('Mobile: Emergency play button clicked');
+      // Remove any existing click handlers to avoid conflicts
+      const newPlayBtn = playPauseBtn.cloneNode(true);
+      playPauseBtn.parentNode.replaceChild(newPlayBtn, playPauseBtn);
+      
+      // Add a simple, direct click handler for mobile emergency fallback
+      newPlayBtn.addEventListener('click', function(e) {
+        console.log('Mobile: Emergency play button clicked - starting direct play');
         e.preventDefault();
         e.stopPropagation();
-        window.handlePlayOnly();
+        
+        // Direct mobile play function
+        mobileDirectPlay();
       });
     }
   }, 3000);
@@ -136,6 +175,90 @@ function initMobilePlayButton() {
 let isPlayerReady = false;
 let isPlayerLoading = false;
 let isPlayButtonHiddenOnMobile = false;
+
+// Direct mobile play function - bypasses all complex logic
+function mobileDirectPlay() {
+  console.log('Mobile: Direct play function called');
+  
+  // Visual feedback for debugging
+  const playPauseBtn = document.getElementById('hero-play-pause');
+  if (playPauseBtn) {
+    playPauseBtn.style.backgroundColor = 'rgba(0, 255, 0, 0.3)';
+    setTimeout(() => {
+      playPauseBtn.style.backgroundColor = 'transparent';
+    }, 500);
+  }
+  
+  // Get current episode
+  if (!currentEpisode) {
+    if (episodes && episodes.length > 0) {
+      currentEpisode = episodes[0];
+      console.log('Mobile: Set current episode to first available:', currentEpisode.name);
+    } else {
+      console.log('Mobile: No episodes available');
+      alert('No episodes available to play');
+      return;
+    }
+  }
+  
+  console.log('Mobile: Playing episode:', currentEpisode.name);
+  
+  // Create or get the Mixcloud iframe
+  let iframe = document.getElementById('mixcloud-iframe');
+  if (!iframe) {
+    console.log('Mobile: Creating Mixcloud iframe');
+    iframe = document.createElement('iframe');
+    iframe.id = 'mixcloud-iframe';
+    iframe.width = '100%';
+    iframe.height = '120';
+    iframe.frameBorder = '0';
+    iframe.allow = 'autoplay';
+    
+    // Add to player container
+    const playerContainer = document.getElementById('mixcloud-player');
+    if (playerContainer) {
+      playerContainer.appendChild(iframe);
+    }
+  }
+  
+  // Set the iframe source to the episode
+  if (currentEpisode.mixcloudUrl) {
+    iframe.src = currentEpisode.mixcloudUrl;
+    console.log('Mobile: Set iframe src to:', currentEpisode.mixcloudUrl);
+  } else if (currentEpisode.url) {
+    iframe.src = currentEpisode.url;
+    console.log('Mobile: Set iframe src to episode URL:', currentEpisode.url);
+  } else {
+    console.log('Mobile: No valid URL for episode');
+    alert('No valid URL for this episode');
+    return;
+  }
+  
+  // Show the player container
+  const container = document.getElementById('mixcloud-player-container');
+  if (container) {
+    container.style.bottom = '0px';
+    console.log('Mobile: Showed player container');
+  }
+  
+  // Update play button state
+  const playPauseBtn = document.getElementById('hero-play-pause');
+  if (playPauseBtn) {
+    playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+    console.log('Mobile: Updated play button to pause icon');
+  }
+  
+  // Set playing state
+  isCurrentlyPlaying = true;
+  
+  console.log('Mobile: Direct play completed');
+}
+
+// Global mobile play button handler
+window.mobilePlayButton = function() {
+  console.log('Mobile: Global play button called');
+  mobileDirectPlay();
+};
 
 // Clear any existing caches and force fresh content loading
 if ('caches' in window) {
