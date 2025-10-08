@@ -227,7 +227,7 @@ const profilePictures = {
   'Jessica': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face',
   'Niv': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face',
   'Gavin': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face',
-  'TBA': 'assets/brandmark/SamudraFMLogo1.png'
+  'TBA': 'assets/brandmark/SamudraFMLogo2.png'
 };
 
 // Function to get profile picture for a presenter
@@ -248,8 +248,8 @@ function getProfilePicture(presenterName) {
     }
   }
   
-  // Default fallback - use SamudraFM logo
-  return 'assets/brandmark/SamudraFMLogo1.png';
+  // Default fallback - use SamudraFM logo 2
+  return 'assets/brandmark/SamudraFMLogo2.png';
 }
 
 const MOCK_COMING = [
