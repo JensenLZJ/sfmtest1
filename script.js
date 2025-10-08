@@ -106,6 +106,12 @@ function handleS24UltraLoading() {
         comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
         setTimeout(() => loadComingUpEventsWithRetry(), 100);
       }
+      
+      // Also check Mixcloud widget
+      if (!window.mixcloudWidgetReady && episodes && episodes.length > 0) {
+        console.log('S24 Ultra: Mixcloud not ready, forcing initialization');
+        forceMobileMixcloudInit();
+      }
     } else {
       console.log('S24 Ultra: All content loaded successfully');
       s24ContentLoaded = true;
@@ -2898,12 +2904,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       console.log('Mobile: Additional Mixcloud initialization');
       if (!window.mixcloudWidgetReady) {
-        console.log('Mobile: Mixcloud not ready, initializing without auto-play');
-        // Initialize the first episode for mobile but don't play it
-        if (episodes && episodes.length > 0) {
-          // Just load the episode without playing
-          loadEpisodeForMobile(episodes[0]);
-        }
+        console.log('Mobile: Mixcloud not ready, forcing initialization');
+        // Force initialize Mixcloud widget
+        forceMobileMixcloudInit();
       }
     }, 2000);
   }
@@ -3640,34 +3643,77 @@ function preloadCurrentEpisode(episode) {
 
 // Function to pre-load Mixcloud player for mobile devices
 function preloadMixcloudPlayer() {
-  
+  console.log('Mobile: Starting simplified Mixcloud preload');
   
   // Wait for episodes to be loaded first
   const checkForEpisodes = () => {
-    const episodesGrid = document.getElementById('episodes-grid');
-    if (episodesGrid && episodesGrid.querySelector('.episodes-card')) {
-      
+    if (episodes && episodes.length > 0) {
+      console.log('Mobile: Episodes available, initializing Mixcloud');
       
       // Get the first episode
-      const firstEpisodeCard = episodesGrid.querySelector('.episodes-card');
-      const episodeTitle = firstEpisodeCard.querySelector('.title')?.textContent;
-      const episodeLink = firstEpisodeCard.querySelector('.play-link')?.href;
+      const firstEpisode = episodes[0];
       
-      if (episodeTitle && episodeLink) {
+      if (firstEpisode && firstEpisode.mixcloudUrl) {
+        console.log('Mobile: Initializing with episode:', firstEpisode.name);
+        
         // Set current episode
-        currentEpisode = {
-          name: episodeTitle,
-          url: episodeLink
-        };
+        currentEpisode = firstEpisode;
+        updateEpisodeInfo(firstEpisode);
         
-        
-        
-        // Create the Mixcloud player but keep it hidden
-        createPreloadedMixcloudPlayer(episodeLink);
+        // Initialize the main iframe directly
+        const iframe = document.getElementById('mixcloud-iframe');
+        if (iframe) {
+          iframe.src = firstEpisode.mixcloudUrl;
+          console.log('Mobile: Set iframe source to:', firstEpisode.mixcloudUrl);
+          
+          // Initialize widget when iframe loads
+          iframe.onload = () => {
+            console.log('Mobile: Main iframe loaded, initializing widget');
+            
+            // Wait for Mixcloud to be available
+            const initWidget = () => {
+              if (window.Mixcloud) {
+                try {
+                  currentWidget = window.Mixcloud.PlayerWidget(iframe);
+                  console.log('Mobile: Mixcloud widget initialized successfully');
+                  
+                  // Mark as ready
+                  window.mixcloudWidgetReady = true;
+                  setPlayerReady(true);
+                  
+                  // Show play button on mobile
+                  const playPauseBtn = document.getElementById('hero-play-pause');
+                  if (playPauseBtn) {
+                    playPauseBtn.classList.add('mixcloud-ready');
+                    playPauseBtn.style.display = 'flex';
+                    playPauseBtn.style.opacity = '1';
+                    playPauseBtn.style.visibility = 'visible';
+                    console.log('Mobile: Play button shown and ready');
+                  }
+                } catch (error) {
+                  console.error('Mobile: Error initializing Mixcloud widget:', error);
+                  // Retry after delay
+                  setTimeout(initWidget, 2000);
+                }
+              } else {
+                console.log('Mobile: Mixcloud not ready, retrying...');
+                setTimeout(initWidget, 1000);
+              }
+            };
+            
+            // Start widget initialization
+            setTimeout(initWidget, 500);
+          };
+        } else {
+          console.error('Mobile: Mixcloud iframe not found');
+        }
+      } else {
+        console.warn('Mobile: No episode with Mixcloud URL found');
       }
     } else {
-      // Episodes not loaded yet, try again in 500ms
-      setTimeout(checkForEpisodes, 500);
+      // Episodes not loaded yet, try again
+      console.log('Mobile: Episodes not ready, retrying...');
+      setTimeout(checkForEpisodes, 1000);
     }
   };
   
@@ -4867,6 +4913,81 @@ if (isMobileDevice()) {
   }
 }
 
+
+// Force mobile Mixcloud initialization
+function forceMobileMixcloudInit() {
+  console.log('Mobile: Force initializing Mixcloud widget');
+  
+  if (episodes && episodes.length > 0) {
+    const firstEpisode = episodes[0];
+    
+    if (firstEpisode && firstEpisode.mixcloudUrl) {
+      console.log('Mobile: Force loading episode:', firstEpisode.name);
+      
+      // Set current episode
+      currentEpisode = firstEpisode;
+      updateEpisodeInfo(firstEpisode);
+      
+      // Get or create iframe
+      let iframe = document.getElementById('mixcloud-iframe');
+      if (!iframe) {
+        console.log('Mobile: Creating Mixcloud iframe');
+        iframe = document.createElement('iframe');
+        iframe.id = 'mixcloud-iframe';
+        iframe.width = '100%';
+        iframe.height = '400';
+        iframe.frameBorder = '0';
+        iframe.allow = 'encrypted-media; fullscreen; autoplay; idle-detection; web-share;';
+        iframe.style.border = 'none';
+        
+        // Add to player container
+        const playerContainer = document.getElementById('mixcloud-player');
+        if (playerContainer) {
+          playerContainer.appendChild(iframe);
+        }
+      }
+      
+      // Set source
+      iframe.src = firstEpisode.mixcloudUrl;
+      console.log('Mobile: Set iframe source to:', firstEpisode.mixcloudUrl);
+      
+      // Initialize widget when loaded
+      iframe.onload = () => {
+        console.log('Mobile: Force iframe loaded, initializing widget');
+        
+        const initWidget = () => {
+          if (window.Mixcloud) {
+            try {
+              currentWidget = window.Mixcloud.PlayerWidget(iframe);
+              console.log('Mobile: Force Mixcloud widget initialized');
+              
+              window.mixcloudWidgetReady = true;
+              setPlayerReady(true);
+              
+              // Show play button
+              const playPauseBtn = document.getElementById('hero-play-pause');
+              if (playPauseBtn) {
+                playPauseBtn.classList.add('mixcloud-ready');
+                playPauseBtn.style.display = 'flex';
+                playPauseBtn.style.opacity = '1';
+                playPauseBtn.style.visibility = 'visible';
+                console.log('Mobile: Force play button shown');
+              }
+            } catch (error) {
+              console.error('Mobile: Force widget error:', error);
+              setTimeout(initWidget, 2000);
+            }
+          } else {
+            console.log('Mobile: Force Mixcloud not ready, retrying...');
+            setTimeout(initWidget, 1000);
+          }
+        };
+        
+        setTimeout(initWidget, 500);
+      };
+    }
+  }
+}
 
 // Load episode for mobile without auto-play
 function loadEpisodeForMobile(episode) {
