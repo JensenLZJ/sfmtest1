@@ -415,6 +415,23 @@ const MOCK_COMING = [
 const INSTAGRAM_ACCESS_TOKEN = window.INSTAGRAM_CONFIG?.accessToken || 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD';
 const INSTAGRAM_POST_LIMIT = window.INSTAGRAM_CONFIG?.postLimit || 12;
 
+// Debug function to log API calls
+function debugApiCall(url, method = 'GET') {
+  console.log(`🌐 API Call: ${method} ${url}`);
+  console.log(`📍 Current domain: ${window.location.hostname}`);
+  console.log(`🔒 Protocol: ${window.location.protocol}`);
+  console.log(`🌍 User Agent: ${navigator.userAgent}`);
+  
+  // Check for potential issues
+  if (window.location.protocol === 'http:' && url.includes('https:')) {
+    console.warn('⚠️ Mixed content warning: HTTP page trying to access HTTPS API');
+  }
+  
+  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    console.log('🌐 Live domain detected - checking CORS policies');
+  }
+}
+
 // Instagram API Integration (Using Instagram Basic Display API)
 async function fetchInstagramPosts() {
   try {
@@ -427,18 +444,30 @@ async function fetchInstagramPosts() {
     
     // Try direct API call first, then CORS proxy if needed
     let mediaResponse;
+    const mediaUrl = `https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=${INSTAGRAM_POST_LIMIT}`;
+    
+    debugApiCall(mediaUrl);
+    
     try {
-      mediaResponse = await fetch(`https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=${INSTAGRAM_POST_LIMIT}`, {
+      mediaResponse = await fetch(mediaUrl, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
         },
         mode: 'cors'
       });
+      
+      if (!mediaResponse.ok) {
+        throw new Error(`Instagram API error: ${mediaResponse.status} ${mediaResponse.statusText}`);
+      }
+      
     } catch (corsError) {
-      console.warn('Direct API call failed, trying CORS proxy...');
+      console.warn('Direct API call failed, trying CORS proxy...', corsError);
       // Try with CORS proxy as fallback
       const proxyUrl = `https://cors-anywhere.herokuapp.com/https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=${INSTAGRAM_POST_LIMIT}`;
+      
+      debugApiCall(proxyUrl);
+      
       mediaResponse = await fetch(proxyUrl, {
         method: 'GET',
         headers: {
@@ -474,19 +503,37 @@ async function fetchInstagramPosts() {
   } catch (error) {
     console.error('Error fetching real Instagram posts:', error);
     
+    // Detailed error analysis for live domain debugging
+    console.log('🔍 Error Analysis:');
+    console.log(`📍 Domain: ${window.location.hostname}`);
+    console.log(`🔒 Protocol: ${window.location.protocol}`);
+    console.log(`❌ Error Type: ${error.name}`);
+    console.log(`📝 Error Message: ${error.message}`);
+    
     // Check if it's a CORS error
-    if (error.message.includes('CORS') || error.message.includes('cross-origin')) {
-      console.warn('CORS error detected. Instagram API cannot be called directly from browser.');
-      console.log('Consider using a backend server or CORS proxy for production.');
+    if (error.message.includes('CORS') || error.message.includes('cross-origin') || error.message.includes('blocked')) {
+      console.warn('🚫 CORS error detected. Instagram API cannot be called directly from browser.');
+      console.log('💡 Solutions:');
+      console.log('1. Use a backend server to proxy API calls');
+      console.log('2. Use a CORS proxy service');
+      console.log('3. Check if your domain is whitelisted in Instagram app settings');
     }
     
     // Check if it's an authentication error
     if (error.message.includes('401') || error.message.includes('403')) {
-      console.warn('Instagram API authentication failed. Please check your access token.');
-      console.log('Follow the setup guide in INSTAGRAM_SETUP.md to get a valid token.');
+      console.warn('🔐 Instagram API authentication failed. Please check your access token.');
+      console.log('💡 Solutions:');
+      console.log('1. Verify your Instagram access token is valid');
+      console.log('2. Check if the token has expired');
+      console.log('3. Ensure your domain is added to Instagram app settings');
     }
     
-    console.log('Falling back to custom posts...');
+    // Check if it's a network error
+    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+      console.warn('🌐 Network error detected. Check your internet connection and server status.');
+    }
+    
+    console.log('🔄 Falling back to custom posts...');
     return await getFallbackInstagramPosts();
   }
 }
@@ -1076,6 +1123,9 @@ async function loadMixcloudEpisodes(username, nextUrl) {
   try {
     // Load episodes from Mixcloud API directly
     const apiUrl = nextUrl || `https://api.mixcloud.com/${username}/cloudcasts/?limit=12`;
+    
+    debugApiCall(apiUrl);
+    
     const res = await fetch(apiUrl, {
       method: 'GET',
       mode: 'cors',
@@ -1086,7 +1136,7 @@ async function loadMixcloudEpisodes(username, nextUrl) {
     });
     
     if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+      throw new Error(`Mixcloud API error: ${res.status} ${res.statusText}`);
     }
     
     const data = await res.json();
@@ -1129,6 +1179,27 @@ async function loadMixcloudEpisodes(username, nextUrl) {
     }
   } catch (err) {
     console.error('Error loading episodes:', err);
+    
+    // Detailed error analysis for live domain debugging
+    console.log('🔍 Mixcloud Error Analysis:');
+    console.log(`📍 Domain: ${window.location.hostname}`);
+    console.log(`🔒 Protocol: ${window.location.protocol}`);
+    console.log(`❌ Error Type: ${err.name}`);
+    console.log(`📝 Error Message: ${err.message}`);
+    
+    // Check if it's a CORS error
+    if (err.message.includes('CORS') || err.message.includes('cross-origin') || err.message.includes('blocked')) {
+      console.warn('🚫 CORS error detected for Mixcloud API.');
+      console.log('💡 Solutions:');
+      console.log('1. Check if your domain is allowed in Mixcloud API settings');
+      console.log('2. Verify Content Security Policy allows api.mixcloud.com');
+      console.log('3. Check server-level CORS headers');
+    }
+    
+    // Check if it's a network error
+    if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+      console.warn('🌐 Network error detected for Mixcloud API.');
+    }
     
     // Show error message when API fails
     slider.innerHTML = '<p class="muted">Unable to load episodes at the moment.</p>';
@@ -1265,7 +1336,11 @@ async function loadHomeEpisodes() {
     episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
     
     // Load episodes from Mixcloud API directly
-    const res = await fetch(`https://api.mixcloud.com/${MIXCLOUD_USERNAME}/cloudcasts/?limit=12`, {
+    const apiUrl = `https://api.mixcloud.com/${MIXCLOUD_USERNAME}/cloudcasts/?limit=12`;
+    
+    debugApiCall(apiUrl);
+    
+    const res = await fetch(apiUrl, {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -1275,7 +1350,7 @@ async function loadHomeEpisodes() {
     });
     
     if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+      throw new Error(`Mixcloud API error: ${res.status} ${res.statusText}`);
     }
     
     const data = await res.json();
@@ -2858,7 +2933,11 @@ async function loadHeroLatest(username){
   
   try{
     // Load latest episode from Mixcloud API directly
-    const res = await fetch(`https://api.mixcloud.com/${username}/cloudcasts/?limit=1`, {
+    const apiUrl = `https://api.mixcloud.com/${username}/cloudcasts/?limit=1`;
+    
+    debugApiCall(apiUrl);
+    
+    const res = await fetch(apiUrl, {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -2868,7 +2947,7 @@ async function loadHeroLatest(username){
     });
     
     if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+      throw new Error(`Mixcloud API error: ${res.status} ${res.statusText}`);
     }
     
     const data = await res.json();
