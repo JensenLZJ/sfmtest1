@@ -12,6 +12,9 @@
 /request.html /request 301
 /coming-soon.html /coming-soon 301
 
+# Application redirect
+/apply /opportunities 301
+
 # Serve clean URLs with .html files
 /about /about.html 200
 /contact /contact.html 200
