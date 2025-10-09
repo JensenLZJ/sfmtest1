@@ -18,6 +18,13 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
     
     def do_GET(self):
+        # Handle redirects first
+        if self.path == '/apply':
+            self.send_response(301)
+            self.send_header('Location', '/opportunities')
+            self.end_headers()
+            return
+        
         # Handle clean URLs by mapping them to .html files
         clean_urls = {
             '/about': '/about.html',
