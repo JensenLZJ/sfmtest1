@@ -54,21 +54,16 @@
             padding: 0 20px;
         }
         
-        /* Header */
-        .site-header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: #0f2230;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        /* Hero Header */
+        .hero-header {
+            width: 100%;
+            padding: 24px 0 12px 0;
         }
         
-        .header-inner {
+        .hero-header-inner {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 18px 0;
         }
         
         .brand {
@@ -130,10 +125,18 @@
         /* Hero Section */
         .request-hero {
             background: linear-gradient(135deg, #1a2332, #2d3748);
-            padding: 80px 0;
+            padding: 0 0 80px 0;
             text-align: center;
             position: relative;
             overflow: hidden;
+        }
+        
+        /* Header inside hero section */
+        .request-hero .hero-header {
+            padding: 24px 0 40px 0;
+            text-align: left;
+            position: relative;
+            z-index: 10;
         }
         
         .hero-content {
@@ -184,8 +187,9 @@
         
         /* Mobile Header Styles - Same as home page */
         @media (max-width: 900px) {
-            .header-inner {
+            .hero-header-inner {
                 padding: 12px 0; /* Reduced from 18px */
+                position: relative;
             }
             
             .brand-subtitle {
@@ -210,8 +214,8 @@
             
             .nav-list {
                 position: absolute;
-                right: 4%;
-                top: 64px;
+                right: 0;
+                top: 48px;
                 background: #0f2230;
                 border: 1px solid var(--border);
                 border-radius: 12px;
@@ -222,6 +226,7 @@
                 visibility: hidden;
                 transform: translateY(-20px);
                 transition: all 0.3s ease;
+                z-index: 100;
             }
             
             .nav-list.open {
@@ -621,12 +626,6 @@
             text-align: center;
         }
         
-        .footer-separator {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            margin: 40px 0 30px;
-        }
-        
         .footer-bottom {
             text-align: center;
             padding-top: 20px;
@@ -646,28 +645,28 @@
     <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
 </head>
 <body>
-    <header class="site-header">
-        <div class="container header-inner">
-            <a href="/" class="brand" aria-label="SamudraFM Home">
-                <span class="brand-mark">Samudra<span>FM</span></span>
-                <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
-            </a>
-            <nav class="nav" aria-label="primary">
-                <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
-                <ul id="nav-menu" class="nav-list">
-                    <li><a href="/">home</a></li>
-                    <li><a href="/#schedule">schedule</a></li>
-                    <li><a href="/team">our team</a></li>
-                    <li><a href="/#about">about</a></li>
-                    <li><a href="/#contact">contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
     <main class="site-main">
-        <!-- Hero Section -->
+        <!-- Hero Section with integrated header -->
         <section class="request-hero">
+            <!-- Hero Header -->
+            <header class="hero-header">
+                <div class="container hero-header-inner">
+                    <a href="/" class="brand" aria-label="SamudraFM Home">
+                        <span class="brand-mark">Samudra<span>FM</span></span>
+                        <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
+                    </a>
+                    <nav class="nav" aria-label="primary">
+                        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
+                        <ul id="nav-menu" class="nav-list">
+                            <li><a href="/">home</a></li>
+                            <li><a href="/schedule">schedule</a></li>
+                            <li><a href="/team">our team</a></li>
+                            <li><a href="/about">about</a></li>
+                            <li><a href="/contact">contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
             <div class="container">
                 <div class="hero-content">
                     <div class="hero-icon">
@@ -856,10 +855,7 @@
     <footer class="site-footer" id="about">
         <div class="footer-content">
             <div class="footer-column">
-           <div class="footer-logo">
-               <img src="assets/brandmark/SamudraFMLogo1.png" alt="SamudraFM Logo" />
-           </div>
-                <h2 class="footer-brand-title">SamudraFM</h2>
+                <h2 class="footer-brand-title">samudrafm.com</h2>
                 <p class="footer-description">
                     Non-Profit Organization. Fully volunteer-run<br>
                     school of SMK Taman SEA radio station.
@@ -881,13 +877,13 @@
             <div class="footer-column">
                 <h3>Links</h3>
                 <ul class="footer-links">
+                    <li><a href="about">About Us</a></li>
                     <li><a href="opportunities">Opportunities</a></li>
                     <li><a href="privacy-policy">Privacy Policy</a></li>
                 </ul>
             </div>
         </div>
         
-        <div class="footer-separator"></div>
         
         <div class="footer-bottom">
             <p>© 2025 SamudraFM. Designed with passion by Jensen. 📻</p>
@@ -1052,19 +1048,6 @@
                 navToggle.addEventListener('click', () => {
                     const open = navMenu.classList.toggle('open');
                     navToggle.setAttribute('aria-expanded', String(open));
-                    
-                    // Add animate__fadeInRightBig class on mobile when menu opens
-                    if (window.innerWidth <= 768) {
-                        if (open) {
-                            // Opening menu on mobile
-                            // Remove any existing animation classes first
-                            navMenu.classList.remove('animate__fadeInRightBig', 'animate__animated');
-                            // Force a reflow to ensure the class removal takes effect
-                            navMenu.offsetHeight;
-                            // Add the animation classes
-                            navMenu.classList.add('animate__animated', 'animate__fadeInRightBig');
-                        }
-                    }
                 });
             }
         }

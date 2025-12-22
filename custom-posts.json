@@ -2,51 +2,211 @@
   "posts": [
     {
       "id": "1",
-      "title": "Welcome to SamudraFM!",
-      "content": "🎵 Fresh beats and great vibes! Tune in to SamudraFM for the latest music and updates!",
-      "image": "images/CustomPost/552514804_17962043480989085_3816.jpg",
-      "link": "https://www.instagram.com/p/DO0d4jRktgm/",
-      "date": "2024-12-18T10:00:00.000Z"
+      "title": "SamudraFM Temporary Hiatus",
+      "content": "📢 Thank you for understanding! As our school SMK Taman SEA has started the final-term examination for Form 5 pupils, SamudraFM will be temporarily put on hold during the examination period. Good luck to all students! 🍀",
+      "image": "images/CustomPost/556763408_latest_post.jpg",
+      "link": "https://www.instagram.com/p/DPIuvt4EiNP/",
+      "date": "2025-09-27T00:00:00.000Z"
     },
     {
       "id": "2",
-      "title": "Behind the Scenes",
-      "content": "📻 Our amazing team working hard to bring you the best content!",
-      "image": "images/CustomPost/551500122_17962043462989085_5241.jpg",
-      "link": "https://www.instagram.com/samudrafm/",
-      "date": "2024-12-17T15:30:00.000Z"
+      "title": "SamudraFM's New Season",
+      "content": "🎵 Fresh beats and great vibes! Get ready for SamudraFM's new season with exciting content coming your way!",
+      "image": "images/CustomPost/552514804_17962043480989085_3816.jpg",
+      "link": "https://www.instagram.com/p/DO0d4jRktgm/",
+      "date": "2025-09-20T12:00:00.000Z"
     },
     {
       "id": "3",
-      "title": "New Episode Alert!",
-      "content": "🔥 Check out our latest episode featuring amazing music and great conversations!",
-      "image": "images/CustomPost/551794330_17962043393989085_4990.jpg",
-      "link": "https://www.instagram.com/samudrafm/",
-      "date": "2024-12-16T20:15:00.000Z"
+      "title": "Meet Our President - Srishti",
+      "content": "🎤 Introducing our President, SRISHTI GANESH! Leading SamudraFM with passion and vision. \"Every second of your life is an opportunity to learn something new.\" 🌟",
+      "image": "images/CustomPost/551500122_17962043462989085_5241.jpg",
+      "link": "https://www.instagram.com/p/DO0d28EkkZy/",
+      "date": "2025-09-20T11:55:00.000Z"
     },
     {
       "id": "4",
-      "title": "Thank You Listeners!",
-      "content": "🙏 Thank you for your amazing support! We love hearing from our community!",
+      "title": "SamudraFM '25",
+      "content": "🔊 GOO 25' - SamudraFM is here to bring you the freshest vibes this year! Stay tuned for more exciting content! 📻",
       "image": "images/CustomPost/552115285_17962041956989085_5018.jpg",
-      "link": "https://www.instagram.com/samudrafm/",
-      "date": "2024-12-15T12:45:00.000Z"
+      "link": "https://www.instagram.com/p/DO0dtQeknJA/",
+      "date": "2025-09-20T11:50:00.000Z"
     },
     {
       "id": "5",
-      "title": "New Music Friday!",
-      "content": "🎶 Fresh tracks just dropped! Check out our latest playlist featuring the hottest new releases! 🔥",
-      "image": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop&crop=center",
-      "link": "https://www.instagram.com/samudrafm/",
-      "date": "2024-12-14T20:15:00.000Z"
+      "title": "Meet Our Vice President - Vyshavi",
+      "content": "🌟 Introducing our Vice President, VYSHAVI! Driving SamudraFM forward with dedication and energy!",
+      "image": "images/CustomPost/551794330_17962043393989085_4990.jpg",
+      "link": "https://www.instagram.com/p/DO0b3e9kn0s/",
+      "date": "2025-09-20T11:45:00.000Z"
     },
     {
       "id": "6",
-      "title": "Behind the Scenes",
-      "content": "📻 Our amazing team working hard to bring you the best content!",
-      "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop&crop=center",
-      "link": "https://www.instagram.com/samudrafm/",
-      "date": "2024-12-13T15:30:00.000Z"
+      "title": "Meet Our Secretary - Noelle",
+      "content": "📋 Introducing our Secretary, NOELLE CHOY! Keeping SamudraFM organized and running smoothly!",
+      "image": "images/CustomPost/550595835_secretary_noelle.jpg",
+      "link": "https://www.instagram.com/p/DO0bpnEEtV0/",
+      "date": "2025-09-20T11:40:00.000Z"
+    },
+    {
+      "id": "7",
+      "title": "Meet Our Arts & Designs - Qing Qing",
+      "content": "🎨 Introducing our Arts & Designs, QING QING! Bringing creativity and visual magic to SamudraFM!",
+      "image": "images/CustomPost/550911421_qingqing.jpg",
+      "link": "https://www.instagram.com/p/DO0bcWgEnUn/",
+      "date": "2025-09-20T11:35:00.000Z"
+    },
+    {
+      "id": "8",
+      "title": "Meet Our Asst. Arts & Designs - Ryan",
+      "content": "🎨 Introducing our Assistant Arts & Designs, RYAN! Supporting the creative vision of SamudraFM!",
+      "image": "images/CustomPost/551157156_ryan.jpg",
+      "link": "https://www.instagram.com/p/DO0aYX5kh9p/",
+      "date": "2025-09-20T11:30:00.000Z"
+    },
+    {
+      "id": "9",
+      "title": "Meet Our AJK English - Airil",
+      "content": "🎙️ Introducing our AJK bahasa Inggeris, AIRIL! Bringing English vibes to SamudraFM!",
+      "image": "images/CustomPost/550825767_airil.jpg",
+      "link": "https://www.instagram.com/p/DO0aMQlEkU9/",
+      "date": "2025-09-20T11:25:00.000Z"
+    },
+    {
+      "id": "10",
+      "title": "Meet Our AJK BM - Karisemma",
+      "content": "🎙️ \"No risk, no plot.\" Meet our AJK bahasa Melayu, KARISEMMA. Bringing Malay vibes to SamudraFM!",
+      "image": "images/CustomPost/post10_karisemma.jpg",
+      "link": "https://www.instagram.com/p/DO0Z3RXkr6X/",
+      "date": "2025-09-20T11:20:00.000Z"
+    },
+    {
+      "id": "11",
+      "title": "Meet Our AJK F5 - Michelle",
+      "content": "🎙️ \"You have to choose to love yourself, it's not natural, it's intentional. -Zooble\" Meet our AJK F5, MICHELLE!",
+      "image": "images/CustomPost/post11_michelle.jpg",
+      "link": "https://www.instagram.com/p/DO0ZXF_ki2Z/",
+      "date": "2025-09-20T11:15:00.000Z"
+    },
+    {
+      "id": "12",
+      "title": "Meet Our AJK F4 - Shayna",
+      "content": "🎙️ \"I'm so excited to graduate next year.\" Meet our AJK F4, SHAYNA!",
+      "image": "images/CustomPost/post12_shayna.jpg",
+      "link": "https://www.instagram.com/p/DO0Y_OIkrMM/",
+      "date": "2025-09-20T11:10:00.000Z"
+    },
+    {
+      "id": "13",
+      "title": "Meet Our AJK F3 - Sereena",
+      "content": "🎙️ \"I'm the chicken, I'm the egg, I'm the omelet.\" - Tyler The Creator/Hot Wind Blow. Meet SamudraFM's AJK F3, SEREENA! 🎵",
+      "image": "images/CustomPost/post13_sereena.jpg",
+      "link": "https://www.instagram.com/p/DO0Yw6-EnD4/",
+      "date": "2025-09-20T11:05:00.000Z"
+    },
+    {
+      "id": "14",
+      "title": "SamudraFM is Back!",
+      "content": "🫶 Ever heard the sound of people talking or music playing at 7.05-7.20am every Tuesday and Wednesday? Don't fret! It's just us. SamudraFM. We're back, ready to speak and ready to give you the latest news in school!",
+      "image": "images/CustomPost/post14_back.jpg",
+      "link": "https://www.instagram.com/p/DLpMmlBTRKf/",
+      "date": "2025-07-03T00:00:00.000Z"
+    },
+    {
+      "id": "15",
+      "title": "Join SamudraFM! - Recruitment 2025",
+      "content": "📣 Calling all Form 3 and Form 4 students with a burning passion for speaking!! Join the SamudraFM family now! Deadline: 13th April 2025",
+      "image": "images/CustomPost/post15_recruitment.webp",
+      "link": "https://www.instagram.com/p/DITXWTOy8RN/",
+      "date": "2025-04-11T00:00:00.000Z"
+    },
+    {
+      "id": "16",
+      "title": "Temporary Closure - SPM 2024",
+      "content": "📢 Temporary closure of SamudraFM in conjunction with SPM. Good luck to all SPM candidates!",
+      "image": "images/CustomPost/post16_spm.jpg",
+      "link": "https://www.instagram.com/p/DDeRLTxSTKc/",
+      "date": "2024-12-12T00:00:00.000Z"
+    },
+    {
+      "id": "17",
+      "title": "MPS2024 Booth Fun",
+      "content": "🎉 Step right up for nonstop fun at our booth! 🎮 Play epic games, score awesome prizes, and grab exclusive badges! Come join the fun and make your day legendary! 😎🎯 #mps2024",
+      "image": "images/CustomPost/post17_mps2024.jpg",
+      "link": "https://www.instagram.com/p/DAfuk-2SN2r/",
+      "date": "2024-09-29T00:00:00.000Z"
+    },
+    {
+      "id": "18",
+      "title": "Song Request Feature",
+      "content": "🎵 Yes! Now you can give us your song request or even dedicate a song to that special someone! Just scan the QR code and we will play your song request on the next show! #SamudraFM",
+      "image": "images/CustomPost/post18_songrequest.jpg",
+      "link": "https://www.instagram.com/p/C7inimKBu_y/",
+      "date": "2024-05-29T00:00:00.000Z"
+    },
+    {
+      "id": "19",
+      "title": "Join the SamudraFM Family! - Recruitment 2023",
+      "content": "🎙️ Calling all Form 2, Form 3, and Form 4 students with a passion for radio and speaking! SamudraFM is on the lookout for dynamic presenters to join our team. Application Deadline: 8th September 2023",
+      "image": "images/CustomPost/post19_presenter2023.jpg",
+      "link": "https://www.instagram.com/p/CwkPMmuy1i1/",
+      "date": "2023-08-30T00:00:00.000Z"
+    },
+    {
+      "id": "20",
+      "title": "SamudraFM is Back! - Post Mid-Exam",
+      "content": "📻🎶 SamudraFM is BACK! After a month-long pause due to mid-examinations, we're thrilled to announce our COMEBACK to the airwaves! Get ready to tune in again! 🎧🎤🎵",
+      "image": "images/CustomPost/post20_comeback.jpg",
+      "link": "https://www.instagram.com/p/Cvphhjkyjc0/",
+      "date": "2023-08-07T00:00:00.000Z"
+    },
+    {
+      "id": "21",
+      "title": "Temporary Hiatus - Mid-Term Exams",
+      "content": "📢 FOR IMMEDIATE RELEASE - SamudraFM will be on a temporary hiatus during the mid-term examination period. We'll be back soon! Good luck on your exams! 📚",
+      "image": "images/CustomPost/post21_hiatus.jpg",
+      "link": "https://www.instagram.com/p/Cuq7y3-rG86/",
+      "date": "2023-07-14T00:00:00.000Z"
+    },
+    {
+      "id": "22",
+      "title": "🎉 Celebrating 1 Month of Success!",
+      "content": "🌊 From humble beginnings with just two passionate individuals, Jensen and Justin, SamudraFM has grown into a vibrant crew of 15 dedicated volunteers! It all started with an incredible vision from Mr. Eugene. We've lit up our school, one song at a time! 🎧💙",
+      "image": "images/CustomPost/post22_1month.jpg",
+      "link": "https://www.instagram.com/p/CuW8bKdyBeb/",
+      "date": "2023-07-06T00:00:00.000Z"
+    },
+    {
+      "id": "23",
+      "title": "SamudraFM Week 2 Update",
+      "content": "🌊🎙️ SamudraFM Week 2 Update! We're thrilled to share that our operations have been sailing smoothly with the addition of our incredible new crew members on the Bahasa Melayu department! 🙌🏽🎉",
+      "image": "images/CustomPost/post23_week2.jpg",
+      "link": "https://www.instagram.com/p/CtonorCSurQ/",
+      "date": "2023-06-18T00:00:00.000Z"
+    },
+    {
+      "id": "24",
+      "title": "First Week of Operations - Success!",
+      "content": "🎉 Celebrating an Incredible First Week of Operations! We are thrilled to announce the successful launch and completion of the first week of operations for SamudraFM! 📻✨",
+      "image": "images/CustomPost/post24_firstweek.jpg",
+      "link": "https://www.instagram.com/p/CtWm9CehUH6/",
+      "date": "2023-06-11T00:00:00.000Z"
+    },
+    {
+      "id": "25",
+      "title": "Tasty Tuesday Show Summary",
+      "content": "📻 The Tasty Tuesday Show Summary on SamudraFM. Thank you for the wonderful morning today! We would love to have you give feedback to us. Every feedback is greatly appreciated!",
+      "image": "images/CustomPost/post25_summary.jpg",
+      "link": "https://www.instagram.com/p/CtJB0yeS7ip/",
+      "date": "2023-06-06T00:00:00.000Z"
+    },
+    {
+      "id": "26",
+      "title": "SamudraFM Launch Announcement",
+      "content": "📢 ANNOUNCEMENT: Tune In to SamudraFM Live Broadcast Tomorrow Morning at SMK Taman SEA! 🎙️ Join us for an electrifying start to your day as SamudraFM takes over the airwaves!",
+      "image": "images/CustomPost/post26_launch.jpg",
+      "link": "https://www.instagram.com/p/CtG0lAdSi70/",
+      "date": "2023-06-05T00:00:00.000Z"
     }
   ]
 }

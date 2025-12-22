@@ -1,4 +1,47 @@
 ﻿/* SamduraFM theme - modern dark, inspired by trucking radio UI */
+
+/* Atkinson Hyperlegible Font */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('assets/fonts/AtkinsonHyperlegible/AtkinsonHyperlegible-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('assets/fonts/AtkinsonHyperlegible/AtkinsonHyperlegible-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('assets/fonts/AtkinsonHyperlegible/AtkinsonHyperlegible-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('assets/fonts/AtkinsonHyperlegible/AtkinsonHyperlegible-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Funnel Display Font */
+@font-face {
+  font-family: 'Funnel Display';
+  src: url('assets/fonts/FunnelDisplay/FunnelDisplay-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root{
   --bg:#0f2230;
   --bg-elev:#173246;
@@ -53,9 +96,10 @@
 
 *{box-sizing:border-box}
 html,body{height:100%}
+p{margin-top:5px;margin-bottom:0;padding-top:0;padding-bottom:0}
 body{
   margin:0;
-  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  font-family:'Atkinson Hyperlegible',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   color:var(--text);
   background:var(--bg);
   position: relative;
@@ -126,21 +170,30 @@ body{
 
 .container{width:min(1200px,92%);margin:0 auto}
 
-/* Header */
-.site-header{position:sticky;top:0;z-index:50;background:var(--bg);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-.header-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+/* Hero Header - Used on all pages */
+.hero-header{width:100%;padding:16px 0 12px 0}
+.hero-header-inner{display:flex;align-items:center;justify-content:space-between}
+/* When hero-header is inside a grid (home page hero section), span full width */
+.hero .hero-header{grid-column:1/-1;margin-bottom:12px;padding-bottom:0}
 .brand{color:var(--text);text-decoration:none;display:flex;flex-direction:column;align-items:flex-start;gap:2px}
-.brand-mark{font-weight:800;letter-spacing:.2px;font-size:24px}
+.brand-mark{font-weight:800;letter-spacing:.2px;font-size:26px}
 .brand-mark span{color:#ed1d59}
 .brand-subtitle{font-size:12px;opacity:0.6;font-weight:400;color:var(--muted);line-height:1.2}
 
-.nav-toggle{display:none;background:none;border:1px solid var(--border);border-radius:10px;color:var(--text);padding:6px 10px}
+.nav-toggle{display:none;background:none;border:none;padding:12px;width:44px;height:44px;flex-direction:column;justify-content:center;align-items:center;gap:5px;cursor:pointer;border-radius:8px;transition:background 0.2s ease}
+.nav-toggle:hover{background:rgba(255,255,255,0.1)}
+.hamburger-line{display:block;width:24px;height:2px;background:#f61b58;border-radius:2px;transition:transform 0.3s ease,opacity 0.3s ease}
+.nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(2){opacity:0}
+.nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 .nav-list{display:flex;gap:28px;list-style:none;margin:0;padding:0}
-.nav-list a{color:var(--muted);text-decoration:none;text-transform:lowercase;font-weight:600}
+.nav-list a{color:var(--muted);text-decoration:none;text-transform:lowercase;font-weight:600;transition:color 0.2s ease;position:relative;padding-bottom:4px}
+.nav-list a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:#f61b58;border-radius:2px;transition:width 0.3s ease}
+.nav-list a:hover::after,.nav-list a.active::after{width:100%}
 .nav-list a.active,.nav-list a:hover{color:#f61b58}
 
 /* Hero */
-.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:stretch;padding:42px 0}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;grid-template-rows:auto 1fr;gap:28px;align-items:stretch;padding:0 0 42px 0}
 .hero-latest{display:grid;grid-template-columns:1fr;gap:12px;position:relative;background:rgba(255,255,255,0.1) !important;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:var(--radius);padding:20px;margin:20px 0;border:1px solid rgba(255,255,255,0.2);box-shadow:0 8px 32px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.1)}
 
 /* Hide Mixcloud player behind custom UI */
@@ -169,15 +222,17 @@ body{
 .player-widget {
   position: relative;
   z-index: 10;
-  background: #21055f; /* Solid purple background - 100% opacity */
+  background: rgba(23, 50, 70, 0.3);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   display: flex;
   gap: 16px;
   align-items: center;
+  justify-content: flex-start;
   padding: 16px;
 }
-.player-left{position:relative;flex:0 0 35%;max-width:35%;aspect-ratio:1}
+.player-content-row{display:flex;align-items:center;gap:16px;width:100%;justify-content:flex-start}
+.player-left{position:relative;flex:0 0 152px;max-width:152px;height:152px}
 .hero-latest-cover{width:100%;height:100%;border-radius:12px;background-size:cover;background-position:center;background-repeat:no-repeat;image-rendering:high-quality;image-rendering:-webkit-optimize-contrast}
 .hero-latest-cover.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);
   background:
@@ -190,13 +245,13 @@ body{
 .play-pause-btn{font-size:48px;color:white;font-weight:bold}
 .play-pause-btn:hover{transform:scale(1.08)}
 .play-pause-btn:active{transform:scale(0.95)}
-.player-right{flex:1;min-width:0;max-width:65%}
-.player-info{margin-bottom:12px}
+.player-right{flex:1;min-width:0;min-height:152px}
+.player-info{margin-bottom:6px}
 .spotify-logo{width:24px;height:24px;background:var(--brand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:white;font-weight:bold}
-.track-title{font-size:18px;font-weight:700;margin:0;color:var(--text)}
-.track-artist{font-size:14px;color:var(--muted);margin:0}
-.player-controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.volume-control{display:flex;align-items:center;gap:8px}
+.track-title{font-size:14px;font-weight:700;margin:0;color:var(--text)}
+.track-artist{font-size:12px;color:var(--muted);margin:0}
+.player-controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.volume-control{display:flex;align-items:center;gap:8px;overflow:hidden}
 .volume-icon{font-size:16px}
 .volume-slider{width:100px}
 .volume-bar{
@@ -249,6 +304,7 @@ body{
   transform:scale(1.1);
 }
 .request-btn{background:transparent;border:1px solid var(--border);color:var(--text);padding:12px 16px;border-radius:12px;text-decoration:none;font-size:12px;font-weight:600;transition:all 0.2s ease}
+#hero-open{overflow:hidden}
 .request-btn:hover{background:var(--bg-elev) !important;border-color:#f61b58 !important;color:#f61b58 !important}
 .progress-container{
   margin-top: 12px;
@@ -344,6 +400,7 @@ body{
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
 }
 
 /* Desktop-only: Enforce 50/50 split between Instagram and Coming Up sections */
@@ -1184,6 +1241,7 @@ body{
   height: 2px;
   background: linear-gradient(90deg, #f61b58, #8b4c93);
   margin-left: 16px;
+  margin-right: 16px;
   flex-grow: 1;
   position: relative;
   border-radius: 1px;
@@ -1205,6 +1263,7 @@ body{
   display: flex;
   flex-direction: column;
   gap: 14px;
+  width: 100%;
 }
 
 /* Coming up cards - horizontal layout with cover on left */
@@ -1215,6 +1274,8 @@ body{
   gap: 20px;
   padding: 24px;
   min-height: 120px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .coming .card .cover {
@@ -1232,6 +1293,37 @@ body{
 /* Coming up time display (date and day) */
 .coming-up-card {
   position: relative;
+}
+
+/* Colorful text styling for coming-up cards */
+.coming-up-card .title {
+  color: #fff;
+  font-size: 16px;
+}
+
+.coming-up-card .meta {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.coming-up-card .content .meta:nth-of-type(2) {
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.coming-up-card .date-day {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.coming-up-card.card .content {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 99px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .coming-up-time {
@@ -1413,9 +1505,9 @@ body{
 .avatar-placeholder{width:84px;height:84px;border-radius:12px;display:flex;align-items:center;justify-content:center;
   background:#102837 url('images/SamudraFMLogo1.png') center/60% no-repeat;
   color:var(--muted);border:1px solid var(--border);font-weight:700}
-.card .content{padding:12px}
-.card .title{font-weight:700;margin:0 0 4px}
-.card .meta{color:var(--muted);margin:0}
+.card .content{padding:12px;border-radius:29px}
+.card .title{font-weight:700;margin:0}
+.card .meta{color:var(--muted);margin:0 0 5px 0}
 
 /* Episodes */
 .episodes .card .cover{height:140px}
@@ -1464,7 +1556,7 @@ body{
 /* Request Page Hero */
 .request-hero{background:linear-gradient(135deg,#1a2332,#2d3748);padding:80px 0;text-align:center;position:relative;overflow:hidden}
 .request-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>')}
-.hero-content{position:relative;z-index:1}
+.hero-content{position:relative;z-index:1;overflow:hidden;margin-top:0;margin-bottom:0;padding-bottom:20px}
 .hero-icon{width:80px;height:80px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;backdrop-filter:blur(10px)}
 .hero-icon i{font-size:32px;color:#f61b58 !important}
 .request-hero h1{color:white;font-size:48px;font-weight:800;margin:0 0 16px;text-shadow:0 2px 4px rgba(0,0,0,0.1)}
@@ -1567,7 +1659,8 @@ body{
 .error-message{display:none;align-items:center;gap:8px;padding:12px 16px;background:#fee;border:1px solid #fcc;border-radius:8px;color:#c33;font-size:14px;margin-top:16px}
 
 /* Contact Page Hero */
-.contact-hero{background:linear-gradient(135deg,#1a2332,#2d3748);padding:40px 0;text-align:center;position:relative;overflow:hidden}
+.contact-hero{background:linear-gradient(135deg,#1a2332,#2d3748);padding:0 0 40px 0;text-align:center;position:relative;overflow:hidden}
+.contact-hero .hero-header{padding:24px 0 40px 0;text-align:left;position:relative;z-index:10}
 .contact-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>')}
 .contact-hero .hero-content{position:relative;z-index:1}
 .contact-hero .hero-icon{width:80px;height:80px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;backdrop-filter:blur(10px)}
@@ -1577,7 +1670,8 @@ body{
 
 /* Contact Hero Mobile */
 @media (max-width:768px){
-  .contact-hero{padding:30px 0}
+  .contact-hero{padding:0 0 30px 0}
+  .contact-hero .hero-header{padding:16px 0 24px 0}
   .contact-hero h1{font-size:36px}
   .contact-hero p{font-size:16px}
 }
@@ -1629,7 +1723,7 @@ body{
 /* Footer */
 .site-footer {
     background: #16213e;
-    padding: 60px 0 30px;
+    padding: 20px 0 20px;
     color: #e0e0e0;
 }
 
@@ -1649,6 +1743,11 @@ body{
     margin-bottom: 20px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* First column stays left-aligned */
+.footer-column:nth-child(1) {
+    text-align: left;
 }
 
 /* Align the second column (Connect & Listen) to the right with padding */
@@ -1705,9 +1804,11 @@ body{
     width: 80px;
     height: 80px;
     border-radius: 8px;
+    margin-top: 20px;
 }
 
 .footer-brand-title {
+    font-family: 'Funnel Display', sans-serif;
     color: white;
     font-size: 28px;
     font-weight: 800;
@@ -1764,13 +1865,6 @@ body{
     width: 28px;
 }
 
-.footer-separator {
-    height: 1px;
-    background: #333;
-    margin: 40px auto 30px;
-    max-width: 1200px;
-}
-
 .footer-bottom {
     text-align: center;
     max-width: 1200px;
@@ -1782,6 +1876,7 @@ body{
     color: #b0b0b0;
     font-size: 14px;
     margin: 0;
+    padding-top: 5px;
 }
 
 .muted{color:var(--muted)}
@@ -1793,14 +1888,25 @@ body{
     }
     
     .footer-content {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
         gap: 20px; /* Reduced from 30px */
         text-align: center;
     }
     
-    /* Reset right alignment on mobile for better readability */
+    /* First column spans full width and stays left-aligned */
+    .footer-column:nth-child(1) {
+        grid-column: 1 / -1;
+        text-align: left;
+    }
+    
+    /* Second column (Connect & Listen) on the left */
     .footer-column:nth-child(2) {
-        text-align: center;
+        text-align: left;
+    }
+    
+    /* Third column (Links) on the right column, but left-aligned content */
+    .footer-column:nth-child(3) {
+        text-align: left;
     }
     
     .footer-column h3 {
@@ -1808,9 +1914,12 @@ body{
         font-size: 14px; /* Reduced from 16px */
     }
     
-    .footer-column:nth-child(2) h3,
+    .footer-column:nth-child(2) h3 {
+        text-align: left;
+    }
+    
     .footer-column:nth-child(3) h3 {
-        text-align: center;
+        text-align: left;
     }
     
     .footer-brand-title {
@@ -1830,9 +1939,9 @@ body{
     
     .footer-links {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px; /* Reduced from 20px */
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px; /* Reduced from 20px */
     }
     
     .footer-links li {
@@ -1843,10 +1952,6 @@ body{
         font-size: 12px; /* Reduced from 14px */
     }
     
-    .footer-separator {
-        margin: 25px auto 20px; /* Reduced from 40px auto 30px */
-    }
-    
     .footer-bottom p {
         font-size: 12px; /* Reduced from 14px */
     }
@@ -1855,17 +1960,36 @@ body{
         font-size: 20px; /* Reduced from 24px */
         width: 24px; /* Reduced from 28px */
     }
+    
+    /* Override desktop right-alignment for second column on mobile */
+    .footer-column:nth-child(2) .social-links {
+        text-align: left;
+    }
+    
+    .footer-column:nth-child(2) .social-links li {
+        text-align: left;
+    }
+    
+    .footer-column:nth-child(2) .social-links .social-link {
+        justify-content: flex-start;
+    }
 }
 
 /* Responsive */
 @media (max-width: 900px){
   .hero{grid-template-columns:1fr;gap:18px}
+  .hero-header-inner{position:relative;flex-wrap:wrap}
   .now-live .live-body{grid-template-columns:1fr}
-  .nav-toggle{display:inline-block;transition:all 0.3s ease;cursor:pointer}
-  .nav-toggle:hover{transform:scale(1.05);background:rgba(246,27,88,0.1);border-color:#f61b58}
-  .nav-toggle:active{transform:scale(0.95)}
-  .nav-list{position:absolute;right:4%;top:64px;background:#0f2230;border:1px solid var(--border);border-radius:12px;padding:10px 12px;flex-direction:column;gap:10px;opacity:0;visibility:hidden;transform:translateY(-20px);transition:all 0.3s ease}
-  .nav-list.open{opacity:1;visibility:visible;transform:translateY(0)}
+  .nav-toggle{display:flex}
+  .nav{position:static;width:100%;order:2;margin-top:0}
+  .nav-list{display:none;flex-direction:column;gap:0;width:100%;background:var(--bg-elev);border-radius:12px;padding:8px 16px;margin-top:16px}
+  .nav-list.open{display:flex}
+  .nav-list li{padding:12px 0}
+  .nav-list a{font-size:16px;display:inline-block;position:relative;padding-bottom:4px}
+  .nav-list a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:#f61b58;border-radius:2px;transition:width 0.3s ease}
+  .nav-list a:hover::after,.nav-list a.active::after{width:100%}
+  .brand{order:0}
+  .nav .nav-toggle{position:absolute;right:0;top:0}
   .main-content-grid{grid-template-columns:1fr;gap:4px}
   .instagram-posts{grid-template-columns:1fr 1fr}
 }
@@ -1978,6 +2102,7 @@ body{
     order: 1;
     margin: 0;
     padding: 0;
+    width: 100%;
   }
   
   .coming h2 {
@@ -4471,7 +4596,7 @@ body{
   
   /* Adjust hero section for small screens */
   .hero {
-    padding: 20px 0 0 0 !important;
+    padding: 0 !important;
     padding-bottom: 0px !important; /* Force bottom padding to 0 */
   }
   
@@ -4517,7 +4642,7 @@ body{
 @media (max-width: 768px) {
   /* Hero section - reduced gap between nav and text on mobile */
   .hero {
-    padding: 56px 0 0 0 !important; /* Removed bottom padding */
+    padding: 0 !important;
     padding-bottom: 0px !important; /* Force bottom padding to 0 */
   }
   
@@ -4574,7 +4699,7 @@ body{
   
   /* Add top padding to main content to account for fixed header */
   .site-main {
-    padding-top: 80px !important;
+    padding-top: 0 !important;
   }
   
   /* Hide Send a request buttons on mobile */

@@ -76,29 +76,6 @@ if (navToggle) {
   navToggle.addEventListener('click', () => {
     const open = navMenu.classList.toggle('open');
     navToggle.setAttribute('aria-expanded', String(open));
-    
-    // Add animate__fadeInRightBig class on mobile when menu opens
-    if (window.innerWidth <= 768) {
-      if (open) {
-        // Opening menu on mobile
-        // Remove any existing animation classes first
-        navMenu.classList.remove('animate__fadeInRightBig', 'animate__animated');
-        // Force a reflow to ensure the class removal takes effect
-        navMenu.offsetHeight;
-        // Add both animate__animated and animate__fadeInRightBig classes
-        navMenu.classList.add('animate__animated', 'animate__fadeInRightBig');
-        // Added animation classes
-        // Remove animation class after animation completes
-        setTimeout(() => {
-          navMenu.classList.remove('animate__fadeInRightBig', 'animate__animated');
-          // Removed animation classes
-        }, 1000);
-      } else {
-        // Remove animation class when closing
-        navMenu.classList.remove('animate__fadeInRightBig', 'animate__animated');
-        // Closing menu, removed animation classes
-      }
-    }
   });
 }
 
@@ -265,77 +242,64 @@ const MOCK_COMING = [
 const INSTAGRAM_ACCESS_TOKEN = window.INSTAGRAM_CONFIG?.accessToken || 'IGAAKR1FYftV5BZAFJhalA4ZAk9nUEtXbWUtdnVsd092aEZAjMXJ3b2JNZAFZAMd1V5VFRoZAmpPOV9QM3hCQ2Fua1pRVFBJMGw3S1VrZAkU4Wkk0eURZAalQwNjJvQTEtR2ViZAWxyam43TU0tVGx6RDV4ZADFmSjctN0FobWw5LU9hRnRYOAZDZD';
 const INSTAGRAM_POST_LIMIT = window.INSTAGRAM_CONFIG?.postLimit || 12;
 
-// Instagram API Integration (Using Instagram Basic Display API)
+// Instagram API Integration
+// Note: RSS.app trial expired. Using custom-posts.json as primary source.
+// To enable live Instagram sync, either:
+// 1. Subscribe to RSS.app and update RSS_FEED_URL
+// 2. Use a free service like Behold.so or ElfSight
+// 3. Set up a backend proxy for Instagram API
+const RSS_FEED_URL = 'https://rss.app/feeds/v1.1/mJ2rDzObUofwK0BR.json';
+
 async function fetchInstagramPosts() {
   try {
-    // First, get the Instagram user ID
-    const userId = await getInstagramUserId();
-    if (!userId) {
-      console.warn('No Instagram user ID found, falling back to custom posts');
-      return await getFallbackInstagramPosts();
-    }
-    
-    // Try direct API call first, then CORS proxy if needed
-    let mediaResponse;
+    // Try RSS.app feed first (if subscription is active)
+    console.log('Checking RSS.app feed for Instagram posts...');
     try {
-      mediaResponse = await fetch(`https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=${INSTAGRAM_POST_LIMIT}`, {
+      const rssResponse = await fetch(RSS_FEED_URL, {
         method: 'GET',
+        mode: 'cors',
+        cache: 'no-cache',
         headers: {
-          'Accept': 'application/json',
-        },
-        mode: 'cors'
-      });
-    } catch (corsError) {
-      console.warn('Direct API call failed, trying CORS proxy...');
-      // Try with CORS proxy as fallback
-      const proxyUrl = `https://cors-anywhere.herokuapp.com/https://graph.instagram.com/${userId}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}&limit=${INSTAGRAM_POST_LIMIT}`;
-      mediaResponse = await fetch(proxyUrl, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
+          'Accept': 'application/json'
         }
       });
-    }
-    
-    if (!mediaResponse.ok) {
-      throw new Error(`Instagram API error: ${mediaResponse.status} ${mediaResponse.statusText}`);
-    }
-    
-    const mediaData = await mediaResponse.json();
-    
-    if (mediaData.data && mediaData.data.length > 0) {
-      const posts = mediaData.data.map(post => ({
-        id: post.id,
-        caption: post.caption || 'Instagram Post',
-        mediaUrl: post.media_url || post.thumbnail_url,
-        thumbnailUrl: post.thumbnail_url || post.media_url,
-        permalink: post.permalink,
-        timestamp: post.timestamp,
-        mediaType: post.media_type
-      }));
       
-      return posts;
-    } else {
-      console.warn('No posts found in Instagram API response');
-      return await getFallbackInstagramPosts();
+      if (rssResponse.ok) {
+        const rssData = await rssResponse.json();
+        
+        // Check if RSS.app trial has expired (returns error message instead of posts)
+        if (rssData.items && rssData.items.length > 0) {
+          const firstItem = rssData.items[0];
+          if (firstItem.title && firstItem.title.includes('Trial has Expired')) {
+            console.warn('RSS.app trial has expired. Using custom posts instead.');
+            console.log('To enable live Instagram sync, subscribe at https://rss.app');
+          } else if (firstItem.image || (firstItem.attachments && firstItem.attachments[0]?.url)) {
+            // Valid posts with images
+            console.log(`Successfully fetched ${rssData.items.length} posts from RSS.app`);
+            const posts = rssData.items.map((item, index) => ({
+              id: item.id || `rss-${index}`,
+              caption: item.title || item.content_text || 'Instagram Post',
+              mediaUrl: item.image || (item.attachments && item.attachments[0]?.url),
+              thumbnailUrl: item.image || (item.attachments && item.attachments[0]?.url),
+              permalink: item.url || 'https://www.instagram.com/samudrafm/',
+              timestamp: item.date_published || new Date().toISOString(),
+              mediaType: 'IMAGE'
+            }));
+            
+            return posts;
+          }
+        }
+      }
+    } catch (rssError) {
+      console.log('RSS.app feed not available:', rssError.message);
     }
+    
+    // Use custom-posts.json as the primary reliable source
+    console.log('Loading Instagram posts from custom-posts.json...');
+    return await getFallbackInstagramPosts();
     
   } catch (error) {
-    console.error('Error fetching real Instagram posts:', error);
-    
-    // Check if it's a CORS error
-    if (error.message.includes('CORS') || error.message.includes('cross-origin')) {
-      console.warn('CORS error detected. Instagram API cannot be called directly from browser.');
-      console.log('Consider using a backend server or CORS proxy for production.');
-    }
-    
-    // Check if it's an authentication error
-    if (error.message.includes('401') || error.message.includes('403')) {
-      console.warn('Instagram API authentication failed. Please check your access token.');
-      console.log('Follow the setup guide in INSTAGRAM_SETUP.md to get a valid token.');
-    }
-    
+    console.error('Error fetching Instagram posts:', error);
     console.log('Falling back to custom posts...');
     return await getFallbackInstagramPosts();
   }
@@ -860,13 +824,8 @@ function renderComingUpEvents(events) {
         <p class="title">${item.title}</p>
         <p class="meta">${item.desc}</p>
         <p class="meta">${item.time}</p>
+        ${item.date && item.day ? `<p class="meta date-day">${item.date} · ${item.day}</p>` : ''}
       </div>
-        ${item.date && item.day ? `
-          <div class="coming-up-time">
-            <div class="coming-up-date">${item.date}</div>
-            <div class="coming-up-day">${item.day}</div>
-          </div>
-        ` : ''}
     </article>
     `;
   }).join('');
@@ -4616,6 +4575,8 @@ function scrollInstagramLeft() {
   });
   
   updateInstagramNavButtons();
+  // Reset auto-scroll timer when nav controls are used
+  resetInstagramAutoScroll();
 }
 
 function scrollInstagramRight() {
@@ -4629,6 +4590,8 @@ function scrollInstagramRight() {
   });
   
   updateInstagramNavButtons();
+  // Reset auto-scroll timer when nav controls are used
+  resetInstagramAutoScroll();
 }
 
 function updateInstagramNavButtons() {
@@ -4658,4 +4621,74 @@ document.addEventListener('DOMContentLoaded', function() {
   if (feed) {
     feed.addEventListener('scroll', updateInstagramNavButtons);
   }
+  
+  // Start Instagram auto-scroll after posts are loaded
+  setTimeout(startInstagramAutoScroll, 3000);
 });
+
+// Instagram Auto-Scroll Feature
+let instagramAutoScrollInterval = null;
+let instagramAutoScrollPaused = false;
+
+function startInstagramAutoScroll() {
+  const feed = document.getElementById('instagram-feed');
+  if (!feed) return;
+  
+  // Clear any existing interval
+  if (instagramAutoScrollInterval) {
+    clearInterval(instagramAutoScrollInterval);
+  }
+  
+  // Pause auto-scroll on hover
+  feed.addEventListener('mouseenter', () => {
+    instagramAutoScrollPaused = true;
+  });
+  
+  feed.addEventListener('mouseleave', () => {
+    instagramAutoScrollPaused = false;
+  });
+  
+  // Auto-scroll every 3 seconds
+  instagramAutoScrollInterval = setInterval(() => {
+    if (instagramAutoScrollPaused) return;
+    
+    const feed = document.getElementById('instagram-feed');
+    if (!feed) return;
+    
+    // Get the first instagram card to determine scroll amount (one post width)
+    const firstCard = feed.querySelector('.instagram-card');
+    if (!firstCard) return;
+    
+    const cardWidth = firstCard.offsetWidth + 14; // Card width + gap
+    const maxScroll = feed.scrollWidth - feed.clientWidth;
+    
+    // Check if we're at or near the end
+    if (feed.scrollLeft >= maxScroll - 5) {
+      // Scroll back to the beginning smoothly
+      feed.scrollTo({
+        left: 0,
+        behavior: 'smooth'
+      });
+    } else {
+      // Scroll to the next post
+      feed.scrollBy({
+        left: cardWidth,
+        behavior: 'smooth'
+      });
+    }
+    
+    updateInstagramNavButtons();
+  }, 3000);
+}
+
+function stopInstagramAutoScroll() {
+  if (instagramAutoScrollInterval) {
+    clearInterval(instagramAutoScrollInterval);
+    instagramAutoScrollInterval = null;
+  }
+}
+
+function resetInstagramAutoScroll() {
+  stopInstagramAutoScroll();
+  startInstagramAutoScroll();
+}

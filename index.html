@@ -172,7 +172,7 @@
     <!-- Content Security Policy and Permissions Policy -->
     <meta http-equiv="Permissions-Policy" content="encrypted-media=(self https://player-widget.mixcloud.com https://www.mixcloud.com); autoplay=(self https://player-widget.mixcloud.com https://www.mixcloud.com); microphone=(); camera=(); fullscreen=(self https://player-widget.mixcloud.com https://www.mixcloud.com); geolocation=(); payment=(); usb=(); accelerometer=(); gyroscope=(); magnetometer=(); display-capture=(); web-share=(self); clipboard-read=(); clipboard-write=(); picture-in-picture=(self)">
     <meta http-equiv="Feature-Policy" content="encrypted-media 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; autoplay 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; microphone 'none'; camera 'none'; fullscreen 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; geolocation 'none'; payment 'none'; usb 'none'; accelerometer 'none'; gyroscope 'none'; magnetometer 'none'; display-capture 'none'; web-share 'self'; clipboard-read 'none'; clipboard-write 'none'; picture-in-picture 'self'">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; script-src-elem 'self' 'unsafe-inline' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://api.allorigins.win https://cors-anywhere.herokuapp.com https://thingproxy.freeboard.io https://www.googleapis.com https://graph.instagram.com; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; child-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; script-src-elem 'self' 'unsafe-inline' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://www.googleapis.com; connect-src 'self' https://api.mixcloud.com https://widget.mixcloud.com https://api.allorigins.win https://cors-anywhere.herokuapp.com https://thingproxy.freeboard.io https://www.googleapis.com https://graph.instagram.com https://rss.app; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; child-src 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -184,33 +184,36 @@
     <div class="ribbon ribbon-left-top"></div>
     <div class="ribbon ribbon-left-bottom"></div>
     
-    <header class="site-header">
-        <div class="container header-inner">
-            <a href="/" class="brand" aria-label="SamudraFM Home">
-                <span class="brand-mark">Samudra<span>FM</span></span>
-                <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
-            </a>
-            <nav class="nav" aria-label="primary">
-                <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
-                <ul id="nav-menu" class="nav-list">
-                    <li><a href="/" class="active">home</a></li>
-                    <li><a href="/schedule">schedule</a></li>
-                    <li><a href="/team">our team</a></li>
-                    <li><a href="/about">about</a></li>
-                    <li><a href="/contact">contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
     <main id="home" class="site-main container">
         <section class="hero">
+            <!-- Integrated Hero Header -->
+            <header class="hero-header">
+                <div class="hero-header-inner">
+                    <a href="/" class="brand" aria-label="SamudraFM Home">
+                        <span class="brand-mark">Samudra<span>FM</span></span>
+                        <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
+                    </a>
+                    <nav class="nav" aria-label="primary">
+                        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                        </button>
+                        <ul id="nav-menu" class="nav-list">
+                            <li><a href="/" class="active">home</a></li>
+                            <li><a href="/schedule">schedule</a></li>
+                            <li><a href="/team">our team</a></li>
+                            <li><a href="/about">about</a></li>
+                            <li><a href="/contact">contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
             <div class="hero-copy">
                 <h1>Your study, your music.</h1>
                 <p>Helping you focus, unwind, and stay inspired.<br>one song at a time.</p>
                 <div class="cta-row">
-                    <button class="btn primary" onclick="window.handlePlayOnly()">Listen now</button>
-                    <a class="btn" href="request">Send a request</a>
+                    <a class="btn primary" href="request">Send a request</a>
                 </div>
             </div>
             <div class="panel hero-latest" id="hero-latest">
@@ -326,7 +329,7 @@
             <div class="about-content">
                 <p>Welcome to SamudraFM, the voice of SMK Taman SEA! 🎙️</p>
                 <p>We're a student-run weekly radio programme created by volunteers with a passion for music, entertainment, and sharing stories. Every week, we bring energy, fun, and fresh vibes straight from our school community to you.</p>
-                <p>SamudraFM isn't just a radio show—it's a platform for students to express themselves, connect with others, and make mornings a little brighter.</p>
+                <p>SamudraFM isn't just a radio show. It's a platform for students to express themselves, connect with others, and make mornings a little brighter.</p>
             </div>
         </section>
     </main>
@@ -334,10 +337,7 @@
     <footer class="site-footer" id="about">
         <div class="footer-content">
             <div class="footer-column">
-                   <div class="footer-logo">
-                       <img src="assets/brandmark/SamudraFMLogo1.png" alt="SamudraFM Logo" />
-                   </div>
-                <h2 class="footer-brand-title">SamudraFM</h2>
+                <h2 class="footer-brand-title">samudrafm.com</h2>
                 <p class="footer-description">
                     Non-Profit Organization. Fully volunteer-run<br>
                     school of SMK Taman SEA radio station.
@@ -359,13 +359,13 @@
             <div class="footer-column">
                 <h3>Links</h3>
                 <ul class="footer-links">
+                    <li><a href="about">About Us</a></li>
                     <li><a href="opportunities">Opportunities</a></li>
                     <li><a href="privacy-policy">Privacy Policy</a></li>
                 </ul>
             </div>
         </div>
         
-        <div class="footer-separator"></div>
         
         <div class="footer-bottom">
             <p>© 2025 SamudraFM. Designed with passion by Jensen. 📻</p>
