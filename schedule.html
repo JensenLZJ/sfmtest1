@@ -46,11 +46,12 @@
     <!-- Force schedule layout changes -->
     <style>
         .schedule-item {
-            background: #1d283c !important;
+            background: rgba(255, 255, 255, 0.03) !important;
             border: none !important;
             border-radius: 10px !important;
             padding: 0 !important;
             display: flex !important;
+            flex-direction: row !important;
             align-items: stretch !important;
             gap: 0 !important;
             margin-bottom: 24px !important;
@@ -59,31 +60,32 @@
         }
         
         .schedule-image {
-            display: none !important;
-            padding: 32px !important;
-            border-radius: 10px !important;
-            border: none !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            padding: 0 !important;
+            border-radius: 14px 0 0 14px !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-right: none !important;
+            background: rgba(255, 255, 255, 0.03) !important;
             flex-shrink: 0 !important;
-        }
-        
-        /* Show presenter images on tablet and larger screens */
-        @media (min-width: 768px) {
-            .schedule-image {
-                display: flex !important;
-                padding: 20px !important;
-            }
-            .schedule-image img {
-                width: 80px !important;
-                height: 80px !important;
-            }
+            overflow: hidden !important;
         }
         
         .schedule-image img {
-            width: 120px !important;
-            height: 120px !important;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 200px !important;
             object-fit: cover !important;
-            border-radius: 10px !important;
-            aspect-ratio: 1 !important;
+            object-position: center center !important;
+            border-radius: 14px 0 0 14px !important;
+            display: block !important;
+            margin: 0 auto !important;
+            vertical-align: middle !important;
+        }
+        
+        .schedule-image {
+            text-align: center !important;
         }
         
         .schedule-content {
@@ -96,6 +98,10 @@
             padding-right: 0 !important;
             min-height: 100px !important;
             position: relative !important;
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border-left: none !important;
+            border-radius: 0 14px 14px 0 !important;
         }
         
              .presenter-name {
@@ -103,6 +109,7 @@
                  font-weight: bold !important;
                  color: white !important;
                  margin: 0 !important;
+                 margin-left: 40px !important;
                  text-overflow: ellipsis !important;
                  overflow: hidden !important;
                  white-space: nowrap !important;
@@ -113,6 +120,7 @@
             font-weight: normal !important;
             color: white !important;
             margin: 0 !important;
+            margin-left: 40px !important;
             line-height: 1.2 !important;
             margin-top: 8px !important;
             display: block !important;
@@ -124,6 +132,7 @@
             align-items: flex-end !important;
             gap: 10px !important;
             margin-top: auto !important;
+            margin-left: 40px !important;
             font-size: 18px !important;
             line-height: 0 !important;
             position: absolute !important;
@@ -146,7 +155,7 @@
         }
         
              .schedule-time {
-                 background: linear-gradient(135deg, #2a2a3e 0%, #434366 100%) !important;
+                 background: #5b41fe !important;
                  padding: 20px !important;
                  font-weight: 300 !important;
                  color: #ffffff !important;
@@ -176,177 +185,151 @@
             text-align: center !important;
         }
         
+        /* Remove dash after date */
+        .time-slot > div:first-child::after {
+            content: none !important;
+            display: none !important;
+        }
+        
+        .date-day::after {
+            content: none !important;
+            display: none !important;
+        }
+        
+        /* Remove background from schedule-list */
+        .schedule-list {
+            background: transparent !important;
+            border: none !important;
+        }
+        
         /* Mobile-specific design using coming up section styling */
         @media (max-width: 768px) {
+            /* Keep PC layout on mobile - force row layout to match desktop */
             .schedule-item {
-                /* Use coming up card design on mobile */
-                display: flex !important;
                 flex-direction: row !important;
-                align-items: center !important;
-                gap: 16px !important;
-                padding: 18px !important;
-                min-height: 110px !important; /* Increased to accommodate 2-line show titles */
-                background: var(--panel, #1d283c) !important;
-                border: 1px solid var(--border, rgba(255,255,255,0.1)) !important;
-                border-radius: var(--radius, 10px) !important;
-                margin-bottom: 14px !important;
-                position: relative !important;
-                box-shadow: var(--shadow, 0 2px 8px rgba(0,0,0,0.1)) !important;
-                transition: transform 0.2s ease !important;
+                text-align: left !important;
+                gap: 0 !important;
+                margin-bottom: 18px !important;
+                min-height: auto !important;
             }
             
-            .schedule-item:hover {
-                transform: translateY(-2px) !important;
-            }
-            
-            /* Show presenter image on mobile like coming up cover */
+            /* Optimize image size on mobile - larger for better visibility */
             .schedule-image {
-                display: flex !important;
-                flex: 0 0 80px !important;
-                max-width: 80px !important;
-                padding: 0 !important;
-                align-items: center !important;
-                justify-content: center !important;
+                flex: 0 0 160px !important;
+                max-width: 160px !important;
+                min-width: 160px !important;
             }
             
             .schedule-image img {
-                width: 80px !important;
-                height: 80px !important;
-                object-fit: cover !important;
-                border-radius: 16px !important;
-                flex-shrink: 0 !important;
+                max-width: 160px !important;
+                width: 160px !important;
+                height: 160px !important;
             }
             
+            /* Optimize content padding and size */
             .schedule-content {
-                flex: 1 !important;
-                min-width: 0 !important;
-                padding: 0 !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                justify-content: center !important;
-                min-height: auto !important;
-                position: static !important;
-                text-align: left !important; /* Ensure all text aligns left */
+                padding: 18px 16px !important;
+                min-height: 160px !important;
             }
             
+            /* Optimize presenter name size */
             .presenter-name {
-                font-size: 16px !important;
-                font-weight: 600 !important;
-                color: var(--text, white) !important;
-                margin: 0 0 4px 0 !important;
-                line-height: 1.2 !important;
-                text-overflow: ellipsis !important;
-                overflow: hidden !important;
-                white-space: nowrap !important;
-                max-width: calc(100% - 15px) !important; /* Account for time badge */
-                padding-right: 5px !important;
-                text-align: left !important; /* Ensure left alignment */
+                font-size: 28px !important;
+                margin-bottom: 10px !important;
+                margin-left: 0 !important; /* Remove left margin on mobile */
             }
             
+            /* Optimize show title size */
             .show-title {
-                font-size: 14px !important;
-                font-weight: 400 !important;
-                color: var(--muted, rgba(255,255,255,0.7)) !important;
-                margin: 0 !important;
-                line-height: 1.3 !important;
-                /* Allow 2-line wrapping instead of ellipsis */
-                white-space: normal !important;
-                overflow: hidden !important;
-                display: -webkit-box !important;
-                -webkit-line-clamp: 2 !important;
-                -webkit-box-orient: vertical !important;
-                line-clamp: 2 !important;
-                max-width: calc(100% - 15px) !important; /* Account for time badge */
-                padding-right: 5px !important;
-                max-height: calc(1.3em * 2) !important; /* Limit to 2 lines */
-                text-align: left !important; /* Ensure left alignment */
+                font-size: 18px !important;
+                margin-top: 10px !important;
+                margin-left: 0 !important; /* Remove left margin on mobile */
+                line-height: 1.4 !important;
             }
             
-            /* Hide social actions on mobile */
+            /* Optimize schedule actions size */
             .schedule-actions {
-                display: none !important;
+                bottom: 16px !important;
+                gap: 12px !important;
+                font-size: 20px !important;
+                margin-left: 0 !important; /* Remove left margin on mobile */
             }
             
-            /* Time display styled like coming up time badge */
+            .action-btn {
+                width: 32px !important;
+                height: 32px !important;
+            }
+            
+            /* Optimize time badge size - make it bigger for mobile */
             .schedule-time {
-                position: absolute !important;
-                right: 16px !important;
-                top: 50% !important;
-                transform: translateY(-50%) !important;
-                background: #220660 !important; /* Changed to requested purple color */
-                color: white !important;
-                padding: 8px 10px !important; /* Adjusted for 3-line layout */
-                border-radius: 8px !important;
-                text-align: center !important;
-                min-width: 65px !important; /* Slightly smaller for better fit */
-                font-size: 12px !important;
-                font-weight: 500 !important;
-                box-shadow: 0 2px 8px rgba(34, 6, 96, 0.3) !important; /* Updated shadow to match new color */
-                border: none !important;
-                margin: 0 !important;
-                width: auto !important;
-                flex-shrink: 0 !important;
-                min-height: 50px !important; /* Ensure enough height for 3 lines */
+                padding: 0 !important;
+                font-size: 15px !important;
+                min-width: 95px !important;
+                max-width: 95px !important;
             }
             
-            .time-slot {
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center !important;
-                gap: 1px !important;
-                text-align: center !important;
-                line-height: 1.1 !important;
-            }
-            
-            /* Remove the dash/after content from time slot on mobile */
-            .time-slot > div:first-child::after {
-                display: none !important;
-                content: none !important;
-            }
-            
-            /* Date display (e.g., "7 Oct") */
             .date-day {
-                font-size: 11px !important;
-                font-weight: 600 !important;
-                line-height: 1.1 !important;
-                margin-bottom: 1px !important;
+                font-size: 14px !important;
             }
             
-            /* Day display (e.g., "Tuesday") */
             .time-slot .day-name {
-                font-size: 9px !important;
-                font-weight: 500 !important;
-                line-height: 1.1 !important;
-                opacity: 0.9 !important;
-                margin-bottom: 1px !important;
+                font-size: 12px !important;
             }
             
-            /* Time range display (e.g., "08:50—07:20") */
             .time-range {
-                font-size: 9px !important;
-                opacity: 0.9 !important;
-                font-weight: 400 !important;
-                line-height: 1.1 !important;
+                font-size: 13px !important;
             }
             
-            /* Ensure content doesn't overlap with time badge */
+            /* Ensure content doesn't overflow */
             .schedule-content {
-                margin-right: 100px !important; /* Increased space for time badge */
-                padding-right: 10px !important; /* Additional padding for safety */
+                overflow: hidden !important;
             }
             
+            /* Keep PC layout on mobile - only adjust container padding */
+            .schedule-section .container {
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+            }
+        }
+        
+        /* Tablet - use same sizing as PC */
+        @media (min-width: 769px) and (max-width: 1279px) {
+            .schedule-image {
+                display: flex !important;
+                padding: 0 !important;
+            }
+            .schedule-image img {
+                width: 100% !important;
+                height: 100% !important;
+                max-width: 200px !important;
+            }
+            .schedule-content {
+                padding: 32px !important;
+                padding-left: 0 !important;
+            }
+            .schedule-actions {
+                bottom: 32px !important;
+            }
+            .schedule-time {
+                padding: 40px 60px !important;
+                width: 320px !important;
+                font-size: 32px !important;
+                min-width: 200px !important;
+            }
+            .time-range {
+                font-size: 0.6em !important;
+            }
         }
         
         @media (min-width: 1280px) {
             .schedule-image {
                 display: flex !important;
-                padding: 32px !important;
+                padding: 0 !important;
             }
             .schedule-image img {
-                width: 120px !important;
-                height: 120px !important;
+                width: 100% !important;
+                height: 100% !important;
+                max-width: 200px !important;
             }
             .schedule-content {
                 padding: 32px !important;
@@ -414,6 +397,12 @@
     @media (max-width: 768px) {
         .hero-player-section {
             padding: 20px 0 10px 0;
+        }
+        
+        /* Optimize container padding on mobile */
+        .hero-player-section .container {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
         }
         
         /* Hero latest panel - full width layout like home page */
@@ -623,14 +612,37 @@
             display: none !important;
         }
         
-        /* Adjust schedule section padding on mobile */
-        .schedule-section {
-            padding-top: 20px !important; /* Reduced from default 60px */
-            padding-bottom: 0px !important; /* Remove bottom padding on mobile */
+        /* Keep PC layout - only adjust container padding for mobile */
+        .schedule-section .container {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+        }
+        
+        /* Ensure proper page flow */
+        .site-main {
+            overflow-x: hidden !important;
         }
     }
     
-    /* Tablet and small desktop player - 768px to 1024px */
+    /* Extra small mobile screens - only adjust container padding */
+    @media (max-width: 480px) {
+        .schedule-section .container {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+        
+        .hero-player-section .container {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+        
+        .hero-section .container {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+    }
+    
+    /* Tablet and small desktop player - 768px to 1024px - Match PC styling */
     @media (min-width: 769px) and (max-width: 1023px) {
         /* Use same container width as schedule-list */
         .hero-player-section .container {
@@ -642,52 +654,92 @@
             padding: 40px 0 20px 0 !important;
         }
         
+        /* Match home page hero-latest styling exactly - same as PC */
         .hero-latest {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+            position: relative !important;
+            background: rgba(255,255,255,0.1) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border-radius: var(--radius) !important;
             padding: 20px !important;
-            margin: 0 !important;
+            margin: 20px 0 !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1) !important;
             box-sizing: border-box !important;
         }
         
+        /* Match home page player-widget styling exactly - same as PC */
         .hero-latest .player-widget {
+            position: relative !important;
+            z-index: 10 !important;
+            background: rgba(91, 65, 254, 0.3) !important; /* Match home player color */
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow) !important;
+            display: flex !important;
+            gap: 16px !important;
+            align-items: center !important;
+            padding: 16px !important;
             width: 100% !important;
             max-width: none !important;
-            display: flex !important;
-            flex-direction: row !important;
-            align-items: center !important;
-            gap: 16px !important;
-            padding: 16px !important;
+            max-height: 212px !important; /* Set maximum height for tablet */
             box-sizing: border-box !important;
         }
         
+        /* Match home page player-content-row styling */
         .hero-latest .player-content-row {
             display: flex !important;
-            width: 100% !important;
-            max-width: none !important;
-            flex-direction: row !important;
             align-items: center !important;
-            gap: 16px !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            box-sizing: border-box !important;
+            gap: 20px !important;
             flex: 1 !important;
         }
         
-        .hero-latest .player-content-row .player-left {
-            flex: 0 0 80px !important;
-            max-width: 80px !important;
-            min-width: 80px !important;
-            width: 80px !important;
+        /* Match home page player-left styling but fit within widget */
+        .hero-latest .player-left {
+            position: relative !important;
+            flex: 0 0 auto !important;
+            width: 180px !important; /* Fixed width to fit within 212px height widget */
+            height: 180px !important; /* Fixed height to fit within widget with padding */
+            max-width: 180px !important;
+            max-height: 180px !important;
+            min-width: 180px !important;
+            min-height: 180px !important;
         }
         
-        .hero-latest .player-content-row .player-right {
-            flex: 1 !important;
-            width: calc(100% - 96px) !important; /* Full width minus cover (80px) and gap (16px) */
-            max-width: none !important;
-            min-width: 0 !important;
+        /* Match home page hero-latest-cover styling exactly */
+        .hero-latest .hero-latest-cover {
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 12px !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            image-rendering: high-quality !important;
+            image-rendering: -webkit-optimize-contrast !important;
+        }
+        
+        /* Match home page play-overlay styling exactly */
+        .hero-latest .play-overlay {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: rgba(0,0,0,0.2) !important;
+            border-radius: 12px !important;
             display: flex !important;
-            flex-direction: column !important;
+            align-items: center !important;
             justify-content: center !important;
-            gap: 10px !important;
+            opacity: 1 !important;
+            transition: opacity 0.2s !important;
+            pointer-events: none !important;
+        }
+        
+        .hero-latest .player-right {
+            flex: 1 !important;
+            min-width: 0 !important;
         }
         
         .hero-latest .player-content-row .player-right .player-info,
@@ -739,7 +791,7 @@
          .hero-latest .player-widget {
              position: relative !important;
              z-index: 10 !important;
-             background: #21055f !important; /* Solid purple background - 100% opacity */
+             background: rgba(91, 65, 254, 0.3) !important; /* Match home player color */
              border-radius: var(--radius) !important;
              box-shadow: var(--shadow) !important;
              display: flex !important;
@@ -899,13 +951,13 @@
     
     .action-btn.active {
         opacity: 1 !important;
-        color: var(--accent, #4a2c8a) !important;
+        color: #f91e5a !important; /* Pink for active social icons */
         cursor: pointer !important;
         pointer-events: auto !important;
     }
     
     .action-btn.active:hover {
-        color: var(--live, #ff6b6b) !important;
+        color: #4a90e2 !important; /* Blue on hover */
         transform: scale(1.1) !important;
     }
     
@@ -927,11 +979,15 @@
         <header class="hero-header">
             <div class="container hero-header-inner">
                 <a href="/" class="brand" aria-label="SamudraFM Home">
-                    <span class="brand-mark">Samudra<span>FM</span></span>
+                    <span class="brand-mark">samudrafm<span>.</span>com</span>
                     <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
                 </a>
                 <nav class="nav" aria-label="primary">
-                    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
+                    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
                     <ul id="nav-menu" class="nav-list">
                         <li><a href="/">home</a></li>
                         <li><a href="/schedule" class="active">schedule</a></li>
@@ -1067,11 +1123,8 @@
     </footer>
 
     <script>
-        // Pagination variables - declare at the top
-        let displayedCount = 4; // Show 4 initially
-        let loadMoreCount = 2; // Load 2 more each time
+        // Schedule data storage
         let allScheduleData = []; // Store all data
-        let currentDisplayed = 0; // Track how many are currently displayed
         
         // Force cache busting
         function forceCacheBust() {
@@ -1340,37 +1393,15 @@
             container.innerHTML = scheduleHTML + bottomMessage;
         }
         
-        // Render schedule items with pagination
+        // Render schedule items - load all items at once
         function renderScheduleItemsPaginated(container) {
-            // renderScheduleItemsPaginated called
-            // Processing schedule data
-            // Schedule data length checked
-            
             if (!allScheduleData || allScheduleData.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: var(--muted); font-style: italic; padding: 40px 20px;">oh noo! future shows are yet to be added :(</p>';
                 return;
             }
             
-            // Rendering schedule items with pagination
-            
-            // Reset displayed count
-            currentDisplayed = 0;
-            
-            // Show initial items
-            loadMoreItems(container);
-        }
-        
-        // Load more items function
-        function loadMoreItems(container) {
-            const itemsToShow = allScheduleData.slice(currentDisplayed, currentDisplayed + (currentDisplayed === 0 ? displayedCount : loadMoreCount));
-            
-            if (itemsToShow.length === 0) {
-                return;
-            }
-            
-            // Loading more items
-            
-            const scheduleHTML = itemsToShow.map((item, index) => {
+            // Render all items at once
+            const scheduleHTML = allScheduleData.map((item, index) => {
                 // Ensure all required fields have fallback values
                 const presenter = item.presenter || item.title || 'TBA';
                 const show = item.show || item.description || 'Special Show';
@@ -1382,8 +1413,6 @@
                 
                 // Get social media links for this presenter
                 const socialLinks = getSocialMediaLinks(presenter);
-                
-                // Show title processed
                 
                 return `
                     <div class="schedule-item">
@@ -1419,77 +1448,10 @@
                 `;
             }).join('');
             
-            if (currentDisplayed === 0) {
-                // First load - replace content
-                container.innerHTML = scheduleHTML;
-            } else {
-                // Load more - append content
-                container.insertAdjacentHTML('beforeend', scheduleHTML);
-            }
+            // Add the bottom message
+            const bottomMessage = '<div class="schedule-bottom-message" style="text-align: center; color: var(--muted); font-style: italic; padding: 0 20px; margin-top: 25px; margin-bottom: 25px;">oh noo! future shows are yet to be added :(</div>';
             
-            currentDisplayed += itemsToShow.length;
-            
-            // Add or update Load More button
-            updateLoadMoreButton(container);
-            
-            // If all items are loaded, add the bottom message
-            if (currentDisplayed >= allScheduleData.length) {
-                const existingMessage = container.querySelector('.schedule-bottom-message');
-                if (!existingMessage) {
-                    const bottomMessage = '<div class="schedule-bottom-message" style="text-align: center; color: var(--muted); font-style: italic; padding: 0 20px; margin-top: 25px; margin-bottom: 25px;">oh noo! future shows are yet to be added :(</div>';
-                    container.insertAdjacentHTML('beforeend', bottomMessage);
-                }
-            }
-        }
-        
-        // Update Load More button
-        function updateLoadMoreButton(container) {
-            // Remove existing button
-            const existingButton = container.parentNode.querySelector('.load-more-btn');
-            if (existingButton) {
-                existingButton.remove();
-            }
-            
-            // Check if there are more items to load
-            if (currentDisplayed < allScheduleData.length) {
-                const loadMoreButton = document.createElement('button');
-                loadMoreButton.className = 'load-more-btn';
-                loadMoreButton.innerHTML = 'Load More';
-                loadMoreButton.style.cssText = `
-                    display: block;
-                    margin: 20px auto;
-                    padding: 12px 24px;
-                    background: var(--accent, #4a2c8a);
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                `;
-                
-                loadMoreButton.addEventListener('click', () => {
-                    loadMoreButton.innerHTML = 'Loading...';
-                    loadMoreButton.disabled = true;
-                    
-                    setTimeout(() => {
-                        loadMoreItems(container);
-                        loadMoreButton.innerHTML = 'Load More';
-                        loadMoreButton.disabled = false;
-                    }, 300);
-                });
-                
-                loadMoreButton.addEventListener('mouseenter', () => {
-                    loadMoreButton.style.background = 'var(--accent-hover, #5a3a9a)';
-                });
-                
-                loadMoreButton.addEventListener('mouseleave', () => {
-                    loadMoreButton.style.background = 'var(--accent, #4a2c8a)';
-                });
-                
-                container.parentNode.appendChild(loadMoreButton);
-            }
+            container.innerHTML = scheduleHTML + bottomMessage;
         }
         
         // Load Google Calendar events via JSONP for static hosting

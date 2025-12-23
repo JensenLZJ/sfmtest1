@@ -39,27 +39,31 @@
 </head>
 <body>
     <main class="site-main">
-        <!-- Hero Header -->
-        <header class="hero-header">
-            <div class="container hero-header-inner">
-                <a href="/" class="brand" aria-label="SamudraFM Home">
-                    <span class="brand-mark">Samudra<span>FM</span></span>
-                    <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
-                </a>
-                <nav class="nav" aria-label="primary">
-                    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
-                    <ul id="nav-menu" class="nav-list">
-                        <li><a href="/">home</a></li>
-                        <li><a href="/schedule">schedule</a></li>
-                        <li><a href="/team">our team</a></li>
-                        <li><a href="/about">about</a></li>
-                        <li><a href="/contact">contact</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
-        <!-- Hero Section -->
+        <!-- Hero Section with integrated header -->
         <section class="request-hero">
+            <!-- Hero Header -->
+            <header class="hero-header">
+                <div class="container hero-header-inner">
+                    <a href="/" class="brand" aria-label="SamudraFM Home">
+                        <span class="brand-mark">samudrafm<span>.</span>com</span>
+                        <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
+                    </a>
+                    <nav class="nav" aria-label="primary">
+                        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                        </button>
+                        <ul id="nav-menu" class="nav-list">
+                            <li><a href="/">home</a></li>
+                            <li><a href="/schedule">schedule</a></li>
+                            <li><a href="/team">our team</a></li>
+                            <li><a href="/about">about</a></li>
+                            <li><a href="/contact">contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
             <div class="container">
                 <div class="hero-content">
                     <div class="hero-icon">
@@ -76,6 +80,34 @@
             <div class="request-layout">
                 <!-- Form Section -->
                 <section class="request-form-section">
+                    <!-- How It Works -->
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-cogs"></i> How It Works</h3>
+                        <div class="steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Submit Request</h4>
+                                    <p>Fill out the form with your song details</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>We Review</h4>
+                                    <p>Our team reviews all requests</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>We Play It</h4>
+                                    <p>Selected songs air on our show!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="form-card">
                         <div class="form-header">
                             <h2><i class="fas fa-paper-plane"></i> Send Your Request</h2>
@@ -172,34 +204,6 @@
 
                 <!-- Sidebar -->
                 <aside class="request-sidebar">
-                    <!-- How It Works -->
-                    <div class="sidebar-card">
-                        <h3><i class="fas fa-cogs"></i> How It Works</h3>
-                        <div class="steps">
-                            <div class="step">
-                                <div class="step-number">1</div>
-                                <div class="step-content">
-                                    <h4>Submit Request</h4>
-                                    <p>Fill out the form with your song details</p>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="step-number">2</div>
-                                <div class="step-content">
-                                    <h4>We Review</h4>
-                                    <p>Our team reviews all requests</p>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="step-number">3</div>
-                                <div class="step-content">
-                                    <h4>We Play It</h4>
-                                    <p>Selected songs air on our show!</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Guidelines -->
                     <div class="sidebar-card">
                         <h3><i class="fas fa-list-check"></i> Guidelines</h3>
@@ -299,6 +303,13 @@
         // Load recent requests from Google Sheets
         async function loadRecentRequests() {
             const container = document.getElementById('recent-requests');
+            const refreshBtn = document.querySelector('.refresh-btn');
+            
+            // Add spinning animation
+            const animationStartTime = Date.now();
+            if (refreshBtn) {
+                refreshBtn.classList.add('spinning');
+            }
             
             try {
                 // If using Google Sheets API
@@ -338,6 +349,16 @@
             } catch (error) {
                 //console.error('Error loading recent requests:', error);
                 showMockRequests();
+            } finally {
+                // Remove spinning animation after minimum duration (600ms) or immediately if longer
+                if (refreshBtn) {
+                    const elapsed = Date.now() - animationStartTime;
+                    const minDuration = 600;
+                    const remaining = Math.max(0, minDuration - elapsed);
+                    setTimeout(() => {
+                        refreshBtn.classList.remove('spinning');
+                    }, remaining);
+                }
             }
         }
         
@@ -607,13 +628,14 @@
         // Mobile navigation toggle
         function setupMobileNavigation() {
             const navToggle = document.querySelector('.nav-toggle');
-            const navMenu = document.querySelector('#nav-menu');
+            const navMenu = document.getElementById('nav-menu');
             
-            navToggle.addEventListener('click', function() {
-                const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                this.setAttribute('aria-expanded', !isExpanded);
-                navMenu.classList.toggle('active');
-            });
+            if (navToggle && navMenu) {
+                navToggle.addEventListener('click', function() {
+                    const open = navMenu.classList.toggle('open');
+                    navToggle.setAttribute('aria-expanded', String(open));
+                });
+            }
         }
     </script>
     

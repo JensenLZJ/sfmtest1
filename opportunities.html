@@ -43,15 +43,20 @@
         
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: #0f2230;
+            background: #16213e;
             color: #e9f1f7;
             line-height: 1.6;
+        }
+        
+        .site-main {
+            background: #16213e;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding-left: 0px;
+            padding-right: 0px;
         }
         
         /* Hero Header */
@@ -82,7 +87,7 @@
         }
         
         .brand-mark span {
-            color: #ed1d59;
+            color: #f91e5a;
         }
         
         .brand-subtitle {
@@ -99,7 +104,40 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             color: #e9f1f7;
-            padding: 6px 10px;
+            padding: 12px;
+            width: 44px;
+            height: 44px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .nav-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .hamburger-line {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: #f91e5a;
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        
+        .nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
         }
         
         .nav-list {
@@ -119,13 +157,13 @@
         
         .nav-list a.active,
         .nav-list a:hover {
-            color: #f61b58;
+            color: #f91e5a;
         }
         
         /* Hero Section */
         .request-hero {
-            background: linear-gradient(135deg, #1a2332, #2d3748);
-            padding: 0 0 80px 0;
+            background: linear-gradient(180deg, rgba(91, 65, 254, 0.5) 0%, rgba(45, 55, 72, 0) 100%);
+            padding: 0 0 0px 0;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -137,6 +175,16 @@
             text-align: left;
             position: relative;
             z-index: 10;
+        }
+        
+        /* Navigation links in request-hero should be white */
+        .request-hero .nav-list a {
+            color: white;
+        }
+        
+        .request-hero .nav-list a:hover,
+        .request-hero .nav-list a.active {
+            color: #f91e5a;
         }
         
         .hero-content {
@@ -158,7 +206,7 @@
         
         .hero-icon i {
             font-size: 32px;
-            color: #f61b58 !important;
+            color: #f91e5a !important;
         }
         
         .request-hero h1 {
@@ -185,6 +233,28 @@
             margin: 40px 0;
         }
         
+        /* Requirements Cards Container - PC Only (above form) */
+        /* Requirements Card - PC Only (above form) */
+        .requirements-card-pc {
+            display: none;
+            margin-bottom: 20px;
+        }
+        
+        /* Requirements Card - Mobile Only (in sidebar) */
+        .requirements-card-mobile {
+            display: block;
+        }
+        
+        /* Show PC version and hide mobile version on desktop */
+        @media (min-width: 901px) {
+            .requirements-card-pc {
+                display: block;
+            }
+            .requirements-card-mobile {
+                display: none;
+            }
+        }
+        
         /* Mobile Header Styles - Same as home page */
         @media (max-width: 900px) {
             .hero-header-inner {
@@ -197,15 +267,31 @@
             }
             
             .nav-toggle {
-                display: inline-block !important;
+                display: flex !important;
+                width: 56px !important;
+                height: 56px !important;
+                padding: 16px !important;
                 transition: all 0.3s ease;
                 cursor: pointer;
             }
             
+            .hamburger-line {
+                width: 28px !important;
+                height: 3px !important;
+            }
+            
+            .nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(1) {
+                transform: translateY(9px) rotate(45deg) !important;
+            }
+            
+            .nav-toggle[aria-expanded="true"] .hamburger-line:nth-child(3) {
+                transform: translateY(-9px) rotate(-45deg) !important;
+            }
+            
             .nav-toggle:hover {
                 transform: scale(1.05);
-                background: rgba(246, 27, 88, 0.1);
-                border-color: #f61b58;
+                background: rgba(249, 30, 90, 0.1);
+                border-color: #f91e5a;
             }
             
             .nav-toggle:active {
@@ -213,6 +299,7 @@
             }
             
             .nav-list {
+                display: none;
                 position: absolute;
                 right: 0;
                 top: 48px;
@@ -222,17 +309,11 @@
                 padding: 10px 12px;
                 flex-direction: column;
                 gap: 10px;
-                opacity: 0;
-                visibility: hidden;
-                transform: translateY(-20px);
-                transition: all 0.3s ease;
                 z-index: 100;
             }
             
             .nav-list.open {
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
+                display: flex;
             }
         }
         
@@ -259,7 +340,7 @@
         
         /* Form Card */
         .form-card {
-            background: #23394b;
+            background: rgba(255, 255, 255, 0.03) !important;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             padding: 32px;
@@ -285,7 +366,7 @@
         }
         
         .form-header h2 i {
-            color: #f61b58;
+            color: #f91e5a;
         }
         
         .form-header p {
@@ -327,7 +408,7 @@
         }
         
         .form-group label i {
-            color: #f61b58;
+            color: #f91e5a;
             width: 16px;
         }
         
@@ -375,14 +456,14 @@
         }
         
         .btn.primary {
-            background: linear-gradient(135deg, #f61b58, #ff4d6d);
+            background: linear-gradient(135deg, #f91e5a, #ff4d6d);
             color: white;
             border: 0;
             padding: 18px 32px;
             font-size: 18px;
             font-weight: 700;
             min-height: 56px;
-            box-shadow: 0 4px 15px rgba(246, 27, 88, 0.3);
+            box-shadow: 0 4px 15px rgba(249, 30, 90, 0.3);
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s;
@@ -393,12 +474,20 @@
             gap: 8px;
         }
         
+        .btn.primary i {
+            color: white;
+        }
+        
         .btn.primary:hover {
             background: transparent;
-            border: 2px solid #f61b58;
-            color: #f61b58;
+            border: 2px solid #f91e5a;
+            color: #f91e5a;
             transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(246, 27, 88, 0.3), 0 0 0 1px rgba(246, 27, 88, 0.2);
+            box-shadow: 0 8px 25px rgba(249, 30, 90, 0.3), 0 0 0 1px rgba(249, 30, 90, 0.2);
+        }
+        
+        .btn.primary:hover i {
+            color: #f91e5a;
         }
         
         /* Sidebar */
@@ -409,7 +498,7 @@
         }
         
         .sidebar-card {
-            background: #23394b;
+            background: rgba(255, 255, 255, 0.03) !important;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             padding: 24px;
@@ -427,7 +516,7 @@
         }
         
         .sidebar-card h3 i {
-            color: #f61b58;
+            color: #f91e5a;
         }
         
         .positions-list {
@@ -438,9 +527,10 @@
         
         .position-item {
             padding: 16px;
-            background: #23394b;
+            background: rgba(255, 255, 255, 0.03) !important;
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
         }
         
         .position-item h4 {
@@ -458,18 +548,20 @@
         }
         
         .position-number {
-            color: #f61b58;
+            color: #f91e5a;
             font-weight: 700;
             margin-right: 8px;
         }
         
-        .status-indicator {
+        .position-item .status-indicator {
+            display: block;
             font-size: 12px;
             font-weight: 700;
             padding: 4px 8px;
             border-radius: 4px;
-            margin-left: 8px;
+            margin: 0 0 8px 0;
             text-transform: uppercase;
+            width: fit-content;
         }
         
         .status-indicator.open {
@@ -493,18 +585,22 @@
             align-items: center;
             gap: 8px;
             margin-bottom: 8px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03) !important;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
             color: #8fa6b7;
             font-size: 14px;
         }
         
         .guidelines-list li i {
-            color: #f61b58;
+            color: #f91e5a;
             width: 16px;
         }
         
         /* Footer Styles - Match Main Page */
         .site-footer {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: #16213e;
             color: #e9f1f7;
             padding: 60px 0 30px;
             margin-top: 80px;
@@ -512,15 +608,6 @@
             overflow: hidden;
         }
         
-        .site-footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        }
         
         .footer-content {
             max-width: 1200px;
@@ -614,7 +701,7 @@
         }
         
         .footer-links a:hover {
-            color: #f61b58;
+            color: #f91e5a;
         }
         
         .social-links a {
@@ -652,11 +739,15 @@
             <header class="hero-header">
                 <div class="container hero-header-inner">
                     <a href="/" class="brand" aria-label="SamudraFM Home">
-                        <span class="brand-mark">Samudra<span>FM</span></span>
+                        <span class="brand-mark">samudrafm<span>.</span>com</span>
                         <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
                     </a>
                     <nav class="nav" aria-label="primary">
-                        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">☰</button>
+                        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                            <span class="hamburger-line"></span>
+                        </button>
                         <ul id="nav-menu" class="nav-list">
                             <li><a href="/">home</a></li>
                             <li><a href="/schedule">schedule</a></li>
@@ -683,6 +774,17 @@
             <div class="request-layout">
                 <!-- Form Section -->
                 <section class="request-form-section">
+                    <!-- Requirements Card - PC Only (above form) -->
+                    <div class="sidebar-card requirements-card-pc">
+                        <h3><i class="fas fa-list-check"></i> Requirements</h3>
+                        <ul class="guidelines-list">
+                            <li><i class="fas fa-check"></i> Humble. Team player attitude</li>
+                            <li><i class="fas fa-check"></i> Passion for radio & music</li>
+                            <li><i class="fas fa-check"></i> Great communication</li>
+                            <li><i class="fas fa-check"></i> Reliable & committed</li>
+                        </ul>
+                    </div>
+                    
                     <div class="form-card">
                         <div class="form-header">
                             <h2><i class="fas fa-paper-plane"></i> Apply Now</h2>
@@ -799,23 +901,28 @@
                         <h3><i class="fas fa-briefcase"></i> Available Positions</h3>
                         <div class="positions-list">
                             <div class="position-item">
-                                <h4><span class="position-number">1.</span> Radio Presenter <span class="status-indicator open">OPEN</span></h4>
+                                <span class="status-indicator open">OPEN</span>
+                                <h4><span class="position-number">1.</span> Radio Presenter</h4>
                                 <p>Host live shows, engage with listeners, and create amazing radio content</p>
                             </div>
                             <div class="position-item">
-                                <h4><span class="position-number">2.</span> Music Coordinator <span class="status-indicator open">OPEN</span></h4>
+                                <span class="status-indicator open">OPEN</span>
+                                <h4><span class="position-number">2.</span> Music Coordinator</h4>
                                 <p>Curate playlists, manage music library, and coordinate song selections</p>
                             </div>
                             <div class="position-item">
-                                <h4><span class="position-number">3.</span> Script Planner/Researcher <span class="status-indicator open">OPEN</span></h4>
+                                <span class="status-indicator open">OPEN</span>
+                                <h4><span class="position-number">3.</span> Script Planner/Researcher</h4>
                                 <p>Research topics, write scripts, and plan show content for Presenters</p>
                             </div>
                             <div class="position-item">
-                                <h4><span class="position-number">4.</span> Event Planner <span class="status-indicator closed">CLOSED</span></h4>
+                                <span class="status-indicator closed">CLOSED</span>
+                                <h4><span class="position-number">4.</span> Event Planner</h4>
                                 <p>Organize radio events, manage logistics, and coordinate activities</p>
                             </div>
                             <div class="position-item">
-                                <h4><span class="position-number">5.</span> Sound Editor <span class="status-indicator closed">CLOSED</span></h4>
+                                <span class="status-indicator closed">CLOSED</span>
+                                <h4><span class="position-number">5.</span> Sound Editor</h4>
                                 <p>Edit audio content, manage sound quality, and technical audio production</p>
                             </div>
                         </div>
@@ -835,15 +942,13 @@
                         </ul>
                     </div>
 
-                    <!-- Requirements -->
-                    <div class="sidebar-card">
+                    <!-- Requirements - Mobile Only -->
+                    <div class="sidebar-card requirements-card-mobile">
                         <h3><i class="fas fa-list-check"></i> Requirements</h3>
                         <ul class="guidelines-list">
-                            <li><i class="fas fa-check"></i> Humble</li>
+                            <li><i class="fas fa-check"></i> Humble. Team player attitude</li>
                             <li><i class="fas fa-check"></i> Passion for radio & music</li>
-                            <li><i class="fas fa-check"></i> Good communication skills</li>
-                            <li><i class="fas fa-check"></i> Team player attitude</li>
-                            <li><i class="fas fa-check"></i> Willingness to learn</li>
+                            <li><i class="fas fa-check"></i> Great communication</li>
                             <li><i class="fas fa-check"></i> Reliable & committed</li>
                         </ul>
                     </div>
@@ -1063,7 +1168,7 @@
         
         .position-item {
             padding: 16px;
-            background: var(--panel, #23394b);
+            background: rgba(255, 255, 255, 0.03) !important;
             border-radius: 8px;
             border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
         }
@@ -1170,19 +1275,19 @@
         }
         
         .request-form label i {
-            color: #f61b58 !important;
+            color: #f91e5a !important;
             width: 16px !important;
         }
         
         .request-form .btn.primary {
-            background: linear-gradient(135deg, #f61b58, #ff4d6d) !important;
+            background: linear-gradient(135deg, #f91e5a, #ff4d6d) !important;
             color: white !important;
             border: 0 !important;
             padding: 18px 32px !important;
             font-size: 18px !important;
             font-weight: 700 !important;
             min-height: 56px !important;
-            box-shadow: 0 4px 15px rgba(246, 27, 88, 0.3) !important;
+            box-shadow: 0 4px 15px rgba(249, 30, 90, 0.3) !important;
             border-radius: 12px !important;
             cursor: pointer !important;
             transition: all 0.2s !important;
@@ -1193,12 +1298,20 @@
             gap: 8px !important;
         }
         
+        .request-form .btn.primary i {
+            color: white !important;
+        }
+        
         .request-form .btn.primary:hover {
             background: transparent !important;
-            border: 2px solid #f61b58 !important;
-            color: #f61b58 !important;
+            border: 2px solid #f91e5a !important;
+            color: #f91e5a !important;
             transform: translateY(-4px) !important;
-            box-shadow: 0 8px 25px rgba(246, 27, 88, 0.3), 0 0 0 1px rgba(246, 27, 88, 0.2) !important;
+            box-shadow: 0 8px 25px rgba(249, 30, 90, 0.3), 0 0 0 1px rgba(249, 30, 90, 0.2) !important;
+        }
+        
+        .request-form .btn.primary:hover i {
+            color: #f91e5a !important;
         }
         
         /* Ensure form layout is correct */

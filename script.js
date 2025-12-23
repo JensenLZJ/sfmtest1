@@ -65,9 +65,9 @@ if ('caches' in window) {
 
 // Hidden easter egg - hiring message
 console.log('%c🥚 Easter Egg Found!\n%cLike looking under the hood? We\'re interested in people like you!\n%cCome and join us: https://samudrafm.com/opportunities/\n%cWe\'re always looking for talented students! 🚀', 
-  'color: #f61b58; font-size: 16px; font-weight: bold;',
+  'color: #f91e5a; font-size: 16px; font-weight: bold;',
   'color: #8b4c93; font-size: 14px;',
-  'color: #f61b58; font-size: 12px; text-decoration: underline;',
+  'color: #f91e5a; font-size: 12px; text-decoration: underline;',
   'color: #8b4c93; font-size: 12px; font-style: italic;');
 
 const navToggle = document.querySelector('.nav-toggle');
