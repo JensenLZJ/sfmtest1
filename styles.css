@@ -175,6 +175,8 @@ body{
 .hero-header-inner{display:flex;align-items:center;justify-content:space-between}
 /* When hero-header is inside a grid (home page hero section), span full width */
 .hero .hero-header{grid-column:1/-1;margin-bottom:12px;padding-bottom:0}
+/* Hero header background color with 50% opacity for non-home pages (direct child of site-main, not inside .hero) */
+.site-main > .hero-header{background-color:rgba(91, 65, 254, 0.5) !important}
 .brand{color:var(--text);text-decoration:none;display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .brand-mark{font-weight:800;letter-spacing:.2px;font-size:30px;font-family:'Funnel Display',sans-serif}
 .brand-mark span{color:#f91e5a}
@@ -288,6 +290,7 @@ body{
 .player-content-row{display:flex;align-items:center;gap:16px;width:100%;justify-content:flex-start}
 .player-left{position:relative;flex:0 0 152px;max-width:152px;height:152px}
 .hero-latest-cover{width:100%;height:100%;border-radius:12px;background-size:cover;background-position:center;background-repeat:no-repeat;image-rendering:high-quality;image-rendering:-webkit-optimize-contrast}
+.live-badge{position:absolute;top:8px;left:8px;background:#f91e5a;color:white;padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;z-index:5;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
 .hero-latest-cover.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);
   background:
     radial-gradient(600px 300px at 10% -10%, rgba(255,255,255,.06), transparent 60%),
@@ -2592,15 +2595,10 @@ i.fas {
 }
 
 .team-hero .hero-card {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 20px !important;
-    padding: 60px !important;
-    text-align: center;
+    padding: 0;
+    text-align: left;
     max-width: 800px;
     margin: 0 auto;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
-    backdrop-filter: blur(10px);
     position: relative;
     z-index: 1;
 }
@@ -2623,8 +2621,10 @@ i.fas {
 /* Team Main Section */
 .team-main {
     padding: 80px 0;
-    background: var(--bg-elev);
+    background-color: rgba(22, 33, 62, 1);
+    background-image: none;
     position: relative;
+    overflow: hidden;
 }
 
 .team-main::before {
@@ -2634,29 +2634,45 @@ i.fas {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(249, 30, 90, 0.02) 0%, rgba(76, 175, 80, 0.02) 100%);
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23ffffff" opacity="0.03"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.5;
     pointer-events: none;
 }
 
 .team-intro {
-    text-align: center;
+    text-align: left;
     max-width: 800px;
     margin: 0 auto 60px;
     position: relative;
     z-index: 1;
 }
 
+.team-intro h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: white;
+    margin: 0 0 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.team-intro .hero-subtitle {
+    font-size: 1.3rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 40px;
+    font-weight: 400;
+}
+
 .team-intro h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--text);
+    color: white;
     margin: 0 0 20px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .team-intro p {
     font-size: 1.1rem;
-    color: var(--muted);
+    color: rgba(255, 255, 255, 0.8);
     line-height: 1.7;
     margin: 0;
 }
@@ -2820,6 +2836,8 @@ i.fas {
     color: white;
     margin: 0 0 20px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .join-team p {
@@ -2827,13 +2845,17 @@ i.fas {
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.7;
     margin: 0 0 30px;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .join-buttons {
     display: flex;
-    gap: 20px;
+    gap: 0px;
     justify-content: center;
     flex-wrap: wrap;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .join-btn {
@@ -3204,30 +3226,23 @@ i.fas {
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-    .team-hero {
-        padding: 60px 0;
-    }
-    
-    .team-hero .hero-card {
-        padding: 40px 20px;
-        margin: 0 20px;
-    }
-    
-    .team-hero .hero-card h1 {
-        font-size: 2.5rem;
-    }
-    
-    .team-hero .hero-subtitle {
-        font-size: 1.1rem;
-    }
-    
     .team-main {
         padding: 60px 0;
+        background-color: rgba(0, 0, 0, 1) !important;
+        background-image: none !important;
     }
     
     .team-intro {
         margin: 0 auto 40px;
         padding: 0 20px;
+    }
+    
+    .team-intro h1 {
+        font-size: 2.5rem;
+    }
+    
+    .team-intro .hero-subtitle {
+        font-size: 1.1rem;
     }
     
     .team-intro h2 {
@@ -3289,13 +3304,16 @@ i.fas {
 }
 
 @media (max-width: 480px) {
-    .team-hero .hero-card {
-        margin: 0 10px;
-        padding: 30px 15px;
+    .team-intro {
+        padding: 0 10px;
     }
     
-    .team-hero .hero-card h1 {
+    .team-intro h1 {
         font-size: 2rem;
+    }
+    
+    .team-intro .hero-subtitle {
+        font-size: 1rem;
     }
     
     .team-grid {

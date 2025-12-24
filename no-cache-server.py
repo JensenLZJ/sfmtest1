@@ -51,7 +51,7 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             '/privacy-policy': '/privacy-policy.html',
             '/request': '/request.html',
             '/coming-soon': '/coming-soon.html',
-            '/brand-usage': '/brand-usage.html'
+            '/brand': '/brand.html'
         }
         
         # Check if this is a clean URL that needs to be mapped

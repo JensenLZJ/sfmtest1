@@ -45,10 +45,25 @@
     
     <!-- Inline styles to ensure team cards display with founders design -->
     <style>
+        /* Ensure team-main background is consistent on all devices */
+        .team-main {
+            background-color: rgba(22, 33, 62, 1) !important;
+            background-image: none !important;
+        }
+        
+        /* Hero header background for non-home pages */
+        .hero-header {
+            background-color: rgba(91, 65, 254, 0.5) !important;
+        }
+        
         .team-filter {
             margin: 40px 0 60px !important;
             display: flex !important;
             justify-content: center !important;
+        }
+        
+        .team-filter.year-filter {
+            margin: 40px 0 20px !important;
         }
         
         .filter-container {
@@ -73,7 +88,6 @@
             font-weight: 600 !important;
             cursor: pointer !important;
             transition: all 0.3s ease !important;
-            text-transform: uppercase !important;
             letter-spacing: 0.5px !important;
         }
         
@@ -257,6 +271,19 @@
             transform: translateY(-2px) !important;
         }
         
+        .team-social .social-link.disabled {
+            color: rgba(255, 255, 255, 0.3) !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+            opacity: 0.5 !important;
+        }
+        
+        .team-social .social-link.disabled:hover {
+            background: transparent !important;
+            color: rgba(255, 255, 255, 0.3) !important;
+            transform: none !important;
+        }
+        
         @media (max-width: 1200px) {
             .team-grid {
                 grid-template-columns: repeat(3, 1fr) !important;
@@ -274,30 +301,6 @@
         }
         
         @media (max-width: 768px) {
-            .team-filter {
-                margin: 30px 0 40px !important;
-            }
-            
-            .filter-container {
-                flex-wrap: wrap !important;
-                gap: 6px !important;
-                padding: 6px !important;
-            }
-            
-            .filter-btn {
-                padding: 10px 16px !important;
-                font-size: 12px !important;
-            }
-            
-            .team-category {
-                margin-bottom: 40px !important;
-            }
-            
-            .category-title {
-                font-size: 24px !important;
-                margin: 0 0 20px !important;
-            }
-            
             .team-grid {
                 grid-template-columns: 1fr !important;
                 gap: 30px !important;
@@ -305,44 +308,133 @@
                 justify-items: center !important;
             }
             
+            /* Maintain same styling as desktop on mobile */
+            .team-hero {
+                padding: 80px 0 !important;
+            }
+            
+            .team-hero .hero-card {
+                padding: 60px !important;
+                margin: 0 auto !important;
+                max-width: 800px !important;
+            }
+            
+            .team-hero .hero-card h1 {
+                font-size: 3.5rem !important;
+            }
+            
+            .team-hero .hero-subtitle {
+                font-size: 1.3rem !important;
+            }
+            
             .team-image {
                 width: calc(100% - 4px) !important;
                 height: 0 !important;
                 padding-bottom: calc(100% - 4px) !important;
-                border-radius: 12px !important;
-                margin: 0 0 12px 0 !important;
+                border-radius: 16px !important;
+                margin: 0 0 15px 0 !important;
             }
             
             .team-info h3 {
-                font-size: 16px !important;
+                font-size: 20px !important;
             }
             
             .team-role {
-                font-size: 11px !important;
+                font-size: 14px !important;
             }
             
             .team-bio {
-                font-size: 10px !important;
+                font-size: 14px !important;
             }
             
             .team-social .social-link {
-                width: 28px !important;
-                height: 28px !important;
-                font-size: 12px !important;
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 16px !important;
+            }
+            
+            .team-card {
+                padding: 30px !important;
+                min-height: 450px !important;
+            }
+            
+            .category-title {
+                font-size: 28px !important;
+                margin: 0 0 30px !important;
+            }
+            
+            /* Fix filter container clipping on mobile - allow wrapping */
+            .team-filter {
+                margin: 40px 0 60px !important;
+                padding: 0 20px !important;
+            }
+            
+            .filter-container {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+                justify-content: center !important;
+                padding: 8px 12px !important;
+                max-width: 100% !important;
+            }
+            
+            .filter-btn {
+                padding: 10px 16px !important;
+                font-size: 13px !important;
+                white-space: nowrap !important;
+                flex: 0 1 auto !important;
             }
         }
         
         @media (max-width: 480px) {
+            /* Maintain same styling as desktop on mobile */
+            .team-hero {
+                padding: 80px 0 !important;
+            }
+            
+            .team-hero .hero-card {
+                padding: 60px !important;
+                margin: 0 auto !important;
+                max-width: 800px !important;
+            }
+            
+            .team-hero .hero-card h1 {
+                font-size: 3.5rem !important;
+            }
+            
+            .team-hero .hero-subtitle {
+                font-size: 1.3rem !important;
+            }
+            
             .team-image {
                 width: calc(100% - 4px) !important;
                 height: 0 !important;
                 padding-bottom: calc(100% - 4px) !important;
-                border-radius: 10px !important;
-                margin: 0 0 10px 0 !important;
+                border-radius: 16px !important;
+                margin: 0 0 15px 0 !important;
             }
             
             .team-card {
-                padding: 16px !important;
+                padding: 30px !important;
+                min-height: 450px !important;
+            }
+            
+            /* Further optimize filter for very small screens */
+            .team-filter {
+                padding: 0 15px !important;
+            }
+            
+            .filter-container {
+                padding: 8px 10px !important;
+                gap: 6px !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+            }
+            
+            .filter-btn {
+                padding: 8px 14px !important;
+                font-size: 12px !important;
+                flex: 0 1 auto !important;
             }
         }
         
@@ -351,6 +443,9 @@
             display: flex !important;
             justify-content: flex-start !important;
             margin-top: 20px !important;
+            gap: 0px !important;
+            padding-left: 30px !important;
+            padding-right: 30px !important;
         }
         
         .join-btn {
@@ -381,6 +476,21 @@
         
         .join-team {
             padding-bottom: 40px !important;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.1) 100%) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            border-radius: 20px !important;
+        }
+        
+        .join-team h2 {
+            padding-left: 30px !important;
+            padding-right: 30px !important;
+        }
+        
+        .join-team p {
+            padding-left: 30px !important;
+            padding-right: 30px !important;
         }
         
         /* Player styling to match schedule items */
@@ -704,7 +814,7 @@
     <header class="hero-header">
         <div class="container hero-header-inner">
             <a href="/" class="brand" aria-label="SamudraFM Home">
-                <span class="brand-mark">samudrafm<span>.</span>com</span>
+                <span class="brand-mark"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></span>
                 <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
             </a>
             <nav class="nav" aria-label="primary">
@@ -740,6 +850,7 @@
                     <div class="player-content-row">
                         <div class="player-left">
                             <div class="hero-latest-cover cover placeholder" id="player-cover"></div>
+                            <div class="live-badge">LIVE</div>
                             <div class="play-overlay" id="play-overlay">
                                 <button class="play-pause-btn" id="hero-play-pause"><i class="fa-solid fa-pause"></i></button>
                             </div>
@@ -747,7 +858,7 @@
                         <div class="player-right">
                             <div class="player-info">
                                 <h3 id="hero-ep-title" class="track-title">Loading…</h3>
-                                <p id="hero-ep-artist" class="track-artist">by SamudraFM</p>
+                                <p id="hero-ep-artist" class="track-artist">by <img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1em; vertical-align: middle; display: inline-block; margin: 0 2px;"></p>
                             </div>
                             <div class="player-controls">
                                 <div class="volume-control">
@@ -799,43 +910,548 @@
     </div>
 
     <main class="site-main">
-        <!-- Hero Section -->
-        <section class="team-hero">
-            <div class="container">
-                <div class="hero-card">
-                    <h1>Our Team</h1>
-                    <p class="hero-subtitle">Meet the passionate students behind SamudraFM</p>
-                </div>
-            </div>
-        </section>
-
         <!-- Team Section -->
         <section class="team-main">
             <div class="container">
                 <div class="team-intro">
-                    <h2>Behind the Microphones</h2>
-                    <p>SamudraFM is powered by a dedicated team of students from SMK Taman SEA who share a passion for radio, music, and community engagement. Each member brings unique talents and perspectives to create the vibrant programming you hear every week.</p>
+                    <h1>The "Is This Thing On?" Team</h1>
+                    <p class="hero-subtitle">Meet the students you're currently listening on <img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block; margin: 0 4px; max-width: 200px;"></p>
+                    <h2>Behind the mute presser</h2>
+                    <p>SamudraFM is powered by a team of SMK Taman SEA students who are 90% passion and 10% knowing which button turns the volume up. We bring our unique talents(mostly panic) improvising and drinking too much coffee creating the chaotic noise you tolerate every week.</p>
                 </div>
 
-                <!-- Filter Bar -->
+                <!-- Year Filter Bar -->
+                <div class="team-filter year-filter">
+                    <div class="filter-container">
+                        <button class="filter-btn year-btn active" data-year="2025">2025</button>
+                        <button class="filter-btn year-btn" data-year="2024">2024</button>
+                        <button class="filter-btn year-btn" data-year="2023">2023</button>
+                    </div>
+                </div>
+
+                <!-- Category Filter Bar -->
                 <div class="team-filter">
                     <div class="filter-container">
                         <button class="filter-btn active" data-filter="all">All</button>
                         <button class="filter-btn" data-filter="founders">Founders</button>
                         <button class="filter-btn" data-filter="management">Management</button>
-                        <button class="filter-btn" data-filter="onairtalent">On-Air Talent</button>
                         <button class="filter-btn" data-filter="supportstaff">Support Staff</button>
+                        <button class="filter-btn" data-filter="onairtalent">On-Air Talent</button>
+                    </div>
+                </div>
+
+                <!-- Management Section -->
+                <div class="team-category" data-category="management" data-year="2025">
+                    <h3 class="category-title">Management</h3>
+                    <div class="team-grid">
+                        <!-- Station Manager -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/avatar/Srishti.jpg" alt="Shristi">
+                            </div>
+                            <div class="team-info">
+                                <h3>Shristi</h3>
+                                <p class="team-role">Station Manager</p>
+                                <p class="team-bio">Leading the station's operations and strategic direction</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/crispysrishti/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Asst. Station Manager -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Vyshavi A/P Nandan">
+                            </div>
+                            <div class="team-info">
+                                <h3>Vyshavi A/P Nandan</h3>
+                                <p class="team-role">Asst. Station Manager</p>
+                                <p class="team-bio">Supporting station operations and management</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/vyshavi_8/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Secretary -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Noelle Choy Ee Theng">
+                            </div>
+                            <div class="team-info">
+                                <h3>Noelle Choy Ee Theng</h3>
+                                <p class="team-role">Secretary</p>
+                                <p class="team-bio">Managing documentation and administrative tasks</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/no.ellee_/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sound Engineer Supervisor -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Benjamin Edward Ng">
+                            </div>
+                            <div class="team-info">
+                                <h3>Benjamin Edward Ng</h3>
+                                <p class="team-role">Sound Engineer Supervisor</p>
+                                <p class="team-bio">Overseeing audio quality and technical operations</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/ben.edward.ng/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Graphics & Social Supervisor -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Ho Qing Qing">
+                            </div>
+                            <div class="team-info">
+                                <h3>Ho Qing Qing</h3>
+                                <p class="team-role">Graphics & Social Supervisor</p>
+                                <p class="team-bio">Leading visual design and social media strategy</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/qxnggg/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- English Coordinator Supervisor -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Airil Daniel">
+                            </div>
+                            <div class="team-info">
+                                <h3>Airil Daniel</h3>
+                                <p class="team-role">English Coordinator Supervisor</p>
+                                <p class="team-bio">Supervising English language programming and content</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/rilrilthedandan/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Malay Coordinator Supervisor -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Karisemma">
+                            </div>
+                            <div class="team-info">
+                                <h3>Karisemma</h3>
+                                <p class="team-role">Malay Coordinator Supervisor</p>
+                                <p class="team-bio">Supervising Malay language programming and content</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/rilrilthedandan/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Support Staff Section -->
+                <div class="team-category" data-category="supportstaff" data-year="2025">
+                    <h3 class="category-title">Support Staff</h3>
+                    <div class="team-grid">
+                        <!-- Graphics & Social Assistant Supervisor -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Ryan Liew Kye Le">
+                            </div>
+                            <div class="team-info">
+                                <h3>Ryan Liew Kye Le</h3>
+                                <p class="team-role">Graphics & Social Assistant Supervisor</p>
+                                <p class="team-bio">Supporting graphics design and social media operations</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/ryanliew01/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Street Team - Michelle Chantelle -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Michelle Chantelle">
+                            </div>
+                            <div class="team-info">
+                                <h3>Michelle Chantelle</h3>
+                                <p class="team-role">Street Team</p>
+                                <p class="team-bio">Promoting the station and engaging with the community</p>
+                                <div class="team-social">
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Street Team - Shayna Prisha -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Shayna Prisha">
+                            </div>
+                            <div class="team-info">
+                                <h3>Shayna Prisha</h3>
+                                <p class="team-role">Street Team</p>
+                                <p class="team-bio">Promoting the station and engaging with the community</p>
+                                <div class="team-social">
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Street Team - Sereena Anjali -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Sereena Anjali">
+                            </div>
+                            <div class="team-info">
+                                <h3>Sereena Anjali</h3>
+                                <p class="team-role">Street Team</p>
+                                <p class="team-bio">Promoting the station and engaging with the community</p>
+                                <div class="team-social">
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- On-Air Talent Section -->
+                <div class="team-category" data-category="onairtalent" data-year="2025">
+                    <h3 class="category-title">On-Air Talent</h3>
+                    <div class="team-grid">
+                        <!-- Shristi -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/avatar/Srishti.jpg" alt="Shristi">
+                            </div>
+                            <div class="team-info">
+                                <h3>Shristi</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Leading the station's operations and strategic direction</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/crispysrishti/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vyshavi A/P Nandan -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Vyshavi A/P Nandan">
+                            </div>
+                            <div class="team-info">
+                                <h3>Vyshavi A/P Nandan</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Supporting station operations and management</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/vyshavi_8/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Noelle Choy Ee Theng -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Noelle Choy Ee Theng">
+                            </div>
+                            <div class="team-info">
+                                <h3>Noelle Choy Ee Theng</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Managing documentation and administrative tasks</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/no.ellee_/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Benjamin Edward Ng -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Benjamin Edward Ng">
+                            </div>
+                            <div class="team-info">
+                                <h3>Benjamin Edward Ng</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Overseeing audio quality and technical operations</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/ben.edward.ng/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ho Qing Qing -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Ho Qing Qing">
+                            </div>
+                            <div class="team-info">
+                                <h3>Ho Qing Qing</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Leading visual design and social media strategy</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/qxnggg/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Airil Daniel -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Airil Daniel">
+                            </div>
+                            <div class="team-info">
+                                <h3>Airil Daniel</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Supervising English language programming and content</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/rilrilthedandan/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Karisemma -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Karisemma">
+                            </div>
+                            <div class="team-info">
+                                <h3>Karisemma</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Supervising Malay language programming and content</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/rilrilthedandan/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ryan Liew Kye Le -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Ryan Liew Kye Le">
+                            </div>
+                            <div class="team-info">
+                                <h3>Ryan Liew Kye Le</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Supporting graphics design and social media operations</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/ryanliew01/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Michelle Chantelle -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Michelle Chantelle">
+                            </div>
+                            <div class="team-info">
+                                <h3>Michelle Chantelle</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Promoting the station and engaging with the community</p>
+                                <div class="team-social">
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shayna Prisha -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Shayna Prisha">
+                            </div>
+                            <div class="team-info">
+                                <h3>Shayna Prisha</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Promoting the station and engaging with the community</p>
+                                <div class="team-social">
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sereena Anjali -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Sereena Anjali">
+                            </div>
+                            <div class="team-info">
+                                <h3>Sereena Anjali</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Promoting the station and engaging with the community</p>
+                                <div class="team-social">
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- On-Air Talent Section 2023 -->
+                <div class="team-category" data-category="onairtalent" data-year="2023">
+                    <h3 class="category-title">On-Air Talent</h3>
+                    <div class="team-grid">
+                        <!-- Jensen Lim -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/avatar/Jensen.jpg" alt="Jensen Lim Zi Jen">
+                            </div>
+                            <div class="team-info">
+                                <h3>Jensen Lim Zi Jen</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Visionary leader, creative producer, music enthusiast</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/06_jsn/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Justin Choe -->
+                        <div class="team-card">
+                            <div class="team-image">
+                                <img src="assets/avatar/Justin.jpg" alt="Justin Choe">
+                            </div>
+                            <div class="team-info">
+                                <h3>Justin Choe</h3>
+                                <p class="team-role">On-Air Talent</p>
+                                <p class="team-bio">Technical expert, audio specialist, problem solver</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/justinchoe_/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Founders Section -->
-                <div class="team-category" data-category="founders">
+                <div class="team-category" data-category="founders" data-year="2025">
                     <h3 class="category-title">Founders</h3>
-                <div class="team-grid">
-                    <!-- Jensen Lim -->
-                    <div class="team-card founder">
-                        <div class="team-image">
-                            <img src="assets/avatar/Jensen.jpg" alt="Jensen Lim Zi Jen">
+                    <div class="team-grid">
+                        <!-- Jensen Lim -->
+                        <div class="team-card founder">
+                            <div class="team-image">
+                                <img src="assets/avatar/Jensen.jpg" alt="Jensen Lim Zi Jen">
                             </div>
                             <div class="team-info">
                                 <h3>Jensen Lim Zi Jen</h3>
@@ -845,17 +1461,17 @@
                                     <a href="https://www.instagram.com/06_jsn/" target="_blank" class="social-link">
                                         <i class="fab fa-instagram"></i>
                                     </a>
-                                    <a href="https://www.facebook.com/SamudraFMSMKTS" target="_blank" class="social-link">
+                                    <a href="javascript:void(0)" class="social-link disabled">
                                         <i class="fab fa-facebook"></i>
                                     </a>
                                 </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Justin Choe -->
-                    <div class="team-card founder">
-                        <div class="team-image">
-                            <img src="assets/avatar/Justin.jpg" alt="Justin Choe">
+                        <!-- Justin Choe -->
+                        <div class="team-card founder">
+                            <div class="team-image">
+                                <img src="assets/avatar/Justin.jpg" alt="Justin Choe">
                             </div>
                             <div class="team-info">
                                 <h3>Justin Choe</h3>
@@ -865,105 +1481,7 @@
                                     <a href="https://www.instagram.com/justinchoe_/" target="_blank" class="social-link">
                                         <i class="fab fa-instagram"></i>
                                     </a>
-                                    <a href="https://www.facebook.com/SamudraFMSMKTS" target="_blank" class="social-link">
-                                        <i class="fab fa-facebook"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                <!-- Management Section -->
-                <div class="team-category" data-category="management">
-                    <h3 class="category-title">Management</h3>
-                    <div class="team-grid">
-                        <!-- Content Creators -->
-                    <div class="team-card">
-                        <div class="team-image">
-                                <img src="assets/avatar/Jensen.jpg" alt="Content Creators">
-                            </div>
-                            <div class="team-info">
-                                <h3>Content Creators</h3>
-                                <p class="team-role">Programming & Planning</p>
-                                <p class="team-bio">Creative programmers, content planners, music curators</p>
-                                <div class="team-social">
-                                    <a href="https://www.instagram.com/samudrafm/" target="_blank" class="social-link">
-                                        <i class="fab fa-instagram"></i>
-                                    </a>
-                                    <a href="https://www.facebook.com/SamudraFMSMKTS" target="_blank" class="social-link">
-                                        <i class="fab fa-facebook"></i>
-                                    </a>
-                                </div>
-                        </div>
-                    </div>
-
-                        <!-- Community Managers -->
-                    <div class="team-card">
-                        <div class="team-image">
-                                <img src="assets/avatar/Justin.jpg" alt="Community Managers">
-                            </div>
-                            <div class="team-info">
-                                <h3>Community Managers</h3>
-                                <p class="team-role">Social Media & Engagement</p>
-                                <p class="team-bio">Social media experts, community builders, listener connectors</p>
-                                <div class="team-social">
-                                    <a href="https://www.instagram.com/samudrafm/" target="_blank" class="social-link">
-                                        <i class="fab fa-instagram"></i>
-                                    </a>
-                                    <a href="https://www.facebook.com/SamudraFMSMKTS" target="_blank" class="social-link">
-                                        <i class="fab fa-facebook"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                <!-- On-Air Talent Section -->
-                <div class="team-category" data-category="onairtalent">
-                    <h3 class="category-title">On-Air Talent</h3>
-                    <div class="team-grid">
-                        <!-- Radio Hosts -->
-                    <div class="team-card">
-                        <div class="team-image">
-                                <img src="assets/avatar/mrbean.jpg" alt="Radio Hosts">
-                            </div>
-                            <div class="team-info">
-                                <h3>Radio Hosts</h3>
-                                <p class="team-role">On-Air Talent</p>
-                                <p class="team-bio">Energetic hosts, engaging personalities, local experts</p>
-                                <div class="team-social">
-                                    <a href="https://www.instagram.com/samudrafm/" target="_blank" class="social-link">
-                                        <i class="fab fa-instagram"></i>
-                                    </a>
-                                    <a href="https://www.facebook.com/SamudraFMSMKTS" target="_blank" class="social-link">
-                                        <i class="fab fa-facebook"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-
-                <!-- Support Staff Section -->
-                <div class="team-category" data-category="supportstaff">
-                    <h3 class="category-title">Support Staff</h3>
-                    <div class="team-grid">
-                        <!-- Technical Team -->
-                    <div class="team-card">
-                        <div class="team-image">
-                                <img src="assets/avatar/Srishti.jpg" alt="Technical Team">
-                            </div>
-                            <div class="team-info">
-                                <h3>Technical Team</h3>
-                                <p class="team-role">Audio & Production</p>
-                                <p class="team-bio">Audio engineers, live streaming specialists, quality experts</p>
-                                <div class="team-social">
-                                    <a href="https://www.instagram.com/samudrafm/" target="_blank" class="social-link">
-                                        <i class="fab fa-instagram"></i>
-                                    </a>
-                                    <a href="https://www.facebook.com/SamudraFMSMKTS" target="_blank" class="social-link">
+                                    <a href="javascript:void(0)" class="social-link disabled">
                                         <i class="fab fa-facebook"></i>
                                     </a>
                                 </div>
@@ -990,7 +1508,7 @@
     <footer class="site-footer" id="about">
         <div class="footer-content">
             <div class="footer-column">
-                <h2 class="footer-brand-title">samudrafm.com</h2>
+                <h2 class="footer-brand-title"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></h2>
                 <p class="footer-description">
                     Non-Profit Organization. Fully volunteer-run<br>
                     school of SMK Taman SEA radio station.
@@ -1016,7 +1534,7 @@
                     <li><a href="team">Team</a></li>
                     <li><a href="opportunities">Opportunities</a></li>
                     <li><a href="contact">Feedback</a></li>
-                    <li><a href="brand-usage">Brand Usage</a></li>
+                    <li><a href="brand">Brand Usage</a></li>
                     <li><a href="privacy-policy">Privacy Policy</a></li>
                 </ul>
             </div>
@@ -1036,22 +1554,38 @@
     <!-- Team Filter JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
+            const yearButtons = document.querySelectorAll('.year-btn');
+            const categoryButtons = document.querySelectorAll('.filter-btn:not(.year-btn)');
             const teamCategories = document.querySelectorAll('.team-category');
             
-            // Function to apply filter
-            function applyFilter(filter) {
+            let selectedYear = '2025'; // Default to latest year
+            let selectedCategory = 'all';
+            
+            // Function to apply both year and category filters
+            function applyFilters() {
                 teamCategories.forEach(category => {
+                    const categoryYear = category.getAttribute('data-year');
                     const categoryType = category.getAttribute('data-category');
                     
-                    if (filter === 'all') {
-                        // Show all categories except founders
-                        if (categoryType === 'founders') {
-                            category.classList.add('hidden');
-                        } else {
-                            category.classList.remove('hidden');
-                        }
-                    } else if (categoryType === filter) {
+                    // Check year filter - founders are always shown regardless of year
+                    let yearMatch = false;
+                    if (categoryType === 'founders') {
+                        yearMatch = true; // Founders always visible for all years
+                    } else {
+                        yearMatch = categoryYear === selectedYear;
+                    }
+                    
+                    // Check category filter
+                    let categoryMatch = false;
+                    if (selectedCategory === 'all') {
+                        // Show all categories including founders (founders will appear last)
+                        categoryMatch = true;
+                    } else {
+                        categoryMatch = categoryType === selectedCategory;
+                    }
+                    
+                    // Show or hide based on both filters
+                    if (yearMatch && categoryMatch) {
                         category.classList.remove('hidden');
                     } else {
                         category.classList.add('hidden');
@@ -1059,23 +1593,40 @@
                 });
             }
             
-            // Apply filter on page load (default to 'all')
-            applyFilter('all');
-            
-            // Add click handlers to filter buttons
-            filterButtons.forEach(button => {
+            // Add click handlers to year filter buttons
+            yearButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    const filter = this.getAttribute('data-filter');
+                    const year = this.getAttribute('data-year');
                     
-                    // Remove active class from all buttons
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Remove active class from all year buttons
+                    yearButtons.forEach(btn => btn.classList.remove('active'));
                     // Add active class to clicked button
                     this.classList.add('active');
                     
-                    // Apply the filter
-                    applyFilter(filter);
+                    // Update selected year and apply filters
+                    selectedYear = year;
+                    applyFilters();
                 });
             });
+            
+            // Add click handlers to category filter buttons
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Remove active class from all category buttons
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update selected category and apply filters
+                    selectedCategory = filter;
+                    applyFilters();
+                });
+            });
+            
+            // Apply filters on page load (default to 'all' for both)
+            applyFilters();
         });
     </script>
     

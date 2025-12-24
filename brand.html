@@ -19,7 +19,7 @@
     
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://samudrafm.com/brand-usage">
+    <meta property="og:url" content="https://samudrafm.com/brand">
     <meta property="og:title" content="Brand Usage Guidelines - SamudraFM">
     <meta property="og:description" content="Brand usage guidelines and assets for SamudraFM - SMK Taman SEA school radio programme">
     <meta property="og:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
@@ -27,7 +27,7 @@
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://samudrafm.com/brand-usage">
+    <meta property="twitter:url" content="https://samudrafm.com/brand">
     <meta property="twitter:title" content="Brand Usage Guidelines - SamudraFM">
     <meta property="twitter:description" content="Brand usage guidelines and assets for SamudraFM - SMK Taman SEA school radio programme">
     <meta property="twitter:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
@@ -42,10 +42,35 @@
     <link rel="stylesheet" href="styles.css?v=1734570300">
     
     <style>
+        /* Hero header background for non-home pages */
+        .hero-header {
+            background-color: rgba(91, 65, 254, 0.5) !important;
+        }
+        
         .brand-hero {
             padding: 120px 0 80px;
             background: linear-gradient(135deg, #0f2230 0%, #1a2a3a 100%);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .brand-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        
+        .brand-hero .container {
+            position: relative;
+            z-index: 1;
         }
         
         .brand-hero h1 {
@@ -91,8 +116,9 @@
         .section-line {
             width: 100px;
             height: 4px;
-            background: linear-gradient(135deg, #f91e5a, #ff6b9d);
+            background: linear-gradient(90deg, #f91e5a, #8b4c93);
             margin: 0 auto;
+            border-radius: 2px;
         }
         
         .section-content {
@@ -109,35 +135,46 @@
         }
         
         .logo-card {
-            background: #173246;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
+            background: rgba(255,255,255,0.1) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 14px;
             padding: 40px;
             text-align: center;
             transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
         }
         
         .logo-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-            border-color: #f91e5a;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
         }
         
         .logo-preview {
-            background: #0f2230;
+            background: rgba(15, 34, 48, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
             padding: 40px;
             margin-bottom: 20px;
-            min-height: 200px;
+            aspect-ratio: 1 / 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .logo-preview img {
             max-width: 100%;
             max-height: 150px;
             object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
         
         .logo-card h3 {
@@ -159,20 +196,25 @@
             align-items: center;
             gap: 8px;
             padding: 10px 20px;
-            background: transparent;
-            border: 1px solid #f91e5a;
+            background: rgba(249, 30, 90, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(249, 30, 90, 0.3);
             color: #f91e5a;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(249, 30, 90, 0.2);
         }
         
         .download-btn:hover {
-            background: #f91e5a;
-            color: white;
+            background: rgba(249, 30, 90, 0.2);
+            border-color: #f91e5a;
+            color: #fff;
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 30, 90, 0.4);
         }
         
         .color-grid {
@@ -183,17 +225,20 @@
         }
         
         .color-card {
-            background: #173246;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
+            background: rgba(255,255,255,0.1) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 14px;
             overflow: hidden;
             transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
         }
         
         .color-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-            border-color: #f91e5a;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
         }
         
         .color-swatch {
@@ -217,6 +262,23 @@
             font-size: 16px;
             font-family: 'Courier New', monospace;
             margin: 0 0 8px;
+            cursor: pointer;
+            user-select: all;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .color-code:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f91e5a;
+        }
+        
+        .color-code.copied {
+            color: #f91e5a;
+            background: rgba(249, 30, 90, 0.1);
         }
         
         .color-usage {
@@ -233,10 +295,20 @@
         }
         
         .guideline-card {
-            background: #173246;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
+            background: rgba(255,255,255,0.1) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 14px;
             padding: 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .guideline-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
         }
         
         .guideline-card.dos {
@@ -300,11 +372,21 @@
         }
         
         .typography-sample {
-            background: #173246;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
+            background: rgba(255,255,255,0.1) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 14px;
             padding: 40px;
             margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .typography-sample:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
         }
         
         .typography-sample h3 {
@@ -325,6 +407,43 @@
             margin-top: 12px;
         }
         
+        .contact-info-card {
+            transition: all 0.3s ease;
+        }
+        
+        .contact-info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        
+        .contact-email-btn:hover {
+            background: transparent !important;
+            border: 2px solid #f91e5a !important;
+            color: #f91e5a !important;
+            transform: translateY(-4px) !important;
+            box-shadow: 0 8px 25px rgba(249,30,90,0.3), 0 0 0 1px rgba(249,30,90,0.2) !important;
+        }
+        
+        .contact-email-btn:hover i {
+            color: #f91e5a !important;
+        }
+        
+        .contact-btn:hover {
+            background: transparent !important;
+            border: 2px solid #f91e5a !important;
+            color: #f91e5a !important;
+            transform: translateY(-4px) !important;
+            box-shadow: 0 8px 25px rgba(249,30,90,0.3), 0 0 0 1px rgba(249,30,90,0.2) !important;
+        }
+        
+        .contact-btn:hover i {
+            color: #f91e5a !important;
+        }
+        
+        .contact-info-card a[href="contact"]:hover {
+            border-bottom-color: #f91e5a;
+        }
+        
         @media (max-width: 768px) {
             .brand-hero h1 {
                 font-size: 32px;
@@ -343,6 +462,15 @@
             .guidelines-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .contact-info-card {
+                padding: 32px 24px !important;
+            }
+            
+            .contact-email-btn {
+                font-size: 14px !important;
+                padding: 12px 24px !important;
+            }
         }
     </style>
     
@@ -357,7 +485,7 @@
         <header class="hero-header">
             <div class="container hero-header-inner">
                 <a href="/" class="brand" aria-label="SamudraFM Home">
-                    <span class="brand-mark">samudrafm<span>.</span>com</span>
+                    <span class="brand-mark"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></span>
                     <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
                 </a>
                 <nav class="nav" aria-label="primary">
@@ -405,21 +533,32 @@
                     <div class="logo-grid">
                         <div class="logo-card">
                             <div class="logo-preview" style="background: #0f2230;">
-                                <img src="assets/brandmark/SamudraFMLogo1.png" alt="SamudraFM Logo 1">
+                                <img src="assets/brandmark/sfmText Logo1.svg" alt="SamudraFM Primary Logo">
                             </div>
                             <h3>Primary Logo</h3>
-                            <p>Use this as the default logo for most applications. Best for light backgrounds.</p>
+                            <p>Our main brand logo. Use this as the default logo for most applications. Best for dark backgrounds.</p>
+                            <a href="assets/brandmark/sfmText Logo1.svg" download class="download-btn">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        </div>
+                        
+                        <div class="logo-card">
+                            <div class="logo-preview" style="background: #0f2230;">
+                                <img src="assets/brandmark/SamudraFMLogo1.png" alt="SamudraFM Logo 2">
+                            </div>
+                            <h3>Logo 2</h3>
+                            <p>for dark backgrounds.</p>
                             <a href="assets/brandmark/SamudraFMLogo1.png" download class="download-btn">
                                 <i class="fas fa-download"></i> Download
                             </a>
                         </div>
                         
                         <div class="logo-card">
-                            <div class="logo-preview" style="background: #ffffff;">
-                                <img src="assets/brandmark/SamudraFMLogo2.png" alt="SamudraFM Logo 2">
+                            <div class="logo-preview" style="background: #0f2230;">
+                                <img src="assets/brandmark/SamudraFMLogo2.png" alt="SamudraFM Logo 3">
                             </div>
-                            <h3>Logo Variation 2</h3>
-                            <p>Alternative logo style for different design contexts.</p>
+                            <h3>Logo 3</h3>
+                            <p>for light backgrounds,</p>
                             <a href="assets/brandmark/SamudraFMLogo2.png" download class="download-btn">
                                 <i class="fas fa-download"></i> Download
                             </a>
@@ -427,66 +566,33 @@
                         
                         <div class="logo-card">
                             <div class="logo-preview" style="background: #0f2230;">
-                                <img src="assets/brandmark/SamudraFMLogo3.png" alt="SamudraFM Logo 3">
+                                <img src="assets/brandmark/SamudraFMLogo3.png" alt="SamudraFM Logo 4">
                             </div>
-                            <h3>Logo Variation 3</h3>
-                            <p>Another variation suitable for dark backgrounds.</p>
+                            <h3>Logo 4</h3>
+                            <p>for dark and light background except for white background.</p>
                             <a href="assets/brandmark/SamudraFMLogo3.png" download class="download-btn">
                                 <i class="fas fa-download"></i> Download
                             </a>
                         </div>
                         
                         <div class="logo-card">
-                            <div class="logo-preview" style="background: #ffffff;">
-                                <img src="assets/brandmark/SamudraFMLogo4.png" alt="SamudraFM Logo 4">
+                            <div class="logo-preview" style="background: #0f2230;">
+                                <img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="SamudraFM Primary Text Logo">
                             </div>
-                            <h3>Logo Variation 4</h3>
-                            <p>Alternative design for light backgrounds.</p>
-                            <a href="assets/brandmark/SamudraFMLogo4.png" download class="download-btn">
+                            <h3>Primary Text Logo</h3>
+                            <p>Text-based logo variation. Use for headers, navigation, and text-focused applications.</p>
+                            <a href="assets/brandmark/samudrafmcomTextLogo1.svg" download class="download-btn">
                                 <i class="fas fa-download"></i> Download
                             </a>
                         </div>
                         
                         <div class="logo-card">
                             <div class="logo-preview" style="background: #0f2230;">
-                                <img src="assets/brandmark/SamudraFMLogo5.png" alt="SamudraFM Logo 5">
+                                <img src="assets/brandmark/samudrafmcomTextLogo4.svg" alt="SamudraFM Text Logo with Slogan">
                             </div>
-                            <h3>Logo Variation 5</h3>
-                            <p>Dark background optimized version.</p>
-                            <a href="assets/brandmark/SamudraFMLogo5.png" download class="download-btn">
-                                <i class="fas fa-download"></i> Download
-                            </a>
-                        </div>
-                        
-                        <div class="logo-card">
-                            <div class="logo-preview" style="background: #ffffff;">
-                                <img src="assets/brandmark/SamudraFMLogo6.png" alt="SamudraFM Logo 6">
-                            </div>
-                            <h3>Logo Variation 6</h3>
-                            <p>Light background optimized version.</p>
-                            <a href="assets/brandmark/SamudraFMLogo6.png" download class="download-btn">
-                                <i class="fas fa-download"></i> Download
-                            </a>
-                        </div>
-                        
-                        <div class="logo-card">
-                            <div class="logo-preview" style="background: #0f2230;">
-                                <img src="assets/brandmark/SamudraFMLogo7.png" alt="SamudraFM Logo 7">
-                            </div>
-                            <h3>Logo Variation 7</h3>
-                            <p>Additional dark theme variation.</p>
-                            <a href="assets/brandmark/SamudraFMLogo7.png" download class="download-btn">
-                                <i class="fas fa-download"></i> Download
-                            </a>
-                        </div>
-                        
-                        <div class="logo-card">
-                            <div class="logo-preview" style="background: #ffffff;">
-                                <img src="assets/brandmark/SamudraFMLogo8.png" alt="SamudraFM Logo 8">
-                            </div>
-                            <h3>Logo Variation 8</h3>
-                            <p>Additional light theme variation.</p>
-                            <a href="assets/brandmark/SamudraFMLogo8.png" download class="download-btn">
+                            <h3>Text Logo with Slogan</h3>
+                            <p>Text logo variation that includes the slogan. Use when you need to display the full brand message.</p>
+                            <a href="assets/brandmark/samudrafmcomTextLogo4.svg" download class="download-btn">
                                 <i class="fas fa-download"></i> Download
                             </a>
                         </div>
@@ -509,17 +615,17 @@
                             <div class="color-swatch" style="background: #f91e5a;"></div>
                             <div class="color-info">
                                 <h3>Primary Brand Color</h3>
-                                <p class="color-code">#f91e5a</p>
+                                <p class="color-code">#F91E5A</p>
                                 <p class="color-usage">Use for primary actions, highlights, and brand elements. This is our signature pink/magenta color.</p>
                             </div>
                         </div>
                         
                         <div class="color-card">
-                            <div class="color-swatch" style="background: #ff6b9d;"></div>
+                            <div class="color-swatch" style="background: #5b41fe;"></div>
                             <div class="color-info">
-                                <h3>Secondary Brand Color</h3>
-                                <p class="color-code">#ff6b9d</p>
-                                <p class="color-usage">Use for gradients, hover states, and secondary accents. Complements the primary color.</p>
+                                <h3>Electric Violet</h3>
+                                <p class="color-code">#5B41FE</p>
+                                <p class="color-usage">Use for hover states and secondary accents. Complements the primary color.</p>
                             </div>
                         </div>
                         
@@ -527,7 +633,7 @@
                             <div class="color-swatch" style="background: #0f2230;"></div>
                             <div class="color-info">
                                 <h3>Dark Background</h3>
-                                <p class="color-code">#0f2230</p>
+                                <p class="color-code">#0F2230</p>
                                 <p class="color-usage">Primary dark background color for sections and containers.</p>
                             </div>
                         </div>
@@ -536,7 +642,7 @@
                             <div class="color-swatch" style="background: #1a2a3a;"></div>
                             <div class="color-info">
                                 <h3>Secondary Background</h3>
-                                <p class="color-code">#1a2a3a</p>
+                                <p class="color-code">#1A2A3A</p>
                                 <p class="color-usage">Alternating background color for visual hierarchy.</p>
                             </div>
                         </div>
@@ -554,7 +660,7 @@
                             <div class="color-swatch" style="background: #e9f1f7;"></div>
                             <div class="color-info">
                                 <h3>Primary Text</h3>
-                                <p class="color-code">#e9f1f7</p>
+                                <p class="color-code">#E9F1F7</p>
                                 <p class="color-usage">Main text color for headings and important content.</p>
                             </div>
                         </div>
@@ -575,9 +681,9 @@
                     <div class="typography-sample">
                         <h3>Brand Font - Funnel Display</h3>
                         <p class="typography-preview" style="font-family: 'Funnel Display', sans-serif; font-size: 48px; font-weight: 800;">
-                            samudrafm.com
+                            <img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="max-width: 100%; height: auto;">
                         </p>
-                        <p class="typography-details">Used for the brand mark and primary headings. Available weights: Light, Regular, Medium, SemiBold, Bold, ExtraBold.</p>
+                        <p class="typography-details">Only use extra bold with this font.</p>
                     </div>
                     
                     <div class="typography-sample">
@@ -588,7 +694,7 @@
                         <p style="font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 18px; font-weight: 700; color: #e9f1f7; margin: 12px 0;">
                             <strong>The quick brown fox jumps over the lazy dog.</strong> (Bold)
                         </p>
-                        <p class="typography-details">Used for body text, descriptions, and general content. Available styles: Regular (400) and Bold (700). This font is designed for maximum legibility and accessibility. Note: Italic styles are not used on this website.</p>
+                        <p class="typography-details">We use this font to support the people with dyslexia. It creates a more inclusive reading experience, ensuring that people who struggle to see clearly can still distinguish letters and read with confidence.</p>
                     </div>
                 </div>
             </div>
@@ -616,7 +722,7 @@
                                 <li>Ensure sufficient contrast between logo and background</li>
                                 <li>Use brand colors consistently across all materials</li>
                                 <li>Respect the minimum clear space around the logo</li>
-                                <li>Use high-resolution logo files for print materials</li>
+                                <li>Use high-resolution SVG files for print materials</li>
                             </ul>
                         </div>
                         
@@ -632,7 +738,6 @@
                                 <li>Do not add effects like shadows, outlines, or gradients to the logo</li>
                                 <li>Do not use outdated or modified versions of the logo</li>
                                 <li>Do not use the logo smaller than the minimum size requirement</li>
-                                <li>Do not create your own logo variations without approval</li>
                             </ul>
                         </div>
                     </div>
@@ -648,10 +753,20 @@
                         <h2>Questions?</h2>
                         <div class="section-line"></div>
                     </div>
-                    <p style="text-align: center; color: rgba(255,255,255,0.8); font-size: 18px; max-width: 600px; margin: 0 auto;">
-                        If you have questions about brand usage or need approval for specific applications, please contact us at 
-                        <a href="mailto:contact@samudrafm.com" style="color: #f91e5a; text-decoration: none;">contact@samudrafm.com</a>
-                    </p>
+                    <div class="contact-info-card" style="background: rgba(255,255,255,0.1) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 14px; padding: 40px; max-width: 600px; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);">
+                        <p style="text-align: center; color: rgba(255,255,255,0.9); font-size: 18px; margin: 0 0 24px; line-height: 1.6;">
+                            If you have questions about brand usage or need approval for specific applications, please contact us at
+                        </p>
+                        <div style="text-align: center; margin-bottom: 24px;">
+                            <a href="contact.html" class="contact-btn" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #f91e5a 0%, #e01a4f 100%); color: white; text-decoration: none; font-weight: 700; font-size: 16px; border-radius: 12px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(249,30,90,0.3); border: none;">
+                                <i class="fas fa-envelope"></i>
+                                Contact
+                            </a>
+                        </div>
+                        <p style="text-align: center; margin: 0; color: rgba(255,255,255,0.7); font-size: 14px;">
+                            or email us on <a href="mailto:contact@samudrafm.com" style="color: #f91e5a; text-decoration: none; font-weight: 600; transition: all 0.3s ease; border-bottom: 1px solid transparent;">contact@samudrafm.com</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -660,7 +775,7 @@
     <footer class="site-footer" id="about">
         <div class="footer-content">
             <div class="footer-column">
-                <h2 class="footer-brand-title">samudrafm.com</h2>
+                <h2 class="footer-brand-title"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></h2>
                 <p class="footer-description">
                     Non-Profit Organization. Fully volunteer-run<br>
                     school of SMK Taman SEA radio station.
@@ -686,7 +801,7 @@
                     <li><a href="team">Team</a></li>
                     <li><a href="opportunities">Opportunities</a></li>
                     <li><a href="contact">Feedback</a></li>
-                    <li><a href="brand-usage">Brand Usage</a></li>
+                    <li><a href="brand">Brand Usage</a></li>
                     <li><a href="privacy-policy">Privacy Policy</a></li>
                 </ul>
             </div>
@@ -698,6 +813,57 @@
         </div>
     </footer>
 
+    <script>
+        // Copy color code to clipboard functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const colorCodes = document.querySelectorAll('.color-code');
+            
+            colorCodes.forEach(function(colorCode) {
+                colorCode.addEventListener('click', function() {
+                    const text = this.textContent.trim();
+                    
+                    // Copy to clipboard
+                    navigator.clipboard.writeText(text).then(function() {
+                        // Visual feedback
+                        const originalText = colorCode.textContent;
+                        colorCode.classList.add('copied');
+                        colorCode.textContent = 'Copied!';
+                        
+                        // Reset after 2 seconds
+                        setTimeout(function() {
+                            colorCode.classList.remove('copied');
+                            colorCode.textContent = originalText;
+                        }, 2000);
+                    }).catch(function(err) {
+                        // Fallback for older browsers
+                        const textArea = document.createElement('textarea');
+                        textArea.value = text;
+                        textArea.style.position = 'fixed';
+                        textArea.style.opacity = '0';
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        try {
+                            document.execCommand('copy');
+                            const originalText = colorCode.textContent;
+                            colorCode.classList.add('copied');
+                            colorCode.textContent = 'Copied!';
+                            setTimeout(function() {
+                                colorCode.classList.remove('copied');
+                                colorCode.textContent = originalText;
+                            }, 2000);
+                        } catch (err) {
+                            console.error('Failed to copy:', err);
+                        }
+                        document.body.removeChild(textArea);
+                    });
+                });
+                
+                // Add title attribute for tooltip
+                colorCode.setAttribute('title', 'Click to copy');
+            });
+        });
+    </script>
+    
     <script src="script.js"></script>
     
 </body>

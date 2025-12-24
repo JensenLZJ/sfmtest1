@@ -204,7 +204,7 @@ const profilePictures = {
   'Jessica': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face',
   'Niv': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face',
   'Gavin': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face',
-  'TBA': 'assets/brandmark/SamudraFMLogo2.png'
+  'TBA': 'assets/brandmark/sfmTextLogoBG1.svg'
 };
 
 // Function to get profile picture for a presenter
@@ -225,8 +225,8 @@ function getProfilePicture(presenterName) {
     }
   }
   
-  // Default fallback - use SamudraFM logo 2
-  return 'assets/brandmark/SamudraFMLogo2.png';
+  // Default fallback - use SamudraFM logo SVG
+  return 'assets/brandmark/sfmTextLogoBG1.svg';
 }
 
 const MOCK_COMING = [
@@ -1505,6 +1505,24 @@ async function fetchDurationFromAPI(episodeUrl) {
   }
 }
 
+// Function to update artist display - use logo if artist is SamudraFM
+function updateArtistDisplay(artistEl, episode) {
+  if (!artistEl) return;
+  
+  // Check if episode has user info and if it's SamudraFM
+  const artistName = episode.user?.username || episode.user?.name || '';
+  const isSamudraFM = artistName.toLowerCase() === 'samudrafm' || artistName === 'SamudraFM';
+  
+  if (isSamudraFM) {
+    // Replace text with logo
+    artistEl.innerHTML = 'by <img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1em; vertical-align: middle; display: inline-block; margin: 0 2px;">';
+  } else {
+    // Use default text or episode artist name
+    const displayText = artistName ? `by ${artistName}` : 'by SamudraFM';
+    artistEl.textContent = displayText;
+  }
+}
+
 function playEpisode(episode) {
   
   // Hide play button on mobile when starting to load new episode (unless it's auto-play)
@@ -1558,10 +1576,13 @@ function playEpisode(episode) {
   
   // Update the hero player title and info
   const titleEl = document.getElementById('hero-ep-title');
+  const artistEl = document.getElementById('hero-ep-artist');
   const openEl = document.getElementById('hero-open');
   if (titleEl) {
     titleEl.textContent = episode.name;
   }
+  // Update artist display - use logo if artist is SamudraFM
+  updateArtistDisplay(artistEl, episode);
   if (openEl) {
     openEl.href = 'request';
   }
@@ -2692,6 +2713,9 @@ async function loadHeroLatest(username){
     }
     
     titleEl.textContent = ep.name;
+    const artistEl = document.getElementById('hero-ep-artist');
+    // Update artist display - use logo if artist is SamudraFM
+    updateArtistDisplay(artistEl, ep);
     openEl.href = 'request';
     
     // Set current episode for play button
