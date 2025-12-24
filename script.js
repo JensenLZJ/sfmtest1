@@ -4692,3 +4692,24 @@ function resetInstagramAutoScroll() {
   stopInstagramAutoScroll();
   startInstagramAutoScroll();
 }
+
+// Calculate and display founder ages
+function calculateFounderAges() {
+  const ageElements = document.querySelectorAll('.age-calc');
+  const currentYear = new Date().getFullYear();
+  
+  ageElements.forEach(function(element) {
+    const birthYear = parseInt(element.getAttribute('data-birth-year'));
+    if (!isNaN(birthYear)) {
+      const age = currentYear - birthYear;
+      element.textContent = age;
+    }
+  });
+}
+
+// Run age calculation when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', calculateFounderAges);
+} else {
+  calculateFounderAges();
+}

@@ -11,6 +11,7 @@
 /privacy-policy.html /privacy-policy 301
 /request.html /request 301
 /coming-soon.html /coming-soon 301
+/brand-usage.html /brand-usage 301
 
 # Application redirect
 /apply /opportunities 301
@@ -24,6 +25,9 @@
 /privacy-policy /privacy-policy.html 200
 /request /request.html 200
 /coming-soon /coming-soon.html 200
+/brand-usage /brand-usage.html 200
 
 # Allow all images and assets to load normally
 
+# Catch-all 404 redirect - must be last
+/* /404.html 404

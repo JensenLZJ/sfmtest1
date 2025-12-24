@@ -17,6 +17,22 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Clear-Site-Data', '"cache", "cookies", "storage"')
         super().end_headers()
     
+    def send_error(self, code, message=None, explain=None):
+        # Override error handling to serve 404.html for 404 errors
+        if code == 404 and os.path.exists('404.html'):
+            self.path = '/404.html'
+            self.send_response(404)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            try:
+                with open('404.html', 'rb') as f:
+                    self.wfile.write(f.read())
+            except Exception:
+                pass
+            return
+        # For other errors, use default behavior
+        super().send_error(code, message, explain)
+    
     def do_GET(self):
         # Handle redirects first
         if self.path == '/apply':
@@ -34,7 +50,8 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             '/opportunities': '/opportunities.html',
             '/privacy-policy': '/privacy-policy.html',
             '/request': '/request.html',
-            '/coming-soon': '/coming-soon.html'
+            '/coming-soon': '/coming-soon.html',
+            '/brand-usage': '/brand-usage.html'
         }
         
         # Check if this is a clean URL that needs to be mapped
@@ -42,6 +59,7 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.path = clean_urls[self.path]
         
         # Call the parent method to handle the request
+        # If file doesn't exist, send_error will be called with 404
         super().do_GET()
 
 if __name__ == "__main__":

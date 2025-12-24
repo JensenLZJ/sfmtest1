@@ -64,12 +64,24 @@ try {
                 $response.OutputStream.Write($content, 0, $content.Length)
                 Write-Host "Served: $localPath to $($request.RemoteEndPoint.Address)"
             } else {
-                $response.StatusCode = 404
-                $errorMessage = "File not found: $localPath"
-                $errorBytes = [System.Text.Encoding]::UTF8.GetBytes($errorMessage)
-                $response.ContentLength64 = $errorBytes.Length
-                $response.OutputStream.Write($errorBytes, 0, $errorBytes.Length)
-                Write-Host "404: $localPath from $($request.RemoteEndPoint.Address)"
+                # File not found - serve 404.html if it exists
+                $notFoundPath = Join-Path $root "404.html"
+                if (Test-Path $notFoundPath -PathType Leaf) {
+                    $response.StatusCode = 404
+                    $content = [System.IO.File]::ReadAllBytes($notFoundPath)
+                    $response.ContentLength64 = $content.Length
+                    $response.ContentType = "text/html; charset=utf-8"
+                    $response.OutputStream.Write($content, 0, $content.Length)
+                    Write-Host "404: $localPath from $($request.RemoteEndPoint.Address) - served 404.html"
+                } else {
+                    $response.StatusCode = 404
+                    $errorMessage = "File not found: $localPath"
+                    $errorBytes = [System.Text.Encoding]::UTF8.GetBytes($errorMessage)
+                    $response.ContentLength64 = $errorBytes.Length
+                    $response.ContentType = "text/plain; charset=utf-8"
+                    $response.OutputStream.Write($errorBytes, 0, $errorBytes.Length)
+                    Write-Host "404: $localPath from $($request.RemoteEndPoint.Address)"
+                }
             }
             
             $response.Close()
