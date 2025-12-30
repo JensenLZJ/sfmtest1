@@ -14,7 +14,7 @@
       gtag('config', 'G-4NCN6ZYF05');
     </script>
     
-    <title>Our Team - SamudraFM</title>
+    <title>Our team - SamudraFM</title>
     <meta name="description" content="Meet the talented team behind SamudraFM - the student-run radio program at SMK Taman SEA.">
     
     <!-- Open Graph / Facebook / WhatsApp -->
@@ -1510,11 +1510,11 @@
             <div class="footer-column">
                 <h2 class="footer-brand-title"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></h2>
                 <p class="footer-description">
-                    Non-Profit Organization. Fully volunteer-run<br>
-                    school of SMK Taman SEA radio station.
+                    Fully volunteer-run radio station from SMK Taman SEA, Petaling Jaya
                 </p>
                 <p class="footer-programme">
-                    Our programme is a recreational school radio initiative, designed to give students hands-on broadcasting experience while exploring creativity in music, events, and radio production.
+                    Our programme is a recreational school radio initiative, designed to give students hands-on broadcasting experience while exploring creativity in music, events, and radio production. 
+                    Not to use outside of Malaysia.
                 </p>
             </div>
             
@@ -1542,7 +1542,7 @@
         
         
         <div class="footer-bottom">
-            <p>© 2025 SamudraFM. Designed with passion by Jensen. 📻</p>
+            <p id="footer-year">2025 SamudraFM. Designed with passion by Jensen. 📻</p>
         </div>
     </footer>
 
@@ -1628,6 +1628,17 @@
             // Apply filters on page load (default to 'all' for both)
             applyFilters();
         });
+    </script>
+    
+    <!-- Auto-update footer year -->
+    <script>
+        (function() {
+            const yearElement = document.getElementById('footer-year');
+            if (yearElement) {
+                const currentYear = new Date().getFullYear();
+                yearElement.textContent = currentYear + ' SamudraFM. Designed with passion by Jensen. 📻';
+            }
+        })();
     </script>
     
 </body>

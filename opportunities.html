@@ -14,7 +14,7 @@
       gtag('config', 'G-4NCN6ZYF05');
     </script>
     
-    <title>Join Our Team - SamudraFM</title>
+    <title>Join our team - SamudraFM</title>
     <meta name="description" content="Join the SamudraFM team - We're looking for talented individuals to help us grow!">
     
     <!-- Open Graph / Facebook / WhatsApp -->
@@ -837,6 +837,15 @@
             .hero-latest .player-right {
                 flex: 0 0 50% !important;
                 max-width: 50% !important;
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info {
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info * {
+                text-align: left !important;
             }
 
             .hero-latest .hero-latest-cover {
@@ -952,6 +961,15 @@
             .hero-latest .player-right {
                 flex: 1 !important;
                 min-width: 0 !important;
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info {
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info * {
+                text-align: left !important;
             }
             
             .hero-latest .player-widget > .progress-container {
@@ -1045,6 +1063,15 @@
             .hero-latest .player-right {
                 flex: 1 !important;
                 min-width: 0 !important;
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info {
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info * {
+                text-align: left !important;
             }
             
             .hero-latest .player-widget > .progress-container {
@@ -1054,6 +1081,36 @@
             .hero-latest .player-content-row .player-right .progress-container {
                 display: block !important;
             }
+        }
+        
+        /* Keep player info left-aligned on opportunities page */
+        .hero-latest .player-right {
+            text-align: left !important;
+        }
+        
+        .hero-latest .player-info {
+            text-align: left !important;
+        }
+        
+        .hero-latest .player-info * {
+            text-align: left !important;
+        }
+        
+        .hero-latest #hero-ep-title,
+        .hero-latest .track-title {
+            text-align: left !important;
+            width: 100% !important;
+            display: block !important;
+        }
+        
+        .hero-latest #hero-ep-artist,
+        .hero-latest .track-artist {
+            text-align: left !important;
+            color: rgba(255, 255, 255, 1) !important;
+            width: 100% !important;
+            display: block !important;
+            margin-left: 0 !important;
+            padding-left: 0 !important;
         }
     </style>
 </head>
@@ -1363,11 +1420,11 @@
             <div class="footer-column">
                 <h2 class="footer-brand-title"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></h2>
                 <p class="footer-description">
-                    Non-Profit Organization. Fully volunteer-run<br>
-                    school of SMK Taman SEA radio station.
+                    Fully volunteer-run radio station from SMK Taman SEA, Petaling Jaya
                 </p>
                 <p class="footer-programme">
-                    Our programme is a recreational school radio initiative, designed to give students hands-on broadcasting experience while exploring creativity in music, events, and radio production.
+                    Our programme is a recreational school radio initiative, designed to give students hands-on broadcasting experience while exploring creativity in music, events, and radio production. 
+                    Not to use outside of Malaysia.
                 </p>
             </div>
             
@@ -1395,117 +1452,147 @@
         
         
         <div class="footer-bottom">
-            <p>© 2025 SamudraFM. Designed with passion by Jensen. 📻</p>
+            <p id="footer-year">2025 SamudraFM. Designed with passion by Jensen. 📻</p>
         </div>
     </footer>
 
     <script>
+        // Google Form Configuration
+        // INSTRUCTIONS TO FIND ENTRY IDs:
+        // 1. Open https://forms.gle/tfMkpXcjsnvsoTKU8 in your browser
+        // 2. Right-click on the page and select "View Page Source" (or press Ctrl+U)
+        // 3. Press Ctrl+F to search for "entry."
+        // 4. You'll see entries like: name="entry.1234567890"
+        // 5. Match each field in your form to the corresponding entry ID:
+        //    - Full Name (Nickname) -> entry.XXXXX
+        //    - Email -> entry.XXXXX
+        //    - Phone number -> entry.XXXXX
+        //    - role of interest -> entry.XXXXX
+        //    - Experience Level -> entry.XXXXX
+        //    - Why do you want to join samudrafm? -> entry.XXXXX
+        //    - skills & interest -> entry.XXXXX
+        // 6. Also find the form ID in the action URL: action="https://docs.google.com/forms/d/e/FORM_ID/formResponse"
+        const GOOGLE_FORM_CONFIG = {
+            // Form ID
+            formId: '1FAIpQLSd1LUl84gB_JDb3vydgKek9U2FZP5iIu4_cypad3OL1nyaKTQ',
+            entryIds: {
+                name: 'entry.2005620554',        // Full Name (Nickname)
+                email: 'entry.1045781291',        // Email
+                phone: 'entry.1166974658',        // Phone number
+                role: 'entry.1065046570',        // role of interest
+                experience: 'entry.1480668658',  // Experience Level
+                motivation: 'entry.839337160',    // Why do you want to join samudrafm?
+                skills: 'entry.17983031'         // skills & interest
+            }
+        };
+        
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             setupMobileNavigation();
         });
         
         // Handle form submission
-        document.addEventListener('submit', function(e) {
-            if (e.target.id === 'request-form') {
+        document.addEventListener('DOMContentLoaded', function() {
+            const requestForm = document.getElementById('request-form');
+            
+            requestForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 submitApplication(e.target);
-            }
+            });
         });
         
         // Submit application to Google Forms
-        async function submitApplication(form) {
-            const submitBtn = document.getElementById('submit-btn');
-            const btnText = submitBtn.querySelector('.btn-text');
-            const btnLoading = submitBtn.querySelector('.btn-loading');
+        function submitApplication(form) {
+            // Get form data
+            const formData = new FormData(form);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const phone = formData.get('phone');
+            const role = formData.get('role');
+            const experience = formData.get('experience');
+            const motivation = formData.get('motivation');
+            const skills = formData.get('skills') || '';
             
-            // Show loading state
-            submitBtn.disabled = true;
-            btnText.style.display = 'none';
-            btnLoading.style.display = 'inline-flex';
+            // Validate required fields
+            if (!name || !email || !phone || !role || !experience || !motivation) {
+                showErrorMessage('Please fill in all required fields');
+                return;
+            }
             
-            try {
-                // Get form data
-                const formData = new FormData(form);
-                
-                // Validate required fields
-                const name = formData.get('name');
-                const email = formData.get('email');
-                const phone = formData.get('phone');
-                const role = formData.get('role');
-                const experience = formData.get('experience');
-                const motivation = formData.get('motivation');
-                
-                if (!name || !email || !phone || !role || !experience || !motivation) {
-                    throw new Error('Please fill in all required fields');
-                }
-                
-                // Validate phone number format (Malaysian format: 601xxxxxxx or 01xxxxxxx, 7-15 digits total)
-                const phonePattern = /^(601|01)[0-9]{5,13}$/;
-                if (!phonePattern.test(phone)) {
-                    throw new Error('Please enter a valid Malaysian phone number starting with 601 or 01 (7-15 digits total)');
-                }
-                
-                // Simulate processing time
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                
-                // Create Google Form submission
-                const googleFormAction = 'https://docs.google.com/forms/d/e/1FAIpQLSd1LUl84gB_JDb3vydgKek9U2FZP5iIu4_cypad3OL1nyaKTQ/formResponse';
-                
-                // Create a hidden form for submission
-                const hiddenForm = document.createElement('form');
-                hiddenForm.action = googleFormAction;
-                hiddenForm.method = 'POST';
-                hiddenForm.target = 'hidden_iframe';
-                hiddenForm.style.display = 'none';
-                
-                // Add form fields - using generic entry names that should work
-                const fields = [
-                    { name: 'entry.2005620554', value: name }, // Name field
-                    { name: 'entry.1045781291', value: email }, // Email field
-                    { name: 'entry.1166974658', value: formData.get('phone') || '' }, // Phone field
-                    { name: 'entry.839337160', value: formData.get('role') || '' }, // Role field
-                    { name: 'entry.1065046570', value: formData.get('experience') || '' }, // Experience field
-                    { name: 'entry.1974380732', value: motivation }, // Motivation field
-                    { name: 'entry.839337160', value: formData.get('skills') || '' } // Skills field
-                ];
-                
-                fields.forEach(field => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = field.name;
-                    input.value = field.value;
-                    hiddenForm.appendChild(input);
-                });
-                
-                // Submit the form
-                document.body.appendChild(hiddenForm);
-                hiddenForm.submit();
+            // Validate phone number format (Malaysian format: 601xxxxxxx or 01xxxxxxx, 7-15 digits total)
+            const phonePattern = /^(601|01)[0-9]{5,13}$/;
+            if (!phonePattern.test(phone)) {
+                showErrorMessage('Please enter a valid Malaysian phone number starting with 601 or 01 (7-15 digits total)');
+                return;
+            }
+            
+            // Create Google Forms submission URL
+            const googleFormUrl = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_CONFIG.formId}/formResponse`;
+            
+            console.log('Submitting to:', googleFormUrl);
+            console.log('Form data:', { name, email, phone, role, experience, motivation, skills });
+            
+            // Add all form fields as hidden inputs
+            const fields = [
+                { name: GOOGLE_FORM_CONFIG.entryIds.name, value: name },
+                { name: GOOGLE_FORM_CONFIG.entryIds.email, value: email },
+                { name: GOOGLE_FORM_CONFIG.entryIds.phone, value: phone },
+                { name: GOOGLE_FORM_CONFIG.entryIds.role, value: role },
+                { name: GOOGLE_FORM_CONFIG.entryIds.experience, value: experience },
+                { name: GOOGLE_FORM_CONFIG.entryIds.motivation, value: motivation },
+                { name: GOOGLE_FORM_CONFIG.entryIds.skills, value: skills }
+            ];
+            
+            console.log('Entry IDs being used:', fields.map(f => `${f.name}=${f.value.substring(0, 20)}...`));
+            
+            // Create a hidden form for submission to iframe
+            const hiddenForm = document.createElement('form');
+            hiddenForm.action = googleFormUrl;
+            hiddenForm.method = 'POST';
+            hiddenForm.target = 'hidden_iframe';
+            hiddenForm.style.display = 'none';
+            
+            fields.forEach(field => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = field.name;
+                input.value = field.value;
+                hiddenForm.appendChild(input);
+                console.log(`Added field: ${field.name} = ${field.value}`);
+            });
+            
+            // Ensure hidden iframe exists
+            let iframe = document.getElementById('hidden_iframe');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'hidden_iframe';
+                iframe.name = 'hidden_iframe';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+                console.log('Created hidden iframe');
+            }
+            
+            // Add load event listener to iframe to detect when submission completes
+            iframe.onload = function() {
+                console.log('Iframe loaded - form submission may have completed');
+            };
+            
+            // Submit the form to hidden iframe
+            document.body.appendChild(hiddenForm);
+            console.log('Submitting form...');
+            hiddenForm.submit();
+            
+            // Wait a moment for submission, then show success
+            setTimeout(() => {
                 document.body.removeChild(hiddenForm);
+                console.log('Form submission completed');
                 
                 // Show success message
                 form.style.display = 'none';
                 const successMessage = document.getElementById('success-message');
-                successMessage.innerHTML = `
-                    <div class="success-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h3>Application Submitted Successfully!</h3>
-                    <p>Thank you for your interest in joining SamudraFM. Your application has been submitted and we'll review it soon.</p>
-                    <p>Only accepted participants will be notified via email and whatsapp.</p>
-                `;
                 successMessage.style.display = 'block';
                 successMessage.scrollIntoView({ behavior: 'smooth' });
-                
-            } catch (error) {
-                //console.error('Error submitting application:', error);
-                showErrorMessage('Failed to submit application. Please try again.');
-            } finally {
-                // Reset button state
-                submitBtn.disabled = false;
-                btnText.style.display = 'inline';
-                btnLoading.style.display = 'none';
-            }
+            }, 2000);
         }
         
         // Show error message
@@ -1616,6 +1703,65 @@
         
         .error-message i {
             font-size: 16px;
+        }
+        
+        /* Success Message Styles */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px 32px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            margin-top: 24px;
+        }
+        
+        .success-message .success-icon {
+            font-size: 64px;
+            color: rgba(255, 255, 255, 1);
+            margin-bottom: 20px;
+        }
+        
+        .success-message .success-icon i {
+            color: rgba(255, 255, 255, 1) !important;
+        }
+        
+        .success-message h3 {
+            color: #e9f1f7;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+        }
+        
+        .success-message p {
+            color: #8fa6b7;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0 0 12px 0;
+        }
+        
+        .success-message .success-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .success-message .btn.secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e9f1f7;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .success-message .btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
         }
         
         /* Force form elements styling - override any default browser styles */
@@ -1757,6 +1903,17 @@
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js" type="text/javascript"></script>
     
     <script src="script.js"></script>
+    
+    <!-- Auto-update footer year -->
+    <script>
+        (function() {
+            const yearElement = document.getElementById('footer-year');
+            if (yearElement) {
+                const currentYear = new Date().getFullYear();
+                yearElement.textContent = currentYear + ' SamudraFM. Designed with passion by Jensen. 📻';
+            }
+        })();
+    </script>
     
 </body>
 </html>

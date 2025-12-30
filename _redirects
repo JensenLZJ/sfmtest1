@@ -10,8 +10,9 @@
 /opportunities.html /opportunities 301
 /privacy-policy.html /privacy-policy 301
 /request.html /request 301
-/coming-soon.html /coming-soon 301
 /brand.html /brand 301
+/apply.html /apply 301
+/index.html / 301
 
 # Application redirect
 /apply /opportunities 301
@@ -24,8 +25,8 @@
 /opportunities /opportunities.html 200
 /privacy-policy /privacy-policy.html 200
 /request /request.html 200
-/coming-soon /coming-soon.html 200
 /brand /brand.html 200
+/apply /apply.html 200
 
 # Allow all images and assets to load normally
 

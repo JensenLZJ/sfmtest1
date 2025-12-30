@@ -19,7 +19,7 @@
     
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://samudrafm.com/request.html">
+    <meta property="og:url" content="https://samudrafm.com/request">
     <meta property="og:title" content="Send a Song Request - SamudraFM">
     <meta property="og:description" content="Send your song requests to SamudraFM - Your study, your music.">
     <meta property="og:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
@@ -27,7 +27,7 @@
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://samudrafm.com/request.html">
+    <meta property="twitter:url" content="https://samudrafm.com/request">
     <meta property="twitter:title" content="Send a Song Request - SamudraFM">
     <meta property="twitter:description" content="Send your song requests to SamudraFM - Your study, your music.">
     <meta property="twitter:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
@@ -143,6 +143,15 @@
             .hero-latest .player-right {
                 flex: 0 0 50% !important;
                 max-width: 50% !important;
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info {
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info * {
+                text-align: left !important;
             }
 
             .hero-latest .hero-latest-cover {
@@ -258,6 +267,15 @@
             .hero-latest .player-right {
                 flex: 1 !important;
                 min-width: 0 !important;
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info {
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info * {
+                text-align: left !important;
             }
             
             .hero-latest .player-widget > .progress-container {
@@ -351,6 +369,15 @@
             .hero-latest .player-right {
                 flex: 1 !important;
                 min-width: 0 !important;
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info {
+                text-align: left !important;
+            }
+            
+            .hero-latest .player-info * {
+                text-align: left !important;
             }
             
             .hero-latest .player-widget > .progress-container {
@@ -360,6 +387,36 @@
             .hero-latest .player-content-row .player-right .progress-container {
                 display: block !important;
             }
+        }
+        
+        /* Keep player info left-aligned on request page */
+        .hero-latest .player-right {
+            text-align: left !important;
+        }
+        
+        .hero-latest .player-info {
+            text-align: left !important;
+        }
+        
+        .hero-latest .player-info * {
+            text-align: left !important;
+        }
+        
+        .hero-latest #hero-ep-title,
+        .hero-latest .track-title {
+            text-align: left !important;
+            width: 100% !important;
+            display: block !important;
+        }
+        
+        .hero-latest #hero-ep-artist,
+        .hero-latest .track-artist {
+            text-align: left !important;
+            color: rgba(255, 255, 255, 1) !important;
+            width: 100% !important;
+            display: block !important;
+            margin-left: 0 !important;
+            padding-left: 0 !important;
         }
     </style>
 </head>
@@ -470,7 +527,7 @@
                     <div class="hero-icon">
                         <i class="fas fa-music"></i>
                     </div>
-                    <h1>Request Your Song</h1>
+                    <h1>Request your song</h1>
                     <p>Have a song you'd love to hear on SamudraFM? Send us your request and we'll do our best to play it on our next show!</p>
                 </div>
             </div>
@@ -483,26 +540,26 @@
                 <section class="request-form-section">
                     <!-- How It Works -->
                     <div class="sidebar-card">
-                        <h3><i class="fas fa-cogs"></i> How It Works</h3>
+                        <h3><i class="fas fa-cogs"></i> How it works</h3>
                         <div class="steps">
                             <div class="step">
                                 <div class="step-number">1</div>
                                 <div class="step-content">
-                                    <h4>Submit Request</h4>
+                                    <h4>Submit request</h4>
                                     <p>Fill out the form with your song details</p>
                                 </div>
                             </div>
                             <div class="step">
                                 <div class="step-number">2</div>
                                 <div class="step-content">
-                                    <h4>We Review</h4>
+                                    <h4>We review</h4>
                                     <p>Our team reviews all requests</p>
                                 </div>
                             </div>
                             <div class="step">
                                 <div class="step-number">3</div>
                                 <div class="step-content">
-                                    <h4>We Play It</h4>
+                                    <h4>We play it</h4>
                                     <p>Selected songs air on our show!</p>
                                 </div>
                             </div>
@@ -538,7 +595,7 @@
                             <div class="form-group">
                                 <label for="your-name">
                                     <i class="fas fa-id-card"></i>
-                                    Your Name
+                                    Your name and class
                                 </label>
                                 <input type="text" id="your-name" name="yourName" placeholder="e.g., John Doe">
                             </div>
@@ -546,7 +603,7 @@
                             <div class="form-group">
                                 <label for="language">
                                     <i class="fas fa-globe"></i>
-                                    Language Preference
+                                    Language preference
                                 </label>
                                 <select id="language" name="language" required>
                                     <option value="">Select language...</option>
@@ -558,7 +615,7 @@
                             <div class="form-group">
                                 <label for="message">
                                     <i class="fas fa-comment"></i>
-                                    Message (Optional)
+                                    Message (optional)
                                 </label>
                                 <textarea id="message" name="message" rows="4" placeholder="Any special message or dedication?"></textarea>
                             </div>
@@ -619,7 +676,7 @@
                     <!-- Recent Requests -->
                     <div class="sidebar-card">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <h3><i class="fas fa-clock"></i> Recent Requests</h3>
+                            <h3><i class="fas fa-clock"></i> Recent requests</h3>
                             <button onclick="loadRecentRequests()" class="refresh-btn" title="Refresh requests">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
@@ -641,11 +698,11 @@
             <div class="footer-column">
                 <h2 class="footer-brand-title"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></h2>
                 <p class="footer-description">
-                    Non-Profit Organization. Fully volunteer-run<br>
-                    school of SMK Taman SEA radio station.
+                    Fully volunteer-run radio station from SMK Taman SEA, Petaling Jaya
                 </p>
                 <p class="footer-programme">
-                    Our programme is a recreational school radio initiative, designed to give students hands-on broadcasting experience while exploring creativity in music, events, and radio production.
+                    Our programme is a recreational school radio initiative, designed to give students hands-on broadcasting experience while exploring creativity in music, events, and radio production. 
+                    Not to use outside of Malaysia.
                 </p>
             </div>
             
@@ -673,7 +730,7 @@
         
         
         <div class="footer-bottom">
-            <p>© 2025 SamudraFM. Designed with passion by Jensen. 📻</p>
+            <p id="footer-year">2025 SamudraFM. Designed with passion by Jensen. 📻</p>
         </div>
     </footer>
 
@@ -1050,6 +1107,17 @@
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js" type="text/javascript"></script>
     
     <script src="script.js"></script>
+    
+    <!-- Auto-update footer year -->
+    <script>
+        (function() {
+            const yearElement = document.getElementById('footer-year');
+            if (yearElement) {
+                const currentYear = new Date().getFullYear();
+                yearElement.textContent = currentYear + ' SamudraFM. Designed with passion by Jensen. 📻';
+            }
+        })();
+    </script>
     
 </body>
 </html>

@@ -17,7 +17,7 @@
       gtag('config', 'G-4NCN6ZYF05');
     </script>
     
-    <title>SamudraFM — Your study, your music. (v<script>document.write(Date.now())</script>)</title>
+    <title>SamudraFM - Your study, your music.</title>
     <meta name="description" content="SamudraFM - Non-stop hits, live shows, and requests.">
     
     <!-- Force cache clearing on every visit - Enhanced for mobile -->
@@ -40,11 +40,6 @@
     
     <!-- Force fresh load on every visit -->
     <script>
-        // Immediately redirect with cache busting parameter
-        if (!window.location.search.includes('cb=')) {
-            window.location.replace(window.location.href + (window.location.search ? '&' : '?') + 'cb=' + Date.now());
-        }
-        
         // Ensure JavaScript runs regardless of how page is loaded
         function ensureScriptsRun() {
             console.log('Ensuring scripts run - DOM ready state:', document.readyState);
@@ -112,33 +107,6 @@
                 return originalFetch(url, options);
             }
         };
-    </script>
-    
-    <!-- Coming Soon Redirect - Fixed logic to prevent second visit redirects -->
-    <script>
-        // Check if this is a fresh bypass (not a refresh)
-        const urlParams = new URLSearchParams(window.location.search);
-        const hasBypassParam = urlParams.has('bypass');
-        const isRefresh = sessionStorage.getItem('samudrafm_visited') === 'true';
-        
-        // Only redirect to coming soon if NO bypass parameter AND it's the first visit
-        // This prevents redirects on second visits
-        if (!hasBypassParam && !isRefresh) {
-            // Clear any existing bypass data
-            localStorage.removeItem('samudrafm_bypass');
-            sessionStorage.removeItem('samudrafm_bypass');
-            sessionStorage.removeItem('samudrafm_visited');
-            document.cookie = 'samudrafm_bypass=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            
-            // Force redirect to coming soon page
-            window.location.href = '/coming-soon.html';
-        } else {
-            // Mark as visited and set session flag (for subsequent visits)
-            sessionStorage.setItem('samudrafm_visited', 'true');
-            sessionStorage.setItem('samudrafm_bypass', 'true');
-            
-            // Construction warning popup removed for better user experience
-        }
     </script>
     
     <!-- Open Graph / Facebook / WhatsApp -->
@@ -359,11 +327,11 @@
             <div class="footer-column">
                 <h2 class="footer-brand-title"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></h2>
                 <p class="footer-description">
-                    Non-profit organization. Fully volunteer-run<br>
-                    school of SMK Taman SEA radio station.
+                    Fully volunteer-run radio station from SMK Taman SEA, Petaling Jaya
                 </p>
                 <p class="footer-programme">
-                    Our programme is a recreational school radio initiative, designed to give students hands-on broadcasting experience while exploring creativity in music, events, and radio production.
+                    Our programme is a recreational school radio initiative, designed to give students hands-on broadcasting experience while exploring creativity in music, events, and radio production. 
+                    Not to use outside of Malaysia.
                 </p>
             </div>
             
@@ -391,7 +359,7 @@
         
         
         <div class="footer-bottom">
-            <p>© 2025 SamudraFM. Designed with passion by Jensen. 📻</p>
+            <p id="footer-year">2025 SamudraFM. Designed with passion by Jensen. 📻</p>
         </div>
     </footer>
 
@@ -833,6 +801,17 @@
     <!-- Instagram Feed - Auto-updating content -->
     <script>
       // Instagram feed is handled by the main script.js
+    </script>
+    
+    <!-- Auto-update footer year -->
+    <script>
+        (function() {
+            const yearElement = document.getElementById('footer-year');
+            if (yearElement) {
+                const currentYear = new Date().getFullYear();
+                yearElement.textContent = currentYear + ' SamudraFM. Designed with passion by Jensen. 📻';
+            }
+        })();
     </script>
     
     

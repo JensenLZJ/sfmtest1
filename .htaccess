@@ -78,3 +78,19 @@ Header always set Content-Security-Policy "default-src 'self'; img-src 'self' da
 # Force HTTPS (uncomment if you have SSL)
 # RewriteCond %{HTTPS} off
 # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Remove .html extension from URLs
+<IfModule mod_rewrite.c>
+    # Redirect .html URLs to clean URLs (301 permanent redirect)
+    RewriteCond %{THE_REQUEST} /([^.]+)\.html [NC]
+    RewriteRule ^ /%1? [NC,L,R=301]
+    
+    # Serve clean URLs by internally rewriting to .html files
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.html -f
+    RewriteRule ^(.*)$ $1.html [NC,L]
+</IfModule>
+
+# Custom 404 Error Page
+ErrorDocument 404 /404.html
