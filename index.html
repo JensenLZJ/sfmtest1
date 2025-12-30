@@ -93,6 +93,16 @@
             });
         }
         
+        // Hide cache-busting parameters from URL bar
+        (function() {
+            if (window.location.search.includes('cb=')) {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('cb');
+                url.searchParams.delete('r');
+                window.history.replaceState({}, '', url.pathname + (url.search ? url.search : ''));
+            }
+        })();
+        
         // Simple cache busting without complex queuing
         const originalFetch = window.fetch;
         window.fetch = function(url, options = {}) {
