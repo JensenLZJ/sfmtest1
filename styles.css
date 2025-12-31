@@ -1567,6 +1567,7 @@ button.btn{opacity:1}
   text-align: center;
 }
 .card{background:var(--bg-elev);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+article.card{margin-top:0px;margin-bottom:0px}
 .clickable-card{cursor:pointer;transition:all 0.2s ease}
 .clickable-card:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,0.15);border-color:var(--brand)}
 .card .cover{height:120px;background:#0f1e2a center/cover no-repeat}
@@ -1644,7 +1645,7 @@ i.fas {
 .request-hero .hero-header{padding:24px 0 40px 0;text-align:left;position:relative;z-index:10}
 .request-hero .nav-list a{color:white}
 .request-hero .nav-list a:hover,.request-hero .nav-list a.active{color:#f91e5a}
-.hero-content{position:relative;z-index:1;overflow:hidden;margin-top:0;margin-bottom:0;padding-bottom:20px}
+.hero-content{position:relative;z-index:1;overflow:hidden;margin-top:0;margin-bottom:0;padding-bottom:0px}
 .hero-icon{width:80px;height:80px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;backdrop-filter:blur(10px)}
 .hero-icon i{font-size:32px;color:#f91e5a !important}
 .request-hero h1{color:white;font-size:48px;font-weight:800;margin:0 0 16px;text-shadow:0 2px 4px rgba(0,0,0,0.1)}
@@ -1788,7 +1789,7 @@ i.fas {
 
 /* Schedule Hero Mobile */
 @media (max-width:768px){
-  .schedule-hero{padding:0 0 30px 0}
+  .schedule-hero{padding:0 0 0px 0}
   .schedule-hero .hero-header{padding:16px 0 24px 0}
   .schedule-hero h1{font-size:36px}
   .schedule-hero p{font-size:16px}
@@ -3423,7 +3424,7 @@ i.fas {
 
 /* About Page Hero */
 .about-hero {
-    background: linear-gradient(135deg, #1a2332, #2d3748);
+    background: #16213e;
     padding: 80px 0;
     position: relative;
     overflow: hidden;
@@ -3458,6 +3459,7 @@ i.fas {
     font-weight: 800;
     margin: 0 0 20px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: left;
 }
 
 .about-hero-text h1 .brand-mark {
@@ -3472,6 +3474,7 @@ i.fas {
     line-height: 1.4;
     margin: 0 0 30px;
     text-align: center;
+    vertical-align: middle;
 }
 
 .about-hero-story {
@@ -3479,6 +3482,7 @@ i.fas {
     font-size: 16px;
     line-height: 1.7;
     margin: 0 0 20px;
+    text-align: left;
 }
 
 .about-hero-tagline {
@@ -3487,7 +3491,7 @@ i.fas {
     font-weight: 700;
     line-height: 1.6;
     margin: 30px 0 30px;
-    text-align: center;
+    text-align: left;
 }
 
 .about-hero-stats {
@@ -4415,7 +4419,7 @@ i.fas {
 
 /* Schedule Section Styling */
 .schedule-section {
-    padding: 60px 0;
+    padding: 0;
     position: relative;
     overflow: hidden;
 }
@@ -4466,7 +4470,10 @@ i.fas {
     display: flex;
     flex-direction: column;
     gap: 0;
-    padding-bottom: 20px;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
     background: rgba(255, 255, 255, 0.03) !important;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 14px;
@@ -4698,6 +4705,25 @@ i.fas {
     
   .schedule-actions {
     justify-content: center;
+  }
+  
+  /* Add gap between coming-up cards on mobile */
+  article.card.coming-up-card {
+    margin-bottom: 16px !important;
+  }
+  
+  article.card.coming-up-card:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  /* Ensure card-col gap works on mobile */
+  .card-col {
+    gap: 16px !important;
+  }
+  
+  /* Add gap to schedule-list container on mobile */
+  .schedule-list {
+    gap: 16px !important;
   }
   
 }

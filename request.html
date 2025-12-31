@@ -746,7 +746,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             setupGoogleForm();
             loadRecentRequests();
-            setupMobileNavigation();
         });
         
         // Setup Google Form
@@ -1089,18 +1088,6 @@
             document.getElementById('song-title').focus();
         }
         
-        // Mobile navigation toggle
-        function setupMobileNavigation() {
-            const navToggle = document.querySelector('.nav-toggle');
-            const navMenu = document.getElementById('nav-menu');
-            
-            if (navToggle && navMenu) {
-                navToggle.addEventListener('click', function() {
-                    const open = navMenu.classList.toggle('open');
-                    navToggle.setAttribute('aria-expanded', String(open));
-                });
-            }
-        }
     </script>
     
     <!-- Mixcloud Widget Script -->

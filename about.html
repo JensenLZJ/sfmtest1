@@ -112,7 +112,7 @@
             border-radius: 10px !important;
             overflow: hidden !important;
             color: white !important;
-            margin: 0 auto !important;
+            margin: 0 !important;
             padding: 20px !important;
             max-width: 100% !important;
             width: 100% !important;
@@ -160,10 +160,18 @@
                 flex-direction: column !important;
                 gap: 8px !important;
                 min-height: auto !important;
-                margin: 24px 0 4px 0 !important;
+                margin: 24px -16px 4px -16px !important;
                 padding: 16px !important;
-                width: 100% !important;
-                max-width: 100% !important;
+                width: calc(100% + 32px) !important;
+                max-width: calc(100% + 32px) !important;
+                /* Same background as desktop */
+                background: rgba(255,255,255,0.1) !important;
+                backdrop-filter: blur(20px) !important;
+                -webkit-backdrop-filter: blur(20px) !important;
+                border-radius: var(--radius) !important;
+                border: 1px solid rgba(255,255,255,0.2) !important;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+                position: relative !important;
             }
 
             .hero-latest .player-widget {
@@ -525,10 +533,10 @@
                         <div style="text-align: center; margin: 0 0 30px;">
                             <p class="about-hero-subtitle" style="color: #f91e5a; font-size: 28px; font-weight: 600; line-height: 1.4; margin: 0; text-align: center; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.1) 100%); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 20px 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.1); display: inline-block;">"What if students can own a radio station?"</p>
                         </div>
-                        <p class="about-hero-story" style="color: rgba(255,255,255,0.9); font-size: 20px; line-height: 1.7; margin: 0 0 20px;">That simple yet powerful question, asked by a visionary <span style="color: #f91e5a; font-weight: 700;">English teacher</span> in 2023, was the spark that started it all. From that moment, a group of passionate students took the idea and turned it into something real. And just like that, SamudraFM was founded on 6 June 2023.</p>
+                        <p class="about-hero-story" style="color: rgba(255,255,255,0.9); font-size: 20px; line-height: 1.7; margin: 0 0 20px;">That simple yet powerful question, asked by a visionary <span style="color: #f91e5a; font-weight: 700;">English teacher MrEugene</span> in 2023, was the spark that started it all. From that moment, a group of passionate students took the idea and turned it into something real. And just like that, SamudraFM was founded on 6 June 2023.</p>
                         <p class="about-hero-story" style="color: rgba(255,255,255,0.9); font-size: 20px; line-height: 1.7; margin: 0 0 20px;"><span style="font-size: 28px; font-weight: 800;">Today</span>, SamudraFM proudly stands as Malaysia's first ever <span style="color: #f91e5a; font-weight: 700;">student-led</span> school radio station. It's a platform where creativity meets technology, and where every student's voice matters.</p>
                         <p class="about-hero-story" style="color: rgba(255,255,255,0.9); font-size: 20px; line-height: 1.7; margin: 0 0 20px;">Operated entirely by students, for students, SamudraFM is more than just a radio programme. We produce shows that entertain, inform, and inspire. Whether it's music, talk shows, storytelling, or live coverage of school events, SamudraFM gives students the chance to express themselves, develop real-world media skills, and be heard far beyond the classroom walls.</p>
-                        <p class="about-hero-tagline" style="color: #f91e5a; font-size: 22px; font-weight: 700; line-height: 1.6; margin: 30px 0 0; text-align: center;">We're not just making noise. We're making history.<br>Your study, your music.</p>
+                        <p class="about-hero-tagline" style="color: #f91e5a; font-size: 22px; font-weight: 700; line-height: 1.6; margin: 30px 0 0; text-align: left;">We're not just making noise. We're making history.<br>Your study, your music.</p>
                     </div>
                 </div>
             </div>
@@ -584,6 +592,22 @@
                             </div>
                         </div>
 
+                        <div class="founder-card" style="background: #173246; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px; text-align: center; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                            <div class="founder-image" style="width: 100px; height: 100px; margin: 0 auto 20px; border-radius: 50%; overflow: hidden; border: 3px solid #f91e5a; position: relative;">
+                                <img src="assets/avatar/mreugene.png" alt="Mr Eugene" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" />
+                            </div>
+                            <div class="founder-info">
+                                <h3 style="color: #e9f1f7; font-size: 20px; font-weight: 700; margin: 0 0 6px;">Mr Eugene</h3>
+                                <p class="founder-role" style="color: #f91e5a; font-size: 14px; font-weight: 600; margin: 0 0 12px; text-transform: uppercase; letter-spacing: 0.5px;">Visionary Teacher</p>
+                                <p class="founder-bio" style="color: #8fa6b7; font-size: 13px; line-height: 1.5; margin: 0 0 20px;">The visionary English teacher who asked the transformative question "What if students can own a radio station?" in 2023. This simple yet powerful question sparked the creation of SamudraFM, inspiring students to turn an idea into reality.</p>
+                                <div class="founder-social" style="display: flex; gap: 12px; justify-content: center;">
+                                    <a href="https://www.instagram.com/eugene_morais/" target="_blank" class="social-link" style="width: 36px; height: 36px; background: #23394b; border: 1px solid rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #8fa6b7; text-decoration: none; transition: all 0.3s ease; font-size: 14px;">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -625,7 +649,7 @@
                         <div class="station-manager-card" style="background: #173246; border: 2px solid rgba(59, 130, 246, 0.3); border-radius: 20px; padding: 40px 30px; text-align: center; box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15); position: relative; overflow: hidden;">
                             <div class="year-badge" style="position: absolute; top: 15px; right: 15px; background: linear-gradient(135deg, #3b82f6, #60a5fa); color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;">2024</div>
                             <div class="station-manager-image" style="width: 120px; height: 120px; margin: 0 auto 20px; border-radius: 50%; overflow: hidden; border: 4px solid #3b82f6; position: relative;">
-                                <img src="assets/avatar/mrbean.jpg" alt="Benjamin Edward" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" />
+                                <img src="assets/avatar/benjaminedward.png" alt="Benjamin Edward" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" />
                             </div>
                             <div class="station-manager-info">
                                 <h3 style="color: #e9f1f7; font-size: 22px; font-weight: 700; margin: 0 0 8px;">Benjamin Edward</h3>

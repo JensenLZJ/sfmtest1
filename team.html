@@ -302,10 +302,10 @@
         
         @media (max-width: 768px) {
             .team-grid {
-                grid-template-columns: 1fr !important;
-                gap: 30px !important;
-                padding: 0 20px !important;
-                justify-items: center !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 15px !important;
+                padding: 0 16px !important;
+                justify-items: stretch !important;
             }
             
             /* Maintain same styling as desktop on mobile */
@@ -331,36 +331,42 @@
                 width: calc(100% - 4px) !important;
                 height: 0 !important;
                 padding-bottom: calc(100% - 4px) !important;
-                border-radius: 16px !important;
-                margin: 0 0 15px 0 !important;
+                border-radius: 12px !important;
+                margin: 0 0 12px 0 !important;
             }
             
             .team-info h3 {
-                font-size: 20px !important;
-            }
-            
-            .team-role {
-                font-size: 14px !important;
-            }
-            
-            .team-bio {
-                font-size: 14px !important;
-            }
-            
-            .team-social .social-link {
-                width: 40px !important;
-                height: 40px !important;
                 font-size: 16px !important;
             }
             
+            .team-role {
+                font-size: 12px !important;
+            }
+            
+            .team-bio {
+                font-size: 12px !important;
+                line-height: 1.5 !important;
+            }
+            
+            .team-social {
+                gap: 10px !important;
+            }
+            
+            .team-social .social-link {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 14px !important;
+            }
+            
             .team-card {
-                padding: 30px !important;
-                min-height: 450px !important;
+                padding: 20px !important;
+                min-height: auto !important;
+                max-width: 100% !important;
             }
             
             .category-title {
-                font-size: 28px !important;
-                margin: 0 0 30px !important;
+                font-size: 24px !important;
+                margin: 0 0 25px !important;
             }
             
             /* Fix filter container clipping on mobile - allow wrapping */
@@ -387,6 +393,12 @@
         }
         
         @media (max-width: 480px) {
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+                padding: 0 12px !important;
+            }
+            
             /* Maintain same styling as desktop on mobile */
             .team-hero {
                 padding: 80px 0 !important;
@@ -410,13 +422,41 @@
                 width: calc(100% - 4px) !important;
                 height: 0 !important;
                 padding-bottom: calc(100% - 4px) !important;
-                border-radius: 16px !important;
-                margin: 0 0 15px 0 !important;
+                border-radius: 10px !important;
+                margin: 0 0 10px 0 !important;
+            }
+            
+            .team-info h3 {
+                font-size: 15px !important;
+            }
+            
+            .team-role {
+                font-size: 11px !important;
+            }
+            
+            .team-bio {
+                font-size: 11px !important;
+                line-height: 1.4 !important;
+            }
+            
+            .team-social {
+                gap: 8px !important;
+            }
+            
+            .team-social .social-link {
+                width: 28px !important;
+                height: 28px !important;
+                font-size: 12px !important;
             }
             
             .team-card {
-                padding: 30px !important;
-                min-height: 450px !important;
+                padding: 16px !important;
+                min-height: auto !important;
+            }
+            
+            .category-title {
+                font-size: 22px !important;
+                margin: 0 0 20px !important;
             }
             
             /* Further optimize filter for very small screens */
@@ -967,7 +1007,7 @@
                         <!-- Asst. Station Manager -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Vyshavi A/P Nandan">
+                                <img src="assets/avatar/vyshavi.png" alt="Vyshavi A/P Nandan">
                             </div>
                             <div class="team-info">
                                 <h3>Vyshavi A/P Nandan</h3>
@@ -987,7 +1027,7 @@
                         <!-- Secretary -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Noelle Choy Ee Theng">
+                                <img src="assets/avatar/noellechoy.png" alt="Noelle Choy Ee Theng">
                             </div>
                             <div class="team-info">
                                 <h3>Noelle Choy Ee Theng</h3>
@@ -1007,7 +1047,7 @@
                         <!-- Sound Engineer Supervisor -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Benjamin Edward Ng">
+                                <img src="assets/avatar/benjaminedward.png" alt="Benjamin Edward Ng">
                             </div>
                             <div class="team-info">
                                 <h3>Benjamin Edward Ng</h3>
@@ -1027,7 +1067,7 @@
                         <!-- Graphics & Social Supervisor -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Ho Qing Qing">
+                                <img src="assets/avatar/qinqing.png" alt="Ho Qing Qing">
                             </div>
                             <div class="team-info">
                                 <h3>Ho Qing Qing</h3>
@@ -1047,7 +1087,7 @@
                         <!-- English Coordinator Supervisor -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Airil Daniel">
+                                <img src="assets/avatar/airildaniel.png" alt="Airil Daniel">
                             </div>
                             <div class="team-info">
                                 <h3>Airil Daniel</h3>
@@ -1067,7 +1107,7 @@
                         <!-- Malay Coordinator Supervisor -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Karisemma">
+                                <img src="assets/avatar/karisemma.png" alt="Karisemma">
                             </div>
                             <div class="team-info">
                                 <h3>Karisemma</h3>
@@ -1093,7 +1133,7 @@
                         <!-- Graphics & Social Assistant Supervisor -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Ryan Liew Kye Le">
+                                <img src="assets/avatar/ryanliew.png" alt="Ryan Liew Kye Le">
                             </div>
                             <div class="team-info">
                                 <h3>Ryan Liew Kye Le</h3>
@@ -1113,7 +1153,7 @@
                         <!-- Street Team - Michelle Chantelle -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Michelle Chantelle">
+                                <img src="assets/avatar/michellechantelle.png" alt="Michelle Chantelle">
                             </div>
                             <div class="team-info">
                                 <h3>Michelle Chantelle</h3>
@@ -1133,7 +1173,7 @@
                         <!-- Street Team - Shayna Prisha -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Shayna Prisha">
+                                <img src="assets/avatar/shaynaprisha.png" alt="Shayna Prisha">
                             </div>
                             <div class="team-info">
                                 <h3>Shayna Prisha</h3>
@@ -1153,7 +1193,7 @@
                         <!-- Street Team - Sereena Anjali -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Sereena Anjali">
+                                <img src="assets/avatar/sereenaanjali.png" alt="Sereena Anjali">
                             </div>
                             <div class="team-info">
                                 <h3>Sereena Anjali</h3>
@@ -1199,7 +1239,7 @@
                         <!-- Vyshavi A/P Nandan -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Vyshavi A/P Nandan">
+                                <img src="assets/avatar/vyshavi.png" alt="Vyshavi A/P Nandan">
                             </div>
                             <div class="team-info">
                                 <h3>Vyshavi A/P Nandan</h3>
@@ -1219,7 +1259,7 @@
                         <!-- Noelle Choy Ee Theng -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Noelle Choy Ee Theng">
+                                <img src="assets/avatar/noellechoy.png" alt="Noelle Choy Ee Theng">
                             </div>
                             <div class="team-info">
                                 <h3>Noelle Choy Ee Theng</h3>
@@ -1239,7 +1279,7 @@
                         <!-- Benjamin Edward Ng -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Benjamin Edward Ng">
+                                <img src="assets/avatar/benjaminedward.png" alt="Benjamin Edward Ng">
                             </div>
                             <div class="team-info">
                                 <h3>Benjamin Edward Ng</h3>
@@ -1259,7 +1299,7 @@
                         <!-- Ho Qing Qing -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Ho Qing Qing">
+                                <img src="assets/avatar/qinqing.png" alt="Ho Qing Qing">
                             </div>
                             <div class="team-info">
                                 <h3>Ho Qing Qing</h3>
@@ -1279,7 +1319,7 @@
                         <!-- Airil Daniel -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Airil Daniel">
+                                <img src="assets/avatar/airildaniel.png" alt="Airil Daniel">
                             </div>
                             <div class="team-info">
                                 <h3>Airil Daniel</h3>
@@ -1299,7 +1339,7 @@
                         <!-- Karisemma -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Karisemma">
+                                <img src="assets/avatar/karisemma.png" alt="Karisemma">
                             </div>
                             <div class="team-info">
                                 <h3>Karisemma</h3>
@@ -1319,7 +1359,7 @@
                         <!-- Ryan Liew Kye Le -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Ryan Liew Kye Le">
+                                <img src="assets/avatar/ryanliew.png" alt="Ryan Liew Kye Le">
                             </div>
                             <div class="team-info">
                                 <h3>Ryan Liew Kye Le</h3>
@@ -1339,7 +1379,7 @@
                         <!-- Michelle Chantelle -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Michelle Chantelle">
+                                <img src="assets/avatar/michellechantelle.png" alt="Michelle Chantelle">
                             </div>
                             <div class="team-info">
                                 <h3>Michelle Chantelle</h3>
@@ -1359,7 +1399,7 @@
                         <!-- Shayna Prisha -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Shayna Prisha">
+                                <img src="assets/avatar/shaynaprisha.png" alt="Shayna Prisha">
                             </div>
                             <div class="team-info">
                                 <h3>Shayna Prisha</h3>
@@ -1379,7 +1419,7 @@
                         <!-- Sereena Anjali -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/brandmark/sfmTextLogoBG1.svg" alt="Sereena Anjali">
+                                <img src="assets/avatar/sereenaanjali.png" alt="Sereena Anjali">
                             </div>
                             <div class="team-info">
                                 <h3>Sereena Anjali</h3>
@@ -1479,6 +1519,26 @@
                                 <p class="team-bio">Technical expert, audio specialist, problem solver</p>
                                 <div class="team-social">
                                     <a href="https://www.instagram.com/justinchoe_/" target="_blank" class="social-link">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="social-link disabled">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mr Eugene -->
+                        <div class="team-card founder">
+                            <div class="team-image">
+                                <img src="assets/avatar/mreugene.png" alt="Mr Eugene">
+                            </div>
+                            <div class="team-info">
+                                <h3>Mr Eugene</h3>
+                                <p class="team-role">Visionary Teacher</p>
+                                <p class="team-bio">The visionary English teacher who asked the transformative question "What if students can own a radio station?" in 2023. This simple yet powerful question sparked the creation of SamudraFM, inspiring students to turn an idea into reality.</p>
+                                <div class="team-social">
+                                    <a href="https://www.instagram.com/eugene_morais/" target="_blank" class="social-link">
                                         <i class="fab fa-instagram"></i>
                                     </a>
                                     <a href="javascript:void(0)" class="social-link disabled">

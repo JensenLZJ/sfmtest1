@@ -70,309 +70,30 @@
             background-color: rgba(91, 65, 254, 0.5) !important;
         }
         
-        .schedule-item {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: none !important;
-            border-radius: 10px !important;
-            padding: 0 !important;
-            display: flex !important;
-            flex-direction: row !important;
-            align-items: stretch !important;
-            gap: 0 !important;
-            margin-bottom: 24px !important;
-            min-height: auto !important;
-            width: 100% !important;
-        }
-        
-        .schedule-image {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            padding: 0 !important;
-            border-radius: 14px 0 0 14px !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            border-right: none !important;
-            background: rgba(255, 255, 255, 0.03) !important;
-            flex-shrink: 0 !important;
-            overflow: hidden !important;
-        }
-        
-        .schedule-image img {
-            width: 100% !important;
-            height: 100% !important;
-            max-width: 200px !important;
-            object-fit: cover !important;
-            object-position: center center !important;
-            border-radius: 14px 0 0 14px !important;
-            display: block !important;
-            margin: 0 auto !important;
-            vertical-align: middle !important;
-        }
-        
-        .schedule-image {
-            text-align: center !important;
-        }
-        
-        .schedule-content {
-            flex: 1 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: flex-start !important;
-            padding: 16px 0 !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-            min-height: 100px !important;
-            position: relative !important;
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            border-left: none !important;
-            border-radius: 0 14px 14px 0 !important;
-        }
-        
-             .presenter-name {
-                 font-size: 33px !important;
-                 font-weight: bold !important;
-                 color: white !important;
-                 margin: 0 !important;
-                 margin-left: 40px !important;
-                 text-overflow: ellipsis !important;
-                 overflow: hidden !important;
-                 white-space: nowrap !important;
-             }
-        
-        .show-title {
-            font-size: 18px !important;
-            font-weight: normal !important;
-            color: white !important;
-            margin: 0 !important;
-            margin-left: 40px !important;
-            line-height: 1.2 !important;
-            margin-top: 8px !important;
-            display: block !important;
-        }
-        
-        
-        .schedule-actions {
-            display: flex !important;
-            align-items: flex-end !important;
-            gap: 10px !important;
-            margin-top: auto !important;
-            margin-left: 40px !important;
-            font-size: 18px !important;
-            line-height: 0 !important;
-            position: absolute !important;
-            bottom: 16px !important;
-            left: 0 !important;
-            right: 0 !important;
-        }
-        
-        .action-btn {
-            background: none !important;
-            border: none !important;
-            color: white !important;
-            opacity: 0.25 !important;
-            width: 32px !important;
-            height: 32px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            pointer-events: none !important;
-        }
-        
-             .schedule-time {
-                 background: #5b41fe !important;
-                 padding: 20px !important;
-                 font-weight: 300 !important;
-                 color: #ffffff !important;
-                 font-size: 18px !important;
-                 width: auto !important;
-                 margin-left: auto !important;
-                 border-radius: 0 10px 10px 0 !important;
-                 box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3) !important;
-                 min-width: 120px !important;
-                 display: flex !important;
-                 align-items: center !important;
-                 justify-content: center !important;
-             }
-        
-        .time-slot {
-            background: none !important;
-            color: inherit !important;
-            padding: 0 !important;
-            border-radius: 0 !important;
-            font-size: inherit !important;
-            font-weight: inherit !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 8px !important;
-            flex-direction: column !important;
-            text-align: center !important;
-        }
-        
-        /* Remove dash after date */
-        .time-slot > div:first-child::after {
-            content: none !important;
-            display: none !important;
-        }
-        
-        .date-day::after {
-            content: none !important;
-            display: none !important;
-        }
-        
+        /* Schedule page now uses the same card styling as home page */
         /* Remove background from schedule-list */
         .schedule-list {
             background: transparent !important;
             border: none !important;
         }
         
+        /* Ensure coming-up-card styling applies on schedule page */
+        .schedule-section.coming .card {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
+        
         /* Mobile-specific design using coming up section styling */
         @media (max-width: 768px) {
-            /* Keep PC layout on mobile - force row layout to match desktop */
-            .schedule-item {
-                flex-direction: row !important;
-                text-align: left !important;
-                gap: 0 !important;
-                margin-bottom: 18px !important;
-                min-height: auto !important;
-            }
-            
-            /* Optimize image size on mobile - larger for better visibility */
-            .schedule-image {
-                flex: 0 0 160px !important;
-                max-width: 160px !important;
-                min-width: 160px !important;
-            }
-            
-            .schedule-image img {
-                max-width: 160px !important;
-                width: 160px !important;
-                height: 160px !important;
-            }
-            
-            /* Optimize content padding and size */
-            .schedule-content {
-                padding: 18px 16px !important;
-                min-height: 160px !important;
-            }
-            
-            /* Optimize presenter name size */
-            .presenter-name {
-                font-size: 28px !important;
-                margin-bottom: 10px !important;
-                margin-left: 0 !important; /* Remove left margin on mobile */
-            }
-            
-            /* Optimize show title size */
-            .show-title {
-                font-size: 18px !important;
-                margin-top: 10px !important;
-                margin-left: 0 !important; /* Remove left margin on mobile */
-                line-height: 1.4 !important;
-            }
-            
-            /* Optimize schedule actions size */
-            .schedule-actions {
-                bottom: 16px !important;
-                gap: 12px !important;
-                font-size: 20px !important;
-                margin-left: 0 !important; /* Remove left margin on mobile */
-            }
-            
-            .action-btn {
-                width: 32px !important;
-                height: 32px !important;
-            }
-            
-            /* Optimize time badge size - make it bigger for mobile */
-            .schedule-time {
-                padding: 0 !important;
-                font-size: 15px !important;
-                min-width: 95px !important;
-                max-width: 95px !important;
-            }
-            
-            .date-day {
-                font-size: 14px !important;
-            }
-            
-            .time-slot .day-name {
-                font-size: 12px !important;
-            }
-            
-            .time-range {
-                font-size: 13px !important;
-            }
-            
-            /* Ensure content doesn't overflow */
-            .schedule-content {
-                overflow: hidden !important;
-            }
-            
-            /* Keep PC layout on mobile - only adjust container padding */
+            /* Schedule page uses same card styling as home page */
+            /* Only adjust container padding */
             .schedule-section .container {
                 padding-left: 16px !important;
                 padding-right: 16px !important;
             }
         }
         
-        /* Tablet - use same sizing as PC */
-        @media (min-width: 769px) and (max-width: 1279px) {
-            .schedule-image {
-                display: flex !important;
-                padding: 0 !important;
-            }
-            .schedule-image img {
-                width: 100% !important;
-                height: 100% !important;
-                max-width: 200px !important;
-            }
-            .schedule-content {
-                padding: 32px !important;
-                padding-left: 0 !important;
-            }
-            .schedule-actions {
-                bottom: 32px !important;
-            }
-            .schedule-time {
-                padding: 40px 60px !important;
-                width: 320px !important;
-                font-size: 32px !important;
-                min-width: 200px !important;
-            }
-            .time-range {
-                font-size: 0.6em !important;
-            }
-        }
-        
-        @media (min-width: 1280px) {
-            .schedule-image {
-                display: flex !important;
-                padding: 0 !important;
-            }
-            .schedule-image img {
-                width: 100% !important;
-                height: 100% !important;
-                max-width: 200px !important;
-            }
-            .schedule-content {
-                padding: 32px !important;
-                padding-left: 0 !important;
-            }
-            .schedule-actions {
-                bottom: 32px !important;
-            }
-            .schedule-time {
-                padding: 40px 60px !important;
-                width: 320px !important;
-                font-size: 32px !important;
-                min-width: 200px !important;
-            }
-        .time-range {
-            font-size: 0.6em !important;
-        }
-    }
+        /* Tablet and desktop use same card styling as home page */
+        /* No additional overrides needed - uses .coming .card styles from main CSS */
     
     /* Player styling to match schedule items */
     .hero-player-section {
@@ -1107,11 +828,11 @@
             <div id="mixcloud-player" style="width: 100%; height: 100%;"></div>
         </div>
 
-        <section class="schedule-section">
+        <section class="schedule-section coming">
             <div class="container">
                 
                 
-                <div class="schedule-list" id="schedule-list">
+                <div class="schedule-list card-col" id="schedule-list">
                     <!-- Schedule items will be loaded here -->
                 </div>
             </div>
@@ -1589,7 +1310,12 @@
                 return;
             }
             
-            // Render all items at once
+            // Helper function to create cover element (matching home page style)
+            function withCover(url) {
+                return url ? `<div class="cover" style="background-image:url('${url}')" onerror="this.style.backgroundImage='url(assets/brandmark/SamudraFMLogo1.png)'"></div>` : `<div class="cover placeholder"></div>`;
+            }
+            
+            // Render all items at once using the same card structure as home page
             const scheduleHTML = allScheduleData.map((item, index) => {
                 // Ensure all required fields have fallback values
                 const presenter = item.presenter || item.title || 'TBA';
@@ -1600,45 +1326,25 @@
                 // Use profile picture detection or fallback to provided image
                 const image = item.image || getProfilePicture(presenter);
                 
-                // Get social media links for this presenter
-                const socialLinks = getSocialMediaLinks(presenter);
+                // Format time display
+                const timeDisplay = `${startTime} - ${endTime}`;
+                const dateDay = item.date && item.day ? `${item.date} · ${item.day}` : (item.date || item.day || '');
                 
                 return `
-                    <div class="schedule-item">
-                        <div class="schedule-image">
-                            <img src="${image}" alt="${presenter}" onerror="this.src='assets/brandmark/sfmTextLogoBG1.svg'" />
+                    <article class="card coming-up-card">
+                        ${withCover(image)}
+                        <div class="content">
+                            <p class="title">${presenter}</p>
+                            <p class="meta">${show}</p>
+                            <p class="meta">${timeDisplay}</p>
+                            ${dateDay ? `<p class="meta date-day">${dateDay}</p>` : ''}
                         </div>
-                        <div class="schedule-content">
-                            <div class="presenter-name">${presenter}</div>
-                            <div class="show-title">${show}</div>
-                 <div class="schedule-actions">
-                     <a href="${socialLinks.twitter}" target="_blank" rel="noopener" class="action-btn ${socialLinks.twitter !== '#' ? 'active' : 'disabled'}" title="X (Twitter)">
-                         <i class="fab fa-twitter"></i>
-                     </a>
-                     <a href="${socialLinks.facebook}" target="_blank" rel="noopener" class="action-btn ${socialLinks.facebook !== '#' ? 'active' : 'disabled'}" title="Facebook">
-                         <i class="fab fa-facebook"></i>
-                     </a>
-                     <a href="${socialLinks.instagram}" target="_blank" rel="noopener" class="action-btn ${socialLinks.instagram !== '#' ? 'active' : 'disabled'}" title="Instagram">
-                         <i class="fab fa-instagram"></i>
-                     </a>
-                     <a href="${socialLinks.youtube}" target="_blank" rel="noopener" class="action-btn ${socialLinks.youtube !== '#' ? 'active' : 'disabled'}" title="YouTube">
-                         <i class="fab fa-youtube"></i>
-                     </a>
-                 </div>
-                        </div>
-                        <div class="schedule-time">
-                            <div class="time-slot">
-                                <div class="date-day">${item.date || 'Today'}</div>
-                                <div class="date-day">${item.day || 'Monday'}</div>
-                                <div class="time-range">${startTime} — ${endTime}</div>
-                            </div>
-                        </div>
-                    </div>
+                    </article>
                 `;
             }).join('');
             
             // Add the bottom message
-            const bottomMessage = '<div class="schedule-bottom-message" style="text-align: center; color: var(--muted); font-style: italic; padding: 0 20px; margin-top: 25px; margin-bottom: 25px;">oh noo! future shows are yet to be added :(</div>';
+            const bottomMessage = '<div class="schedule-bottom-message" style="text-align: center; color: var(--muted); font-style: italic; padding: 0 20px; margin-top: 10px; margin-bottom: 10px;">oh noo! future shows are yet to be added :(</div>';
             
             container.innerHTML = scheduleHTML + bottomMessage;
         }

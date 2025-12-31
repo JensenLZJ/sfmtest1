@@ -188,15 +188,60 @@ const MOCK_RECENT = [
 
 // Profile picture mapping (same as schedule page)
 const profilePictures = {
+  // Jensen variations
   'JensenL': 'assets/avatar/Jensen.jpg',
   'Jensen': 'assets/avatar/Jensen.jpg',
   'JensenLim': 'assets/avatar/Jensen.jpg',
   'Jensen Lim': 'assets/avatar/Jensen.jpg',
   'Jensen L': 'assets/avatar/Jensen.jpg',
+  'Jensen Lim Zi Jen': 'assets/avatar/Jensen.jpg',
+  // Justin
+  'Justin': 'assets/avatar/Justin.jpg',
+  'Justin Choe': 'assets/avatar/Justin.jpg',
+  // Srishti/Shristi variations
   'Srishti': 'assets/avatar/Srishti.jpg',
+  'Shristi': 'assets/avatar/Srishti.jpg',
+  // Vyshavi
+  'Vyshavi': 'assets/avatar/vyshavi.png',
+  'Vyshavi A/P Nandan': 'assets/avatar/vyshavi.png',
+  'Vyshavi A/P Nandan': 'assets/avatar/vyshavi.png',
+  // Noelle
+  'Noelle': 'assets/avatar/noellechoy.png',
+  'Noelle Choy Ee Theng': 'assets/avatar/noellechoy.png',
+  // Benjamin
+  'Benjamin': 'assets/avatar/benjaminedward.png',
+  'Benjamin Edward Ng': 'assets/avatar/benjaminedward.png',
+  // Ho Qing Qing
+  'Qing Qing': 'assets/avatar/qinqing.png',
+  'Ho Qing Qing': 'assets/avatar/qinqing.png',
+  'QingQing': 'assets/avatar/qinqing.png',
+  // Airil Daniel
+  'Airil': 'assets/avatar/airildaniel.png',
+  'Airil Daniel': 'assets/avatar/airildaniel.png',
+  // Karisemma
+  'Karisemma': 'assets/avatar/karisemma.png',
+  // Ryan
+  'Ryan': 'assets/avatar/ryanliew.png',
+  'Ryan Liew Kye Le': 'assets/avatar/ryanliew.png',
+  // Michelle
+  'Michelle': 'assets/avatar/michellechantelle.png',
+  'Michelle Chantelle': 'assets/avatar/michellechantelle.png',
+  // Shayna
+  'Shayna': 'assets/avatar/shaynaprisha.png',
+  'Shayna Prisha': 'assets/avatar/shaynaprisha.png',
+  // Sereena
+  'Sereena': 'assets/avatar/sereenaanjali.png',
+  'Sereena Anjali': 'assets/avatar/sereenaanjali.png',
+  // Mr. Bean variations
   'mrbean': 'assets/avatar/mrbean.jpg',
   'Mrbean': 'assets/avatar/mrbean.jpg',
   'MrBean': 'assets/avatar/mrbean.jpg',
+  'Mr. Bean': 'assets/avatar/mrbean.jpg',
+  // Mr. Eugene
+  'mreugene': 'assets/avatar/mreugene.png',
+  'MrEugene': 'assets/avatar/mreugene.png',
+  'Mr. Eugene': 'assets/avatar/mreugene.png',
+  // Fallback for unknown presenters
   'Marcus': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face',
   'Jess': 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face',
   'James': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face',
