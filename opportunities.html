@@ -52,9 +52,7 @@
         
         /* Layout */
         .request-layout {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 40px;
+            display: block;
             margin: 40px 0;
         }
         
@@ -82,22 +80,7 @@
         
         @media (max-width: 768px) {
             .request-layout {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            
-            /* Reorder sections on mobile - positions above form */
-            .request-layout {
-                display: flex;
-                flex-direction: column;
-            }
-            
-            .request-sidebar {
-                order: 1; /* Positions section first */
-            }
-            
-            .request-form-section {
-                order: 2; /* Form section second */
+                margin: 30px 0;
             }
         }
         
@@ -150,7 +133,7 @@
             margin-bottom: 20px;
         }
         
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
             }
@@ -188,6 +171,19 @@
             width: 100%;
             box-sizing: border-box;
             transition: all 0.2s;
+        }
+        
+        .form-group input,
+        .form-group select {
+            height: 70px;
+        }
+        
+        #applicant-computer,
+        #applicant-presenting {
+            height: 140px;
+            padding-top: 16px !important;
+            padding-bottom: 100px !important;
+            vertical-align: top;
         }
         
         .form-group input:focus,
@@ -486,6 +482,157 @@
             font-size: 14px;
             margin: 0;
             font-style: italic;
+        }
+        
+        /* FAQ Section Styles */
+        .faq-section {
+            margin: 60px 0;
+            padding: 40px 0;
+        }
+        
+        .faq-title {
+            color: #e9f1f7;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 32px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .faq-title i {
+            color: #f91e5a;
+        }
+        
+        .faq-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 16px;
+        }
+        
+        .faq-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .faq-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .faq-question {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 20px 24px;
+            color: #e9f1f7;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+        }
+        
+        .faq-question:hover {
+            color: #f91e5a;
+        }
+        
+        .faq-question i {
+            color: #8fa6b7;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+            color: #f91e5a;
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 24px;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 800px;
+            padding: 0 24px 20px;
+        }
+        
+        .faq-answer p {
+            color: #8fa6b7;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .faq-benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .faq-benefits-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #8fa6b7;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .faq-benefits-list li i {
+            color: #10b981;
+            width: 20px;
+            flex-shrink: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .faq-section {
+                margin: 40px 0;
+                padding: 30px 0;
+            }
+            
+            .faq-title {
+                font-size: 24px;
+            }
+            
+            .faq-container {
+                flex-direction: column;
+            }
+            
+            .faq-question {
+                font-size: 16px;
+                padding: 16px 20px;
+            }
+            
+            .faq-answer {
+                padding: 0 20px;
+            }
+            
+            .faq-item.active .faq-answer {
+                padding: 0 20px 16px;
+            }
         }
     </style>
     
@@ -963,110 +1110,139 @@
                 <div id="mixcloud-player" style="width: 100%; height: 100%;"></div>
             </div>
 
+            <h2 style="margin-top: 16px; margin-bottom: 0; font-weight: 600; font-size: 48px; color: #ffffff; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; width: 100%;">
+                <span>Applications are currently</span>
+                <span style="color: #f91e5a; border: 1px solid #f91e5a; border-radius: 4px; padding: 8px 16px; font-weight: 500;">OPEN</span>
+            </h2>
             <div class="container">
                 <div class="hero-content">
-                    <div class="hero-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h1>Join Our Team</h1>
                     <p>We're always looking for passionate individuals to join the SamudraFM family! Whether you're interested in radio, technology, or just want to be part of something amazing, we'd love to hear from you.</p>
                 </div>
             </div>
         </section>
+
+        <!-- FAQ Section -->
+        <div class="container">
+            <section class="faq-section">
+                <h2 class="faq-title"><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+                <div class="faq-container">
+                    <div class="faq-column">
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span>What is the time commitment?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>During your show, you will have to reach the studio by 6:40am, please arrange your transportation</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span>What benefits do I get?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <ul class="faq-benefits-list">
+                                    <li><i class="fas fa-check"></i> Hands-on radio experience</li>
+                                    <li><i class="fas fa-check"></i> Boost your portfolio</li>
+                                    <li><i class="fas fa-check"></i> Build confidence in public speaking</li>
+                                    <li><i class="fas fa-check"></i> Learn teamwork & leadership</li>
+                                    <li><i class="fas fa-check"></i> Develop creative & technical skills</li>
+                                    <li><i class="fas fa-check"></i> Organize exciting school events</li>
+                                    <li><i class="fas fa-check"></i> Have fun and express yourself!</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-column">
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span>Do I need prior experience?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>No prior experience is required! We welcome applicants of all experience levels - from beginners to advanced. We provide training and support to help you succeed.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span>How long does the application process take?</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Our team typically reviews applications and reaches out to candidates for an interview within 1 week. Keep an eye on your email and WhatsApp for interview schedule from us.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
 
         <!-- Main Content -->
         <div class="container">
             <div class="request-layout">
                 <!-- Form Section -->
                 <section class="request-form-section">
-                    <!-- Requirements Card - PC Only (above form) -->
-                    <div class="sidebar-card requirements-card-pc">
-                        <h3><i class="fas fa-list-check"></i> Requirements</h3>
-                        <ul class="guidelines-list">
-                            <li><i class="fas fa-check"></i> Humble. Team player attitude</li>
-                            <li><i class="fas fa-check"></i> Passion for radio & music</li>
-                            <li><i class="fas fa-check"></i> Great communication</li>
-                            <li><i class="fas fa-check"></i> Reliable & committed</li>
-                        </ul>
-                    </div>
-                    
                     <div class="form-card">
                         <div class="form-header">
-                            <h2><i class="fas fa-paper-plane"></i> Apply Now</h2>
-                            <p>Fill out the form below to express your interest in joining our team</p>
+                            <h2><i class="fas fa-paper-plane"></i> Join us here</h2>
+                            <p>Fill in again, if you didnt receive an email from us within <span style="color: #f91e5a;">24 hours</span></p>
                         </div>
                         
                         <!-- Custom Form UI - Integrated with Google Form -->
                         <form id="request-form" class="request-form">
+                            <h3 style="margin-bottom: 20px; color: #e9f1f7; font-size: 20px; font-weight: 600;">About you</h3>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="applicant-name">
                                         <i class="fas fa-user"></i>
-                                        Full Name *
+                                        Your full name *
                                     </label>
-                                    <input type="text" id="applicant-name" name="name" required placeholder="Your answer">
+                                    <input type="text" id="applicant-name" name="name" required placeholder="name">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="applicant-email">
                                         <i class="fas fa-envelope"></i>
-                                        Email *
+                                        Your email *
                                     </label>
-                                    <input type="email" id="applicant-email" name="email" required placeholder="Your answer">
+                                    <input type="email" id="applicant-email" name="email" required placeholder="name@email.com">
                                 </div>
                             </div>
                             
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="applicant-class">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        Your class for 2026 *
+                                    </label>
+                                    <input type="text" id="applicant-class" name="class" required placeholder="5 class">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="applicant-phone">
+                                        <i class="fas fa-phone"></i>
+                                        Your phone number *
+                                    </label>
+                                    <input type="tel" id="applicant-phone" name="phone" required placeholder="e.g. 0123456789" pattern="^(601|01)[0-9]{5,13}$" title="Please enter a valid Malaysian phone number starting with 601 or 01 (7-15 digits total)">
+                                </div>
+                            </div>
+                            
+                            <h3 style="margin-bottom: 20px; color: #e9f1f7; font-size: 20px; font-weight: 600;">Experience</h3>
                             <div class="form-group">
-                                <label for="applicant-phone">
-                                    <i class="fas fa-phone"></i>
-                                    Phone number *
+                                <label for="applicant-computer">
+                                    <i class="fas fa-laptop"></i>
+                                    Do you have basic computer knowledge? *
                                 </label>
-                                <input type="tel" id="applicant-phone" name="phone" required placeholder="e.g., 60123456789 or 0123456789" pattern="^(601|01)[0-9]{5,13}$" title="Please enter a valid Malaysian phone number starting with 601 or 01 (7-15 digits total)">
+                                <input type="text" id="applicant-computer" name="computer" required placeholder="start typing...">
                             </div>
                             
                             <div class="form-group">
-                                <label for="applicant-role">
-                                    <i class="fas fa-briefcase"></i>
-                                    Role of interest *
+                                <label for="applicant-presenting">
+                                    <i class="fas fa-microphone"></i>
+                                    Do you have presenting experience? *
                                 </label>
-                                <select id="applicant-role" name="role" required>
-                                    <option value="">Select an option</option>
-                                    <option value="Radio Presenter">Radio Presenter</option>
-                                    <option value="Music Coordinator">Music Coordinator</option>
-                                    <option value="Script Planner/Researcher">Script Planner/Researcher</option>
-                                    <option value="Event Planner">Event Planner</option>
-                                    <option value="Sound Editor">Sound Editor</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="applicant-experience">
-                                    <i class="fas fa-star"></i>
-                                    Experience Level *
-                                </label>
-                                <select id="applicant-experience" name="experience" required>
-                                    <option value="">Select an option</option>
-                                    <option value="Beginner">Beginner</option>
-                                    <option value="Intermediate">Intermediate</option>
-                                    <option value="Advanced">Advanced</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="applicant-motivation">
-                                    <i class="fas fa-heart"></i>
-                                    Why do you want to join samudrafm? *
-                                </label>
-                                <textarea id="applicant-motivation" name="motivation" rows="4" required placeholder="Your answer"></textarea>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="applicant-skills">
-                                    <i class="fas fa-tools"></i>
-                                    Skills & interest
-                                </label>
-                                <textarea id="applicant-skills" name="skills" rows="3" placeholder="Your answer"></textarea>
+                                <input type="text" id="applicant-presenting" name="presenting" required placeholder="start typing...">
                             </div>
                             
                             <button type="submit" class="btn primary submit-btn" id="submit-btn">
@@ -1088,6 +1264,7 @@
                             </div>
                             <h3>Application Submitted Successfully!</h3>
                             <p>Thank you for your interest in joining SamudraFM! We'll review your application and get back to you soon.</p>
+                            <p>Fill in again, if you didn't receive an email from us within <span style="color: #f91e5a;">24 hours</span>.</p>
                             <div class="success-actions">
                                 <a href="/" class="btn secondary">Back to Home</a>
                                 <button onclick="submitAnotherApplication()" class="btn secondary">
@@ -1098,66 +1275,6 @@
                         </div>
                     </div>
                 </section>
-
-                <!-- Sidebar -->
-                <aside class="request-sidebar">
-                    <!-- Available Positions -->
-                    <div class="sidebar-card">
-                        <h3><i class="fas fa-briefcase"></i> Available Positions</h3>
-                        <div class="positions-list">
-                            <div class="position-item">
-                                <span class="status-indicator open">OPEN</span>
-                                <h4><span class="position-number">1.</span> Radio Presenter</h4>
-                                <p>Host live shows, engage with listeners, and create amazing radio content</p>
-                            </div>
-                            <div class="position-item">
-                                <span class="status-indicator open">OPEN</span>
-                                <h4><span class="position-number">2.</span> Music Coordinator</h4>
-                                <p>Curate playlists, manage music library, and coordinate song selections</p>
-                            </div>
-                            <div class="position-item">
-                                <span class="status-indicator open">OPEN</span>
-                                <h4><span class="position-number">3.</span> Script Planner/Researcher</h4>
-                                <p>Research topics, write scripts, and plan show content for Presenters</p>
-                            </div>
-                            <div class="position-item">
-                                <span class="status-indicator closed">CLOSED</span>
-                                <h4><span class="position-number">4.</span> Event Planner</h4>
-                                <p>Organize radio events, manage logistics, and coordinate activities</p>
-                            </div>
-                            <div class="position-item">
-                                <span class="status-indicator closed">CLOSED</span>
-                                <h4><span class="position-number">5.</span> Sound Editor</h4>
-                                <p>Edit audio content, manage sound quality, and technical audio production</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Benefits -->
-                    <div class="sidebar-card">
-                        <h3><i class="fas fa-gift"></i> What We Offer</h3>
-                        <ul class="guidelines-list">
-                            <li><i class="fas fa-check"></i> Hands-on radio experience</li>
-                            <li><i class="fas fa-check"></i> Boost your portfolio</li>
-                            <li><i class="fas fa-check"></i> Build confidence in public speaking</li>
-                            <li><i class="fas fa-check"></i> Learn teamwork & leadership</li>
-                            <li><i class="fas fa-check"></i> Develop creative & technical skills</li>
-                            <li><i class="fas fa-check"></i> Organize exciting school events</li>
-                            <li><i class="fas fa-check"></i> Have fun and express yourself!</li>
-                        </ul>
-                    </div>
-
-                    <!-- Requirements - Mobile Only -->
-                    <div class="sidebar-card requirements-card-mobile">
-                        <h3><i class="fas fa-list-check"></i> Requirements</h3>
-                        <ul class="guidelines-list">
-                            <li><i class="fas fa-check"></i> Humble. Team player attitude</li>
-                            <li><i class="fas fa-check"></i> Passion for radio & music</li>
-                            <li><i class="fas fa-check"></i> Great communication</li>
-                            <li><i class="fas fa-check"></i> Reliable & committed</li>
-                        </ul>
-                    </div>
-                </aside>
             </div>
         </div>
     </main>
@@ -1206,30 +1323,28 @@
     <script>
         // Google Form Configuration
         // INSTRUCTIONS TO FIND ENTRY IDs:
-        // 1. Open https://forms.gle/tfMkpXcjsnvsoTKU8 in your browser
+        // 1. Open the Google Form in your browser
         // 2. Right-click on the page and select "View Page Source" (or press Ctrl+U)
         // 3. Press Ctrl+F to search for "entry."
         // 4. You'll see entries like: name="entry.1234567890"
         // 5. Match each field in your form to the corresponding entry ID:
-        //    - Full Name (Nickname) -> entry.XXXXX
-        //    - Email -> entry.XXXXX
-        //    - Phone number -> entry.XXXXX
-        //    - role of interest -> entry.XXXXX
-        //    - Experience Level -> entry.XXXXX
-        //    - Why do you want to join samudrafm? -> entry.XXXXX
-        //    - skills & interest -> entry.XXXXX
+        //    - Your full name -> entry.2005620554
+        //    - Your email -> entry.1045781291
+        //    - Your class for 2026 -> entry.1908860655
+        //    - Your phone number -> entry.1166974658
+        //    - Do you have basic computer knowledge? -> entry.839337160
+        //    - Do you have presenting experience? -> entry.17983031
         // 6. Also find the form ID in the action URL: action="https://docs.google.com/forms/d/e/FORM_ID/formResponse"
         const GOOGLE_FORM_CONFIG = {
             // Form ID
             formId: '1FAIpQLSd1LUl84gB_JDb3vydgKek9U2FZP5iIu4_cypad3OL1nyaKTQ',
             entryIds: {
-                name: 'entry.2005620554',        // Full Name (Nickname)
-                email: 'entry.1045781291',        // Email
-                phone: 'entry.1166974658',        // Phone number
-                role: 'entry.1065046570',        // role of interest
-                experience: 'entry.1480668658',  // Experience Level
-                motivation: 'entry.839337160',    // Why do you want to join samudrafm?
-                skills: 'entry.17983031'         // skills & interest
+                name: 'entry.2005620554',        // Your full name
+                email: 'entry.1045781291',        // Your email
+                class: 'entry.1908860655',        // Your class for 2026
+                phone: 'entry.1166974658',        // Your phone number
+                computer: 'entry.839337160',      // Do you have basic computer knowledge?
+                presenting: 'entry.17983031'      // Do you have presenting experience?
             }
         };
         
@@ -1248,20 +1363,80 @@
             });
         });
         
+        // FAQ Dropdown Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            // Ensure all FAQ items are closed on page load
+            faqItems.forEach(item => {
+                item.classList.remove('active');
+                const question = item.querySelector('.faq-question');
+                if (question) {
+                    question.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            faqQuestions.forEach((question, questionIndex) => {
+                question.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const faqItem = this.closest('.faq-item');
+                    if (!faqItem) return;
+                    
+                    const isActive = faqItem.classList.contains('active');
+                    
+                    // Toggle only the clicked item - don't close other cards
+                    if (isActive) {
+                        // Item was active, close it
+                        faqItem.classList.remove('active');
+                        this.setAttribute('aria-expanded', 'false');
+                    } else {
+                        // Item was not active, open it
+                        faqItem.classList.add('active');
+                        this.setAttribute('aria-expanded', 'true');
+                    }
+                });
+            });
+        });
+        
+        // Check internet connectivity
+        async function checkInternetConnection() {
+            try {
+                // Try to fetch a small resource with cache-busting
+                const response = await fetch('https://www.google.com/favicon.ico?t=' + Date.now(), {
+                    method: 'HEAD',
+                    mode: 'no-cors',
+                    cache: 'no-cache'
+                });
+                return true;
+            } catch (error) {
+                // Try alternative check
+                return navigator.onLine;
+            }
+        }
+        
         // Submit application to Google Forms
-        function submitApplication(form) {
+        async function submitApplication(form) {
+            // Check internet connection first
+            const isOnline = await checkInternetConnection();
+            if (!isOnline && !navigator.onLine) {
+                showErrorMessage('No internet connection detected. Please check your connection and try again.');
+                return;
+            }
+            
             // Get form data
             const formData = new FormData(form);
             const name = formData.get('name');
             const email = formData.get('email');
+            const classValue = formData.get('class');
             const phone = formData.get('phone');
-            const role = formData.get('role');
-            const experience = formData.get('experience');
-            const motivation = formData.get('motivation');
-            const skills = formData.get('skills') || '';
+            const computer = formData.get('computer');
+            const presenting = formData.get('presenting');
             
             // Validate required fields
-            if (!name || !email || !phone || !role || !experience || !motivation) {
+            if (!name || !email || !classValue || !phone || !computer || !presenting) {
                 showErrorMessage('Please fill in all required fields');
                 return;
             }
@@ -1277,17 +1452,16 @@
             const googleFormUrl = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_CONFIG.formId}/formResponse`;
             
             console.log('Submitting to:', googleFormUrl);
-            console.log('Form data:', { name, email, phone, role, experience, motivation, skills });
+            console.log('Form data:', { name, email, class: classValue, phone, computer, presenting });
             
             // Add all form fields as hidden inputs
             const fields = [
                 { name: GOOGLE_FORM_CONFIG.entryIds.name, value: name },
                 { name: GOOGLE_FORM_CONFIG.entryIds.email, value: email },
+                { name: GOOGLE_FORM_CONFIG.entryIds.class, value: classValue },
                 { name: GOOGLE_FORM_CONFIG.entryIds.phone, value: phone },
-                { name: GOOGLE_FORM_CONFIG.entryIds.role, value: role },
-                { name: GOOGLE_FORM_CONFIG.entryIds.experience, value: experience },
-                { name: GOOGLE_FORM_CONFIG.entryIds.motivation, value: motivation },
-                { name: GOOGLE_FORM_CONFIG.entryIds.skills, value: skills }
+                { name: GOOGLE_FORM_CONFIG.entryIds.computer, value: computer },
+                { name: GOOGLE_FORM_CONFIG.entryIds.presenting, value: presenting }
             ];
             
             console.log('Entry IDs being used:', fields.map(f => `${f.name}=${f.value.substring(0, 20)}...`));
@@ -1319,9 +1493,132 @@
                 console.log('Created hidden iframe');
             }
             
+            // Show loading state on submit button
+            const submitBtn = document.getElementById('submit-btn');
+            const btnText = submitBtn ? submitBtn.querySelector('.btn-text') : null;
+            const btnLoading = submitBtn ? submitBtn.querySelector('.btn-loading') : null;
+            
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                if (btnText) btnText.style.display = 'none';
+                if (btnLoading) btnLoading.style.display = 'inline-flex';
+            }
+            
+            let submissionVerified = false;
+            let verificationAttempts = 0;
+            const maxAttempts = 10; // Check for up to 5 seconds (10 attempts * 500ms)
+            
+            // Function to verify submission
+            const verifySubmission = () => {
+                verificationAttempts++;
+                
+                try {
+                    // Try to access iframe content (may be blocked by CORS)
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+                    
+                    if (iframeDoc) {
+                        // Check for Google Forms success indicators
+                        const bodyText = iframeDoc.body?.innerText || '';
+                        const bodyHTML = iframeDoc.body?.innerHTML || '';
+                        
+                        // Google Forms shows "Your response has been recorded" on success
+                        if (bodyText.includes('Your response has been recorded') || 
+                            bodyText.includes('response has been recorded') ||
+                            bodyHTML.includes('Your response has been recorded')) {
+                            submissionVerified = true;
+                            console.log('Submission verified - Google Forms confirmed receipt');
+                            showSuccess();
+                            return;
+                        }
+                        
+                        // Check for error messages
+                        if (bodyText.includes('error') || bodyText.includes('Error') || 
+                            bodyHTML.includes('error') || bodyHTML.includes('Error')) {
+                            console.log('Error detected in Google Forms response');
+                            showError('Failed to submit form. Please try again.');
+                            return;
+                        }
+                    }
+                    
+                    // Check iframe URL for success indicators
+                    try {
+                        const iframeUrl = iframe.contentWindow?.location?.href || '';
+                        if (iframeUrl.includes('formResponse') && iframeUrl.includes('submit')) {
+                            // URL suggests submission was processed
+                            if (verificationAttempts >= 3) {
+                                submissionVerified = true;
+                                console.log('Submission likely successful based on URL');
+                                showSuccess();
+                                return;
+                            }
+                        }
+                    } catch (e) {
+                        // CORS may block this, that's okay
+                        console.log('Cannot access iframe URL (CORS restriction)');
+                    }
+                    
+                    // If we haven't verified yet and haven't exceeded max attempts, try again
+                    if (verificationAttempts < maxAttempts) {
+                        setTimeout(verifySubmission, 500);
+                    } else {
+                        // After max attempts, assume success (since iframe loaded without errors)
+                        console.log('Submission timeout - assuming success after verification attempts');
+                        submissionVerified = true;
+                        showSuccess();
+                    }
+                } catch (e) {
+                    // CORS error - can't access iframe content
+                    console.log('Cannot verify submission due to CORS restrictions');
+                    
+                    // If we've waited long enough, assume success
+                    if (verificationAttempts >= maxAttempts) {
+                        console.log('Assuming submission successful after timeout');
+                        submissionVerified = true;
+                        showSuccess();
+                    } else {
+                        setTimeout(verifySubmission, 500);
+                    }
+                }
+            };
+            
+            // Function to show success
+            const showSuccess = () => {
+                document.body.removeChild(hiddenForm);
+                console.log('Form submission verified and completed');
+                
+                // Reset button state
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    if (btnText) btnText.style.display = 'inline';
+                    if (btnLoading) btnLoading.style.display = 'none';
+                }
+                
+                // Show success message
+                form.style.display = 'none';
+                const successMessage = document.getElementById('success-message');
+                successMessage.style.display = 'block';
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+            };
+            
+            // Function to show error
+            const showError = (message) => {
+                document.body.removeChild(hiddenForm);
+                
+                // Reset button state
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    if (btnText) btnText.style.display = 'inline';
+                    if (btnLoading) btnLoading.style.display = 'none';
+                }
+                
+                showErrorMessage(message);
+            };
+            
             // Add load event listener to iframe to detect when submission completes
             iframe.onload = function() {
-                console.log('Iframe loaded - form submission may have completed');
+                console.log('Iframe loaded - checking for submission confirmation');
+                // Start verification after a short delay to allow page to render
+                setTimeout(verifySubmission, 500);
             };
             
             // Submit the form to hidden iframe
@@ -1329,17 +1626,43 @@
             console.log('Submitting form...');
             hiddenForm.submit();
             
-            // Wait a moment for submission, then show success
+            // Fallback timeout - if iframe doesn't load within 15 seconds (increased for slow connections), show error
             setTimeout(() => {
-                document.body.removeChild(hiddenForm);
-                console.log('Form submission completed');
-                
-                // Show success message
-                form.style.display = 'none';
-                const successMessage = document.getElementById('success-message');
-                successMessage.style.display = 'block';
-                successMessage.scrollIntoView({ behavior: 'smooth' });
-            }, 2000);
+                if (!submissionVerified) {
+                    console.log('Submission timeout - iframe did not load');
+                    // Check if still online
+                    if (!navigator.onLine) {
+                        showError('Connection lost during submission. Please check your internet connection and try again.');
+                    } else {
+                        showError('Submission timed out. This may be due to a slow connection. Please wait a moment and check if your submission was received, or try again.');
+                    }
+                }
+            }, 15000);
+            
+            // Listen for online/offline events to detect connection issues
+            const handleOffline = () => {
+                console.log('Connection lost during submission');
+                if (!submissionVerified) {
+                    showError('Connection lost during submission. Please check your internet connection and try again.');
+                }
+            };
+            
+            window.addEventListener('offline', handleOffline);
+            
+            // Store original functions to restore after cleanup
+            const originalShowSuccess = showSuccess;
+            const originalShowError = showError;
+            
+            // Wrap functions to clean up event listeners
+            showSuccess = function() {
+                window.removeEventListener('offline', handleOffline);
+                originalShowSuccess();
+            };
+            
+            showError = function(message) {
+                window.removeEventListener('offline', handleOffline);
+                originalShowError(message);
+            };
         }
         
         // Show error message
@@ -1503,7 +1826,20 @@
         .request-form input[type="text"],
         .request-form input[type="email"],
         .request-form input[type="tel"],
-        .request-form select,
+        .request-form select {
+            background: #0f2230 !important;
+            color: #e9f1f7 !important;
+            border: 2px solid rgba(255, 255, 255, 0.08) !important;
+            border-radius: 12px !important;
+            padding: 16px 20px !important;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+            font-size: 16px !important;
+            width: 100% !important;
+            height: 70px !important;
+            box-sizing: border-box !important;
+            transition: all 0.2s !important;
+        }
+        
         .request-form textarea {
             background: #0f2230 !important;
             color: #e9f1f7 !important;
@@ -1515,6 +1851,14 @@
             width: 100% !important;
             box-sizing: border-box !important;
             transition: all 0.2s !important;
+        }
+        
+        #applicant-computer,
+        #applicant-presenting {
+            height: 140px !important;
+            padding-top: 16px !important;
+            padding-bottom: 100px !important;
+            vertical-align: top !important;
         }
         
         .request-form input[type="text"]:focus,
@@ -1611,7 +1955,7 @@
             margin-bottom: 20px !important;
         }
         
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr !important;
             }
