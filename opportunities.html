@@ -1504,87 +1504,18 @@
                 if (btnLoading) btnLoading.style.display = 'inline-flex';
             }
             
-            let submissionVerified = false;
-            let verificationAttempts = 0;
-            const maxAttempts = 10; // Check for up to 5 seconds (10 attempts * 500ms)
+            let submissionConfirmed = false;
+            let iframeLoaded = false;
             
-            // Function to verify submission
-            const verifySubmission = () => {
-                verificationAttempts++;
+            // Function to show success ONLY when Google Forms has finished processing
+            function showSuccess() {
+                if (submissionConfirmed) return;
+                submissionConfirmed = true;
                 
-                try {
-                    // Try to access iframe content (may be blocked by CORS)
-                    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-                    
-                    if (iframeDoc) {
-                        // Check for Google Forms success indicators
-                        const bodyText = iframeDoc.body?.innerText || '';
-                        const bodyHTML = iframeDoc.body?.innerHTML || '';
-                        
-                        // Google Forms shows "Your response has been recorded" on success
-                        if (bodyText.includes('Your response has been recorded') || 
-                            bodyText.includes('response has been recorded') ||
-                            bodyHTML.includes('Your response has been recorded')) {
-                            submissionVerified = true;
-                            console.log('Submission verified - Google Forms confirmed receipt');
-                            showSuccess();
-                            return;
-                        }
-                        
-                        // Check for error messages
-                        if (bodyText.includes('error') || bodyText.includes('Error') || 
-                            bodyHTML.includes('error') || bodyHTML.includes('Error')) {
-                            console.log('Error detected in Google Forms response');
-                            showError('Failed to submit form. Please try again.');
-                            return;
-                        }
-                    }
-                    
-                    // Check iframe URL for success indicators
-                    try {
-                        const iframeUrl = iframe.contentWindow?.location?.href || '';
-                        if (iframeUrl.includes('formResponse') && iframeUrl.includes('submit')) {
-                            // URL suggests submission was processed
-                            if (verificationAttempts >= 3) {
-                                submissionVerified = true;
-                                console.log('Submission likely successful based on URL');
-                                showSuccess();
-                                return;
-                            }
-                        }
-                    } catch (e) {
-                        // CORS may block this, that's okay
-                        console.log('Cannot access iframe URL (CORS restriction)');
-                    }
-                    
-                    // If we haven't verified yet and haven't exceeded max attempts, try again
-                    if (verificationAttempts < maxAttempts) {
-                        setTimeout(verifySubmission, 500);
-                    } else {
-                        // After max attempts, assume success (since iframe loaded without errors)
-                        console.log('Submission timeout - assuming success after verification attempts');
-                        submissionVerified = true;
-                        showSuccess();
-                    }
-                } catch (e) {
-                    // CORS error - can't access iframe content
-                    console.log('Cannot verify submission due to CORS restrictions');
-                    
-                    // If we've waited long enough, assume success
-                    if (verificationAttempts >= maxAttempts) {
-                        console.log('Assuming submission successful after timeout');
-                        submissionVerified = true;
-                        showSuccess();
-                    } else {
-                        setTimeout(verifySubmission, 500);
-                    }
+                if (hiddenForm.parentNode) {
+                    document.body.removeChild(hiddenForm);
                 }
-            };
-            
-            // Function to show success
-            const showSuccess = () => {
-                document.body.removeChild(hiddenForm);
-                console.log('Form submission verified and completed');
+                console.log('Form submission completed (iframe load detected)');
                 
                 // Reset button state
                 if (submitBtn) {
@@ -1598,11 +1529,16 @@
                 const successMessage = document.getElementById('success-message');
                 successMessage.style.display = 'block';
                 successMessage.scrollIntoView({ behavior: 'smooth' });
-            };
+            }
             
-            // Function to show error
-            const showError = (message) => {
-                document.body.removeChild(hiddenForm);
+            // Function to show error if we CANNOT confirm submission
+            function showError(message) {
+                if (submissionConfirmed) return;
+                submissionConfirmed = true;
+                
+                if (hiddenForm.parentNode) {
+                    document.body.removeChild(hiddenForm);
+                }
                 
                 // Reset button state
                 if (submitBtn) {
@@ -1612,57 +1548,35 @@
                 }
                 
                 showErrorMessage(message);
-            };
+            }
             
-            // Add load event listener to iframe to detect when submission completes
+            // Add load event listener to iframe to detect when Google Forms has
+            // finished processing the submission. We treat a completed load as
+            // confirmation that Google has received the data (and written it to Sheets).
             iframe.onload = function() {
-                console.log('Iframe loaded - checking for submission confirmation');
-                // Start verification after a short delay to allow page to render
-                setTimeout(verifySubmission, 500);
+                iframeLoaded = true;
+                console.log('Hidden Google Forms iframe finished loading – treating as confirmed submission');
+                showSuccess();
             };
             
             // Submit the form to hidden iframe
             document.body.appendChild(hiddenForm);
-            console.log('Submitting form...');
+            console.log('Submitting form to Google Forms via hidden iframe...');
             hiddenForm.submit();
             
-            // Fallback timeout - if iframe doesn't load within 15 seconds (increased for slow connections), show error
+            // Fallback timeout: if the iframe never finishes loading, we assume
+            // that the submission did NOT go through and show an error instead
+            // of a success message.
             setTimeout(() => {
-                if (!submissionVerified) {
-                    console.log('Submission timeout - iframe did not load');
-                    // Check if still online
+                if (!submissionConfirmed) {
+                    console.log('Submission timeout - iframe did not finish loading');
                     if (!navigator.onLine) {
                         showError('Connection lost during submission. Please check your internet connection and try again.');
                     } else {
-                        showError('Submission timed out. This may be due to a slow connection. Please wait a moment and check if your submission was received, or try again.');
+                        showError('We could not confirm that your application was received. Please check your connection and try again.');
                     }
                 }
             }, 15000);
-            
-            // Listen for online/offline events to detect connection issues
-            const handleOffline = () => {
-                console.log('Connection lost during submission');
-                if (!submissionVerified) {
-                    showError('Connection lost during submission. Please check your internet connection and try again.');
-                }
-            };
-            
-            window.addEventListener('offline', handleOffline);
-            
-            // Store original functions to restore after cleanup
-            const originalShowSuccess = showSuccess;
-            const originalShowError = showError;
-            
-            // Wrap functions to clean up event listeners
-            showSuccess = function() {
-                window.removeEventListener('offline', handleOffline);
-                originalShowSuccess();
-            };
-            
-            showError = function(message) {
-                window.removeEventListener('offline', handleOffline);
-                originalShowError(message);
-            };
         }
         
         // Show error message
