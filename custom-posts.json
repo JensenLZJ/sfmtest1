@@ -1,6 +1,27 @@
 {
   "posts": [
     {
+        "id": "29",
+        "content": "https://samudrafm.com/request\nSend us your favourite jams!",
+        "image": "images/CustomPost/29.jpg",
+        "link": "https://www.instagram.com/p/DUQla21EiAj/",
+        "date": "2026-02-02T00:00:00.000Z"
+    },
+    {
+        "id": "28",
+        "content": "Love music? Well this is your chance! Join our team at samudrafm.com/apply",
+        "image": "images/CustomPost/28.jpg",
+        "link": "https://www.instagram.com/p/DTE6qYQkhHb/",
+        "date": "2026-01-04T00:00:00.000Z"
+    },
+    {
+        "id": "27",
+        "content": "In the car, at the gym, or relaxing at home? samudrafm.com is now just a click away! 🌍 📱",
+        "image": "images/CustomPost/27.jpeg",
+        "link": "https://www.instagram.com/p/DS-ATiREkX7/",
+        "date": "2026-01-01T00:00:00.000Z"
+    },
+    {
       "id": "1",
       "title": "SamudraFM Temporary Hiatus",
       "content": "📢 Thank you for understanding! As our school SMK Taman SEA has started the final-term examination for Form 5 pupils, SamudraFM will be temporarily put on hold during the examination period. Good luck to all students! 🍀",
