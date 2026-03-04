@@ -607,8 +607,8 @@ function getFallbackCalendarEvents() {
   return [
     {
       id: 'fallback-1',
-      summary: 'JensenL - A Wee Mystical Magical Show',
-      description: 'Join Jensen for an enchanting musical journey',
+      summary: 'No Data',
+      description: 'No Show',
       start: { dateTime: new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString() },
       end: { dateTime: new Date(now.getTime() + 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString() },
       location: 'Online',
@@ -616,8 +616,8 @@ function getFallbackCalendarEvents() {
     },
     {
       id: 'fallback-2',
-      summary: 'Srishti - Study Vibes Session',
-      description: 'Perfect music for your study sessions',
+      summary: 'No Data',
+      description: 'No Show',
       start: { dateTime: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000).toISOString() },
       end: { dateTime: new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000 + 1.5 * 60 * 60 * 1000).toISOString() },
       location: 'Online',
@@ -625,8 +625,8 @@ function getFallbackCalendarEvents() {
     },
     {
       id: 'fallback-3',
-      summary: 'Special Guest - Music Discovery',
-      description: 'Discover new artists and hidden gems',
+      summary: 'No Data',
+      description: 'No Show',
       start: { dateTime: new Date(now.getTime() + 4 * 24 * 60 * 60 * 1000).toISOString() },
       end: { dateTime: new Date(now.getTime() + 4 * 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000).toISOString() },
       location: 'Online',
