@@ -1140,28 +1140,6 @@
                     // No Google Calendar events found, using fallback data
                 }
                 
-                // Fallback to presenters.json
-                const response = await fetch('presenters.json');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.events && data.events.length > 0) {
-                        // Map the events to the correct format
-                        const mappedEvents = data.events.map(event => {
-                            const presenter = event.presenter || event.title || 'TBA';
-                            return {
-                                presenter: presenter,
-                                show: event.description || event.show || 'Special Show',
-                                startTime: event.startTime || '10:00',
-                                endTime: event.endTime || '11:00',
-                                image: getProfilePicture(presenter)
-                            };
-                        });
-                        allScheduleData = mappedEvents;
-                        renderScheduleItemsPaginated(scheduleContainer);
-                        return;
-                    }
-                }
-                
                 // Fallback to mock data (images will be auto-detected)
                 const today = new Date();
                 const tomorrow = new Date(today);
