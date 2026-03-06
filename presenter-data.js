@@ -8,10 +8,10 @@
 
   var PRESENTER_DATA = {
     AutoDJ: {
-      name: 'AutoDJ',
+      name: 'autoDJ',
       description: 'Non-stop music on SamudraFM.',
-      timeLabel: 'Streaming all day.',
-      notes: 'Default when no live show is on.',
+      timeLabel: 'Streaming 24/7.',
+      notes: '',
       instagram: null,
       facebook: null,
       profileUrl: null,
