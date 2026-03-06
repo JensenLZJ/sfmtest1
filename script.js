@@ -1,6 +1,9 @@
 // SamduraFM front-end behaviors and mock data wiring
 // Script.js loaded successfully
 
+// Disable right-click (context menu) on the whole website
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+
 // Ensure this script runs regardless of DOMContentLoaded events
 console.log('Script.js loaded - DOM ready state:', document.readyState);
 
@@ -705,8 +708,66 @@ function formatCalendarEvent(event) {
     time: timeString,
     cover: getProfilePicture(presenter),
     date: dateString,
-    day: dayString
+    day: dayString,
+    startRaw: start,
+    endRaw: end
   };
+}
+
+// Update hero presenter card from formatted events
+function updatePresenterCard(events) {
+  const card = document.getElementById('hero-presenter-card');
+  if (!card) return;
+  
+  const nameEl = document.getElementById('presenter-name');
+  const descEl = document.getElementById('presenter-desc');
+  const timeEl = document.getElementById('presenter-time');
+  const avatarEl = document.getElementById('presenter-avatar');
+  
+  if (!nameEl || !descEl || !timeEl || !avatarEl) return;
+  
+  const now = new Date();
+  let current = null;
+  
+  if (Array.isArray(events)) {
+    current = events.find(ev => {
+      if (!ev.startRaw || !ev.endRaw) return false;
+      const s = new Date(ev.startRaw);
+      const e = new Date(ev.endRaw);
+      return !isNaN(s) && !isNaN(e) && s <= now && now <= e;
+    }) || null;
+  }
+  
+  if (!current) {
+    // Fallback: AutoDJ
+    nameEl.textContent = 'AutoDJ';
+    descEl.textContent = 'Non-stop music on SamudraFM.';
+    timeEl.textContent = 'Streaming all day.';
+    avatarEl.style.backgroundImage = "url('assets/brandmark/sfmTextLogoBG1.svg')";
+    return;
+  }
+  
+  nameEl.textContent = current.title || 'Live presenter';
+  descEl.textContent = current.desc || '';
+  
+  if (current.endRaw) {
+    const endDate = new Date(current.endRaw);
+    if (!isNaN(endDate)) {
+      const until = endDate.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+      timeEl.textContent = `On air until ${until}`;
+    } else {
+      timeEl.textContent = current.time || '';
+    }
+  } else {
+    timeEl.textContent = current.time || '';
+  }
+  
+  const coverUrl = current.cover || getProfilePicture(current.title || '');
+  avatarEl.style.backgroundImage = `url('${coverUrl}')`;
 }
 
 // Helpers for placeholders ---------------------------------------------------
@@ -805,6 +866,7 @@ async function loadComingUpEvents() {
       const formattedEvents = events.map(formatCalendarEvent);
       // Formatted events processed
       renderComingUpEvents(formattedEvents);
+      updatePresenterCard(formattedEvents);
       return;
     } else {
       // No calendar events found, using fallback
