@@ -8,9 +8,12 @@ import socketserver
 import urllib.parse
 from pathlib import Path
 
-# Redirect rules from _redirects file
+# Redirect rules from _redirects file (values starting with http are external)
 REDIRECTS = {
     '/': '/index.html',
+    '/SFM-DOC-PH': 'https://docs.google.com/document/d/1tYCRH3ngzCz3mAS-Z1jtVdZryMA8Ca-XY7IOYbsVnM0/edit?usp=sharing',
+    '/SFM-DOC-EH': 'https://docs.google.com/document/d/1Q-kWjKdyqgYQTZRCDyNuWrzoNqmVyHWv9hvg-dwzjvc/edit?usp=sharing',
+    '/SFM-DOC-CL': 'https://docs.google.com/document/d/1NWjJTojbJ7azQST_hQow3MmKKIaOXVb2Wi6BUh4WP4I/edit?usp=sharing',
     '/about': '/about.html',
     '/contact': '/contact.html',
     '/schedule': '/schedule.html',
@@ -31,7 +34,14 @@ class RedirectHandler(http.server.SimpleHTTPRequestHandler):
         # Check if this is a redirect
         if path in REDIRECTS:
             redirect_to = REDIRECTS[path]
-            # Check if file exists
+            # External URL → HTTP redirect
+            if redirect_to.startswith('http://') or redirect_to.startswith('https://'):
+                self.send_response(302)
+                self.send_header('Location', redirect_to)
+                self.send_header('X-Robots-Tag', 'noindex, nofollow')
+                self.end_headers()
+                return
+            # Internal → serve .html file
             file_path = Path(redirect_to.lstrip('/'))
             if file_path.exists():
                 self.send_response(200)

@@ -79,6 +79,16 @@ Header always set Content-Security-Policy "default-src 'self'; img-src 'self' da
 # RewriteCond %{HTTPS} off
 # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# External redirects (before clean-URL rules)
+<IfModule mod_rewrite.c>
+    RewriteRule ^SFM-DOC-PH$ https://docs.google.com/document/d/1tYCRH3ngzCz3mAS-Z1jtVdZryMA8Ca-XY7IOYbsVnM0/edit?usp=sharing [R=302,L,NE,E=NOINDEX:1]
+    RewriteRule ^SFM-DOC-EH$ https://docs.google.com/document/d/1Q-kWjKdyqgYQTZRCDyNuWrzoNqmVyHWv9hvg-dwzjvc/edit?usp=sharing [R=302,L,NE,E=NOINDEX:1]
+    RewriteRule ^SFM-DOC-CL$ https://docs.google.com/document/d/1NWjJTojbJ7azQST_hQow3MmKKIaOXVb2Wi6BUh4WP4I/edit?usp=sharing [R=302,L,NE,E=NOINDEX:1]
+</IfModule>
+<IfModule mod_headers.c>
+    Header always set X-Robots-Tag "noindex, nofollow" env=NOINDEX
+</IfModule>
+
 # Remove .html extension from URLs
 <IfModule mod_rewrite.c>
     # Redirect .html URLs to clean URLs (301 permanent redirect)

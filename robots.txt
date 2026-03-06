@@ -1,4 +1,7 @@
 User-agent: *
+Disallow: /SFM-DOC-PH
+Disallow: /SFM-DOC-EH
+Disallow: /SFM-DOC-CL
 Disallow: /images/
 Disallow: /assets/
 Disallow: /*.png

@@ -17,6 +17,13 @@
 # Application redirect
 /apply /opportunities 301
 
+# Presenter's Handbook (external doc – not for indexing)
+/SFM-DOC-PH https://docs.google.com/document/d/1tYCRH3ngzCz3mAS-Z1jtVdZryMA8Ca-XY7IOYbsVnM0/edit?usp=sharing 302
+# Equipment Handbook (external doc – not for indexing)
+/SFM-DOC-EH https://docs.google.com/document/d/1Q-kWjKdyqgYQTZRCDyNuWrzoNqmVyHWv9hvg-dwzjvc/edit?usp=sharing 302
+# Checklist (external doc – not for indexing)
+/SFM-DOC-CL https://docs.google.com/document/d/1NWjJTojbJ7azQST_hQow3MmKKIaOXVb2Wi6BUh4WP4I/edit?usp=sharing 302
+
 # Serve clean URLs with .html files
 /about /about.html 200
 /contact /contact.html 200
