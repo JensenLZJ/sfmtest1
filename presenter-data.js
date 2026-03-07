@@ -9,12 +9,12 @@
   var PRESENTER_DATA = {
     AutoDJ: {
       name: 'autoDJ',
-      description: 'Non-stop music on SamudraFM.',
+      description: 'Non-stop music on samudrafm.com.',
       timeLabel: 'Streaming 24/7.',
       notes: '',
-      instagram: null,
+      instagram: 'https://www.instagram.com/samudrafm/',
       facebook: null,
-      profileUrl: null,
+      profileUrl: '/profile',
       art: 'assets/brandmark/autoDJ.jpg'
     },
     Jensen: {

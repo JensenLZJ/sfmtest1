@@ -208,13 +208,29 @@
             </header>
             <div class="hero-copy">
                 <h1><span class="hero-line-1">Your <span class="underlined-word">study</span><span class="pink-punctuation">,</span></span><span class="hero-line-2"> your <span class="underlined-word">music</span><span class="pink-punctuation">.</span></span></h1>
-                <p>Helping you focus, unwind, and stay inspired.<br>one song at a time.</p>
                 <div class="cta-row">
                     <a class="btn primary" href="request">Send a request</a>
                 </div>
+                <!-- Ad space banner (click to contact) - contained in hero-copy -->
+                <div class="ad-banner-section" aria-label="Advertising space">
+                    <a class="ad-banner-link" href="https://samudrafm.com/contact" target="_blank" rel="noopener noreferrer" aria-label="Space for rent – click to contact">
+                        <div class="ad-banner-track" id="ad-banner-track">
+                            <div class="ad-banner-slide" style="background-image: url('assets/banner/spaceforrent.jpg');"></div>
+                            <div class="ad-banner-slide" style="background-image: url('assets/banner/spaceforrent2.jpg');"></div>
+                            <div class="ad-banner-slide" style="background-image: url('assets/banner/spaceforrent3.jpg');"></div>
+                            <div class="ad-banner-slide" style="background-image: url('assets/banner/spaceforrent4.jpg');"></div>
+                        </div>
+                    </a>
+                    <div class="ad-banner-dots" id="ad-banner-dots" role="tablist" aria-label="Banner slides">
+                        <button type="button" class="ad-banner-dot active" data-index="0" aria-label="Show banner 1" aria-selected="true"></button>
+                        <button type="button" class="ad-banner-dot" data-index="1" aria-label="Show banner 2" aria-selected="false"></button>
+                        <button type="button" class="ad-banner-dot" data-index="2" aria-label="Show banner 3" aria-selected="false"></button>
+                        <button type="button" class="ad-banner-dot" data-index="3" aria-label="Show banner 4" aria-selected="false"></button>
+                    </div>
+                </div>
             </div>
-            <!-- Right column: LIVE stream card -->
-            <div class="hero-embed hero-live-embed" id="hero-live-embed">
+            <!-- Right column: LIVE stream card (texts hidden until API data received) -->
+            <div class="hero-embed hero-live-embed hero-live-text-pending" id="hero-live-embed">
                 <div class="hero-live-player" id="hero-live-player">
                     <div class="hero-live-player-inner">
                         <div class="hero-live-left">
@@ -237,7 +253,7 @@
                                     <span class="hero-live-volume-icon" aria-hidden="true">🔊</span>
                                     <input type="range" class="hero-live-volume" id="hero-live-volume" min="0" max="100" value="80" aria-label="Live stream volume">
                                 </div>
-                                <a class="hero-live-request" href="request">send a request</a>
+                                <a class="hero-live-request" href="request">manualDJ</a>
                             </div>
                         </div>
                     </div>
@@ -258,12 +274,9 @@
                                 Streaming all day.
                             </p>
                             <div class="hero-presenter-socials">
-                                <span class="hero-presenter-social-icon"><i class="fab fa-instagram" aria-hidden="true"></i></span>
+                                <span class="hero-presenter-social-icon"><i class="fa-brands fa-instagram" aria-hidden="true"></i></span>
                                 <span class="hero-presenter-social-icon"><i class="fab fa-facebook-f" aria-hidden="true"></i></span>
-                                <a class="hero-presenter-social-icon" href="/profile">
-                                    <i class="fas fa-user" aria-hidden="true"></i>
-                                    <span class="sr-only">Profile Page</span>
-                                </a>
+                                <a class="hero-presenter-social-icon" href="/profile" aria-label="Profile Page"><i class="fas fa-user" aria-hidden="true"></i></a>
                             </div>
                         </div>
                         <div class="hero-presenter-avatar-wrap">
@@ -275,6 +288,15 @@
             </div>
         </section>
 
+        <!-- Previously played (from live player) -->
+        <section class="recently-played-section" id="recently-played-section" aria-labelledby="recently-played-heading">
+            <div class="section-head">
+                <h2 id="recently-played-heading"><span class="dot-particle"></span>Previously played<span class="heading-line">&nbsp;</span></h2>
+            </div>
+            <div class="recently-played-list" id="recently-played-list">
+                <!-- Filled by recent-tracks.js from API -->
+            </div>
+        </section>
 
         <section class="main-content-grid">
             <!-- Left Side - Instagram Posts -->
@@ -382,7 +404,7 @@
         <section id="about" class="about">
             <h2>About us</h2>
             <div class="about-content">
-                <p>Welcome to SamudraFM, the voices of SMK Taman SEA! 🎙️</p>
+                <p>Welcome to samudrafm, the voices of SMK Taman SEA! 🎙️</p>
                 <p>We're a student-run weekly radio programme created by volunteers with a passion for music, entertainment, and sharing stories. Every week, we bring energy, fun, and fresh vibes straight from our school community to you.</p>
                 <p>SamudraFM isn't just a radio show. It's a platform for students to express themselves, connect with others, and make mornings a little brighter.</p>
             </div>
@@ -781,6 +803,7 @@
     <script src="instagram-config.js"></script>
     <script src="presenter-data.js"></script>
     <script src="nowplaying.js"></script>
+    <script src="recent-tracks.js"></script>
     <script src="azuracast-song-request.js"></script>
 
     <script>
@@ -817,6 +840,7 @@
       }
       function startLiveStream() {
         if (isLivePlaying) return;
+        if (typeof window.pauseMixcloudPlayer === 'function') window.pauseMixcloudPlayer();
         if (Hls.isSupported()) {
           if (hls) {
             hls.destroy();
@@ -858,6 +882,7 @@
         isLivePlaying = false;
         updateLiveButton();
       }
+      window.pauseHeroLiveStream = stopLiveStream;
       playBtn.addEventListener('click', function() {
         if (isLivePlaying) stopLiveStream();
         else startLiveStream();
@@ -868,6 +893,34 @@
         vol.addEventListener('input', function() { audio.volume = vol.value / 100; });
       }
       updateLiveButton();
+
+      /* PC only: show play overlay on load; hide after 5s if not hovering; show again on hover */
+      (function() {
+        if (window.matchMedia && !window.matchMedia('(min-width: 1025px)').matches) return;
+        var player = document.getElementById('hero-live-player');
+        var overlay = document.querySelector('.hero-live-play-overlay');
+        if (!player || !overlay) return;
+        var hideTimeout = null;
+        function scheduleHide() {
+          if (hideTimeout) clearTimeout(hideTimeout);
+          hideTimeout = setTimeout(function() {
+            hideTimeout = null;
+            overlay.classList.add('hero-live-play-overlay-hidden');
+          }, 5000);
+        }
+        function showOverlay() {
+          if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
+          overlay.classList.remove('hero-live-play-overlay-hidden');
+        }
+        player.addEventListener('mouseenter', function() {
+          showOverlay();
+          scheduleHide();
+        });
+        player.addEventListener('mouseleave', function() {
+          scheduleHide();
+        });
+        scheduleHide();
+      })();
     })();
     </script>
     <!-- Static script fallback removed to prevent duplicate loading -->

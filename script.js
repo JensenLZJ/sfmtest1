@@ -866,7 +866,7 @@ async function loadComingUpEvents() {
       const formattedEvents = events.map(formatCalendarEvent);
       // Formatted events processed
       renderComingUpEvents(formattedEvents);
-      updatePresenterCard(formattedEvents);
+      // Hero presenter card is updated only by nowplaying.js from API (do not overwrite)
       return;
     } else {
       // No calendar events found, using fallback
@@ -1064,6 +1064,49 @@ function initEpisodesSlider() {
   updateSliderControls();
 }
 
+/**
+ * Extract date from episode title if it appears in parentheses.
+ * Matches: (3/3/26), (7 October 2025), (23 June 2023), etc.
+ * @param {string} title - Episode title
+ * @returns {{ dateOnly: string, fullMatch: string }} dateOnly = text without brackets; fullMatch = (date) for stripping from title; both '' if none
+ */
+function extractDateFromTitle(title) {
+  if (!title || typeof title !== 'string') return { dateOnly: '', fullMatch: '' };
+  const monthNames = 'January|February|March|April|May|June|July|August|September|October|November|December';
+  const inParens = /\(([^)]+)\)/g;
+  let match;
+  while ((match = inParens.exec(title)) !== null) {
+    const s = match[1].trim();
+    if (/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(s)) return { dateOnly: s, fullMatch: match[0] };
+    if (new RegExp(`^\\d{1,2}\\s+(${monthNames})\\s+\\d{4}$`, 'i').test(s)) return { dateOnly: s, fullMatch: match[0] };
+  }
+  return { dateOnly: '', fullMatch: '' };
+}
+
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+/**
+ * Convert short date (e.g. 3/3/26) to full date (e.g. 3 March 2026).
+ * Numeric format is parsed as day/month/year. Already full dates (e.g. 7 October 2025) are returned as-is.
+ * @param {string} dateOnly - Date string without brackets
+ * @returns {string} Full date string
+ */
+function formatDateFull(dateOnly) {
+  if (!dateOnly || typeof dateOnly !== 'string') return dateOnly || '';
+  const s = dateOnly.trim();
+  const numeric = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/;
+  const m = s.match(numeric);
+  if (m) {
+    const day = parseInt(m[1], 10);
+    const month = parseInt(m[2], 10);
+    let year = parseInt(m[3], 10);
+    if (year < 100) year += year < 50 ? 2000 : 1900;
+    if (month < 1 || month > 12) return s;
+    return day + ' ' + MONTH_NAMES[month - 1] + ' ' + year;
+  }
+  return s;
+}
+
 function renderEpisodesSlider() {
   const slider = document.getElementById('episodes-slider');
   if (!slider) {
@@ -1074,14 +1117,16 @@ function renderEpisodesSlider() {
 
   const html = episodes.map((ep, i) => {
     const imageUrl = ep.pictures?.large || ep.pictures?.medium || ep.picture || 'assets/brandmark/SamudraFMLogo1.png';
-    const createdDate = ep.created_time ? new Date(ep.created_time).toLocaleDateString() : (ep.created ? ep.created.toLocaleDateString() : '');
+    const { dateOnly, fullMatch } = extractDateFromTitle(ep.name);
+    const titleWithoutDate = fullMatch ? ep.name.replace(fullMatch, '').trim() : ep.name;
+    const metaDate = dateOnly ? formatDateFull(dateOnly) : '';
     
     return `
       <article class="card episodes-card clickable-card" data-ep-index="${i}">
         <div class="cover" style="background-image:url('${imageUrl}')"></div>
         <div class="content">
-          <p class="title">${ep.name}</p>
-          <p class="meta">${createdDate}</p>
+          <p class="title">${titleWithoutDate}</p>
+          ${metaDate ? `<p class="meta">${metaDate}</p>` : ''}
           <span class="play-link">Click to play now ▶</span>
         </div>
       </article>
@@ -1354,6 +1399,8 @@ function nextEpisode() {
 let currentEpisode = null;
 let isCurrentlyPlaying = false;
 let currentWidget = null;
+let lastPlayPauseClickTime = 0;
+const PLAY_PAUSE_CLICK_DEBOUNCE_MS = 400;
 let currentEpisodeIndex = 0; // Track current episode index for auto-play
 
 // Function to get the next episode for auto-play
@@ -1631,7 +1678,7 @@ function updateArtistDisplay(artistEl, episode) {
 }
 
 function playEpisode(episode) {
-  
+  if (typeof window.pauseHeroLiveStream === 'function') window.pauseHeroLiveStream();
   // Hide play button on mobile when starting to load new episode (unless it's auto-play)
   if (isMobileDevice()) {
     // Don't hide play button if this is an auto-play transition
@@ -1685,6 +1732,7 @@ function playEpisode(episode) {
   const titleEl = document.getElementById('hero-ep-title');
   const artistEl = document.getElementById('hero-ep-artist');
   const openEl = document.getElementById('hero-open');
+  const coverEl = document.getElementById('player-cover');
   if (titleEl) {
     titleEl.textContent = episode.name;
   }
@@ -1692,6 +1740,19 @@ function playEpisode(episode) {
   updateArtistDisplay(artistEl, episode);
   if (openEl) {
     openEl.href = 'request';
+  }
+  // Update player cover from episode artwork (from Mixcloud feed/API)
+  if (coverEl) {
+    const imageUrl = episode.pictures
+      ? (episode.pictures.extra_large || episode.pictures.large || episode.pictures.medium || episode.pictures.small)
+      : (episode.picture || '');
+    if (imageUrl) {
+      coverEl.style.backgroundImage = `url('${imageUrl.replace(/'/g, "%27")}')`;
+      coverEl.classList.remove('placeholder');
+    } else {
+      coverEl.style.backgroundImage = '';
+      coverEl.classList.add('placeholder');
+    }
   }
   
   // Reset progress bar to beginning for new episode
@@ -1777,9 +1838,28 @@ function playWithMixcloudWidget(episode) {
           currentWidget = window.Mixcloud.PlayerWidget(iframe);
           console.log('Mixcloud widget initialized for controls');
           
-          // Mark widget as ready
+          // Sync button state with actual widget playback (fixes desync and delay)
+          if (currentWidget.events) {
+            if (currentWidget.events.play) {
+              currentWidget.events.play.on(() => {
+                isCurrentlyPlaying = true;
+                updatePlayState(true);
+                if (!window.currentProgressInterval && !window.currentProgressTimeoutId) startSimpleProgressTracking();
+              });
+            }
+            if (currentWidget.events.pause) {
+              currentWidget.events.pause.on(() => {
+                isCurrentlyPlaying = false;
+                updatePlayState(false);
+                stopProgressTracking();
+              });
+            }
+          }
+          
           window.mixcloudWidgetReady = true;
           setPlayerReady(true);
+          isCurrentlyPlaying = true;
+          updatePlayState(true);
           
           // For mobile auto-play, wait for widget ready event then start play
           if (isMobileDevice() && window.isAutoPlaying) {
@@ -1924,10 +2004,7 @@ function playWithMixcloudWidget(episode) {
               updatePlayState(false);
               isCurrentlyPlaying = false;
               // Stop progress tracking when paused
-              if (window.currentProgressInterval) {
-                clearInterval(window.currentProgressInterval);
-                window.currentProgressInterval = null;
-              }
+              stopProgressTracking();
             });
           }
           
@@ -1943,10 +2020,7 @@ function playWithMixcloudWidget(episode) {
                   
                   if (isPaused) {
                     // Stop progress tracking when paused
-                    if (window.currentProgressInterval) {
-                      clearInterval(window.currentProgressInterval);
-                      window.currentProgressInterval = null;
-                    }
+                    stopProgressTracking();
                   } else {
                     // Start progress tracking when playing
                     
@@ -1975,10 +2049,7 @@ function playWithMixcloudWidget(episode) {
               updatePlayState(false);
               isCurrentlyPlaying = false;
               // Stop progress tracking when ended
-              if (window.currentProgressInterval) {
-                clearInterval(window.currentProgressInterval);
-                window.currentProgressInterval = null;
-              }
+              stopProgressTracking();
               
               // Trigger auto-play next episode
               setTimeout(() => {
@@ -2063,6 +2134,19 @@ function hideMixcloudPlayer() {
   }
 }
 
+function pauseMixcloudPlayer() {
+  if (currentWidget) {
+    try {
+      if (typeof currentWidget.pause === 'function') currentWidget.pause();
+    } catch (e) {}
+  }
+  isCurrentlyPlaying = false;
+  updatePlayState(false);
+  stopProgressTracking();
+  hideMixcloudPlayer();
+}
+if (typeof window !== 'undefined') window.pauseMixcloudPlayer = pauseMixcloudPlayer;
+
 function showMixcloudPlayer() {
   const container = document.getElementById('mixcloud-player-container');
   if (container) {
@@ -2093,24 +2177,21 @@ function startProgressTracking(widget) {
 }
 
 function updateProgressBar(percentage, currentSeconds, totalSeconds) {
-  // Update mobile progress bar
+  const pct = Math.max(0, Math.min(100, Number(percentage) || 0));
   const progressFill = document.getElementById('hero-progress');
   const progressHandle = document.getElementById('progress-handle');
   const currentTimeEl = document.getElementById('current-time');
   const totalTimeEl = document.getElementById('total-time');
-  
-  // Update desktop progress bar
   const progressFillDesktop = document.getElementById('hero-progress-desktop');
   const progressHandleDesktop = document.getElementById('progress-handle-desktop');
   const currentTimeElDesktop = document.getElementById('current-time-desktop');
   const totalTimeElDesktop = document.getElementById('total-time-desktop');
   
-  // Update mobile elements
   if (progressFill) {
-    progressFill.style.width = percentage + '%';
+    progressFill.style.width = pct + '%';
   }
   if (progressHandle) {
-    progressHandle.style.left = percentage + '%';
+    progressHandle.style.left = pct + '%';
   }
   if (currentTimeEl) {
     currentTimeEl.textContent = formatTime(Math.floor(currentSeconds));
@@ -2118,13 +2199,11 @@ function updateProgressBar(percentage, currentSeconds, totalSeconds) {
   if (totalTimeEl) {
     totalTimeEl.textContent = '-' + formatTime(Math.floor(totalSeconds - currentSeconds));
   }
-  
-  // Update desktop elements
   if (progressFillDesktop) {
-    progressFillDesktop.style.width = percentage + '%';
+    progressFillDesktop.style.width = pct + '%';
   }
   if (progressHandleDesktop) {
-    progressHandleDesktop.style.left = percentage + '%';
+    progressHandleDesktop.style.left = pct + '%';
   }
   if (currentTimeElDesktop) {
     currentTimeElDesktop.textContent = formatTime(Math.floor(currentSeconds));
@@ -2173,91 +2252,76 @@ function pauseEpisode() {
     hideMixcloudPlayer();
   }
   
-  // Stop progress tracking
-  if (window.currentProgressInterval) {
-    clearInterval(window.currentProgressInterval);
-    window.currentProgressInterval = null;
-  }
-  
+  stopProgressTracking();
   updatePlayState(false);
 }
 
-function startSimpleProgressTracking() {
-  // Stop any existing progress tracking
+function stopProgressTracking() {
   if (window.currentProgressInterval) {
     clearInterval(window.currentProgressInterval);
     window.currentProgressInterval = null;
   }
-  
-  // Only start tracking if we're actually playing
-  if (!isCurrentlyPlaying) {
-    
-    return;
-  }
-  
-  
-  
-  // Try to get progress from Mixcloud widget
-  if (currentWidget && typeof currentWidget.getPosition === 'function' && typeof currentWidget.getDuration === 'function') {
-    
-    
-    window.currentProgressInterval = setInterval(async () => {
-      if (isCurrentlyPlaying && currentWidget) {
-        try {
-          // Handle async position and duration
-          const position = await currentWidget.getPosition();
-          const duration = await currentWidget.getDuration();
-          
-          if (position !== null && duration !== null && duration > 0) {
-            const percentage = (position / duration) * 100;
-            updateProgressBar(percentage, position, duration);
-            
-            // Check if episode has ended (within 2 seconds of duration)
-            if (duration - position <= 2) {
-              console.log('Episode completed via main progress tracking - triggering auto-play');
-              console.log(`Position: ${position}s, Duration: ${duration}s, Remaining: ${duration - position}s`);
-              clearInterval(window.currentProgressInterval);
-              window.currentProgressInterval = null;
-              
-              // Update play state
-              updatePlayState(false);
-              isCurrentlyPlaying = false;
-              
-              // Trigger auto-play
-              setTimeout(() => {
-                console.log('Triggering auto-play from main progress tracking');
-                handleAutoPlayNext();
-              }, 1000);
-            }
-          } else {
-            
-            // Try fallback if we can't get valid data
-            startFallbackProgressTracking();
-          }
-        } catch (error) {
-          
-          // Fallback to simple tracking
-          startFallbackProgressTracking();
-        }
-      } else {
-        
-        if (window.currentProgressInterval) {
-          clearInterval(window.currentProgressInterval);
-          window.currentProgressInterval = null;
-        }
-      }
-    }, 1000);
-  } else {
-    
-    startFallbackProgressTracking();
+  if (window.currentProgressTimeoutId) {
+    clearTimeout(window.currentProgressTimeoutId);
+    window.currentProgressTimeoutId = null;
   }
 }
 
-function startFallbackProgressTracking() {
-  // Fallback progress tracking - simple timer
-  let totalDuration = window.currentEpisodeDuration || 1200; // Use API duration if available, otherwise 20 minutes
+function startSimpleProgressTracking() {
+  stopProgressTracking();
   
-  // Try to get the actual duration from Mixcloud widget first
+  if (!isCurrentlyPlaying) return;
+  if (!currentWidget || typeof currentWidget.getPosition !== 'function' || typeof currentWidget.getDuration !== 'function') {
+    startFallbackProgressTracking();
+    return;
+  }
+  
+  const PROGRESS_POLL_MS = 1000;
+  
+  function pollOnce() {
+    if (!isCurrentlyPlaying || !currentWidget) {
+      if (window.currentProgressTimeoutId) {
+        clearTimeout(window.currentProgressTimeoutId);
+        window.currentProgressTimeoutId = null;
+      }
+      return;
+    }
+    Promise.all([currentWidget.getPosition(), currentWidget.getDuration()])
+      .then(([position, duration]) => {
+        if (!isCurrentlyPlaying || !currentWidget) return;
+        if (position == null || duration == null || duration <= 0) {
+          startFallbackProgressTracking();
+          return;
+        }
+        const pos = Math.max(0, Math.min(position, duration));
+        const pct = Math.max(0, Math.min(100, (pos / duration) * 100));
+        updateProgressBar(pct, pos, duration);
+        
+        if (duration - pos <= 2) {
+          if (window.currentProgressTimeoutId) {
+            clearTimeout(window.currentProgressTimeoutId);
+            window.currentProgressTimeoutId = null;
+          }
+          updatePlayState(false);
+          isCurrentlyPlaying = false;
+          setTimeout(() => handleAutoPlayNext(), 1000);
+          return;
+        }
+        window.currentProgressTimeoutId = setTimeout(pollOnce, PROGRESS_POLL_MS);
+      })
+      .catch(() => {
+        if (!isCurrentlyPlaying) return;
+        startFallbackProgressTracking();
+      });
+  }
+  
+  pollOnce();
+}
+
+function startFallbackProgressTracking() {
+  stopProgressTracking();
+  let totalDuration = window.currentEpisodeDuration || 1200;
+  
   if (currentWidget && typeof currentWidget.getDuration === 'function') {
     currentWidget.getDuration()
       .then(duration => {
@@ -2296,8 +2360,8 @@ function startFallbackProgressTracking() {
         console.log(`Progress: ${progress}s, Duration: ${totalDuration}s, Remaining: ${totalDuration - progress}s`);
         isCurrentlyPlaying = false;
         updatePlayState(false);
-        clearInterval(window.currentProgressInterval);
-        
+        stopProgressTracking();
+
         // Trigger auto-play next episode
         setTimeout(() => {
           console.log('Triggering auto-play from fallback progress tracking');
@@ -2309,16 +2373,11 @@ function startFallbackProgressTracking() {
 }
 
 function updatePlayState(isPlaying) {
-  // Update the single play/pause button
   const playPauseBtn = document.getElementById('hero-play-pause');
-  
-  if (!playPauseBtn) {
-    // Play button not found in updatePlayState
-    return;
-  }
-  
-  // Updating play state
-  
+  if (!playPauseBtn) return;
+
+  playPauseBtn.disabled = false;
+
   if (isPlaying) {
     // Show pause icon (Font Awesome)
     playPauseBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
@@ -2367,33 +2426,17 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
     const clickX = e.clientX - rect.left;
     const percentage = (clickX / rect.width) * 100;
     
-    // Stop automatic progress tracking when user seeks
-    if (window.currentProgressInterval) {
-      clearInterval(window.currentProgressInterval);
-      window.currentProgressInterval = null;
-    }
-    
+    stopProgressTracking();
     seekTo(percentage);
-    
-    // Restart progress tracking after seeking with longer delay
     if (isCurrentlyPlaying) {
-      setTimeout(() => {
-        // Restarting progress tracking after seek
-        startSimpleProgressTracking();
-      }, 500);
+      setTimeout(() => startSimpleProgressTracking(), 500);
     }
   });
   
-  // Drag handle
   progressHandle.addEventListener('mousedown', (e) => {
     isDragging = true;
     e.preventDefault();
-    
-    // Stop automatic progress tracking when user starts dragging
-    if (window.currentProgressInterval) {
-      clearInterval(window.currentProgressInterval);
-      window.currentProgressInterval = null;
-    }
+    stopProgressTracking();
   });
   
   document.addEventListener('mousemove', (e) => {
@@ -2410,14 +2453,7 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
       isDragging = false;
       const percentage = parseFloat(progressFill.style.width);
       seekTo(percentage);
-      
-      // Restart progress tracking after dragging with longer delay
-      if (isCurrentlyPlaying) {
-        setTimeout(() => {
-          // Restarting progress tracking after drag
-          startSimpleProgressTracking();
-        }, 500);
-      }
+      if (isCurrentlyPlaying) setTimeout(() => startSimpleProgressTracking(), 500);
     }
   });
   
@@ -2432,13 +2468,7 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
     const touchX = touch.clientX - rect.left;
     const percentage = Math.max(0, Math.min(100, (touchX / rect.width) * 100));
     
-    // Stop automatic progress tracking when user starts touching
-    if (window.currentProgressInterval) {
-      clearInterval(window.currentProgressInterval);
-      window.currentProgressInterval = null;
-    }
-    
-    // Update progress immediately on touch start
+    stopProgressTracking();
     updateProgress(percentage);
   }, { passive: false });
   
@@ -2478,11 +2508,7 @@ function initSingleProgressBar(progressBarId, progressHandleId, progressFillId, 
     const touch = e.touches[0];
     touchStartX = touch.clientX;
     
-    // Stop automatic progress tracking when user starts dragging handle
-    if (window.currentProgressInterval) {
-      clearInterval(window.currentProgressInterval);
-      window.currentProgressInterval = null;
-    }
+    stopProgressTracking();
   }, { passive: false });
   
   // Add visual feedback for mobile
@@ -3338,7 +3364,11 @@ window.handlePlayOnly = function() {
 
 // Make handlePlayPause globally accessible
 window.handlePlayPause = function() {
-  console.log('Play button clicked');
+  const now = Date.now();
+  if (now - lastPlayPauseClickTime < PLAY_PAUSE_CLICK_DEBOUNCE_MS) {
+    return;
+  }
+  lastPlayPauseClickTime = now;
   
   // If no current episode, try to get the latest episode from the episodes grid
   if (!currentEpisode) {
@@ -3361,68 +3391,53 @@ window.handlePlayPause = function() {
   }
   
   if (currentEpisode) {
-    console.log('Current episode:', currentEpisode);
-    
     if (isCurrentlyPlaying) {
-      // Currently playing, pause the episode
-      console.log('Pausing episode');
+      // Currently playing → pause: optimistic UI then call widget
+      updatePlayState(false);
+      isCurrentlyPlaying = false;
+      stopProgressTracking();
+      const container = document.getElementById('mixcloud-player-container');
+      if (container) container.style.bottom = '-200px';
       
       if (currentWidget) {
         try {
-          if (typeof currentWidget.pause === 'function') {
+          if (typeof currentWidget.togglePlay === 'function') {
+            currentWidget.togglePlay();
+          } else if (typeof currentWidget.pause === 'function') {
             currentWidget.pause();
-            console.log('Widget paused');
+            setTimeout(function retryPause() {
+              if (currentWidget && typeof currentWidget.pause === 'function') {
+                currentWidget.pause();
+              }
+            }, 150);
           }
         } catch (error) {
           console.error('Error pausing widget:', error);
         }
       }
       
-      // Update UI state
-      updatePlayState(false);
-      isCurrentlyPlaying = false;
-      
-      // Stop progress tracking
-      if (window.currentProgressInterval) {
-        clearInterval(window.currentProgressInterval);
-        window.currentProgressInterval = null;
-      }
-      
-      // Hide player container
-      const container = document.getElementById('mixcloud-player-container');
-      if (container) {
-        container.style.bottom = '-200px';
-      }
-      
     } else {
-      // Currently paused, play the episode
-      console.log('Resuming episode:', currentEpisode);
+      // Currently paused → play: pause live stream so only one player is active
+      if (typeof window.pauseHeroLiveStream === 'function') window.pauseHeroLiveStream();
+      isCurrentlyPlaying = true;
+      updatePlayState(true);
       
-      // Show player container
       const container = document.getElementById('mixcloud-player-container');
-      if (container) {
-        container.style.bottom = '0px';
-      }
+      if (container) container.style.bottom = '0px';
       
-      // Check if we have an existing widget that we can resume
       if (currentWidget) {
-        console.log('Resuming existing widget');
         try {
-          if (typeof currentWidget.play === 'function') {
+          if (typeof currentWidget.togglePlay === 'function') {
+            currentWidget.togglePlay();
+          } else if (typeof currentWidget.play === 'function') {
             currentWidget.play();
-            console.log('Widget resumed from pause position');
-            
-            // Update UI state
-            updatePlayState(true);
-            isCurrentlyPlaying = true;
-            startSimpleProgressTracking();
           } else {
-            // Widget doesn't have play function, create new one
             playEpisode(currentEpisode);
+            return;
           }
+          startSimpleProgressTracking();
         } catch (error) {
           console.error('Error resuming widget:', error);
-          // Fallback to creating new widget
           playEpisode(currentEpisode);
         }
       } else if (window.preloadedWidget && window.mixcloudWidgetReady) {
@@ -3522,6 +3537,24 @@ function preloadCurrentEpisode(episode) {
           window.preloadedWidget = window.Mixcloud.PlayerWidget(preloadIframe);
           console.log('Preloaded widget controls initialized');
           window.mixcloudWidgetReady = true;
+          
+          // Sync button state when preloaded widget becomes active (same as main widget)
+          if (window.preloadedWidget.events) {
+            if (window.preloadedWidget.events.play) {
+              window.preloadedWidget.events.play.on(() => {
+                isCurrentlyPlaying = true;
+                updatePlayState(true);
+                if (!window.currentProgressInterval && !window.currentProgressTimeoutId) startSimpleProgressTracking();
+              });
+            }
+            if (window.preloadedWidget.events.pause) {
+              window.preloadedWidget.events.pause.on(() => {
+                isCurrentlyPlaying = false;
+                updatePlayState(false);
+                stopProgressTracking();
+              });
+            }
+          }
           
           // Mark player as ready when preloaded widget is ready
           setPlayerReady(true);
@@ -3718,7 +3751,22 @@ function createPreloadedMixcloudPlayer(episodeUrl) {
       if (window.Mixcloud) {
         try {
           currentWidget = window.Mixcloud.PlayerWidget(iframe);
-          
+          if (currentWidget.events) {
+            if (currentWidget.events.play) {
+              currentWidget.events.play.on(() => {
+                isCurrentlyPlaying = true;
+                updatePlayState(true);
+                if (!window.currentProgressInterval && !window.currentProgressTimeoutId) startSimpleProgressTracking();
+              });
+            }
+            if (currentWidget.events.pause) {
+              currentWidget.events.pause.on(() => {
+                isCurrentlyPlaying = false;
+                updatePlayState(false);
+                stopProgressTracking();
+              });
+            }
+          }
           setPlayerReady(true);
         } catch (error) {
           
@@ -3730,7 +3778,10 @@ function createPreloadedMixcloudPlayer(episodeUrl) {
           if (window.Mixcloud) {
             try {
               currentWidget = window.Mixcloud.PlayerWidget(iframe);
-              
+              if (currentWidget.events) {
+                if (currentWidget.events.play) currentWidget.events.play.on(() => { isCurrentlyPlaying = true; updatePlayState(true); if (!window.currentProgressInterval && !window.currentProgressTimeoutId) startSimpleProgressTracking(); });
+                if (currentWidget.events.pause) currentWidget.events.pause.on(() => { isCurrentlyPlaying = false; updatePlayState(false); stopProgressTracking(); });
+              }
               setPlayerReady(true);
             } catch (error) {
               
@@ -4809,7 +4860,7 @@ function startInstagramAutoScroll() {
     }
     
     updateInstagramNavButtons();
-  }, 3000);
+  }, 4000);
 }
 
 function stopInstagramAutoScroll() {
@@ -4822,6 +4873,50 @@ function stopInstagramAutoScroll() {
 function resetInstagramAutoScroll() {
   stopInstagramAutoScroll();
   startInstagramAutoScroll();
+}
+
+// Ad banner auto-rotate and dot indicators
+function initAdBanner() {
+  var track = document.getElementById('ad-banner-track');
+  var dotsContainer = document.getElementById('ad-banner-dots');
+  if (!track) return;
+  var index = 0;
+  var total = 4;
+  var intervalMs = 5000;
+  var intervalId;
+
+  function goToSlide(i) {
+    index = (i + total) % total;
+    track.style.transform = 'translateX(-' + (index * 25) + '%)';
+    if (dotsContainer) {
+      var dots = dotsContainer.querySelectorAll('.ad-banner-dot');
+      dots.forEach(function(dot, j) {
+        var isActive = j === index;
+        dot.classList.toggle('active', isActive);
+        dot.setAttribute('aria-selected', isActive);
+      });
+    }
+  }
+
+  if (dotsContainer) {
+    dotsContainer.querySelectorAll('.ad-banner-dot').forEach(function(dot) {
+      dot.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var i = parseInt(dot.getAttribute('data-index'), 10);
+        if (!isNaN(i)) goToSlide(i);
+      });
+    });
+  }
+
+  intervalId = setInterval(function() {
+    goToSlide(index + 1);
+  }, intervalMs);
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAdBanner);
+} else {
+  initAdBanner();
 }
 
 // Calculate and display founder ages

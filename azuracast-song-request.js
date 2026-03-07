@@ -60,7 +60,7 @@
     overlay.innerHTML =
       '<div class="azuracast-request-modal">' +
         '<div class="azuracast-request-header">' +
-          '<h2 id="azuracast-request-title" class="azuracast-request-title">Request a song</h2>' +
+          '<h2 id="azuracast-request-title" class="azuracast-request-title">Be a manualDJ. Request a song.</h2>' +
           '<button type="button" class="azuracast-request-close" aria-label="Close">&times;</button>' +
         '</div>' +
         '<div class="azuracast-request-body">' +
