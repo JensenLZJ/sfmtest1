@@ -1,4 +1,4 @@
-// NO CACHE VERSION - Clear all caches immediately
+// NO CACHE VERSION - Clear all caches immediately | FORCE-CLEAR 2025-03-07
 const CACHE_NAME = 'samudrafm-no-cache-v' + Date.now();
 
 self.addEventListener('install', (event) => {

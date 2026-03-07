@@ -64,9 +64,9 @@ function updateHeroPresenterFromApi(presenter) {
   if (!nameEl || !descEl || !timeEl || !avatarEl) return;
 
   if (presenter && presenter.noData === true) {
-    nameEl.textContent = 'No data.';
-    descEl.textContent = 'No data.';
-    timeEl.textContent = 'No data.';
+    nameEl.textContent = 'Offline';
+    descEl.textContent = 'Offline';
+    timeEl.textContent = 'Offline';
     avatarEl.style.backgroundImage = "url('assets/brandmark/sfmTextLogoBG1.svg')";
     if (socialsEl) {
       socialsEl.innerHTML = '<span class="hero-presenter-social-icon" aria-hidden="true"><i class="fa-brands fa-instagram" aria-hidden="true"></i></span><span class="hero-presenter-social-icon" aria-hidden="true"><i class="fab fa-facebook-f" aria-hidden="true"></i></span><a class="hero-presenter-social-icon" href="/profile" aria-label="Profile Page"><i class="fas fa-user" aria-hidden="true"></i></a>';
@@ -162,6 +162,7 @@ function updateHeroNowPlaying() {
   var titleEl = document.getElementById('hero-live-title');
   var spotifyLink = document.getElementById('hero-live-spotify-link');
   var subtitleEl = document.querySelector('.hero-live-info .hero-live-subtitle');
+  var badgeEl = document.querySelector('#hero-live-info .hero-live-badge');
 
   fetchNowPlaying().then(function (result) {
     var track = result.data;
@@ -174,12 +175,16 @@ function updateHeroNowPlaying() {
 
     if (infoEl && cover && titleEl && subtitleEl) {
       if (!track) {
-        infoEl.classList.add('hero-live-info-hidden');
-        infoEl.setAttribute('aria-hidden', 'true');
+        infoEl.classList.remove('hero-live-info-hidden');
+        infoEl.setAttribute('aria-hidden', 'false');
         cover.style.backgroundImage = '';
-        titleEl.textContent = '';
+        titleEl.textContent = 'Offline';
         subtitleEl.textContent = '';
         if (spotifyLink) spotifyLink.style.display = 'none';
+        if (badgeEl) {
+          badgeEl.textContent = 'Offline';
+          badgeEl.classList.add('hero-live-badge--offline');
+        }
       } else {
         infoEl.classList.remove('hero-live-info-hidden');
         infoEl.setAttribute('aria-hidden', 'false');
@@ -191,6 +196,10 @@ function updateHeroNowPlaying() {
         }
         if (track.artist) {
           subtitleEl.textContent = track.artist;
+        }
+        if (badgeEl) {
+          badgeEl.textContent = 'LIVE';
+          badgeEl.classList.remove('hero-live-badge--offline');
         }
         if (spotifyLink) {
           var songLink = track.link || track.spotify_link || track.track_url || track.url || track.external_url || (track.external_urls && track.external_urls.spotify) || '';

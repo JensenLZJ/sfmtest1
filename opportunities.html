@@ -41,7 +41,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="styles.css?v=1734570200">
+    <link rel="stylesheet" href="styles.css?v=99&t=1741305600&nocache=1">
     
     <!-- Custom CSS for opportunities page -->
     <style>
@@ -642,474 +642,103 @@
     <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
     
     <style>
-        /* Player styling to match schedule items */
-        .hero-player-section {
-            padding: 40px 0 20px 0;
-        }
-        
-        .hero-latest {
-            background: #1d283c !important;
-            border-radius: 10px !important;
-            overflow: hidden !important;
-            color: white !important;
-            margin: 0 auto !important;
-            padding: 20px !important;
-            max-width: 100% !important;
-            width: 100% !important;
-        }
-        
-        .hero-latest .player-content-row {
-            display: flex !important;
-            align-items: center !important;
-            gap: 20px !important;
-        }
-        
-        .hero-latest .player-left {
-            flex: 0 0 80px !important;
-            max-width: 80px !important;
-            position: relative !important;
-        }
-        
-        .hero-latest .hero-latest-cover {
-            width: 80px !important;
-            height: 80px !important;
-            border-radius: 8px !important;
-        }
-        
-        .hero-latest .play-overlay {
-            border-radius: 8px !important;
-        }
-        
-        .hero-latest .player-right {
-            flex: 1 !important;
-            min-width: 0 !important;
-        }
-        
-        @media (max-width: 768px) {
-            .hero-player-section {
-                padding: 20px 0 10px 0;
-            }
-            
-            .hero-player-section .container {
-                padding-left: 16px !important;
-                padding-right: 16px !important;
-            }
-            
-            .hero-latest {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 8px !important;
-                min-height: auto !important;
-                margin: 24px 0 4px 0 !important;
-                padding: 16px !important;
-                width: 100% !important;
-                max-width: 100% !important;
-            }
-
-            .hero-latest .player-widget {
-                width: 100% !important;
-                min-height: 120px !important;
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 12px !important;
-                padding: 12px !important;
-            }
-            
-            .hero-latest .player-content-row {
-                display: flex !important;
-                align-items: center !important;
-                gap: 16px !important;
-                flex: 1 !important;
-            }
-
-            .hero-latest .player-left {
-                flex: 0 0 50% !important;
-                max-width: 50% !important;
-                aspect-ratio: 1 !important;
-            }
-            
-            .hero-latest .player-right {
-                flex: 0 0 50% !important;
-                max-width: 50% !important;
-                text-align: left !important;
-            }
-            
-            .hero-latest .player-info {
-                text-align: left !important;
-            }
-            
-            .hero-latest .player-info * {
-                text-align: left !important;
-            }
-
-            .hero-latest .hero-latest-cover {
-                width: 100% !important;
-                height: 100% !important;
-                border-radius: 10px !important;
-            }
-
-            .hero-latest .play-overlay {
-                pointer-events: auto !important;
-                border-radius: 10px !important;
-            }
-
-            .hero-latest .play-pause-btn {
-                width: 60px !important;
-                height: 60px !important;
-                font-size: 42px !important;
-                background: transparent !important;
-                color: white !important;
-            }
-            
-            .hero-latest .player-widget > .progress-container {
-                order: 10 !important;
-                width: 100% !important;
-                margin-top: 8px !important;
-            }
-            
-            .hero-latest .player-right .progress-container {
-                display: none !important;
-            }
-        }
-        
-        @media (min-width: 769px) and (max-width: 1023px) {
-            .hero-player-section {
-                padding: 40px 0 20px 0 !important;
-            }
-            
-            .hero-latest {
-                display: grid !important;
-                grid-template-columns: 1fr !important;
-                gap: 12px !important;
-                position: relative !important;
-                background: rgba(255,255,255,0.1) !important;
-                backdrop-filter: blur(20px) !important;
-                -webkit-backdrop-filter: blur(20px) !important;
-                border-radius: var(--radius) !important;
-                padding: 20px !important;
-                margin: 20px 0 !important;
-                border: 1px solid rgba(255,255,255,0.2) !important;
-                box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1) !important;
-                box-sizing: border-box !important;
-            }
-            
-            .hero-latest .player-widget {
-                position: relative !important;
-                z-index: 10 !important;
-                background: rgba(91, 65, 254, 0.3) !important;
-                border-radius: var(--radius) !important;
-                box-shadow: var(--shadow) !important;
-                display: flex !important;
-                gap: 16px !important;
-                align-items: center !important;
-                padding: 16px !important;
-                width: 100% !important;
-                max-width: none !important;
-                max-height: 212px !important;
-                box-sizing: border-box !important;
-            }
-            
-            .hero-latest .player-content-row {
-                display: flex !important;
-                align-items: center !important;
-                gap: 20px !important;
-                flex: 1 !important;
-            }
-            
-            .hero-latest .player-left {
-                position: relative !important;
-                flex: 0 0 auto !important;
-                width: 180px !important;
-                height: 180px !important;
-                max-width: 180px !important;
-                max-height: 180px !important;
-                min-width: 180px !important;
-                min-height: 180px !important;
-            }
-            
-            .hero-latest .hero-latest-cover {
-                width: 100% !important;
-                height: 100% !important;
-                border-radius: 12px !important;
-                background-size: cover !important;
-                background-position: center !important;
-                background-repeat: no-repeat !important;
-            }
-            
-            .hero-latest .play-overlay {
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
-                background: rgba(0,0,0,0.2) !important;
-                border-radius: 12px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                opacity: 1 !important;
-                transition: opacity 0.2s !important;
-                pointer-events: none !important;
-            }
-            
-            .hero-latest .player-right {
-                flex: 1 !important;
-                min-width: 0 !important;
-                text-align: left !important;
-            }
-            
-            .hero-latest .player-info {
-                text-align: left !important;
-            }
-            
-            .hero-latest .player-info * {
-                text-align: left !important;
-            }
-            
-            .hero-latest .player-widget > .progress-container {
-                display: none !important;
-            }
-            
-            .hero-latest .player-content-row .player-right .progress-container {
-                display: block !important;
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            .hero-player-section {
-                padding: 40px 0 20px 0 !important;
-            }
-            
-            .hero-latest {
-                display: grid !important;
-                grid-template-columns: 1fr !important;
-                gap: 12px !important;
-                position: relative !important;
-                background: rgba(255,255,255,0.1) !important;
-                backdrop-filter: blur(20px) !important;
-                -webkit-backdrop-filter: blur(20px) !important;
-                border-radius: var(--radius) !important;
-                padding: 20px !important;
-                margin: 20px 0 !important;
-                border: 1px solid rgba(255,255,255,0.2) !important;
-                box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1) !important;
-            }
-            
-            .hero-latest .player-widget {
-                position: relative !important;
-                z-index: 10 !important;
-                background: rgba(91, 65, 254, 0.3) !important;
-                border-radius: var(--radius) !important;
-                box-shadow: var(--shadow) !important;
-                display: flex !important;
-                gap: 16px !important;
-                align-items: center !important;
-                padding: 16px !important;
-                width: 100% !important;
-                max-width: none !important;
-                max-height: 212px !important;
-                box-sizing: border-box !important;
-            }
-            
-            .hero-latest .player-content-row {
-                display: flex !important;
-                align-items: center !important;
-                gap: 20px !important;
-                flex: 1 !important;
-            }
-            
-            .hero-latest .player-left {
-                position: relative !important;
-                flex: 0 0 auto !important;
-                width: 180px !important;
-                height: 180px !important;
-                max-width: 180px !important;
-                max-height: 180px !important;
-                min-width: 180px !important;
-                min-height: 180px !important;
-            }
-            
-            .hero-latest .hero-latest-cover {
-                width: 100% !important;
-                height: 100% !important;
-                border-radius: 12px !important;
-                background-size: cover !important;
-                background-position: center !important;
-                background-repeat: no-repeat !important;
-            }
-            
-            .hero-latest .play-overlay {
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
-                background: rgba(0,0,0,0.2) !important;
-                border-radius: 12px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                opacity: 1 !important;
-                transition: opacity 0.2s !important;
-                pointer-events: none !important;
-            }
-            
-            .hero-latest .player-right {
-                flex: 1 !important;
-                min-width: 0 !important;
-                text-align: left !important;
-            }
-            
-            .hero-latest .player-info {
-                text-align: left !important;
-            }
-            
-            .hero-latest .player-info * {
-                text-align: left !important;
-            }
-            
-            .hero-latest .player-widget > .progress-container {
-                display: none !important;
-            }
-            
-            .hero-latest .player-content-row .player-right .progress-container {
-                display: block !important;
-            }
-        }
-        
-        /* Keep player info left-aligned on opportunities page */
-        .hero-latest .player-right {
-            text-align: left !important;
-        }
-        
-        .hero-latest .player-info {
-            text-align: left !important;
-        }
-        
-        .hero-latest .player-info * {
-            text-align: left !important;
-        }
-        
-        .hero-latest #hero-ep-title,
-        .hero-latest .track-title {
-            text-align: left !important;
-            width: 100% !important;
-            display: block !important;
-        }
-        
-        .hero-latest #hero-ep-artist,
-        .hero-latest .track-artist {
-            text-align: left !important;
-            color: rgba(255, 255, 255, 1) !important;
-            width: 100% !important;
-            display: block !important;
-            margin-left: 0 !important;
-            padding-left: 0 !important;
-        }
+        /* Live player: schedule-style rules in styles.css (body:not(.page-home) .hero-player-section) */
     </style>
 </head>
 <body>
     <main class="site-main">
-        <!-- Hero Section with integrated header -->
-        <section class="request-hero">
-            <!-- Hero Header -->
-            <header class="hero-header">
-                <div class="container hero-header-inner">
-                    <a href="/" class="brand" aria-label="SamudraFM Home">
-                        <span class="brand-mark"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></span>
-                        <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
-                    </a>
-                    <nav class="nav" aria-label="primary">
-                        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
-                            <span class="hamburger-line"></span>
-                            <span class="hamburger-line"></span>
-                            <span class="hamburger-line"></span>
-                        </button>
-                        <ul id="nav-menu" class="nav-list">
-                            <li><a href="/">home</a></li>
-                            <li><a href="/schedule">schedule</a></li>
-                            <li><a href="/team">our team</a></li>
-                            <li><a href="/about">about</a></li>
-                            <li class="nav-dropdown">
-                                <a href="/contact">contact</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="/contact">feedback</a></li>
-                                    <li><a href="/request">request</a></li>
-                                    <li><a href="/opportunities" class="active">opportunities</a></li>
-                                    <li><a href="/apply">apply</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </header>
-            <!-- Player Section -->
-            <section class="hero-player-section">
-                <div class="container">
-                    <div class="panel hero-latest" id="hero-latest">
-                        <div class="player-widget">
-                            <div class="player-content-row">
-                                <div class="player-left">
-                                    <div class="hero-latest-cover cover placeholder" id="player-cover"></div>
-                                    <div class="live-badge">LIVE</div>
-                                    <div class="play-overlay" id="play-overlay">
-                                        <button class="play-pause-btn" id="hero-play-pause"><i class="fa-solid fa-pause"></i></button>
-                                    </div>
-                                </div>
-                                <div class="player-right">
-                                    <div class="player-info">
-                                        <h3 id="hero-ep-title" class="track-title">Loading…</h3>
-                                        <p id="hero-ep-artist" class="track-artist">by <img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1em; vertical-align: middle; display: inline-block; margin: 0 2px;"></p>
-                                    </div>
-                                    <div class="player-controls">
-                                        <div class="volume-control">
-                                            <span class="volume-icon">🔊</span>
-                                            <div class="volume-slider">
-                                                <div class="volume-bar">
-                                                    <div class="volume-fill" style="width: 80%"></div>
-                                                    <div class="volume-handle"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <a id="hero-open" class="request-btn" href="request" target="_blank" rel="noopener">Send a request</a>
-                                    </div>
-                                    
-                                    <!-- Progress Bar for Desktop -->
-                                    <div class="progress-container">
-                                        <div class="progress" id="progress-bar-desktop">
-                                            <div id="hero-progress-desktop" class="bar" style="width:0%"></div>
-                                            <div class="progress-handle" id="progress-handle-desktop"></div>
-                                        </div>
-                                        <div class="time-display">
-                                            <span id="current-time-desktop">0:00</span>
-                                            <span id="total-time-desktop">0:00</span>
-                                        </div>
-                                    </div>
+        <!-- Hero Header (1:1 same as schedule) -->
+        <header class="hero-header">
+            <div class="container hero-header-inner">
+                <a href="/" class="brand" aria-label="SamudraFM Home">
+                    <span class="brand-mark"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></span>
+                    <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
+                </a>
+                <nav class="nav" aria-label="primary">
+                    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    <ul id="nav-menu" class="nav-list">
+                        <li><a href="/">home</a></li>
+                        <li><a href="/schedule">schedule</a></li>
+                        <li><a href="/team">our team</a></li>
+                        <li><a href="/about">about</a></li>
+                        <li class="nav-dropdown">
+                            <a href="/contact">contact</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/contact">feedback</a></li>
+                                <li><a href="/request">request</a></li>
+                                <li><a href="/opportunities" class="active">opportunities</a></li>
+                                <li><a href="/apply">apply</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <!-- Player Section: LIVE stream (1:1 same as schedule) -->
+        <section class="hero-player-section">
+            <div class="container">
+                <div class="hero-embed hero-live-embed hero-live-text-pending" id="hero-live-embed">
+                    <div class="hero-live-player" id="hero-live-player">
+                        <div class="hero-live-player-inner">
+                            <div class="hero-live-left">
+                                <div class="hero-live-cover" id="hero-live-cover" style="background-image: url('images/SamudraFMLogo1.png');"></div>
+                                <div class="hero-live-play-overlay">
+                                    <button type="button" class="hero-live-play-pause" id="hero-live-play-pause" aria-label="Play live stream"><i class="fa-solid fa-play"></i></button>
                                 </div>
                             </div>
-                            
-                            <!-- Progress Bar - Full Width on Mobile -->
-                            <div class="progress-container">
-                                <div class="progress" id="progress-bar">
-                                    <div id="hero-progress" class="bar" style="width:0%"></div>
-                                    <div class="progress-handle" id="progress-handle"></div>
+                            <div class="hero-live-offline" id="hero-live-offline" aria-live="polite">Offline</div>
+                            <div class="hero-live-info" id="hero-live-info" aria-hidden="false">
+                                <div class="hero-live-status-row" id="hero-live-spotify-row">
+                                    <a id="hero-live-spotify-link" href="https://open.spotify.com" target="_blank" rel="noopener" class="hero-live-spotify-link" aria-label="Open in Spotify" style="display:none">
+                                        <img class="hero-live-spotify-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640'%3E%3Cpath fill='%231db954' d='M320 72C183 72 72 183 72 320C72 457 183 568 320 568C457 568 568 457 568 320C568 183 457 72 320 72zM420.7 436.9C416.5 436.9 413.9 435.6 410 433.3C347.6 395.7 275 394.1 203.3 408.8C199.4 409.8 194.3 411.4 191.4 411.4C181.7 411.4 175.6 403.7 175.6 395.6C175.6 385.3 181.7 380.4 189.2 378.8C271.1 360.7 354.8 362.3 426.2 405C432.3 408.9 435.9 412.4 435.9 421.5C435.9 430.6 428.8 436.9 420.7 436.9zM447.6 371.3C442.4 371.3 438.9 369 435.3 367.1C372.8 330.1 279.6 315.2 196.7 337.7C191.9 339 189.3 340.3 184.8 340.3C174.1 340.3 165.4 331.6 165.4 320.9C165.4 310.2 170.6 303.1 180.9 300.2C208.7 292.4 237.1 286.6 278.7 286.6C343.6 286.6 406.3 302.7 455.7 332.1C463.8 336.9 467 343.1 467 351.8C466.9 362.6 458.5 371.3 447.6 371.3zM478.6 295.1C473.4 295.1 470.2 293.8 465.7 291.2C394.5 248.7 267.2 238.5 184.8 261.5C181.2 262.5 176.7 264.1 171.9 264.1C158.7 264.1 148.6 253.8 148.6 240.5C148.6 226.9 157 219.2 166 216.6C201.2 206.3 240.6 201.4 283.5 201.4C356.5 201.4 433 216.6 488.9 249.2C496.7 253.7 501.8 259.9 501.8 271.8C501.8 285.4 490.8 295.1 478.6 295.1z'/%3E%3C/svg%3E" width="24" height="24" alt="" aria-hidden="true" style="display:block">
+                                    </a>
                                 </div>
-                                <div class="time-display">
-                                    <span id="current-time">0:00</span>
-                                    <span id="total-time">0:00</span>
+                                <h3 class="hero-live-title" id="hero-live-title">Offline</h3>
+                                <p class="hero-live-subtitle"> </p>
+                                <div class="hero-live-controls-row">
+                                    <div class="hero-live-volume-wrap">
+                                        <span class="hero-live-volume-icon" aria-hidden="true">🔊</span>
+                                        <input type="range" class="hero-live-volume" id="hero-live-volume" min="0" max="100" value="80" aria-label="Live stream volume">
+                                    </div>
+                                    <a class="hero-live-request" href="/request">manualDJ</a>
                                 </div>
                             </div>
                         </div>
-                        <div class="hero-embed" hidden></div>
                     </div>
+                    <div class="hero-presenter-card" id="hero-presenter-card">
+                        <div class="hero-presenter-inner">
+                            <div class="hero-presenter-info">
+                                <div class="hero-live-status-row hero-presenter-status">
+                                    <span class="hero-live-status-dot" aria-hidden="true"></span>
+                                    <span class="hero-live-status-label">LIVE</span>
+                                </div>
+                                <h3 class="hero-presenter-name"><a href="/request" id="presenter-name" class="hero-presenter-name-link">Offline</a></h3>
+                                <p class="hero-presenter-subtitle" id="presenter-desc">Offline</p>
+                                <p class="hero-presenter-meta" id="presenter-time">Offline</p>
+                                <div class="hero-presenter-socials">
+                                    <span class="hero-presenter-social-icon"><i class="fa-brands fa-instagram" aria-hidden="true"></i></span>
+                                    <span class="hero-presenter-social-icon"><i class="fab fa-facebook-f" aria-hidden="true"></i></span>
+                                    <a class="hero-presenter-social-icon" href="/profile" aria-label="Profile Page"><i class="fas fa-user" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            <div class="hero-presenter-avatar-wrap">
+                                <div class="hero-presenter-avatar" id="presenter-avatar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <audio id="hero-live-audio" preload="none" crossorigin="anonymous"></audio>
                 </div>
-            </section>
-
-            <!-- Mixcloud Player Container -->
-            <div id="mixcloud-player-container" style="position: fixed; bottom: -400px; left: 0; right: 0; height: 400px; background: #1a1a1a; z-index: 1000; transition: bottom 0.3s ease;">
-                <div id="mixcloud-player" style="width: 100%; height: 100%;"></div>
             </div>
+        </section>
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7"></script>
+        <script src="js/hero-live-stream.js?v=4"></script>
 
+        <!-- Opportunities hero content -->
+        <section class="request-hero">
             <h2 style="margin-top: 16px; margin-bottom: 0; font-weight: 600; font-size: 48px; color: #ffffff; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; width: 100%;">
                 <span>Applications are currently</span>
                 <span style="color: #f91e5a; border: 1px solid #f91e5a; border-radius: 4px; padding: 8px 16px; font-weight: 500;">OPEN</span>
@@ -1893,9 +1522,9 @@
     </style>
     
     <!-- Mixcloud Widget Script -->
-    <script src="https://widget.mixcloud.com/media/js/widgetApi.js" type="text/javascript"></script>
-    
-    <script src="js/script.js"></script>
+    <script src="js/presenter-data.js"></script>
+    <script src="js/nowplaying.js"></script>
+    <script src="js/script.js?v=99&t=1741305600&nocache=1"></script>
     
     <!-- Auto-update footer year -->
     <script>

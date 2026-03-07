@@ -228,6 +228,16 @@
       e.stopPropagation();
       open();
     });
+
+    // Presenter name (e.g. autoDJ): same function as manualDJ – open request modal, don't navigate
+    var presenterNameEl = document.getElementById('presenter-name');
+    if (presenterNameEl) {
+      presenterNameEl.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        open();
+      });
+    }
   }
 
   if (document.readyState === 'loading') {

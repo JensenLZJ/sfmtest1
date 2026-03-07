@@ -837,32 +837,18 @@ async function loadMixcloudEpisodes(username, nextUrl) {
     slider.innerHTML = '<p class="muted">Loading episodes�</p>';
   }
   
+  const getCloudcasts = typeof window.getMixcloudCloudcasts === 'function' ? window.getMixcloudCloudcasts : null;
+  if (!getCloudcasts) {
+    slider.innerHTML = '<p class="muted">Unable to load episodes (data layer not available).</p>';
+    return;
+  }
+  if (!nextUrl && !slider.dataset.loaded) {
+    slider.innerHTML = '<p class="muted">Loading episodes…</p>';
+  }
   try {
-    // Load episodes from Mixcloud API directly
-    const apiUrl = nextUrl || `https://api.mixcloud.com/${username}/cloudcasts/?limit=12`;
-    const res = await fetch(apiUrl, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-    
-    const data = await res.json();
-    
-    const items = (data.data || []).map(item => ({
-      url: item.url,
-      name: item.name,
-      created: item.created_time ? new Date(item.created_time) : null,
-      picture: item.pictures ? (item.pictures.extra_large || item.pictures.large || item.pictures.medium) : ''
-    }));
-    
-    mixcloudNextUrl = data.paging && data.paging.next ? data.paging.next : null;
+    const result = await getCloudcasts(username, nextUrl ? { nextUrl: nextUrl } : { limit: 12 });
+    const items = result.data || [];
+    mixcloudNextUrl = result.paging && result.paging.next ? result.paging.next : null;
     if (!items.length) {
       // No episodes available
       slider.innerHTML = '<p class="muted">No episodes available at the moment.</p>';
@@ -1064,48 +1050,14 @@ function attachEpisodeClickHandlers() {
   });
 }
 
-// Load episodes for home page (using original slider functionality)
+// Load episodes for home page (uses mixcloud-data.js)
 async function loadHomeEpisodes() {
-  const episodesSlider = document.getElementById('episodes-slider');
-  if (!episodesSlider) return;
+  await loadMixcloudEpisodes(MIXCLOUD_USERNAME);
+}
 
-  try {
-    episodesSlider.innerHTML = '<p class="muted">Loading episodes...</p>';
-    
-    // Load episodes from Mixcloud API directly
-    const res = await fetch(`https://api.mixcloud.com/${MIXCLOUD_USERNAME}/cloudcasts/?limit=12`, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-    
-    const data = await res.json();
-    const items = data.data || [];
-    
-    if (items.length === 0) {
-      episodesSlider.innerHTML = '<p class="muted">No episodes available at the moment.</p>';
-      return;
-    }
-    
-    // Store episodes for slider functionality
-    episodes = items;
-    
-    // Initialize and render the slider
-    initEpisodesSlider();
-    renderEpisodesSlider();
-    attachEpisodeClickHandlers();
-    
-  } catch (error) {
-    console.error('Error loading home episodes:', error);
-    episodesSlider.innerHTML = '<p class="muted">Unable to load episodes at the moment.</p>';
-  }
+// Load episodes with retry – used by DOMContentLoaded and visibility check
+function loadEpisodesWithRetry() {
+  loadMixcloudEpisodes(MIXCLOUD_USERNAME);
 }
 
 // Load episodes when DOM is ready
@@ -2603,24 +2555,13 @@ async function loadHeroLatest(username){
     return;
   }
   
-  try{
-    // Load latest episode from Mixcloud API directly
-    const res = await fetch(`https://api.mixcloud.com/${username}/cloudcasts/?limit=1`, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-    
-    const data = await res.json();
-    
-    const ep = data.data && data.data[0];
+  const getLatest = typeof window.getMixcloudLatest === 'function' ? window.getMixcloudLatest : null;
+  if (!getLatest) {
+    titleEl.textContent = 'Unable to load latest episode';
+    return;
+  }
+  try {
+    const ep = await getLatest(username);
     
     if (!ep) {
       // No episodes available

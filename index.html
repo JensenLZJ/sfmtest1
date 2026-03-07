@@ -148,7 +148,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="styles.css?v=44&t=1734571000&force=21&nocache=1&cb=1734571000">
+    <link rel="stylesheet" href="styles.css?v=99&t=1741305600&force=99&nocache=1&cb=1741305600">
     
     
     <!-- Favicon -->
@@ -161,12 +161,12 @@
     <!-- Content Security Policy and Permissions Policy -->
     <meta http-equiv="Permissions-Policy" content="encrypted-media=(self https://player-widget.mixcloud.com https://www.mixcloud.com); autoplay=(self https://player-widget.mixcloud.com https://www.mixcloud.com); microphone=(); camera=(); fullscreen=(self https://player-widget.mixcloud.com https://www.mixcloud.com); geolocation=(); payment=(); usb=(); accelerometer=(); gyroscope=(); magnetometer=(); display-capture=(); web-share=(self); clipboard-read=(); clipboard-write=(); picture-in-picture=(self)">
     <meta http-equiv="Feature-Policy" content="encrypted-media 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; autoplay 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; microphone 'none'; camera 'none'; fullscreen 'self' https://player-widget.mixcloud.com https://www.mixcloud.com; geolocation 'none'; payment 'none'; usb 'none'; accelerometer 'none'; gyroscope 'none'; magnetometer 'none'; display-capture 'none'; web-share 'self'; clipboard-read 'none'; clipboard-write 'none'; picture-in-picture 'self'">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.googleapis.com https://www.googletagmanager.com; script-src-elem 'self' 'unsafe-inline' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.googleapis.com https://www.googletagmanager.com; connect-src 'self' https://api.mixcloud.com https://api.samudrafm.com https://widget.mixcloud.com https://api.allorigins.win https://cors-anywhere.herokuapp.com https://thingproxy.freeboard.io https://www.googleapis.com https://graph.instagram.com https://rss.app https://www.googletagmanager.com https://www.google-analytics.com https://talent.samudrafm.com https://cdn.jsdelivr.net; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com https://talent.samudrafm.com blob:; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; child-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; frame-src https://www.mixcloud.com https://widget.mixcloud.com https://player-widget.mixcloud.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.googleapis.com https://www.googletagmanager.com; script-src-elem 'self' 'unsafe-inline' blob: https://widget.mixcloud.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.googleapis.com https://www.googletagmanager.com; connect-src 'self' https://api.mixcloud.com https://api.samudrafm.com https://widget.mixcloud.com https://api.allorigins.win https://cors-anywhere.herokuapp.com https://thingproxy.freeboard.io https://www.googleapis.com https://graph.instagram.com https://rss.app https://www.googletagmanager.com https://www.google-analytics.com https://talent.samudrafm.com https://cdn.jsdelivr.net; media-src 'self' https://www.mixcloud.com https://widget.mixcloud.com https://talent.samudrafm.com blob:; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self' blob:; child-src 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 </head>
-<body>
+<body class="page-home">
     <!-- Ribbon Effects -->
     <div class="ribbon ribbon-top"></div>
     <div class="ribbon ribbon-bottom"></div>
@@ -240,15 +240,15 @@
                                 <button type="button" class="hero-live-play-pause" id="hero-live-play-pause" aria-label="Play live stream"><i class="fa-solid fa-play"></i></button>
                             </div>
                         </div>
-                        <div class="hero-live-info hero-live-info-hidden" id="hero-live-info" aria-hidden="true">
+                        <div class="hero-live-offline" id="hero-live-offline" aria-live="polite">Offline</div>
+                        <div class="hero-live-info" id="hero-live-info" aria-hidden="false">
                             <div class="hero-live-status-row" id="hero-live-spotify-row">
-                                <a id="hero-live-spotify-link" href="https://open.spotify.com" target="_blank" rel="noopener" class="hero-live-spotify-link" aria-label="Open in Spotify">
+                                <a id="hero-live-spotify-link" href="https://open.spotify.com" target="_blank" rel="noopener" class="hero-live-spotify-link" aria-label="Open in Spotify" style="display:none">
                                     <img class="hero-live-spotify-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640'%3E%3Cpath fill='%231db954' d='M320 72C183 72 72 183 72 320C72 457 183 568 320 568C457 568 568 457 568 320C568 183 457 72 320 72zM420.7 436.9C416.5 436.9 413.9 435.6 410 433.3C347.6 395.7 275 394.1 203.3 408.8C199.4 409.8 194.3 411.4 191.4 411.4C181.7 411.4 175.6 403.7 175.6 395.6C175.6 385.3 181.7 380.4 189.2 378.8C271.1 360.7 354.8 362.3 426.2 405C432.3 408.9 435.9 412.4 435.9 421.5C435.9 430.6 428.8 436.9 420.7 436.9zM447.6 371.3C442.4 371.3 438.9 369 435.3 367.1C372.8 330.1 279.6 315.2 196.7 337.7C191.9 339 189.3 340.3 184.8 340.3C174.1 340.3 165.4 331.6 165.4 320.9C165.4 310.2 170.6 303.1 180.9 300.2C208.7 292.4 237.1 286.6 278.7 286.6C343.6 286.6 406.3 302.7 455.7 332.1C463.8 336.9 467 343.1 467 351.8C466.9 362.6 458.5 371.3 447.6 371.3zM478.6 295.1C473.4 295.1 470.2 293.8 465.7 291.2C394.5 248.7 267.2 238.5 184.8 261.5C181.2 262.5 176.7 264.1 171.9 264.1C158.7 264.1 148.6 253.8 148.6 240.5C148.6 226.9 157 219.2 166 216.6C201.2 206.3 240.6 201.4 283.5 201.4C356.5 201.4 433 216.6 488.9 249.2C496.7 253.7 501.8 259.9 501.8 271.8C501.8 285.4 490.8 295.1 478.6 295.1z'/%3E%3C/svg%3E" width="24" height="24" alt="" aria-hidden="true" style="display:block">
                                 </a>
-                                <span class="hero-live-badge">LIVE</span>
                             </div>
-                            <h3 class="hero-live-title" id="hero-live-title">SamudraFM Live</h3>
-                            <p class="hero-live-subtitle">Feel good tunes from the SamudraFM studio.</p>
+                            <h3 class="hero-live-title" id="hero-live-title">Offline</h3>
+                            <p class="hero-live-subtitle"> </p>
                             <div class="hero-live-controls-row">
                                 <div class="hero-live-volume-wrap">
                                     <span class="hero-live-volume-icon" aria-hidden="true">🔊</span>
@@ -267,12 +267,12 @@
                                 <span class="hero-live-status-dot" aria-hidden="true"></span>
                                 <span class="hero-live-status-label">LIVE</span>
                             </div>
-                            <h3 class="hero-presenter-name" id="presenter-name">AutoDJ</h3>
+                            <h3 class="hero-presenter-name"><a href="/request" id="presenter-name" class="hero-presenter-name-link">Offline</a></h3>
                             <p class="hero-presenter-subtitle" id="presenter-desc">
-                                Non-stop music on SamudraFM.
+                                Offline
                             </p>
                             <p class="hero-presenter-meta" id="presenter-time">
-                                Streaming all day.
+                                Offline
                             </p>
                             <div class="hero-presenter-socials">
                                 <span class="hero-presenter-social-icon"><i class="fa-brands fa-instagram" aria-hidden="true"></i></span>
@@ -804,15 +804,16 @@
     <script src="js/instagram-config.js"></script>
     <script src="js/presenter-data.js"></script>
     <script src="js/nowplaying.js"></script>
+    <script src="js/mixcloud-data.js"></script>
     <script src="js/recent-tracks.js"></script>
-    <script src="js/azuracast-song-request.js"></script>
+    <script src="js/azuracast-song-request.js?v=100"></script>
 
     <script>
     // Simple script loading with cache busting
     const script = document.createElement('script');
     const scriptTimestamp = Date.now();
     const scriptRandomId = Math.random().toString(36).substring(2, 15);
-    script.src = 'js/script.js?v=78&t=' + scriptTimestamp + '&nocache=1&cb=' + scriptTimestamp + '&r=' + scriptRandomId;
+    script.src = 'js/script.js?v=99&t=' + scriptTimestamp + '&nocache=1&cb=' + scriptTimestamp + '&r=' + scriptRandomId;
     script.onload = function() {
       console.log('Script loaded successfully');
     };
@@ -827,143 +828,7 @@
     </script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7"></script>
-    <script>
-    (function() {
-      var LIVE_HLS_URL = 'https://talent.samudrafm.com/hls/samudrafm.com/live.m3u8';
-      var playBtn = document.getElementById('hero-live-play-pause');
-      var audio = document.getElementById('hero-live-audio');
-      if (!playBtn || !audio) return;
-      var hls = null;
-      var isLivePlaying = false;
-      function updateLiveButton() {
-        playBtn.innerHTML = isLivePlaying ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
-        playBtn.setAttribute('aria-label', isLivePlaying ? 'Pause live stream' : 'Play live stream');
-      }
-      function startLiveStream() {
-        if (isLivePlaying) return;
-        if (typeof window.pauseMixcloudPlayer === 'function') window.pauseMixcloudPlayer();
-        if (Hls.isSupported()) {
-          if (hls) {
-            hls.destroy();
-            hls = null;
-          }
-          hls = new Hls({ enableWorker: true });
-          hls.loadSource(LIVE_HLS_URL);
-          hls.attachMedia(audio);
-          hls.on(Hls.Events.MANIFEST_PARSED, function() { audio.play().catch(function() {}); });
-          hls.on(Hls.Events.ERROR, function(ev, data) {
-            if (data.fatal) {
-              if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-                hls.startLoad();
-              } else {
-                hls.destroy();
-                hls = null;
-              }
-            }
-          });
-        } else if (audio.canPlayType('application/vnd.apple.mpegurl')) {
-          audio.src = LIVE_HLS_URL;
-          audio.addEventListener('loadedmetadata', function() { audio.play().catch(function() {}); }, { once: true });
-          audio.play().catch(function() {});
-        } else {
-          console.warn('HLS not supported in this browser');
-          return;
-        }
-        isLivePlaying = true;
-        updateLiveButton();
-      }
-      function stopLiveStream() {
-        if (!isLivePlaying) return;
-        if (hls) {
-          hls.destroy();
-          hls = null;
-        }
-        audio.removeAttribute('src');
-        audio.load();
-        isLivePlaying = false;
-        updateLiveButton();
-      }
-      window.pauseHeroLiveStream = stopLiveStream;
-
-      /* Volume: use Web Audio API (GainNode) so the slider works on iOS, where audio.volume is read-only */
-      var gainNode = null;
-      var audioContext = null;
-      function ensureWebAudioVolume() {
-        if (gainNode) return gainNode;
-        if (!window.AudioContext && !window.webkitAudioContext) return null;
-        try {
-          var Ctx = window.AudioContext || window.webkitAudioContext;
-          audioContext = new Ctx();
-          var source = audioContext.createMediaElementSource(audio);
-          gainNode = audioContext.createGain();
-          source.connect(gainNode);
-          gainNode.connect(audioContext.destination);
-          var vol = document.getElementById('hero-live-volume');
-          var initialVol = (vol && vol.value != null) ? vol.value / 100 : 0.8;
-          gainNode.gain.setValueAtTime(initialVol, audioContext.currentTime);
-          return gainNode;
-        } catch (e) {
-          return null;
-        }
-      }
-      function setHeroLiveVolume(value) {
-        var v = Math.max(0, Math.min(1, value / 100));
-        if (gainNode && audioContext) {
-          gainNode.gain.setValueAtTime(v, audioContext.currentTime);
-        } else {
-          audio.volume = v;
-        }
-      }
-
-      playBtn.addEventListener('click', function() {
-        if (isLivePlaying) {
-          stopLiveStream();
-        } else {
-          ensureWebAudioVolume();
-          if (audioContext && audioContext.state === 'suspended') {
-            audioContext.resume();
-          }
-          startLiveStream();
-        }
-      });
-
-      var vol = document.getElementById('hero-live-volume');
-      if (vol) {
-        setHeroLiveVolume(vol.value);
-        vol.addEventListener('input', function() { setHeroLiveVolume(vol.value); });
-        vol.addEventListener('change', function() { setHeroLiveVolume(vol.value); });
-      }
-      updateLiveButton();
-
-      /* PC only: show play overlay on load; hide after 5s if not hovering; show again on hover */
-      (function() {
-        if (window.matchMedia && !window.matchMedia('(min-width: 1025px)').matches) return;
-        var player = document.getElementById('hero-live-player');
-        var overlay = document.querySelector('.hero-live-play-overlay');
-        if (!player || !overlay) return;
-        var hideTimeout = null;
-        function scheduleHide() {
-          if (hideTimeout) clearTimeout(hideTimeout);
-          hideTimeout = setTimeout(function() {
-            hideTimeout = null;
-            overlay.classList.add('hero-live-play-overlay-hidden');
-          }, 5000);
-        }
-        function showOverlay() {
-          if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
-          overlay.classList.remove('hero-live-play-overlay-hidden');
-        }
-        player.addEventListener('mouseenter', function() {
-          showOverlay();
-          scheduleHide();
-        });
-        player.addEventListener('mouseleave', function() {
-          scheduleHide();
-        });
-        scheduleHide();
-      })();
-    })();
-    </script>
+    <script src="js/hero-live-stream.js"></script>
     <!-- Static script fallback removed to prevent duplicate loading -->
     <script>
     // Immediate test to see if script is loading
@@ -1001,10 +866,12 @@
         });
       }
       
-      // Clear localStorage and sessionStorage
+      // Clear localStorage and sessionStorage (preserve live player state for restore)
       try {
+        var heroLivePlaying = sessionStorage.getItem('heroLivePlaying');
         localStorage.clear();
         sessionStorage.clear();
+        if (heroLivePlaying !== null) sessionStorage.setItem('heroLivePlaying', heroLivePlaying);
       } catch(e) {
         // Storage clearing failed
       }
