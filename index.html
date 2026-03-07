@@ -801,18 +801,18 @@
         })();
     </script>
 <!-- Instagram Configuration -->
-    <script src="instagram-config.js"></script>
-    <script src="presenter-data.js"></script>
-    <script src="nowplaying.js"></script>
-    <script src="recent-tracks.js"></script>
-    <script src="azuracast-song-request.js"></script>
+    <script src="js/instagram-config.js"></script>
+    <script src="js/presenter-data.js"></script>
+    <script src="js/nowplaying.js"></script>
+    <script src="js/recent-tracks.js"></script>
+    <script src="js/azuracast-song-request.js"></script>
 
     <script>
     // Simple script loading with cache busting
     const script = document.createElement('script');
     const scriptTimestamp = Date.now();
     const scriptRandomId = Math.random().toString(36).substring(2, 15);
-    script.src = 'script.js?v=78&t=' + scriptTimestamp + '&nocache=1&cb=' + scriptTimestamp + '&r=' + scriptRandomId;
+    script.src = 'js/script.js?v=78&t=' + scriptTimestamp + '&nocache=1&cb=' + scriptTimestamp + '&r=' + scriptRandomId;
     script.onload = function() {
       console.log('Script loaded successfully');
     };
@@ -820,7 +820,7 @@
       console.warn('Script loading failed, retrying...');
       // Simple fallback
       const fallbackScript = document.createElement('script');
-      fallbackScript.src = 'script.js?fallback=' + Date.now();
+      fallbackScript.src = 'js/script.js?fallback=' + Date.now();
       document.head.appendChild(fallbackScript);
     };
     document.head.appendChild(script);
@@ -957,7 +957,7 @@
         // Register new service worker after clearing
         window.addEventListener('load', function(){ 
           // Temporarily disable service worker to test cache issue
-          // navigator.serviceWorker.register('/sw.js?v=' + timestamp + '&cb=' + timestamp); 
+          // navigator.serviceWorker.register('/js/sw.js?v=' + timestamp + '&cb=' + timestamp); 
         });
       }
       

@@ -266,17 +266,17 @@ async function getFallbackInstagramPosts() {
   // Always use the JSON file, don't ever fall back to hardcoded data
   try {
     // Always fetch from custom-posts.json (force busting cache)
-    const response = await fetch('custom-posts.json?v=' + Date.now(), { headers: { 'Accept': 'application/json' } });
+    const response = await fetch('json/custom-posts.json?v=' + Date.now(), { headers: { 'Accept': 'application/json' } });
 
     if (!response.ok) {
-      throw new Error('Failed to load custom-posts.json');
+      throw new Error('Failed to load json/custom-posts.json');
     }
 
     const data = await response.json();
 
     // Ensure posts is an array
     if (!data || !Array.isArray(data.posts)) {
-      throw new Error('custom-posts.json is malformed or empty');
+      throw new Error('json/custom-posts.json is malformed or empty');
     }
 
     // Always map using the JSON data structure
@@ -3922,7 +3922,7 @@ class ManualInstagramPosts {
     this.isLoading = true;
     
     try {
-      const response = await fetch('custom-posts.json?v=' + Date.now());
+      const response = await fetch('json/custom-posts.json?v=' + Date.now());
       
       if (response.ok) {
         const data = await response.json();
@@ -4219,7 +4219,7 @@ class ManualInstagramPosts {
 // Test function to check JSON file directly
 window.testCustomPosts = async function() {
   try {
-    const response = await fetch('custom-posts.json?v=' + Date.now());
+    const response = await fetch('json/custom-posts.json?v=' + Date.now());
     const data = await response.json();
     // Test function - no console output
   } catch (error) {
