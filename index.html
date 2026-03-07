@@ -884,14 +884,54 @@
         updateLiveButton();
       }
       window.pauseHeroLiveStream = stopLiveStream;
+
+      /* Volume: use Web Audio API (GainNode) so the slider works on iOS, where audio.volume is read-only */
+      var gainNode = null;
+      var audioContext = null;
+      function ensureWebAudioVolume() {
+        if (gainNode) return gainNode;
+        if (!window.AudioContext && !window.webkitAudioContext) return null;
+        try {
+          var Ctx = window.AudioContext || window.webkitAudioContext;
+          audioContext = new Ctx();
+          var source = audioContext.createMediaElementSource(audio);
+          gainNode = audioContext.createGain();
+          source.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          var vol = document.getElementById('hero-live-volume');
+          var initialVol = (vol && vol.value != null) ? vol.value / 100 : 0.8;
+          gainNode.gain.setValueAtTime(initialVol, audioContext.currentTime);
+          return gainNode;
+        } catch (e) {
+          return null;
+        }
+      }
+      function setHeroLiveVolume(value) {
+        var v = Math.max(0, Math.min(1, value / 100));
+        if (gainNode && audioContext) {
+          gainNode.gain.setValueAtTime(v, audioContext.currentTime);
+        } else {
+          audio.volume = v;
+        }
+      }
+
       playBtn.addEventListener('click', function() {
-        if (isLivePlaying) stopLiveStream();
-        else startLiveStream();
+        if (isLivePlaying) {
+          stopLiveStream();
+        } else {
+          ensureWebAudioVolume();
+          if (audioContext && audioContext.state === 'suspended') {
+            audioContext.resume();
+          }
+          startLiveStream();
+        }
       });
+
       var vol = document.getElementById('hero-live-volume');
       if (vol) {
-        audio.volume = vol.value / 100;
-        vol.addEventListener('input', function() { audio.volume = vol.value / 100; });
+        setHeroLiveVolume(vol.value);
+        vol.addEventListener('input', function() { setHeroLiveVolume(vol.value); });
+        vol.addEventListener('change', function() { setHeroLiveVolume(vol.value); });
       }
       updateLiveButton();
 
