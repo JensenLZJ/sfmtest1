@@ -1,41 +1,20 @@
-# Netlify-style redirects for clean URLs
-# Redirect root to index.html
-/ /index.html 200
-
-# Clean URLs - redirect .html requests to clean URLs
-/about.html /about 301
-/contact.html /contact 301
-/schedule.html /schedule 301
-/team.html /team 301
-/opportunities.html /opportunities 301
-/privacy-policy.html /privacy-policy 301
-/request.html /request 301
-/brand.html /brand 301
-/apply.html /apply 301
-/index.html / 301
-
-# Application redirect
-/apply /opportunities 301
-
-# Presenter's Handbook (external doc – not for indexing)
-/SFM-DOC-PH https://docs.google.com/document/d/1tYCRH3ngzCz3mAS-Z1jtVdZryMA8Ca-XY7IOYbsVnM0 302
-# Equipment Handbook (external doc – not for indexing)
-/SFM-DOC-EH https://docs.google.com/document/d/1Q-kWjKdyqgYQTZRCDyNuWrzoNqmVyHWv9hvg-dwzjvc 302
-# Checklist (external doc – not for indexing)
-/SFM-DOC-CL https://docs.google.com/document/d/1NWjJTojbJ7azQST_hQow3MmKKIaOXVb2Wi6BUh4WP4I 302
-
-# Serve clean URLs with .html files
-/about /about.html 200
-/contact /contact.html 200
-/schedule /schedule.html 200
-/team /team.html 200
-/opportunities /opportunities.html 200
-/privacy-policy /privacy-policy.html 200
-/request /request.html 200
-/brand /brand.html 200
-/apply /apply.html 200
-
-# Allow all images and assets to load normally
-
-# Catch-all 404 redirect - must be last
-/* /404.html 404
+# Redirect map (GitHub Pages compatible)
+# GitHub Pages does not support server redirects. These rules are implemented
+# in 404.html via client-side redirects when a path 404s.
+#
+# Format: path -> target (redirect)
+# Clean URLs (no .html) -> serve .html so the page loads
+/about          -> /about.html
+/contact        -> /contact.html
+/schedule       -> /schedule.html
+/team           -> /team.html
+/opportunities  -> /opportunities.html
+/privacy-policy -> /privacy-policy.html
+/request        -> /request.html
+/brand          -> /brand.html
+/apply          -> /opportunities.html
+#
+# External doc short links
+/SFM-DOC-CL     -> https://docs.google.com/document/d/1NWjJTojbJ7azQST_hQow3MmKKIaOXVb2Wi6BUh4WP4I
+/SFM-DOC-PH     -> https://docs.google.com/document/d/1tYCRH3ngzCz3mAS-Z1jtVdZryMA8Ca-XY7IOYbsVnM0
+/SFM-DOC-EH     -> https://docs.google.com/document/d/1Q-kWjKdyqgYQTZRCDyNuWrzoNqmVyHWv9hvg-dwzjvc

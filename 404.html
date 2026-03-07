@@ -69,6 +69,29 @@
         }
     </style>
     <script>document.addEventListener('contextmenu', function(e) { e.preventDefault(); });</script>
+    <script>
+        // GitHub Pages redirects (mirrors _redirects; no server redirects on GH Pages)
+        (function() {
+            var path = window.location.pathname.replace(/\/$/, '') || '/';
+            var redirects = {
+                '/about': '/about.html',
+                '/contact': '/contact.html',
+                '/schedule': '/schedule.html',
+                '/team': '/team.html',
+                '/opportunities': '/opportunities.html',
+                '/privacy-policy': '/privacy-policy.html',
+                '/request': '/request.html',
+                '/brand': '/brand.html',
+                '/apply': '/opportunities.html',
+                '/SFM-DOC-CL': 'https://docs.google.com/document/d/1NWjJTojbJ7azQST_hQow3MmKKIaOXVb2Wi6BUh4WP4I',
+                '/SFM-DOC-PH': 'https://docs.google.com/document/d/1tYCRH3ngzCz3mAS-Z1jtVdZryMA8Ca-XY7IOYbsVnM0',
+                '/SFM-DOC-EH': 'https://docs.google.com/document/d/1Q-kWjKdyqgYQTZRCDyNuWrzoNqmVyHWv9hvg-dwzjvc'
+            };
+            if (redirects[path]) {
+                window.location.replace(redirects[path]);
+            }
+        })();
+    </script>
 </head>
 <body>
     <div class="container">

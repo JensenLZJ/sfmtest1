@@ -49,7 +49,11 @@ function renderRecentTracks(tracks) {
     row += '<div class="recently-played-info"><span class="recently-played-title">' + title + '</span>';
     if (artist) row += ' <span class="recently-played-artist">' + artist + '</span>';
     row += '</div>';
-    if (link) row += '<a class="recently-played-link" href="' + escapeAttr(link) + '" target="_blank" rel="noopener noreferrer" aria-label="Open track">' + (link.indexOf('spotify') !== -1 ? '<i class="fab fa-spotify"></i>' : '<i class="fas fa-external-link-alt"></i>') + '</a>';
+    if (link) {
+      row += '<a class="recently-played-link" href="' + escapeAttr(link) + '" target="_blank" rel="noopener noreferrer" aria-label="Open track">' + (link.indexOf('spotify') !== -1 ? '<i class="fab fa-spotify"></i>' : '<i class="fas fa-external-link-alt"></i>') + '</a>';
+    } else {
+      row += '<span class="recently-played-link recently-played-link--unavailable" aria-label="No link"><i class="fas fa-external-link-alt"></i></span>';
+    }
     row += '</div>';
     return row;
   }).join('');

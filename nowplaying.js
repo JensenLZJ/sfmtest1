@@ -194,8 +194,13 @@ function updateHeroNowPlaying() {
         }
         if (spotifyLink) {
           var songLink = track.link || track.spotify_link || track.track_url || track.url || track.external_url || (track.external_urls && track.external_urls.spotify) || '';
-          spotifyLink.href = songLink || 'https://open.spotify.com';
+          spotifyLink.href = songLink || '#';
           spotifyLink.style.display = '';
+          if (songLink) {
+            spotifyLink.classList.remove('hero-live-spotify-link--unavailable');
+          } else {
+            spotifyLink.classList.add('hero-live-spotify-link--unavailable');
+          }
         }
       }
     }
