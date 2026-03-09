@@ -1,38 +1,12 @@
 /**
  * Mixcloud data layer – fetches episodes (cloudcasts) for Latest Episodes and player.
- * Uses CORS proxy when direct API request fails (Mixcloud can block browser CORS).
+ * Uses the Cloudflare-backed SamudraFM API, which securely handles the Mixcloud API key.
  */
 
 (function (global) {
   'use strict';
 
-  var CORS_PROXY = 'https://api.allorigins.win/raw?url=';
-  var MIXCLOUD_API_BASE = 'https://api.mixcloud.com/';
-
-  /**
-   * Fetch a URL; on failure (e.g. CORS), retry via CORS proxy.
-   * @param {string} url - Full URL to fetch
-   * @returns {Promise<string>} Response text
-   */
-  function fetchUrl(url) {
-    return fetch(url, {
-      method: 'GET',
-      mode: 'cors',
-      headers: { Accept: 'application/json' }
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.text();
-      })
-      .catch(function () {
-        var proxyUrl = CORS_PROXY + encodeURIComponent(url);
-        return fetch(proxyUrl, { method: 'GET', mode: 'cors' })
-          .then(function (res) {
-            if (!res.ok) throw new Error('Proxy HTTP ' + res.status);
-            return res.text();
-          });
-      });
-  }
+  var MIXCLOUD_PROXY_BASE = 'https://api.samudrafm.com/mixcloud';
 
   /**
    * Normalize a cloudcast item to the shape used by the site (episode cards + player).
@@ -71,17 +45,42 @@
     opts = opts || {};
     var limit = opts.limit != null ? opts.limit : 12;
     var nextUrl = opts.nextUrl;
-    var url = nextUrl || (MIXCLOUD_API_BASE + username + '/cloudcasts/?limit=' + limit);
 
-    return fetchUrl(url).then(function (text) {
-      var json = JSON.parse(text);
-      var rawData = json.data || [];
-      var data = rawData.map(normalizeEpisode).filter(Boolean);
-      return {
-        data: data,
-        paging: json.paging || {}
-      };
-    });
+    // Build request URL to your Cloudflare-backed Mixcloud proxy
+    var url = MIXCLOUD_PROXY_BASE;
+    var params = [];
+
+    if (username) {
+      params.push('username=' + encodeURIComponent(username));
+    }
+    if (nextUrl) {
+      // When paginating, pass the Mixcloud paging URL through so the worker can proxy it
+      params.push('next_url=' + encodeURIComponent(nextUrl));
+    } else if (limit != null) {
+      params.push('limit=' + encodeURIComponent(limit));
+    }
+
+    if (params.length) {
+      url += '?' + params.join('&');
+    }
+
+    return fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      headers: { Accept: 'application/json' }
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (json) {
+        var rawData = json.data || [];
+        var data = rawData.map(normalizeEpisode).filter(Boolean);
+        return {
+          data: data,
+          paging: json.paging || {}
+        };
+      });
   }
 
   /**

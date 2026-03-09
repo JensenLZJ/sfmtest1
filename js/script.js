@@ -759,7 +759,6 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 // Mixcloud integration ------------------------------------------------------
 // Set your Mixcloud username here
 const MIXCLOUD_USERNAME = 'samudrafm';
-const MIXCLOUD_API_KEY = 'gDVAEf3yoChF4fkXFxfXNwl3XMkZEs0g';
 
 let mixcloudNextUrl = null;
 const isHttpContext = location.protocol === 'http:' || location.protocol === 'https:';
