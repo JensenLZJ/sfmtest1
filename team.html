@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/local-dev-no-sw.js"></script>
     
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4NCN6ZYF05"></script>
@@ -14,28 +15,34 @@
       gtag('config', 'G-4NCN6ZYF05');
     </script>
     
-    <title>Our team - SamudraFM</title>
-    <meta name="description" content="Meet the talented team behind SamudraFM - the student-run radio program at SMK Taman SEA.">
+    <title>Our Team - samudrafm | SMK Taman SEA School Radio</title>
+    <meta name="description" content="Meet the talented team behind samudrafm – the student-run radio programme at SMK Taman SEA.">
+    <link rel="canonical" href="https://samudrafm.com/team.html">
+    <meta name="keywords" content="sea fm, samudra, samudraa, samudra management, radio petaling jaya, radio selangor, taman sea school, smkts, smk taman sea, radio pj, pj radio, taman sea, tamansea, school radio, samudrafm, our team, student radio, SMK Taman SEA">
     
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://samudrafm.com/team">
-    <meta property="og:title" content="Our Team - SamudraFM">
-    <meta property="og:description" content="Meet the talented team behind SamudraFM - the student-run radio program at SMK Taman SEA.">
-    <meta property="og:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
-    <meta property="og:site_name" content="SamudraFM">
+    <meta property="og:title" content="Our Team - samudrafm">
+    <meta property="og:description" content="Meet the talented team behind samudrafm - the student-run radio program at SMK Taman SEA.">
+    <meta property="og:image" content="https://samudrafm.com/images/samudrafmLogo1.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="samudrafm Logo">
+    <meta property="og:site_name" content="samudrafm">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://samudrafm.com/team">
-    <meta property="twitter:title" content="Our Team - SamudraFM">
-    <meta property="twitter:description" content="Meet the talented team behind SamudraFM - the student-run radio program at SMK Taman SEA.">
-    <meta property="twitter:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    <meta property="twitter:title" content="Our Team - samudrafm">
+    <meta property="twitter:description" content="Meet the talented team behind samudrafm - the student-run radio program at SMK Taman SEA.">
+    <meta property="twitter:image" content="https://samudrafm.com/images/samudrafmLogo1.png">
+    <meta property="twitter:image:alt" content="samudrafm Logo">
     
     <!-- Additional meta tags -->
     <meta name="theme-color" content="#1a1a1a">
     <meta name="msapplication-TileColor" content="#1a1a1a">
-    <meta name="msapplication-TileImage" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    <meta name="msapplication-TileImage" content="https://samudrafm.com/images/samudrafmLogo1.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -845,15 +852,18 @@
     </style>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
-    <link rel="apple-touch-icon" href="images/SamudraFMLogo1.png">
-    <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
+    <link rel="icon" type="image/png" href="images/samudrafmLogo1.png">
+    <link rel="apple-touch-icon" href="images/samudrafmLogo1.png">
+    <link rel="shortcut icon" href="images/samudrafmLogo1.png">
+    <link rel="preload" href="https://api.samudrafm.com/api/nowplaying/1" as="fetch" crossorigin>
+    <link rel="preconnect" href="https://api.samudrafm.com" crossorigin>
+    <script>(function(){var u='https://api.samudrafm.com/api/nowplaying/1';window.__earlyNowPlayingPromise=fetch(u,{cache:'no-store'}).then(function(r){return r.ok?r.json():Promise.reject(new Error('HTTP '+r.status));}).then(function(j){return{status:j.status==='success'?'success':'error',data:j.data||null,error:j.message};}).catch(function(e){return{status:'error',data:null,error:e.message||String(e)};});})();</script>
 </head>
 <body>
     <!-- Hero Header -->
     <header class="hero-header">
         <div class="container hero-header-inner">
-            <a href="/" class="brand" aria-label="SamudraFM Home">
+            <a href="/" class="brand" aria-label="samudrafm Home">
                 <span class="brand-mark"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></span>
                 <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
             </a>
@@ -889,7 +899,7 @@
                 <div class="hero-live-player" id="hero-live-player">
                     <div class="hero-live-player-inner">
                         <div class="hero-live-left">
-                            <div class="hero-live-cover" id="hero-live-cover" style="background-image: url('images/SamudraFMLogo1.png');"></div>
+                            <div class="hero-live-cover" id="hero-live-cover" style="background-image: url('images/samudrafmLogo1.png');"></div>
                             <div class="hero-live-play-overlay">
                                 <button type="button" class="hero-live-play-pause" id="hero-live-play-pause" aria-label="Play live stream"><i class="fa-solid fa-play"></i></button>
                             </div>
@@ -947,7 +957,7 @@
                     <h1>The "Is This Thing On?" Team</h1>
                     <p class="hero-subtitle">Meet the students you're currently listening on <img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block; margin: 0 4px; max-width: 200px;"></p>
                     <h2>Behind the mute presser</h2>
-                    <p>SamudraFM is powered by a team of SMK Taman SEA students who are 90% passion and 10% knowing which button turns the volume up. We bring our unique talents(mostly panic) improvising and drinking too much coffee creating the chaotic noise you tolerate every week.</p>
+                    <p>samudrafm is powered by a team of SMK Taman SEA students who are 90% passion and 10% knowing which button turns the volume up. We bring our unique talents(mostly panic) improvising and drinking too much coffee creating the chaotic noise you tolerate every week.</p>
                 </div>
 
                 <!-- Year Filter Bar -->
@@ -1435,7 +1445,7 @@
                         <!-- Sean Teh Wui Xiong -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Sean Teh Wui Xiong" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Sean Teh Wui Xiong" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Sean Teh Wui Xiong</h3>
@@ -1455,7 +1465,7 @@
                         <!-- Jonathan Lu Shue Zheng -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Jonathan Lu Shue Zheng" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Jonathan Lu Shue Zheng" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Jonathan Lu Shue Zheng</h3>
@@ -1475,7 +1485,7 @@
                         <!-- Ang Shing Wai -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Ang Shing Wai" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Ang Shing Wai" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Ang Shing Wai</h3>
@@ -1495,7 +1505,7 @@
                         <!-- Renee Cheah Yu Chen -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Renee Cheah Yu Chen" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Renee Cheah Yu Chen" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Renee Cheah Yu Chen</h3>
@@ -1515,7 +1525,7 @@
                         <!-- Airil Daniel -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/avatar/airildaniel.png" alt="Airil Daniel" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="assets/avatar/airildaniel.png" alt="Airil Daniel" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Airil Daniel</h3>
@@ -1535,7 +1545,7 @@
                         <!-- Yee Hui Yi -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Yee Hui Yi" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Yee Hui Yi" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Yee Hui Yi</h3>
@@ -1555,7 +1565,7 @@
                         <!-- Jayden Cheng Ching Venn -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Jayden Cheng Ching Venn" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Jayden Cheng Ching Venn" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Jayden Cheng Ching Venn</h3>
@@ -1575,7 +1585,7 @@
                         <!-- Mas Zahid Iskandar -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Mas Zahid Iskandar" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Mas Zahid Iskandar" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Mas Zahid Iskandar</h3>
@@ -1595,7 +1605,7 @@
                         <!-- Amirul Ibrahim -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Amirul Ibrahim" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Amirul Ibrahim" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Amirul Ibrahim</h3>
@@ -1615,7 +1625,7 @@
                         <!-- Eng En -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Eng En" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Eng En" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Eng En</h3>
@@ -1635,7 +1645,7 @@
                         <!-- Lee When Hui -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Lee When Hui" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Lee When Hui" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Lee When Hui</h3>
@@ -1655,7 +1665,7 @@
                         <!-- Yong Zi Xuan -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Yong Zi Xuan" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Yong Zi Xuan" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Yong Zi Xuan</h3>
@@ -1675,7 +1685,7 @@
                         <!-- Benjamin Edward Ng -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/avatar/benjaminedward.png" alt="Benjamin Edward Ng" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="assets/avatar/benjaminedward.png" alt="Benjamin Edward Ng" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Benjamin Edward Ng</h3>
@@ -1695,7 +1705,7 @@
                         <!-- Amanda Alysia Seri Anak Roy Kevin -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Amanda Alysia Seri Anak Roy Kevin" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Amanda Alysia Seri Anak Roy Kevin" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Amanda Alysia Seri Anak Roy Kevin</h3>
@@ -1715,7 +1725,7 @@
                         <!-- Karisemma A/P Mohan Kumar -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="assets/avatar/karisemma.png" alt="Karisemma A/P Mohan Kumar" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="assets/avatar/karisemma.png" alt="Karisemma A/P Mohan Kumar" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Karisemma A/P Mohan Kumar</h3>
@@ -1735,7 +1745,7 @@
                         <!-- Lee Wei Jing -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Lee Wei Jing" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Lee Wei Jing" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Lee Wei Jing</h3>
@@ -1755,7 +1765,7 @@
                         <!-- Tew Jitzen -->
                         <div class="team-card">
                             <div class="team-image">
-                                <img src="images/SamudraFMLogo1.png" alt="Tew Jitzen" onerror="this.src='images/SamudraFMLogo1.png'">
+                                <img src="images/samudrafmLogo1.png" alt="Tew Jitzen" onerror="this.src='images/samudrafmLogo1.png'">
                             </div>
                             <div class="team-info">
                                 <h3>Tew Jitzen</h3>
@@ -1826,7 +1836,7 @@
                             <div class="team-info">
                                 <h3>Mr Eugene</h3>
                                 <p class="team-role">Visionary Teacher</p>
-                                <p class="team-bio">The visionary English teacher who asked the transformative question "What if students can own a radio station?" in 2023. This simple yet powerful question sparked the creation of SamudraFM, inspiring students to turn an idea into reality.</p>
+                                <p class="team-bio">The visionary English teacher who asked the transformative question "What if students can own a radio station?" in 2023. This simple yet powerful question sparked the creation of samudrafm, inspiring students to turn an idea into reality.</p>
                                 <div class="team-social">
                                     <a href="https://www.instagram.com/eugene_morais/" target="_blank" class="social-link">
                                         <i class="fab fa-instagram"></i>
@@ -1843,7 +1853,7 @@
                 <!-- Join Us Section -->
                 <div class="join-team">
                     <h2>Join Our Team</h2>
-                    <p>Interested in becoming part of the SamudraFM family? We're always looking for passionate students who want to contribute to our radio program. Whether you're interested in hosting, technical work, content creation, or community management, there's a place for you on our team.</p>
+                    <p>Interested in becoming part of the samudrafm family? We're always looking for passionate students who want to contribute to our radio program. Whether you're interested in hosting, technical work, content creation, or community management, there's a place for you on our team.</p>
                     <div class="join-buttons">
                               <a href="/opportunities" class="join-btn primary">
                                   <i class="fas fa-users"></i>
@@ -1872,8 +1882,8 @@
                 <h3>Connect & Listen</h3>
                 <ul class="footer-links social-links">
                     <li><a href="https://www.instagram.com/samudrafm/" class="social-link"><i class="fab fa-instagram"></i> Instagram</a></li>
-                    <li><a href="https://www.facebook.com/SamudraFMSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
-                    <li><a href="https://www.mixcloud.com/SamudraFM/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
+                    <li><a href="https://www.facebook.com/samudrafmSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://www.mixcloud.com/samudrafm/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
                 </ul>
             </div>
             
@@ -1892,13 +1902,13 @@
         
         
         <div class="footer-bottom">
-            <p id="footer-year">2025 SamudraFM. Designed with passion by Jensen. 📻</p>
+            <p id="footer-year">2025 samudrafm. Designed with passion by Jensen. 📻</p>
         </div>
     </footer>
 
     <!-- Mixcloud Widget Script -->
-    <script src="js/presenter-data.js"></script>
     <script src="js/nowplaying.js"></script>
+    <script src="js/presenter-data.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7"></script>
     <script src="js/hero-live-stream.js?v=4"></script>
     <script src="js/script.js?v=99&t=1741305600&nocache=1"></script>
@@ -1988,7 +1998,7 @@
             const yearElement = document.getElementById('footer-year');
             if (yearElement) {
                 const currentYear = new Date().getFullYear();
-                yearElement.textContent = currentYear + ' SamudraFM. Designed with passion by Jensen. 📻';
+                yearElement.textContent = currentYear + ' samudrafm. Designed with passion by Jensen. 📻';
             }
         })();
     </script>

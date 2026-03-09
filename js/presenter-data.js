@@ -1,5 +1,5 @@
 /**
- * SamudraFM presenter data – notes, social links, and copy per presenter.
+ * samudrafm presenter data – notes, social links, and copy per presenter.
  * Used by the hero presenter card and anywhere we show presenter info.
  * Keys are matched case-insensitively to API/schedule names (e.g. "autoDJ", "Jensen").
  */
@@ -19,7 +19,7 @@
     },
     Jensen: {
       name: 'Jensen',
-      description: 'A Wee Mystical Magical Show',
+      description: '',
       timeLabel: '',
       notes: '',
       instagram: null,
@@ -29,7 +29,7 @@
     },
     JensenL: {
       name: 'Jensen',
-      description: 'A Wee Mystical Magical Show',
+      description: '',
       timeLabel: '',
       notes: '',
       instagram: null,
@@ -39,7 +39,7 @@
     },
     Srishti: {
       name: 'Srishti',
-      description: 'Study Vibes Session',
+      description: '',
       timeLabel: '',
       notes: '',
       instagram: null,

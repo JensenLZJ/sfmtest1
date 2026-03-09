@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/local-dev-no-sw.js"></script>
     
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4NCN6ZYF05"></script>
@@ -14,10 +15,26 @@
       gtag('config', 'G-4NCN6ZYF05');
     </script>
     
-    <title>Privacy Policy - SamudraFM</title>
+    <title>Privacy Policy - samudrafm | SMK Taman SEA School Radio</title>
+    <meta name="description" content="Privacy Policy for samudrafm – SMK Taman SEA school radio programme. How we collect and use your data.">
+    <link rel="canonical" href="https://samudrafm.com/privacy-policy.html">
+    <meta name="keywords" content="samudrafm, sea fm, samudra, taman sea school, smkts, smk taman sea, school radio, privacy policy">
     <link rel="stylesheet" href="styles.css?v=99&t=1741305600&nocache=1">
-    <link rel="icon" type="image/png" href="assets/brandmark/SamudraFMLogo1.png">
-    <meta name="description" content="Privacy Policy for SamudraFM - SMK Taman SEA school radio programme">
+    <link rel="icon" type="image/png" href="assets/brandmark/samudrafmLogo1.png">
+    <link rel="preload" href="https://api.samudrafm.com/api/nowplaying/1" as="fetch" crossorigin>
+    <link rel="preconnect" href="https://api.samudrafm.com" crossorigin>
+    <script>(function(){var u='https://api.samudrafm.com/api/nowplaying/1';window.__earlyNowPlayingPromise=fetch(u,{cache:'no-store'}).then(function(r){return r.ok?r.json():Promise.reject(new Error('HTTP '+r.status));}).then(function(j){return{status:j.status==='success'?'success':'error',data:j.data||null,error:j.message};}).catch(function(e){return{status:'error',data:null,error:e.message||String(e)};});})();</script>
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://samudrafm.com/privacy-policy.html">
+    <meta property="og:title" content="Privacy Policy - samudrafm">
+    <meta property="og:description" content="Privacy Policy for samudrafm – SMK Taman SEA school radio programme.">
+    <meta property="og:image" content="https://samudrafm.com/images/samudrafmLogo1.png">
+    <meta property="og:site_name" content="samudrafm">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Privacy Policy - samudrafm">
+    <meta property="twitter:description" content="Privacy Policy for samudrafm – SMK Taman SEA school radio programme.">
+    <meta name="robots" content="index, follow">
     <style>
         /* Hero header background for non-home pages */
         .hero-header {
@@ -32,7 +49,7 @@
         <!-- Hero Header -->
         <header class="hero-header">
             <div class="container hero-header-inner">
-                <a href="/" class="brand" aria-label="SamudraFM Home">
+                <a href="/" class="brand" aria-label="samudrafm Home">
                     <span class="brand-mark"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></span>
                     <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
                 </a>
@@ -67,7 +84,7 @@
                     <div class="hero-live-player" id="hero-live-player">
                         <div class="hero-live-player-inner">
                             <div class="hero-live-left">
-                                <div class="hero-live-cover" id="hero-live-cover" style="background-image: url('images/SamudraFMLogo1.png');"></div>
+                                <div class="hero-live-cover" id="hero-live-cover" style="background-image: url('images/samudrafmLogo1.png');"></div>
                                 <div class="hero-live-play-overlay">
                                     <button type="button" class="hero-live-play-pause" id="hero-live-play-pause" aria-label="Play live stream"><i class="fa-solid fa-play"></i></button>
                                 </div>
@@ -129,7 +146,7 @@
                 <div class="privacy-content">
                     <div class="privacy-section">
                         <h2>1. Introduction</h2>
-                        <p>Welcome to SamudraFM, the official radio station of SMK Taman SEA. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.</p>
+                        <p>Welcome to samudrafm, the official radio station of SMK Taman SEA. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.</p>
                         <p>By using our website, you consent to the data practices described in this policy.</p>
                     </div>
 
@@ -183,7 +200,7 @@
                         <ul>
                             <li><strong>Mixcloud:</strong> For streaming our radio content</li>
                             <li><strong>Instagram:</strong> For displaying our social media posts</li>
-                            <li><strong>Google Forms:</strong> For processing song requests</li>
+                            <li><strong>api.samudrafm.com:</strong> For form submissions and sheet/request data</li>
                         </ul>
                         <p>These third-party services have their own privacy policies, and we are not responsible for their practices.</p>
                     </div>
@@ -231,7 +248,7 @@
                         <h2>12. Contact Information</h2>
                         <p>If you have any questions about this Privacy Policy or our data practices, please contact us:</p>
                         <div class="contact-info">
-                            <p><strong>SamudraFM</strong><br>
+                            <p><strong>samudrafm</strong><br>
                             SMK Taman SEA<br>
                             School Radio Programme</p>
                             <p><strong>Email:</strong> <a href="mailto:contact@samudrafm.com">contact@samudrafm.com</a></p>
@@ -259,8 +276,8 @@
                 <h3>Connect & Listen</h3>
                 <ul class="footer-links social-links">
                     <li><a href="https://www.instagram.com/samudrafm/" class="social-link"><i class="fab fa-instagram"></i> Instagram</a></li>
-                    <li><a href="https://www.facebook.com/SamudraFMSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
-                    <li><a href="https://www.mixcloud.com/SamudraFM/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
+                    <li><a href="https://www.facebook.com/samudrafmSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://www.mixcloud.com/samudrafm/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
                 </ul>
             </div>
             
@@ -279,13 +296,13 @@
         
         
         <div class="footer-bottom">
-            <p id="footer-year">2025 SamudraFM. Designed with passion by Jensen. 📻</p>
+            <p id="footer-year">2025 samudrafm. Designed with passion by Jensen. 📻</p>
         </div>
     </footer>
 
     <!-- Mixcloud Widget Script -->
-    <script src="js/presenter-data.js"></script>
     <script src="js/nowplaying.js"></script>
+    <script src="js/presenter-data.js"></script>
     <script src="js/script.js?v=99&t=1741305600&nocache=1"></script>
     <script>
         // Mobile navigation toggle
@@ -309,7 +326,7 @@
             const yearElement = document.getElementById('footer-year');
             if (yearElement) {
                 const currentYear = new Date().getFullYear();
-                yearElement.textContent = currentYear + ' SamudraFM. Designed with passion by Jensen. 📻';
+                yearElement.textContent = currentYear + ' samudrafm. Designed with passion by Jensen. 📻';
             }
         })();
     </script>

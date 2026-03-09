@@ -1,11 +1,9 @@
-<!-- Like looking under the hood? We're interested in people like you! Come and join us: https://samudrafm.com/opportunities/ -->
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="js/local-dev-no-sw.js"></script>
     
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4NCN6ZYF05"></script>
@@ -17,8 +15,10 @@
       gtag('config', 'G-4NCN6ZYF05');
     </script>
     
-    <title>SamudraFM - Your study, your music.</title>
-    <meta name="description" content="SamudraFM - Non-stop hits, live shows, and requests.">
+    <title>samudrafm – Your study, your music. | SMK Taman SEA School Radio</title>
+    <meta name="description" content="samudrafm – Non-stop hits, live shows and song requests. Student-run radio at SMK Taman SEA. Listen online, check the schedule, request a song.">
+    <link rel="canonical" href="https://samudrafm.com/">
+    <meta name="keywords" content="sea fm, samudra, samudraa, samudra management, song request radio, radio petaling jaya, radio selangor, taman sea school, smkts, smk taman sea, smk tamansea, smk taman sea radio, smktaman sea, radio malaysia, radio pj, pj radio, fm samudra, taman sea, tamansea, school radio, school, samudrafm, student radio, online radio malaysia, listen live, request a song, taman sea fm, sea fm radio, smk taman sea fm, radio petaling jaya school, school radio malaysia, student radio selangor, online radio pj">
     
     <!-- Force cache clearing on every visit - Enhanced for mobile -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0, private, no-transform">
@@ -42,15 +42,12 @@
     <script>
         // Ensure JavaScript runs regardless of how page is loaded
         function ensureScriptsRun() {
-            console.log('Ensuring scripts run - DOM ready state:', document.readyState);
-            
             // Force DOMContentLoaded event if it hasn't fired
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function() {
-                    console.log('DOMContentLoaded fired');
+                    // DOMContentLoaded fired
                 });
             } else {
-                console.log('DOM already loaded - triggering events manually');
                 // Manually trigger DOMContentLoaded if it already loaded
                 const event = new Event('DOMContentLoaded');
                 document.dispatchEvent(event);
@@ -122,26 +119,26 @@
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://samudrafm.com/">
-    <meta property="og:title" content="SamudraFM — Your study, your music.">
-    <meta property="og:description" content="SamudraFM - Non-stop hits, live shows, and requests. Helping you focus, unwind, and stay inspired — one song at a time.">
-    <meta property="og:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    <meta property="og:title" content="samudrafm — Your study, your music.">
+    <meta property="og:description" content="samudrafm - Non-stop hits, live shows, and requests. Helping you focus, unwind, and stay inspired — one song at a time.">
+    <meta property="og:image" content="https://samudrafm.com/images/samudrafmLogo1.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="SamudraFM Logo">
-    <meta property="og:site_name" content="SamudraFM">
+    <meta property="og:image:alt" content="samudrafm Logo">
+    <meta property="og:site_name" content="samudrafm">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://samudrafm.com/">
-    <meta property="twitter:title" content="SamudraFM — Your study, your music.">
-    <meta property="twitter:description" content="SamudraFM - Non-stop hits, live shows, and requests. Helping you focus, unwind, and stay inspired — one song at a time.">
-    <meta property="twitter:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
-    <meta property="twitter:image:alt" content="SamudraFM Logo">
+    <meta property="twitter:title" content="samudrafm — Your study, your music.">
+    <meta property="twitter:description" content="samudrafm - Non-stop hits, live shows, and requests. Helping you focus, unwind, and stay inspired — one song at a time.">
+    <meta property="twitter:image" content="https://samudrafm.com/images/samudrafmLogo1.png">
+    <meta property="twitter:image:alt" content="samudrafm Logo">
     
     <!-- Additional meta tags for better sharing -->
     <meta name="theme-color" content="#1a1a1a">
     <meta name="msapplication-TileColor" content="#1a1a1a">
-    <meta name="msapplication-TileImage" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    <meta name="msapplication-TileImage" content="https://samudrafm.com/images/samudrafmLogo1.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -152,9 +149,23 @@
     
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
-    <link rel="apple-touch-icon" href="images/SamudraFMLogo1.png">
-    <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
+    <link rel="icon" type="image/png" href="images/samudrafmLogo1.png">
+    <link rel="apple-touch-icon" href="images/samudrafmLogo1.png">
+    <link rel="shortcut icon" href="images/samudrafmLogo1.png">
+
+    <!-- Preload nowplaying API first – heart of the live player -->
+    <link rel="preload" href="https://api.samudrafm.com/api/nowplaying/1" as="fetch" crossorigin>
+    <link rel="preconnect" href="https://api.samudrafm.com" crossorigin>
+    <!-- Start nowplaying API request in head so it’s in flight before body/scripts -->
+    <script>
+    (function(){
+      var u='https://api.samudrafm.com/api/nowplaying/1';
+      window.__earlyNowPlayingPromise=fetch(u,{cache:'no-store'}).then(function(r){return r.ok?r.json():Promise.reject(new Error('HTTP '+r.status));}).then(function(j){return{status:j.status==='success'?'success':'error',data:j.data||null,error:j.message};}).catch(function(e){return{status:'error',data:null,error:e.message||String(e)};});
+    })();
+    </script>
+    <!-- Start calendar API in head for instant load (coming up section) -->
+    <link rel="preload" href="https://api.samudrafm.com/calendar-events" as="fetch" crossorigin>
+    <script>(function(){var u='https://api.samudrafm.com/calendar-events';window.__earlyCalendarPromise=fetch(u,{cache:'no-store'}).then(function(r){return r.ok?r.json():Promise.reject(new Error('HTTP '+r.status));}).catch(function(){return null;});})();</script>
     
     <!-- Simplified mobile handling - removed complex detection that might cause conflicts -->
     
@@ -165,20 +176,90 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+    <!-- JSON-LD for SEO (Organization + WebSite + alternate names for search) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://samudrafm.com/#organization",
+          "name": "samudrafm",
+          "url": "https://samudrafm.com",
+          "logo": { "@type": "ImageObject", "url": "https://samudrafm.com/images/samudrafmLogo1.png" },
+          "description": "Student-run online radio at SMK Taman SEA. Your study, your music. SEA FM, song request radio, Radio Petaling Jaya, Radio PJ, Taman SEA school radio, SMKTS.",
+          "alternateName": [
+            "SEA FM",
+            "Samudra",
+            "Samudraa",
+            "Samudra Management",
+            "Song Request Radio",
+            "Radio Petaling Jaya",
+            "Radio Selangor",
+            "Taman SEA School",
+            "SMKTS",
+            "SMK Taman SEA",
+            "SMK Taman Sea",
+            "SMK Taman SEA Radio",
+            "smktamanssea",
+            "smk tamansea",
+            "Radio Malaysia",
+            "Radio PJ",
+            "PJ Radio",
+            "FM Samudra",
+            "Taman SEA",
+            "Taman Sea",
+            "Taman Sea School",
+            "Taman SEA FM",
+            "SEA FM Radio",
+            "School Radio",
+            "School",
+            "Student Radio",
+            "Online Radio Malaysia",
+            "samudrafm.com"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://samudrafm.com/#website",
+          "url": "https://samudrafm.com",
+          "name": "samudrafm",
+          "alternateName": [
+            "SEA FM",
+            "Samudra",
+            "Radio Petaling Jaya",
+            "Radio PJ",
+            "Taman SEA School Radio",
+            "SMKTS",
+            "Song Request Radio",
+            "PJ Radio",
+            "School Radio Malaysia"
+          ],
+          "description": "samudrafm – Non-stop hits, live shows and song requests. Student-run radio at SMK Taman SEA, Petaling Jaya. Listen online, song request, schedule.",
+          "publisher": { "@id": "https://samudrafm.com/#organization" },
+          "inLanguage": "en-MY",
+          "potentialAction": {
+            "@type": "ListenAction",
+            "target": "https://samudrafm.com/",
+            "description": "Listen to samudrafm live"
+          }
+        }
+      ]
+    }
+    </script>
 </head>
 <body class="page-home">
-    <!-- Ribbon Effects -->
-    <div class="ribbon ribbon-top"></div>
-    <div class="ribbon ribbon-bottom"></div>
-    <div class="ribbon ribbon-left-top"></div>
-    <div class="ribbon ribbon-left-bottom"></div>
+    <!-- Side topography: vertical gold lines, full height, left and right only -->
+    <div class="ribbon-side ribbon-side-left" aria-hidden="true"></div>
+    <div class="ribbon-side ribbon-side-right" aria-hidden="true"></div>
     
     <main id="home" class="site-main container">
         <section class="hero">
             <!-- Integrated Hero Header -->
             <header class="hero-header">
                 <div class="hero-header-inner">
-                    <a href="/" class="brand" aria-label="SamudraFM Home">
+                    <a href="/" class="brand" aria-label="samudrafm Home">
                         <span class="brand-mark"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></span>
                         <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
                     </a>
@@ -235,7 +316,7 @@
                 <div class="hero-live-player" id="hero-live-player">
                     <div class="hero-live-player-inner">
                         <div class="hero-live-left">
-                            <div class="hero-live-cover" id="hero-live-cover" style="background-image: url('images/SamudraFMLogo1.png');"></div>
+                            <div class="hero-live-cover" id="hero-live-cover" style="background-image: url('images/samudrafmLogo1.png');"></div>
                             <div class="hero-live-play-overlay">
                                 <button type="button" class="hero-live-play-pause" id="hero-live-play-pause" aria-label="Play live stream"><i class="fa-solid fa-play"></i></button>
                             </div>
@@ -407,7 +488,7 @@
             <div class="about-content">
                 <p>Welcome to samudrafm, the voices of SMK Taman SEA! 🎙️</p>
                 <p>We're a student-run weekly radio programme created by volunteers with a passion for music, entertainment, and sharing stories. Every week, we bring energy, fun, and fresh vibes straight from our school community to you.</p>
-                <p>SamudraFM isn't just a radio show. It's a platform for students to express themselves, connect with others, and make mornings a little brighter.</p>
+                <p>samudrafm isn't just a radio show. It's a platform for students to express themselves, connect with others, and make mornings a little brighter.</p>
             </div>
         </section>
     </main>
@@ -429,8 +510,8 @@
                 <h3>Connect & Listen</h3>
                 <ul class="footer-links social-links">
                     <li><a href="https://www.instagram.com/samudrafm/" class="social-link"><i class="fab fa-instagram"></i> Instagram</a></li>
-                    <li><a href="https://www.facebook.com/SamudraFMSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
-                    <li><a href="https://www.mixcloud.com/SamudraFM/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
+                    <li><a href="https://www.facebook.com/samudrafmSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://www.mixcloud.com/samudrafm/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
                 </ul>
             </div>
             
@@ -449,7 +530,7 @@
         
         
         <div class="footer-bottom">
-            <p id="footer-year">2025 SamudraFM. Designed with passion by Jensen. 📻</p>
+            <p id="footer-year">2025 samudrafm. Designed with passion by Jensen. 📻</p>
         </div>
     </footer>
 
@@ -800,32 +881,15 @@
             extensionBlocking.init();
         })();
     </script>
-<!-- Instagram Configuration -->
-    <script src="js/instagram-config.js"></script>
-    <script src="js/presenter-data.js"></script>
+<!-- Live player API first (nowplaying is the heart of the live player) -->
     <script src="js/nowplaying.js"></script>
+    <script src="js/presenter-data.js"></script>
+    <script src="js/instagram-config.js"></script>
     <script src="js/mixcloud-data.js"></script>
     <script src="js/recent-tracks.js"></script>
     <script src="js/azuracast-song-request.js?v=100"></script>
 
-    <script>
-    // Simple script loading with cache busting
-    const script = document.createElement('script');
-    const scriptTimestamp = Date.now();
-    const scriptRandomId = Math.random().toString(36).substring(2, 15);
-    script.src = 'js/script.js?v=99&t=' + scriptTimestamp + '&nocache=1&cb=' + scriptTimestamp + '&r=' + scriptRandomId;
-    script.onload = function() {
-      console.log('Script loaded successfully');
-    };
-    script.onerror = function() {
-      console.warn('Script loading failed, retrying...');
-      // Simple fallback
-      const fallbackScript = document.createElement('script');
-      fallbackScript.src = 'js/script.js?fallback=' + Date.now();
-      document.head.appendChild(fallbackScript);
-    };
-    document.head.appendChild(script);
-    </script>
+    <script src="js/script.js?v=99&t=1741305600&nocache=1"></script>
     <script src="https://widget.mixcloud.com/media/js/widgetApi.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7"></script>
     <script src="js/hero-live-stream.js"></script>
@@ -908,7 +972,7 @@
             const yearElement = document.getElementById('footer-year');
             if (yearElement) {
                 const currentYear = new Date().getFullYear();
-                yearElement.textContent = currentYear + ' SamudraFM. Designed with passion by Jensen. 📻';
+                yearElement.textContent = currentYear + ' samudrafm. Designed with passion by Jensen. 📻';
             }
         })();
     </script>

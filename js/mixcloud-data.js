@@ -61,7 +61,7 @@
 
   /**
    * Fetch cloudcasts (episodes) from Mixcloud API.
-   * @param {string} username - Mixcloud username (e.g. 'SamudraFM')
+   * @param {string} username - Mixcloud username (e.g. 'samudrafm')
    * @param {Object} [opts] - Options
    * @param {number} [opts.limit=12] - Max number of episodes
    * @param {string} [opts.nextUrl] - Pagination URL (if provided, used instead of limit)

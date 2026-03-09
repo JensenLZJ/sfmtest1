@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/local-dev-no-sw.js"></script>
     
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4NCN6ZYF05"></script>
@@ -17,28 +18,34 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Schedule - SamudraFM</title>
-    <meta name="description" content="Check out our live radio schedule and upcoming shows on SamudraFM.">
+    <title>Schedule - samudrafm | Live Shows &amp; Timetable</title>
+    <meta name="description" content="Check out our live radio schedule and upcoming shows on samudrafm. SMK Taman SEA school radio programme.">
+    <link rel="canonical" href="https://samudrafm.com/schedule.html">
+    <meta name="keywords" content="sea fm, samudra, samudraa, song request radio, radio petaling jaya, radio selangor, taman sea school, smkts, smk taman sea, radio malaysia, radio pj, pj radio, fm samudra, taman sea, tamansea, school radio, samudrafm, live schedule, show times, student radio">
     
     <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://samudrafm.com/schedule">
-    <meta property="og:title" content="Schedule - SamudraFM">
-    <meta property="og:description" content="Check out our live radio schedule and upcoming shows on SamudraFM.">
-    <meta property="og:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
-    <meta property="og:site_name" content="SamudraFM">
+    <meta property="og:title" content="Schedule - samudrafm">
+    <meta property="og:description" content="Check out our live radio schedule and upcoming shows on samudrafm.">
+    <meta property="og:image" content="https://samudrafm.com/images/samudrafmLogo1.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="samudrafm Logo">
+    <meta property="og:site_name" content="samudrafm">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://samudrafm.com/schedule">
-    <meta property="twitter:title" content="Schedule - SamudraFM">
-    <meta property="twitter:description" content="Check out our live radio schedule and upcoming shows on SamudraFM.">
-    <meta property="twitter:image" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    <meta property="twitter:title" content="Schedule - samudrafm">
+    <meta property="twitter:description" content="Check out our live radio schedule and upcoming shows on samudrafm.">
+    <meta property="twitter:image" content="https://samudrafm.com/images/samudrafmLogo1.png">
+    <meta property="twitter:image:alt" content="samudrafm Logo">
     
     <!-- Additional meta tags -->
     <meta name="theme-color" content="#1a1a1a">
     <meta name="msapplication-TileColor" content="#1a1a1a">
-    <meta name="msapplication-TileImage" content="https://samudrafm.com/images/SamudraFMLogo1.png">
+    <meta name="msapplication-TileImage" content="https://samudrafm.com/images/samudrafmLogo1.png">
     
     <!-- Prevent caching -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -727,16 +734,21 @@
     </style>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="images/SamudraFMLogo1.png">
-    <link rel="apple-touch-icon" href="images/SamudraFMLogo1.png">
-    <link rel="shortcut icon" href="images/SamudraFMLogo1.png">
+    <link rel="icon" type="image/png" href="images/samudrafmLogo1.png">
+    <link rel="apple-touch-icon" href="images/samudrafmLogo1.png">
+    <link rel="shortcut icon" href="images/samudrafmLogo1.png">
+    <link rel="preload" href="https://api.samudrafm.com/api/nowplaying/1" as="fetch" crossorigin>
+    <link rel="preconnect" href="https://api.samudrafm.com" crossorigin>
+    <script>(function(){var u='https://api.samudrafm.com/api/nowplaying/1';window.__earlyNowPlayingPromise=fetch(u,{cache:'no-store'}).then(function(r){return r.ok?r.json():Promise.reject(new Error('HTTP '+r.status));}).then(function(j){return{status:j.status==='success'?'success':'error',data:j.data||null,error:j.message};}).catch(function(e){return{status:'error',data:null,error:e.message||String(e)};});})();</script>
+    <link rel="preload" href="https://api.samudrafm.com/calendar-events" as="fetch" crossorigin>
+    <script>(function(){var u='https://api.samudrafm.com/calendar-events';window.__earlyCalendarPromise=fetch(u,{cache:'no-store'}).then(function(r){return r.ok?r.json():Promise.reject(new Error('HTTP '+r.status));}).catch(function(){return null;});})();</script>
 </head>
 <body class="page-schedule">
     <main class="site-main">
         <!-- Hero Header -->
         <header class="hero-header">
             <div class="container hero-header-inner">
-                <a href="/" class="brand" aria-label="SamudraFM Home">
+                <a href="/" class="brand" aria-label="samudrafm Home">
                     <span class="brand-mark"><img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1.2em; vertical-align: middle; display: inline-block;"></span>
                     <span class="brand-subtitle">SMK Taman SEA school radio programme</span>
                 </a>
@@ -771,7 +783,7 @@
                     <div class="hero-live-player" id="hero-live-player">
                         <div class="hero-live-player-inner">
                             <div class="hero-live-left">
-                                <div class="hero-live-cover" id="hero-live-cover" style="background-image: url('images/SamudraFMLogo1.png');"></div>
+                                <div class="hero-live-cover" id="hero-live-cover" style="background-image: url('images/samudrafmLogo1.png');"></div>
                                 <div class="hero-live-play-overlay">
                                     <button type="button" class="hero-live-play-pause" id="hero-live-play-pause" aria-label="Play live stream"><i class="fa-solid fa-play"></i></button>
                                 </div>
@@ -860,8 +872,8 @@
                 <h3>Connect & Listen</h3>
                 <ul class="footer-links social-links">
                     <li><a href="https://www.instagram.com/samudrafm/" class="social-link"><i class="fab fa-instagram"></i> Instagram</a></li>
-                    <li><a href="https://www.facebook.com/SamudraFMSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
-                    <li><a href="https://www.mixcloud.com/SamudraFM/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
+                    <li><a href="https://www.facebook.com/samudrafmSMKTS" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://www.mixcloud.com/samudrafm/" class="social-link"><i class="fab fa-mixcloud"></i> Mixcloud</a></li>
                 </ul>
             </div>
             
@@ -880,7 +892,7 @@
         
         
         <div class="footer-bottom">
-            <p id="footer-year">2025 SamudraFM. Designed with passion by Jensen. 📻</p>
+            <p id="footer-year">2025 samudrafm. Designed with passion by Jensen. 📻</p>
         </div>
     </footer>
 
@@ -899,24 +911,22 @@
             });
         }
         
-        // Initialize schedule page
-        document.addEventListener('DOMContentLoaded', function() {
+        // Initialize schedule page instantly – no delay (calendar fetch already started in head)
+        function initScheduleNow() {
             try {
-                // Schedule page loaded with pagination support
-                // Pagination variables initialized
                 forceCacheBust();
-                
-                // Force hard refresh if needed
                 if (window.location.search.includes('force=1')) {
                     window.location.reload(true);
                     return;
                 }
-                
                 loadScheduleData();
-            } catch (error) {
-                //console.error('Error initializing schedule page:', error);
-            }
-        });
+            } catch (error) {}
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initScheduleNow);
+        } else {
+            initScheduleNow();
+        }
         
         // Profile picture mapping is defined in script.js
 
@@ -1124,8 +1134,10 @@
             const scheduleContainer = document.getElementById('schedule-list');
             if (!scheduleContainer) return;
             
-            // Show loading state
-            scheduleContainer.innerHTML = '<p style="text-align: center; color: var(--muted);">Loading schedule...</p>';
+            // Only show loading state if we don't have early calendar data (instant when head fetch already resolved)
+            if (typeof window === 'undefined' || !window.__earlyCalendarPromise) {
+                scheduleContainer.innerHTML = '<p style="text-align: center; color: var(--muted);">Loading schedule...</p>';
+            }
             
             try {
                 // Loading schedule data...
@@ -1246,7 +1258,7 @@
             
             // Helper function to create cover element (matching home page style)
             function withCover(url) {
-                return url ? `<div class="cover" style="background-image:url('${url}')" onerror="this.style.backgroundImage='url(assets/brandmark/SamudraFMLogo1.png)'"></div>` : `<div class="cover placeholder"></div>`;
+                return url ? `<div class="cover" style="background-image:url('${url}')" onerror="this.style.backgroundImage='url(assets/brandmark/samudrafmLogo1.png)'"></div>` : `<div class="cover placeholder"></div>`;
             }
             
             // Render all items at once using the same card structure as home page
@@ -1283,117 +1295,53 @@
             container.innerHTML = scheduleHTML + bottomMessage;
         }
         
-        // Load Google Calendar events via JSONP for static hosting
+        // Load calendar events from Worker proxy: GET https://api.samudrafm.com/calendar-events (response.data = array of events)
+        // Uses window.__earlyCalendarPromise if set by head script for instant load
         async function loadGoogleCalendarEvents() {
             try {
-                const apiKey = 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
-                const calendarId = 'samudrafm.com@gmail.com';
-                
-                const now = new Date();
-                const timeMin = now.toISOString();
-                const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
-                
-                // Use JSONP approach for static hosting
-                const calendarUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&maxResults=50&singleEvents=true&orderBy=startTime&callback=handleCalendarResponse`;
-                
-                return new Promise((resolve, reject) => {
-                    // Create a unique callback function name
-                    const callbackName = 'googleCalendarCallback_' + Date.now();
-                    
-                    // Create the script tag for JSONP
-                    const script = document.createElement('script');
-                    script.src = calendarUrl.replace('callback=handleCalendarResponse', `callback=${callbackName}`);
-                    
-                    // Define the callback function
-                    window[callbackName] = function(data) {
-                        try {
-                            // Clean up
-                            document.head.removeChild(script);
-                            delete window[callbackName];
-                            
-                            if (data.error) {
-                                throw new Error(`Google Calendar API error: ${data.error.message}`);
-                            }
-                            
-                            // Successfully fetched Google Calendar events
-                            
-                            // Transform the data to match schedule format
-                            const events = data.items.map(event => {
-                                const fullTitle = event.summary || 'TBA';
-                                
-                                // Split "JensenL - A Wee Mystical Magical Show" into presenter and show
-                                let presenter, show;
-                                if (fullTitle.includes(' - ')) {
-                                    const parts = fullTitle.split(' - ');
-                                    presenter = parts[0].trim();
-                                    show = parts[1].trim();
-                                } else {
-                                    presenter = fullTitle;
-                                    show = event.description || 'Special Show';
-                                }
-                                
-                                const startDate = new Date(event.start?.dateTime || event.start?.date);
-                                const endDate = new Date(event.end?.dateTime || event.end?.date);
-                                
-                                return {
-                                    presenter: presenter,
-                                    show: show,
-                                    startTime: startDate.toLocaleTimeString('en-GB', { 
-                                        hour: '2-digit', 
-                                        minute: '2-digit',
-                                        hour12: false 
-                                    }),
-                                    endTime: endDate.toLocaleTimeString('en-GB', { 
-                                        hour: '2-digit', 
-                                        minute: '2-digit',
-                                        hour12: false 
-                                    }),
-                                    date: startDate.toLocaleDateString('en-GB', {
-                                        day: 'numeric',
-                                        month: 'short'
-                                    }),
-                                    day: startDate.toLocaleDateString('en-GB', {
-                                        weekday: 'long'
-                                    }),
-                                    image: getProfilePicture(presenter)
-                                };
-                            });
-                            
-                            resolve(events);
-                        } catch (error) {
-                            reject(error);
-                        }
+                let json = null;
+                if (typeof window !== 'undefined' && window.__earlyCalendarPromise) {
+                    json = await window.__earlyCalendarPromise;
+                    delete window.__earlyCalendarPromise;
+                }
+                if (!json) {
+                    const res = await fetch('https://api.samudrafm.com/calendar-events');
+                    if (!res.ok) return null;
+                    json = await res.json();
+                }
+                const items = Array.isArray(json && json.data) ? json.data : [];
+                const events = items.map(event => {
+                    const fullTitle = event.summary || 'TBA';
+                    let presenter, show;
+                    if (fullTitle.includes(' - ')) {
+                        const parts = fullTitle.split(' - ');
+                        presenter = parts[0].trim();
+                        show = parts[1].trim();
+                    } else {
+                        presenter = fullTitle;
+                        show = event.description || 'Special Show';
+                    }
+                    const startDate = new Date(event.start?.dateTime || event.start?.date);
+                    const endDate = new Date(event.end?.dateTime || event.end?.date);
+                    return {
+                        presenter: presenter,
+                        show: show,
+                        startTime: startDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }),
+                        endTime: endDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }),
+                        date: startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+                        day: startDate.toLocaleDateString('en-GB', { weekday: 'long' }),
+                        image: getProfilePicture(presenter)
                     };
-                    
-                    // Handle script load error
-                    script.onerror = function() {
-                        document.head.removeChild(script);
-                        delete window[callbackName];
-                        reject(new Error('Failed to load Google Calendar data'));
-                    };
-                    
-                    // Add script to document
-                    document.head.appendChild(script);
-                    
-                    // Timeout after 10 seconds
-                    setTimeout(() => {
-                        if (window[callbackName]) {
-                            document.head.removeChild(script);
-                            delete window[callbackName];
-                            reject(new Error('Google Calendar request timeout'));
-                        }
-                    }, 10000);
                 });
-                
+                return events;
             } catch (error) {
-                //console.error('Google Calendar API error:', error);
                 return null;
             }
         }
     </script>
     
-    <script src="js/presenter-data.js"></script>
     <script src="js/nowplaying.js"></script>
+    <script src="js/presenter-data.js"></script>
     <script src="js/azuracast-song-request.js?v=100"></script>
     <script src="js/script.js?v=99&t=1741305600&nocache=1"></script>
     
@@ -1403,7 +1351,7 @@
             const yearElement = document.getElementById('footer-year');
             if (yearElement) {
                 const currentYear = new Date().getFullYear();
-                yearElement.textContent = currentYear + ' SamudraFM. Designed with passion by Jensen. 📻';
+                yearElement.textContent = currentYear + ' samudrafm. Designed with passion by Jensen. 📻';
             }
         })();
     </script>

@@ -5,13 +5,42 @@
 
 const NOWPLAYING_API = 'https://api.samudrafm.com/api/nowplaying/1';
 
+// Use request started in head (window.__earlyNowPlayingPromise) or start one now so data is ready by DOMContentLoaded
+var earlyNowPlayingPromise = null;
+if (typeof window !== 'undefined' && window.__earlyNowPlayingPromise) {
+  earlyNowPlayingPromise = window.__earlyNowPlayingPromise;
+  delete window.__earlyNowPlayingPromise;
+} else if (typeof fetch !== 'undefined') {
+  earlyNowPlayingPromise = fetch(NOWPLAYING_API, { cache: 'no-store' })
+    .then(function (response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return response.json();
+    })
+    .then(function (json) {
+      if (json.status !== 'success') {
+        return { status: json.status || 'error', data: null, error: json.message || 'API returned non-success status' };
+      }
+      return { status: 'success', data: json.data || null };
+    })
+    .catch(function (err) {
+      if (typeof console !== 'undefined' && console.error) console.error('Now Playing fetch error:', err);
+      return { status: 'error', data: null, error: err.message || String(err) };
+    });
+}
+
 /**
  * Fetches current now-playing metadata from the API.
+ * First call reuses the early request started when the script loaded.
  * @returns {Promise<{ status: string, data: Object | null, error?: string }>}
  */
 async function fetchNowPlaying() {
+  if (earlyNowPlayingPromise) {
+    var p = earlyNowPlayingPromise;
+    earlyNowPlayingPromise = null;
+    return p;
+  }
   try {
-    const response = await fetch(NOWPLAYING_API);
+    const response = await fetch(NOWPLAYING_API, { cache: 'no-store' });
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -79,14 +108,14 @@ function updateHeroPresenterFromApi(presenter) {
   var isLive = presenter && presenter.is_live === true;
   var data = getData('AutoDJ');
   var displayName = (data && data.name) ? data.name : 'AutoDJ';
-  var description = (data && data.description) ? data.description : 'Non-stop music on SamudraFM.';
+  var description = (data && data.description) ? data.description : 'Non-stop music on samudrafm.';
   var timeLabel = (data && data.timeLabel) ? data.timeLabel : 'Streaming all day.';
   var artUrl = (data && data.art) ? data.art : 'assets/brandmark/sfmTextLogoBG1.svg';
 
   if (isLive && presenter.name) {
     data = getData(presenter.name) || data;
     displayName = (data && data.name) ? data.name : (presenter.name.charAt(0).toUpperCase() + presenter.name.slice(1));
-    description = (data && data.description) ? data.description : 'Live on SamudraFM.';
+    description = (data && data.description) ? data.description : 'Live on samudrafm.';
     timeLabel = (data && data.timeLabel) ? data.timeLabel : 'On air now.';
     if (presenter.art) {
       artUrl = presenter.art;

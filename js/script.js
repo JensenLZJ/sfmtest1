@@ -60,14 +60,14 @@ if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 // Media Session API for mobile lock screen controls
 if ('mediaSession' in navigator) {
   
-  // Set up media session metadata
+  // Set up media session metadata (skip when live stream is playing – it owns the session)
   function updateMediaSession(episode) {
     if (!episode) return;
-    
-    
+    if (window.isHeroLiveStreamPlaying) return;
+
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: episode.name || 'SamudraFM',
-      artist: 'SamudraFM',
+      title: episode.name || 'samudrafm',
+      artist: 'samudrafm',
       album: 'Your study, your music',
       artwork: episode.picture ? [
         { src: episode.picture, sizes: '96x96', type: 'image/jpeg' },
@@ -77,18 +77,22 @@ if ('mediaSession' in navigator) {
         { src: episode.picture, sizes: '384x384', type: 'image/jpeg' },
         { src: episode.picture, sizes: '512x512', type: 'image/jpeg' }
       ] : [
-        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '96x96', type: 'image/png' },
-        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '128x128', type: 'image/png' },
-        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '192x192', type: 'image/png' },
-        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '256x256', type: 'image/png' },
-        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '384x384', type: 'image/png' },
-        { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '512x512', type: 'image/png' }
+        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '96x96', type: 'image/png' },
+        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '128x128', type: 'image/png' },
+        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '192x192', type: 'image/png' },
+        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '256x256', type: 'image/png' },
+        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '384x384', type: 'image/png' },
+        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '512x512', type: 'image/png' }
       ]
     });
   }
 
-  // Set up media session action handlers
+  // Set up media session action handlers (live stream takes precedence when present)
   navigator.mediaSession.setActionHandler('play', () => {
+    if (document.getElementById('hero-live-audio') && typeof window.startHeroLiveStream === 'function') {
+      window.startHeroLiveStream();
+      return;
+    }
     if (window.currentWidget && window.currentWidget.play) {
       window.currentWidget.play();
     } else if (window.currentEpisode) {
@@ -97,6 +101,11 @@ if ('mediaSession' in navigator) {
   });
 
   navigator.mediaSession.setActionHandler('pause', () => {
+    if (window.isHeroLiveStreamPlaying && typeof window.pauseHeroLiveStream === 'function') {
+      if (navigator.mediaSession) navigator.mediaSession.playbackState = 'paused';
+      window.pauseHeroLiveStream();
+      return;
+    }
     if (window.currentWidget && window.currentWidget.pause) {
       window.currentWidget.pause();
     } else {
@@ -105,6 +114,11 @@ if ('mediaSession' in navigator) {
   });
 
   navigator.mediaSession.setActionHandler('stop', () => {
+    if (window.isHeroLiveStreamPlaying && typeof window.pauseHeroLiveStream === 'function') {
+      if (navigator.mediaSession) navigator.mediaSession.playbackState = 'paused';
+      window.pauseHeroLiveStream();
+      return;
+    }
     window.pauseAudio();
   });
 
@@ -116,25 +130,14 @@ if ('mediaSession' in navigator) {
     // Could implement next episode functionality
   });
 
-  // Update playback state
+  // Update playback state (skip when live stream is playing)
   function updatePlaybackState(playing) {
+    if (window.isHeroLiveStreamPlaying) return;
     navigator.mediaSession.playbackState = playing ? 'playing' : 'paused';
   }
 
-  // Set initial metadata
-  navigator.mediaSession.metadata = new MediaMetadata({
-    title: 'SamudraFM',
-    artist: 'Your study, your music',
-    album: 'Live Radio',
-    artwork: [
-      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '96x96', type: 'image/png' },
-      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '128x128', type: 'image/png' },
-      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '192x192', type: 'image/png' },
-      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '256x256', type: 'image/png' },
-      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '384x384', type: 'image/png' },
-      { src: 'assets/brandmark/SamudraFMLogo1.png', sizes: '512x512', type: 'image/png' }
-    ]
-  });
+  // Do not set initial metadata on load – avoids notification (and timestamp) showing before user plays anything.
+  // Metadata is set when: user starts live stream (hero-live-stream) or plays a Mixcloud episode (updateMediaSession).
 
   // Make functions globally available
   window.updateMediaSession = updateMediaSession;
@@ -243,7 +246,7 @@ function getProfilePicture(presenterName) {
     }
   }
   
-  // Default fallback - use SamudraFM logo SVG
+  // Default fallback - use samudrafm logo SVG
   return 'assets/brandmark/sfmTextLogoBG1.svg';
 }
 
@@ -303,25 +306,25 @@ function getHardcodedFallbackPosts() {
   return [
     {
       id: 'fallback-1',
-      caption: 'Welcome to SamudraFM! Your study, your music. 🎵',
-      mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
-      thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
+      caption: 'Welcome to samudrafm! Your study, your music. 🎵',
+      mediaUrl: 'assets/brandmark/samudrafmLogo1.png',
+      thumbnailUrl: 'assets/brandmark/samudrafmLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
       timestamp: new Date().toISOString()
     },
     {
       id: 'fallback-2',
       caption: 'Tune in to our latest shows and discover new music! 🎧',
-      mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
-      thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
+      mediaUrl: 'assets/brandmark/samudrafmLogo1.png',
+      thumbnailUrl: 'assets/brandmark/samudrafmLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
       timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
     },
     {
       id: 'fallback-3',
       caption: 'Helping you focus, unwind, and stay inspired — one song at a time. ✨',
-      mediaUrl: 'assets/brandmark/SamudraFMLogo1.png',
-      thumbnailUrl: 'assets/brandmark/SamudraFMLogo1.png',
+      mediaUrl: 'assets/brandmark/samudrafmLogo1.png',
+      thumbnailUrl: 'assets/brandmark/samudrafmLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
       timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
     }
@@ -378,85 +381,40 @@ function renderInstagramPosts(posts) {
   // Final container innerHTML set
 }
 
-// Google Calendar Integration - Direct API call
+// Calendar events from Worker proxy: GET https://api.samudrafm.com/calendar-events (response.data = array of events)
+// Uses window.__earlyCalendarPromise if set by head script for instant load
 async function fetchGoogleCalendarEvents() {
   try {
-    // Fetching Google Calendar events from API
-    
-    const apiKey = 'AIzaSyAwJIWjqSccC0lITDPo-qu4Xas3MHkBXX4';
-    const calendarId = 'samudrafm.com@gmail.com';
-    
+    let json = null;
+    if (typeof window !== 'undefined' && window.__earlyCalendarPromise) {
+      json = await window.__earlyCalendarPromise;
+      delete window.__earlyCalendarPromise;
+    }
+    if (!json) {
+      const res = await fetch('https://api.samudrafm.com/calendar-events');
+      if (!res.ok) throw new Error('Calendar unavailable');
+      json = await res.json();
+    }
+    const items = Array.isArray(json && json.data) ? json.data : [];
     const now = new Date();
-    const timeMin = now.toISOString();
-    const timeMax = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
-    
-    // Use JSONP approach for static hosting
-    const calendarUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&maxResults=50&singleEvents=true&orderBy=startTime&callback=handleCalendarResponse`;
-    
-    return new Promise((resolve, reject) => {
-      // Create a unique callback function name
-      const callbackName = 'googleCalendarCallback_' + Date.now();
-      
-      // Create the script tag for JSONP
-      const script = document.createElement('script');
-      script.src = calendarUrl.replace('callback=handleCalendarResponse', `callback=${callbackName}`);
-      
-      // Define the callback function
-      window[callbackName] = function(data) {
-        try {
-          // Clean up
-          document.head.removeChild(script);
-          delete window[callbackName];
-          
-          if (data.error) {
-            throw new Error(`Google Calendar API error: ${data.error.message}`);
-          }
-          
-          // Successfully fetched Google Calendar events
-          
-          // Transform the data to match the expected format
-          const events = data.items.map(event => ({
-            summary: event.summary || 'Untitled Event',
-            description: event.description || '',
-            start: {
-              dateTime: event.start.dateTime || event.start.date
-            },
-            end: {
-              dateTime: event.end.dateTime || event.end.date
-            },
-            location: event.location || 'Online',
-            htmlLink: event.htmlLink || 'https://samudrafm.com'
-          }));
-          
-          // Filter events to only show upcoming ones
-          const upcomingEvents = events.filter(event => {
-            const eventDate = new Date(event.start.dateTime);
-            const isUpcoming = eventDate >= now;
-            // Event processed for upcoming check
-            return isUpcoming;
-          }).slice(0, 10);
-          
-          // Upcoming events processed
-          resolve(upcomingEvents);
-        } catch (error) {
-          reject(error);
-        }
-      };
-      
-      // Handle script load error
-      script.onerror = function() {
-        document.head.removeChild(script);
-        delete window[callbackName];
-        reject(new Error('Failed to load Google Calendar script'));
-      };
-      
-      // Add script to head
-      document.head.appendChild(script);
-    });
-    
+    const events = items.map(event => ({
+      summary: event.summary || 'Untitled Event',
+      description: event.description || '',
+      start: {
+        dateTime: event.start?.dateTime || event.start?.date
+      },
+      end: {
+        dateTime: event.end?.dateTime || event.end?.date
+      },
+      location: event.location || 'Online',
+      htmlLink: event.htmlLink || 'https://samudrafm.com'
+    }));
+    const upcomingEvents = events.filter(event => {
+      const eventDate = new Date(event.start.dateTime);
+      return eventDate >= now;
+    }).slice(0, 10);
+    return upcomingEvents;
   } catch (error) {
-    //console.error('Error fetching Google Calendar events:', error);
-    // Return fallback data if API fails
     return getFallbackCalendarEvents();
   }
 }
@@ -598,7 +556,7 @@ function updatePresenterCard(events) {
   if (!current) {
     // Fallback: AutoDJ
     nameEl.textContent = 'AutoDJ';
-    descEl.textContent = 'Non-stop music on SamudraFM.';
+    descEl.textContent = 'Non-stop music on samudrafm.';
     timeEl.textContent = 'Streaming all day.';
     avatarEl.style.backgroundImage = "url('assets/brandmark/sfmTextLogoBG1.svg')";
     return;
@@ -629,7 +587,7 @@ function updatePresenterCard(events) {
 
 // Helpers for placeholders ---------------------------------------------------
 function withCover(url){
-  return url ? `<div class="cover" style="background-image:url('${url}')" onerror="this.style.backgroundImage='url(assets/brandmark/SamudraFMLogo1.png)'"></div>` : `<div class="cover placeholder"></div>`;
+  return url ? `<div class="cover" style="background-image:url('${url}')" onerror="this.style.backgroundImage='url(assets/brandmark/samudrafmLogo1.png)'"></div>` : `<div class="cover placeholder"></div>`;
 }
 
 // Render recent grid (if element exists)
@@ -646,30 +604,16 @@ if (recentGrid) {
   `).join('');
 }
 
-// Load coming up events when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-  // Add a small delay to ensure all elements are ready
-  setTimeout(() => {
-    const comingGrid = document.getElementById('coming-grid');
-    
-    if (comingGrid) {
-      // Show loading state immediately
-      comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
-      
-      // Load events with retry logic
-      loadComingUpEventsWithRetry();
-    } else {
-      // Retry after a longer delay
-      setTimeout(() => {
-        const retryGrid = document.getElementById('coming-grid');
-        if (retryGrid) {
-          retryGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
-          loadComingUpEventsWithRetry();
-        }
-      }, 1000);
-    }
-  }, 100);
-});
+// Load coming up events instantly – no delay (calendar fetch already started in head)
+function runComingUpEventsNow() {
+  const comingGrid = document.getElementById('coming-grid');
+  if (comingGrid) loadComingUpEventsWithRetry();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', runComingUpEventsNow);
+} else {
+  runComingUpEventsNow();
+}
 
 // Load coming up events with retry logic
 async function loadComingUpEventsWithRetry() {
@@ -702,8 +646,9 @@ async function loadComingUpEvents() {
   // coming-grid found
   if (!comingGrid) return;
   
-  // Show loading state
-  comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
+  // Only show loading state if we don't have early calendar data (avoids flash when head fetch already resolved)
+  var useEarly = typeof window !== 'undefined' && window.__earlyCalendarPromise;
+  if (!useEarly) comingGrid.innerHTML = '<div class="loading-state">Loading upcoming shows...</div>';
   
   try {
     // Try Google Calendar first
@@ -813,7 +758,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 
 // Mixcloud integration ------------------------------------------------------
 // Set your Mixcloud username here
-const MIXCLOUD_USERNAME = 'SamudraFM';
+const MIXCLOUD_USERNAME = 'samudrafm';
 const MIXCLOUD_API_KEY = 'gDVAEf3yoChF4fkXFxfXNwl3XMkZEs0g';
 
 let mixcloudNextUrl = null;
@@ -949,7 +894,7 @@ function renderEpisodesSlider() {
 
 
   const html = episodes.map((ep, i) => {
-    const imageUrl = ep.pictures?.large || ep.pictures?.medium || ep.picture || 'assets/brandmark/SamudraFMLogo1.png';
+    const imageUrl = ep.pictures?.large || ep.pictures?.medium || ep.picture || 'assets/brandmark/samudrafmLogo1.png';
     const { dateOnly, fullMatch } = extractDateFromTitle(ep.name);
     const titleWithoutDate = fullMatch ? ep.name.replace(fullMatch, '').trim() : ep.name;
     const metaDate = dateOnly ? formatDateFull(dateOnly) : '';
@@ -1358,9 +1303,9 @@ async function fetchDurationFromAPI(episodeUrl) {
   
   try {
     // Extract the show path from the URL
-    // Example: https://www.mixcloud.com/SamudraFM/tasty-tuesday-show-27-june-2023/
+    // Example: https://www.mixcloud.com/samudrafm/tasty-tuesday-show-27-june-2023/
     const urlParts = episodeUrl.split('/');
-    const username = urlParts[3]; // SamudraFM
+    const username = urlParts[3]; // samudrafm
     const showSlug = urlParts[4]; // tasty-tuesday-show-27-june-2023
     
     if (!username || !showSlug) {
@@ -1413,20 +1358,20 @@ async function fetchDurationFromAPI(episodeUrl) {
   }
 }
 
-// Function to update artist display - use logo if artist is SamudraFM
+// Function to update artist display - use logo if artist is samudrafm
 function updateArtistDisplay(artistEl, episode) {
   if (!artistEl) return;
   
-  // Check if episode has user info and if it's SamudraFM
+  // Check if episode has user info and if it's samudrafm
   const artistName = episode.user?.username || episode.user?.name || '';
-  const isSamudraFM = artistName.toLowerCase() === 'samudrafm' || artistName === 'SamudraFM';
+  const issamudrafm = artistName.toLowerCase() === 'samudrafm' || artistName === 'samudrafm';
   
-  if (isSamudraFM) {
+  if (issamudrafm) {
     // Replace text with logo
     artistEl.innerHTML = 'by <img src="assets/brandmark/samudrafmcomTextLogo1.svg" alt="samudrafm.com" style="height: 1em; vertical-align: middle; display: inline-block; margin: 0 2px;">';
   } else {
     // Use default text or episode artist name
-    const displayText = artistName ? `by ${artistName}` : 'by SamudraFM';
+    const displayText = artistName ? `by ${artistName}` : 'by samudrafm';
     artistEl.textContent = displayText;
   }
 }
@@ -1488,7 +1433,7 @@ function playEpisode(episode) {
   if (titleEl) {
     titleEl.textContent = episode.name;
   }
-  // Update artist display - use logo if artist is SamudraFM
+  // Update artist display - use logo if artist is samudrafm
   updateArtistDisplay(artistEl, episode);
   if (openEl) {
     openEl.href = 'request';
@@ -2574,7 +2519,7 @@ async function loadHeroLatest(username){
     
     titleEl.textContent = ep.name;
     const artistEl = document.getElementById('hero-ep-artist');
-    // Update artist display - use logo if artist is SamudraFM
+    // Update artist display - use logo if artist is samudrafm
     updateArtistDisplay(artistEl, ep);
     openEl.href = 'request';
     
@@ -3576,8 +3521,8 @@ class AutoInstagramPosts {
     this.posts = [
       {
         id: 'fallback1',
-        title: 'Welcome to SamudraFM!',
-        content: '🎵 Fresh beats and great vibes! Tune in to SamudraFM for the latest music and updates!',
+        title: 'Welcome to samudrafm!',
+        content: '🎵 Fresh beats and great vibes! Tune in to samudrafm for the latest music and updates!',
         image: 'images/CustomPost/552514804_17962043480989085_3816.jpg',
         link: 'https://www.instagram.com/samudrafm/',
         date: new Date().toISOString()
@@ -3907,8 +3852,8 @@ class ManualInstagramPosts {
     this.posts = [
       {
         id: 'fallback1',
-        title: 'Welcome to SamudraFM!',
-        content: '?? Fresh beats and great vibes! Tune in to SamudraFM for the latest music and updates!',
+        title: 'Welcome to samudrafm!',
+        content: '?? Fresh beats and great vibes! Tune in to samudrafm for the latest music and updates!',
         image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop&crop=center',
         link: 'https://www.instagram.com/samudrafm/',
         date: new Date().toISOString()

@@ -5,9 +5,25 @@
 (function() {
   var LIVE_HLS_URL = 'https://talent.samudrafm.com/hls/samudrafm.com/live.m3u8';
   var STORAGE_KEY = 'heroLivePlaying';
+
+  function artworkFromTrack(track) {
+    if (!track || !track.album_art) return [];
+    var src = String(track.album_art).replace(/'/g, '%27');
+    return [
+      { src: src, sizes: '96x96', type: 'image/jpeg' },
+      { src: src, sizes: '128x128', type: 'image/jpeg' },
+      { src: src, sizes: '192x192', type: 'image/jpeg' },
+      { src: src, sizes: '256x256', type: 'image/jpeg' },
+      { src: src, sizes: '384x384', type: 'image/jpeg' },
+      { src: src, sizes: '512x512', type: 'image/jpeg' }
+    ];
+  }
+
   var hls = null;
   var isLivePlaying = false;
   var mobileOverlayHideTimeout = null;
+  var liveMediaSessionInterval = null;
+  var positionClearInterval = null;
 
   function persistLiveState() {
     try {
@@ -57,20 +73,134 @@
   }
   window.applyMobileOverlayBehavior = applyMobileOverlayBehavior;
 
+  function updateLiveStreamMediaSession(data) {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator) || !navigator.mediaSession) return;
+    var track = data || {};
+    var presenter = (data && data.presenter) ? data.presenter : null;
+    var trackTitle = (track.title) ? String(track.title) : 'samudrafm';
+    var artist = (track.artist) ? String(track.artist) : 'Your study, your music';
+    var presenterName = (presenter && presenter.name) ? String(presenter.name).trim() : '';
+    var presenterSuffix = presenterName ? 'With ' + presenterName + ' samudrafm.com' : '';
+    var artistLine = presenterSuffix ? artist + ' · ' + presenterSuffix : artist;
+    var displayTitle = trackTitle;
+    var artwork = artworkFromTrack(track);
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: displayTitle,
+      artist: artistLine,
+      album: presenterSuffix || displayTitle,
+      artwork: artwork
+    });
+    clearPositionState();
+  }
+
+  function refreshLiveMediaSession() {
+    if (!isLivePlaying || typeof window.getCurrentTrack !== 'function') return;
+    window.getCurrentTrack().then(function(track) {
+      updateLiveStreamMediaSession(track);
+    }).catch(function() {
+      updateLiveStreamMediaSession(null);
+    });
+  }
+
+  function clearPositionState() {
+    try {
+      if (typeof navigator !== 'undefined' && navigator.mediaSession && navigator.mediaSession.setPositionState) {
+        navigator.mediaSession.setPositionState({});
+      }
+    } catch (e) {}
+  }
+
+  function setupLiveMediaSession() {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return;
+    navigator.mediaSession.playbackState = 'playing';
+    clearPositionState();
+    setLiveMediaSessionHandlers();
+    updateLiveStreamMediaSession(null);
+    refreshLiveMediaSession();
+    if (liveMediaSessionInterval) clearInterval(liveMediaSessionInterval);
+    liveMediaSessionInterval = setInterval(refreshLiveMediaSession, 10000);
+    if (positionClearInterval) clearInterval(positionClearInterval);
+    positionClearInterval = setInterval(clearPositionState, 800);
+  }
+
+  function clearLiveMediaSession(keepMetadata) {
+    if (liveMediaSessionInterval) {
+      clearInterval(liveMediaSessionInterval);
+      liveMediaSessionInterval = null;
+    }
+    if (positionClearInterval) {
+      clearInterval(positionClearInterval);
+      positionClearInterval = null;
+    }
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return;
+    navigator.mediaSession.playbackState = 'paused';
+    clearPositionState();
+    if (!keepMetadata) {
+      clearPositionState();
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: 'Playing on samudrafm.com: samudrafm',
+        artist: 'Your study, your music',
+        album: 'Playing on samudrafm.com: samudrafm',
+        artwork: []
+      });
+    } else {
+      clearPositionState();
+      setTimeout(function() {
+        if (typeof navigator !== 'undefined' && navigator.mediaSession) {
+          navigator.mediaSession.playbackState = 'paused';
+          clearPositionState();
+        }
+      }, 0);
+    }
+  }
+
+  function setLiveMediaSessionHandlers() {
+    if (typeof navigator === 'undefined' || !('mediaSession' in navigator)) return;
+    navigator.mediaSession.setActionHandler('play', function() {
+      try {
+        if (isLivePlaying) return;
+        var audio = getAudio();
+        if (audio) startLiveStream(audio);
+      } catch (err) {}
+    });
+    navigator.mediaSession.setActionHandler('pause', function() {
+      try {
+        if (isLivePlaying) stopLiveStream();
+      } catch (err) {}
+    });
+    navigator.mediaSession.setActionHandler('stop', function() {
+      try {
+        if (isLivePlaying) stopLiveStream();
+      } catch (err) {}
+    });
+  }
+
   function startLiveStream(audioEl) {
     var audio = audioEl || getAudio();
     if (!audio) return;
     if (isLivePlaying) return;
+    isLivePlaying = true;
+    window.isHeroLiveStreamPlaying = true;
+    persistLiveState();
+    updateLiveButton();
+    setupLiveMediaSession();
     audio.muted = false;
     var volEl = document.getElementById('hero-live-volume');
     var vol = (volEl && volEl.value != null) ? Number(volEl.value) / 100 : 0.8;
     audio.volume = Math.max(0, Math.min(1, vol));
     if (typeof window.pauseMixcloudPlayer === 'function') window.pauseMixcloudPlayer();
+    if (hls && typeof hls.startLoad === 'function') {
+      hls.startLoad();
+      audio.play().catch(function() {});
+      return;
+    }
     if (typeof Hls !== 'undefined' && Hls.isSupported()) {
       if (hls) {
         hls.destroy();
         hls = null;
       }
+      audio.removeAttribute('src');
+      audio.load();
       hls = new Hls({ enableWorker: true });
       hls.loadSource(LIVE_HLS_URL);
       hls.attachMedia(audio);
@@ -92,28 +222,65 @@
       audio.play().catch(function() {});
     } else {
       console.warn('HLS not supported in this browser');
+      isLivePlaying = false;
+      window.isHeroLiveStreamPlaying = false;
+      persistLiveState();
+      updateLiveButton();
       return;
     }
-    isLivePlaying = true;
-    persistLiveState();
-    updateLiveButton();
   }
   function stopLiveStream() {
     var audio = getAudio();
     if (!isLivePlaying) return;
-    if (hls) {
+    if (typeof navigator !== 'undefined' && 'mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = 'paused';
+    }
+    if (audio) {
+      audio.pause();
+    }
+    if (hls && typeof hls.stopLoad === 'function') {
+      hls.stopLoad();
+    } else if (hls) {
       hls.destroy();
       hls = null;
     }
-    if (audio) {
-      audio.removeAttribute('src');
-      audio.load();
-    }
     isLivePlaying = false;
+    window.isHeroLiveStreamPlaying = false;
     persistLiveState();
     updateLiveButton();
+    clearLiveMediaSession(true);
   }
   window.pauseHeroLiveStream = stopLiveStream;
+  window.startHeroLiveStream = function() {
+    var audio = getAudio();
+    if (audio && !isLivePlaying) startLiveStream(audio);
+  };
+  window.isHeroLiveStreamPlaying = false;
+
+  function clearPositionStateBurst() {
+    clearPositionState();
+    setTimeout(clearPositionState, 50);
+    setTimeout(clearPositionState, 100);
+    setTimeout(clearPositionState, 200);
+    setTimeout(clearPositionState, 400);
+    setTimeout(clearPositionState, 700);
+    setTimeout(clearPositionState, 1200);
+    setTimeout(clearPositionState, 2000);
+  }
+
+  function registerLiveMediaHandlersOnLoad() {
+    setLiveMediaSessionHandlers();
+    clearPositionStateBurst();
+  }
+  if (window.addEventListener) {
+    window.addEventListener('load', registerLiveMediaHandlersOnLoad);
+    document.addEventListener('DOMContentLoaded', clearPositionStateBurst);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', clearPositionStateBurst);
+  } else {
+    clearPositionStateBurst();
+  }
 
   function setHeroLiveVolume(value) {
     var audio = getAudio();
