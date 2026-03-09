@@ -44,15 +44,17 @@ function renderRecentTracks(tracks) {
     var title = (t.title && escapeAttr(t.title)) || 'Unknown';
     var artist = (t.artist && escapeAttr(t.artist)) || '';
     var link = t.link || t.spotify_link || t.track_url || t.url || t.external_url || (t.external_urls && t.external_urls.spotify) || '';
+    var isSpotify = !!link && link.indexOf('spotify') !== -1;
     var row = '<div class="recently-played-row">';
     row += '<div class="recently-played-art" style="background-image:url(\'' + art + '\')"></div>';
     row += '<div class="recently-played-info"><span class="recently-played-title">' + title + '</span>';
     if (artist) row += ' <span class="recently-played-artist">' + artist + '</span>';
     row += '</div>';
-    if (link) {
-      row += '<a class="recently-played-link" href="' + escapeAttr(link) + '" target="_blank" rel="noopener noreferrer" aria-label="Open track">' + (link.indexOf('spotify') !== -1 ? '<i class="fab fa-spotify"></i>' : '<i class="fas fa-external-link-alt"></i>') + '</a>';
+    if (isSpotify) {
+      row += '<a class="recently-played-link" href="' + escapeAttr(link) + '" target="_blank" rel="noopener noreferrer" aria-label="Open Spotify track"><i class="fab fa-spotify"></i></a>';
     } else {
-      row += '<span class="recently-played-link recently-played-link--unavailable" aria-label="No link"><i class="fas fa-external-link-alt"></i></span>';
+      // No Spotify track: show greyed Spotify icon without a link
+      row += '<span class="recently-played-link recently-played-link--spotify-grey" aria-label="No Spotify link available"><i class="fab fa-spotify"></i></span>';
     }
     row += '</div>';
     return row;

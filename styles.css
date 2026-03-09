@@ -985,6 +985,15 @@ button.btn{opacity:1}
   background: transparent;
 }
 
+.recently-played-link--spotify-grey {
+  color: var(--muted);
+}
+
+.recently-played-link--spotify-grey:hover {
+  color: var(--muted);
+  background: transparent;
+}
+
 /* Instagram Section */
 .instagram-section {
   background: rgba(255, 255, 255, 0.03) !important;
