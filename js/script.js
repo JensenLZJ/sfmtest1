@@ -77,12 +77,12 @@ if ('mediaSession' in navigator) {
         { src: episode.picture, sizes: '384x384', type: 'image/jpeg' },
         { src: episode.picture, sizes: '512x512', type: 'image/jpeg' }
       ] : [
-        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '96x96', type: 'image/png' },
-        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '128x128', type: 'image/png' },
-        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '192x192', type: 'image/png' },
-        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '256x256', type: 'image/png' },
-        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '384x384', type: 'image/png' },
-        { src: 'assets/brandmark/samudrafmLogo1.png', sizes: '512x512', type: 'image/png' }
+        { src: 'assets/brandmark/samudraFMLogo1.png', sizes: '96x96', type: 'image/png' },
+        { src: 'assets/brandmark/samudraFMLogo1.png', sizes: '128x128', type: 'image/png' },
+        { src: 'assets/brandmark/samudraFMLogo1.png', sizes: '192x192', type: 'image/png' },
+        { src: 'assets/brandmark/samudraFMLogo1.png', sizes: '256x256', type: 'image/png' },
+        { src: 'assets/brandmark/samudraFMLogo1.png', sizes: '384x384', type: 'image/png' },
+        { src: 'assets/brandmark/samudraFMLogo1.png', sizes: '512x512', type: 'image/png' }
       ]
     });
   }
@@ -307,24 +307,24 @@ function getHardcodedFallbackPosts() {
     {
       id: 'fallback-1',
       caption: 'Welcome to samudrafm! Your study, your music. 🎵',
-      mediaUrl: 'assets/brandmark/samudrafmLogo1.png',
-      thumbnailUrl: 'assets/brandmark/samudrafmLogo1.png',
+      mediaUrl: 'assets/brandmark/samudraFMLogo1.png',
+      thumbnailUrl: 'assets/brandmark/samudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
       timestamp: new Date().toISOString()
     },
     {
       id: 'fallback-2',
       caption: 'Tune in to our latest shows and discover new music! 🎧',
-      mediaUrl: 'assets/brandmark/samudrafmLogo1.png',
-      thumbnailUrl: 'assets/brandmark/samudrafmLogo1.png',
+      mediaUrl: 'assets/brandmark/samudraFMLogo1.png',
+      thumbnailUrl: 'assets/brandmark/samudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
       timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
     },
     {
       id: 'fallback-3',
       caption: 'Helping you focus, unwind, and stay inspired — one song at a time. ✨',
-      mediaUrl: 'assets/brandmark/samudrafmLogo1.png',
-      thumbnailUrl: 'assets/brandmark/samudrafmLogo1.png',
+      mediaUrl: 'assets/brandmark/samudraFMLogo1.png',
+      thumbnailUrl: 'assets/brandmark/samudraFMLogo1.png',
       permalink: 'https://www.instagram.com/samudrafm/',
       timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
     }
@@ -587,7 +587,7 @@ function updatePresenterCard(events) {
 
 // Helpers for placeholders ---------------------------------------------------
 function withCover(url){
-  return url ? `<div class="cover" style="background-image:url('${url}')" onerror="this.style.backgroundImage='url(assets/brandmark/samudrafmLogo1.png)'"></div>` : `<div class="cover placeholder"></div>`;
+  return url ? `<div class="cover" style="background-image:url('${url}')" onerror="this.style.backgroundImage='url(assets/brandmark/samudraFMLogo1.png)'"></div>` : `<div class="cover placeholder"></div>`;
 }
 
 // Render recent grid (if element exists)
@@ -893,7 +893,7 @@ function renderEpisodesSlider() {
 
 
   const html = episodes.map((ep, i) => {
-    const imageUrl = ep.pictures?.large || ep.pictures?.medium || ep.picture || 'assets/brandmark/samudrafmLogo1.png';
+    const imageUrl = ep.pictures?.large || ep.pictures?.medium || ep.picture || 'assets/brandmark/samudraFMLogo1.png';
     const { dateOnly, fullMatch } = extractDateFromTitle(ep.name);
     const titleWithoutDate = fullMatch ? ep.name.replace(fullMatch, '').trim() : ep.name;
     const metaDate = dateOnly ? formatDateFull(dateOnly) : '';

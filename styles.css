@@ -355,7 +355,7 @@ body:not(.page-home) .hero-player-section {
 .hero-latest-cover.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);
   background:
     radial-gradient(600px 300px at 10% -10%, rgba(255,255,255,.06), transparent 60%),
-    #142636 url('images/samudrafmLogo1.png') center/42% no-repeat;
+    #142636 url('images/SamudraFMLogo1.png') center/42% no-repeat;
 }
 
 .play-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity 0.2s;pointer-events:none}
@@ -2030,14 +2030,14 @@ article.card{margin-top:0px;margin-bottom:0px}
 .cover.placeholder{display:flex;align-items:center;justify-content:center;color:var(--muted);
   background:
     radial-gradient(600px 300px at 10% -10%, rgba(255,255,255,.06), transparent 60%),
-    #142636 url('images/samudrafmLogo1.png') center/42% no-repeat;
+    #142636 url('images/SamudraFMLogo1.png') center/42% no-repeat;
 }
 .hero-art.placeholder{background:
     radial-gradient(800px 400px at 0% -10%, rgba(255,255,255,.06), transparent 60%),
-    #152b3b url('images/samudrafmLogo1.png') center/160px no-repeat;
+    #152b3b url('images/SamudraFMLogo1.png') center/160px no-repeat;
 }
 .avatar-placeholder{width:84px;height:84px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-  background:#102837 url('images/samudrafmLogo1.png') center/60% no-repeat;
+  background:#102837 url('images/SamudraFMLogo1.png') center/60% no-repeat;
   color:var(--muted);border:1px solid var(--border);font-weight:700}
 .card .content{padding:12px;border-radius:29px}
 .card .title{font-weight:700;margin:0}
