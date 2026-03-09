@@ -3133,7 +3133,7 @@ i.fas {
     background-color: rgba(22, 33, 62, 1);
     background-image: none;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .team-main::before {
