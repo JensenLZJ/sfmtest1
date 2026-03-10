@@ -1,58 +1,35 @@
 /**
- * SamduraFM Now Playing – fetch metadata from the station API
- * API: https://api.samudrafm.com/api/nowplaying/1
+ * SamudraFM Now Playing – cache-first now playing with smooth UI updates.
+ * API: https://api.samudrafm.com/nowplaying
+ *
+ * Behaviour:
+ * - On init: read `samudrafm_last_np` from localStorage and immediately apply to UI (if present).
+ * - Then: fetch fresh data from API, update UI and cache.
+ * - Refresh every 15 seconds.
  */
 
-const NOWPLAYING_API = 'https://api.samudrafm.com/api/nowplaying/1';
-
-// Use request started in head (window.__earlyNowPlayingPromise) or start one now so data is ready by DOMContentLoaded
-var earlyNowPlayingPromise = null;
-if (typeof window !== 'undefined' && window.__earlyNowPlayingPromise) {
-  earlyNowPlayingPromise = window.__earlyNowPlayingPromise;
-  delete window.__earlyNowPlayingPromise;
-} else if (typeof fetch !== 'undefined') {
-  earlyNowPlayingPromise = fetch(NOWPLAYING_API, { cache: 'no-store' })
-    .then(function (response) {
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      return response.json();
-    })
-    .then(function (json) {
-      if (json.status !== 'success') {
-        return { status: json.status || 'error', data: null, error: json.message || 'API returned non-success status' };
-      }
-      return { status: 'success', data: json.data || null };
-    })
-    .catch(function (err) {
-      if (typeof console !== 'undefined' && console.error) console.error('Now Playing fetch error:', err);
-      return { status: 'error', data: null, error: err.message || String(err) };
-    });
-}
+const NOWPLAYING_API = 'https://api.samudrafm.com/nowplaying';
+const NOWPLAYING_STORAGE_KEY = 'samudrafm_last_np';
 
 /**
- * Fetches current now-playing metadata from the API.
- * First call reuses the early request started when the script loaded.
+ * Low-level fetch from the Now Playing API.
  * @returns {Promise<{ status: string, data: Object | null, error?: string }>}
  */
 async function fetchNowPlaying() {
-  if (earlyNowPlayingPromise) {
-    var p = earlyNowPlayingPromise;
-    earlyNowPlayingPromise = null;
-    return p;
-  }
   try {
     const response = await fetch(NOWPLAYING_API, { cache: 'no-store' });
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      throw new Error('HTTP ' + response.status + ': ' + response.statusText);
     }
 
     const json = await response.json();
 
-    if (json.status !== 'success') {
+    if (!json || json.status !== 'success') {
       return {
-        status: json.status || 'error',
+        status: (json && json.status) || 'error',
         data: null,
-        error: json.message || 'API returned non-success status',
+        error: (json && json.message) || 'API returned non-success status',
       };
     }
 
@@ -61,22 +38,62 @@ async function fetchNowPlaying() {
       data: json.data || null,
     };
   } catch (err) {
-    console.error('Now Playing fetch error:', err);
+    if (typeof console !== 'undefined' && console.error) {
+      console.error('Now Playing fetch error:', err);
+    }
     return {
       status: 'error',
       data: null,
-      error: err.message || String(err),
+      error: err && (err.message || String(err)),
     };
   }
 }
 
 /**
- * Fetches now-playing and returns only the track data (artist, title, album_art, etc.).
- * @returns {Promise<Object|null>} Track object or null on failure
+ * Returns only the track data from the API.
+ * @returns {Promise<Object|null>}
  */
 async function getCurrentTrack() {
   const result = await fetchNowPlaying();
   return result.data;
+}
+
+/**
+ * Safely read cached now playing payload from localStorage.
+ * @returns {Object|null}
+ */
+function readCachedNowPlaying() {
+  if (typeof window === 'undefined' || !window.localStorage) return null;
+  try {
+    const raw = window.localStorage.getItem(NOWPLAYING_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') return parsed;
+  } catch (e) {
+    if (typeof console !== 'undefined' && console.warn) {
+      console.warn('Failed to read now playing cache:', e);
+    }
+  }
+  return null;
+}
+
+/**
+ * Persist now playing payload to localStorage.
+ * @param {Object|null} payload
+ */
+function writeCachedNowPlaying(payload) {
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  try {
+    if (!payload) {
+      window.localStorage.removeItem(NOWPLAYING_STORAGE_KEY);
+      return;
+    }
+    window.localStorage.setItem(NOWPLAYING_STORAGE_KEY, JSON.stringify(payload));
+  } catch (e) {
+    if (typeof console !== 'undefined' && console.warn) {
+      console.warn('Failed to write now playing cache:', e);
+    }
+  }
 }
 
 /**
@@ -182,10 +199,24 @@ function escapeAttr(s) {
     .replace(/>/g, '&gt;');
 }
 
+// Keep track of the last track we actually applied to avoid flicker on identical updates.
+var __lastAppliedNowPlaying = null;
+
+function tracksAreSame(a, b) {
+  if (!a && !b) return true;
+  if (!a || !b) return false;
+  return (
+    String(a.title || '') === String(b.title || '') &&
+    String(a.artist || '') === String(b.artist || '') &&
+    String(a.album_art || '') === String(b.album_art || '')
+  );
+}
+
 /**
- * Updates the hero live section with current track and presenter from API.
+ * Apply a now playing track payload to the hero "Now Playing" UI.
+ * @param {Object|null} track
  */
-function updateHeroNowPlaying() {
+function applyNowPlayingToHero(track) {
   var infoEl = document.getElementById('hero-live-info');
   var cover = document.getElementById('hero-live-cover');
   var titleEl = document.getElementById('hero-live-title');
@@ -193,66 +224,121 @@ function updateHeroNowPlaying() {
   var subtitleEl = document.querySelector('.hero-live-info .hero-live-subtitle');
   var badgeEl = document.querySelector('#hero-live-info .hero-live-badge');
 
-  fetchNowPlaying().then(function (result) {
-    var track = result.data;
-    var presenter = (result.data && result.data.presenter) || null;
-    if (result.data == null) {
-      updateHeroPresenterFromApi({ noData: true });
-    } else {
-      updateHeroPresenterFromApi(presenter || { is_live: false });
-    }
+  if (!infoEl || !cover || !titleEl || !subtitleEl) {
+    return;
+  }
 
-    if (infoEl && cover && titleEl && subtitleEl) {
-      if (!track) {
-        infoEl.classList.remove('hero-live-info-hidden');
-        infoEl.setAttribute('aria-hidden', 'false');
-        cover.style.backgroundImage = '';
-        titleEl.textContent = 'Offline';
-        subtitleEl.textContent = '';
-        if (spotifyLink) spotifyLink.style.display = 'none';
-        if (badgeEl) {
-          badgeEl.textContent = 'Offline';
-          badgeEl.classList.add('hero-live-badge--offline');
-        }
-      } else {
-        infoEl.classList.remove('hero-live-info-hidden');
-        infoEl.setAttribute('aria-hidden', 'false');
-        if (track.album_art) {
-          cover.style.backgroundImage = "url('" + track.album_art.replace(/'/g, "%27") + "')";
-        }
-        if (track.title) {
-          titleEl.textContent = track.title;
-        }
-        if (track.artist) {
-          subtitleEl.textContent = track.artist;
-        }
-        if (badgeEl) {
-          badgeEl.textContent = 'LIVE';
-          badgeEl.classList.remove('hero-live-badge--offline');
-        }
-        if (spotifyLink) {
-          var songLink = track.link || track.spotify_link || track.track_url || track.url || track.external_url || (track.external_urls && track.external_urls.spotify) || '';
-          spotifyLink.href = songLink || '#';
-          spotifyLink.style.display = '';
-          if (songLink) {
-            spotifyLink.classList.remove('hero-live-spotify-link--unavailable');
-          } else {
-            spotifyLink.classList.add('hero-live-spotify-link--unavailable');
-          }
+  // If the incoming track is identical to what is already shown, skip updates to prevent flicker.
+  if (!track && __lastAppliedNowPlaying === '__offline__') {
+    return;
+  }
+  if (track && __lastAppliedNowPlaying && __lastAppliedNowPlaying !== '__offline__' && tracksAreSame(track, __lastAppliedNowPlaying)) {
+    return;
+  }
+
+  // Let CSS handle smooth opacity transitions.
+  infoEl.classList.add('hero-live-text-updating');
+
+  // Update presenter card if presenter info is present.
+  var presenter = track && track.presenter ? track.presenter : null;
+  if (!track) {
+    updateHeroPresenterFromApi({ noData: true });
+  } else {
+    updateHeroPresenterFromApi(presenter || { is_live: false });
+  }
+
+  window.setTimeout(function () {
+    infoEl.classList.remove('hero-live-info-hidden');
+    infoEl.setAttribute('aria-hidden', 'false');
+
+    if (!track) {
+      cover.style.backgroundImage = '';
+      titleEl.textContent = 'Offline';
+      subtitleEl.textContent = '';
+      __lastAppliedNowPlaying = '__offline__';
+      if (spotifyLink) {
+        spotifyLink.style.display = 'none';
+      }
+      if (badgeEl) {
+        badgeEl.textContent = 'Offline';
+        badgeEl.classList.add('hero-live-badge--offline');
+      }
+    } else {
+      if (track.album_art) {
+        cover.style.backgroundImage = "url('" + String(track.album_art).replace(/'/g, "%27") + "')";
+      }
+      if (track.title) {
+        titleEl.textContent = track.title;
+      }
+      if (track.artist) {
+        subtitleEl.textContent = track.artist;
+      }
+      if (badgeEl) {
+        badgeEl.textContent = 'LIVE';
+        badgeEl.classList.remove('hero-live-badge--offline');
+      }
+      __lastAppliedNowPlaying = {
+        title: track.title || '',
+        artist: track.artist || '',
+        album_art: track.album_art || '',
+      };
+      if (spotifyLink) {
+        var songLink =
+          track.link ||
+          track.spotify_link ||
+          track.track_url ||
+          track.url ||
+          track.external_url ||
+          (track.external_urls && track.external_urls.spotify) ||
+          '';
+        spotifyLink.href = songLink || '#';
+        spotifyLink.style.display = '';
+        if (songLink) {
+          spotifyLink.classList.remove('hero-live-spotify-link--unavailable');
+        } else {
+          spotifyLink.classList.add('hero-live-spotify-link--unavailable');
         }
       }
     }
 
     var embedEl = document.getElementById('hero-live-embed');
     if (embedEl) embedEl.classList.remove('hero-live-text-pending');
-  }).catch(function () {
-    updateHeroPresenterFromApi({ noData: true });
-    var embedEl = document.getElementById('hero-live-embed');
-    if (embedEl) embedEl.classList.remove('hero-live-text-pending');
-  });
+
+    // Allow fade-in after content swap.
+    window.setTimeout(function () {
+      infoEl.classList.remove('hero-live-text-updating');
+    }, 50);
+  }, 50);
 }
 
-// Export for use as module (e.g. type="module") or attach to window for classic scripts
+/**
+ * Cache-first wrapper used by the rest of the site.
+ * Immediately renders from cache (if available), then refreshes from API.
+ */
+function updateHeroNowPlaying() {
+  // 1) Cache-first: show last known track instantly if available.
+  var cached = readCachedNowPlaying();
+  if (cached) {
+    applyNowPlayingToHero(cached);
+  }
+
+  // 2) Always fetch fresh data.
+  fetchNowPlaying()
+    .then(function (result) {
+      var track = result && result.data ? result.data : null;
+      applyNowPlayingToHero(track);
+      writeCachedNowPlaying(track);
+    })
+    .catch(function () {
+      // On error, keep whatever is currently displayed (cached UI),
+      // but ensure presenter card isn't left in a broken state.
+      updateHeroPresenterFromApi({ noData: true });
+      var embedEl = document.getElementById('hero-live-embed');
+      if (embedEl) embedEl.classList.remove('hero-live-text-pending');
+    });
+}
+
+// Attach helpers globally for other scripts if needed.
 if (typeof window !== 'undefined') {
   window.fetchNowPlaying = fetchNowPlaying;
   window.getCurrentTrack = getCurrentTrack;
@@ -261,17 +347,23 @@ if (typeof window !== 'undefined') {
 
   function initHeroNowPlaying() {
     updateHeroNowPlaying();
-    setInterval(updateHeroNowPlaying, 30000);
+    // Refresh every 15 seconds.
+    setInterval(updateHeroNowPlaying, 15000);
   }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initHeroNowPlaying);
   } else {
     initHeroNowPlaying();
   }
+
   window.addEventListener('load', function () {
+    // Ensure we get a fresh update even if DOMContentLoaded fired from cache.
     updateHeroNowPlaying();
   });
 }
+
+// Optional CommonJS export for tooling/tests.
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { fetchNowPlaying, getCurrentTrack, NOWPLAYING_API };
 }

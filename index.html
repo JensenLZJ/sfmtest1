@@ -933,9 +933,11 @@
       // Clear localStorage and sessionStorage (preserve live player state for restore)
       try {
         var heroLivePlaying = sessionStorage.getItem('heroLivePlaying');
+        var lastNowPlaying = localStorage.getItem('samudrafm_last_np');
         localStorage.clear();
         sessionStorage.clear();
         if (heroLivePlaying !== null) sessionStorage.setItem('heroLivePlaying', heroLivePlaying);
+        if (lastNowPlaying !== null) localStorage.setItem('samudrafm_last_np', lastNowPlaying);
       } catch(e) {
         // Storage clearing failed
       }
